@@ -102,6 +102,7 @@ nav a.active {
     color: var(--text-secondary);
     margin-bottom: 2rem;
     max-width: 700px;
+    text-align: justify;
 }
 
 .hero-cta {
@@ -160,24 +161,24 @@ section:last-of-type {
 }
 
 h1 {
-    color: var(--orange) !important;
+    color: var(--text) !important;
     transition: color 0.2s;
 }
 
 h1:hover {
-    color: var(--blue-hover) !important;
+    color: var(--accent-hover) !important;
 }
 
 h2 {
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 2rem;
-    color: var(--orange) !important;
+    color: var(--text) !important;
     transition: color 0.2s;
 }
 
 h2:hover {
-    color: var(--blue-hover) !important;
+    color: var(--accent-hover) !important;
 }
 
 h3 {
@@ -338,7 +339,7 @@ p {
     font-size: 1.5rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--border);
-    color: var(--orange) !important;
+    color: var(--text) !important;
     cursor: pointer;
     user-select: none;
     margin-bottom: 1.5rem;
