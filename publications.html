@@ -34,8 +34,8 @@
         <div class="container">
             <!-- Trading Strategies -->
             <div class="pub-section">
-                <h2>Trading Strategies</h2>
-
+                <h2 onclick="toggleSection(this)">Trading Strategies</h2>
+                <div class="pub-section-content">
                 <article class="pub">
                     <h3><a href="https://medium.com/insiderfinance/trading-small-caps-6dc50edf10a8" target="_blank">Trading Small Caps</a></h3>
                     <div class="pub-meta">InsiderFinance Wire • Dec 16, 2024</div>
@@ -71,11 +71,13 @@
                     <div class="pub-meta">InsiderFinance Wire • Mar 7, 2024</div>
                     <p>How to use Bollinger Bands and RSI to hedge physical asset.</p>
                 </article>
+                </div>
             </div>
 
             <!-- Quantitative Finance Automation -->
             <div class="pub-section">
-                <h2>Quantitative Finance Automation & LLM Pair-Coding</h2>
+                <h2 onclick="toggleSection(this)">Quantitative Finance Automation & LLM Pair-Coding</h2>
+                <div class="pub-section-content">
 
                 <article class="pub">
                     <h3><a href="https://medium.com/ai-advances/towards-automating-quantitative-finance-research-c868a2a6477e" target="_blank">Towards Automating Quantitative Finance Research</a></h3>
@@ -136,11 +138,13 @@
                     <div class="pub-meta">InsiderFinance Wire • Dec 1, 2023</div>
                     <p>How a Simple Script Can Preemptively Guide Your Trading Decisions.</p>
                 </article>
+                </div>
             </div>
 
             <!-- Stock Analysis -->
             <div class="pub-section">
-                <h2>Stock Analysis</h2>
+                <h2 onclick="toggleSection(this)">Stock Analysis</h2>
+                <div class="pub-section-content">
 
                 <article class="pub">
                     <h3><a href="https://medium.com/insiderfinance/assessing-roa-and-roe-in-selecting-undervalued-stocks-cee518ccd25d" target="_blank">Assessing ROA and ROE in Selecting Undervalued Stocks</a></h3>
@@ -177,11 +181,13 @@
                     <div class="pub-meta">InsiderFinance Wire • Oct 15, 2023</div>
                     <p>Fundamental screening techniques for value investing.</p>
                 </article>
+                </div>
             </div>
 
             <!-- Clustering and Forecasting -->
             <div class="pub-section">
-                <h2>Clustering and Forecasting</h2>
+                <h2 onclick="toggleSection(this)">Clustering and Forecasting</h2>
+                <div class="pub-section-content">
 
                 <article class="pub">
                     <h3><a href="https://medium.com/insiderfinance/back-to-stocks-clustering-the-coded-approach-353e2f1cb943" target="_blank">Stocks Clustering: The Coded Approach</a></h3>
@@ -206,22 +212,26 @@
                     <div class="pub-meta">Python in Plain English • Oct 25, 2023</div>
                     <p>Comparing traditional and deep learning approaches to time series forecasting.</p>
                 </article>
+                </div>
             </div>
 
             <!-- AI in Legal Reasoning -->
             <div class="pub-section">
-                <h2>AI in Legal Reasoning</h2>
+                <h2 onclick="toggleSection(this)">AI in Legal Reasoning</h2>
+                <div class="pub-section-content">
 
                 <article class="pub">
                     <h3><a href="https://medium.com/ai-advances/an-evaluation-of-ai-in-legal-reasoning-836def52d4a" target="_blank">An Evaluation of AI in Legal Reasoning</a></h3>
                     <div class="pub-meta">AI Advances • Aug 5, 2023</div>
                     <p>Can ChatGPT help legal practitioners?</p>
                 </article>
+                </div>
             </div>
 
             <!-- General AI -->
             <div class="pub-section">
-                <h2>General AI</h2>
+                <h2 onclick="toggleSection(this)">General AI</h2>
+                <div class="pub-section-content">
 
                 <article class="pub">
                     <h3><a href="https://medium.com/ai-advances/learning-foreign-languages-with-myshell-80093af71b14" target="_blank">Learning Foreign Languages with MyShell</a></h3>
@@ -264,31 +274,44 @@
                     <div class="pub-meta">Towards Dev • Nov 13, 2023</div>
                     <p>Architecture and design patterns for multi-agent AI systems.</p>
                 </article>
+                </div>
             </div>
 
             <!-- International Maritime Law -->
             <div class="pub-section">
-                <h2>International Maritime Law</h2>
+                <h2 onclick="toggleSection(this)">International Maritime Law</h2>
+                <div class="pub-section-content">
 
                 <article class="pub">
                     <h3><a href="https://scanr.enseignementsup-recherche.gouv.fr/publications/halhal-04721151" target="_blank">Une analyse de la sentence arbitrale rendue dans le différend maritime du Golfe de Piran entre la Slovénie et la Croatie</a></h3>
                     <div class="pub-meta">Neptune, Centre de droit maritime et océanique, Université de Nantes • Oct 10, 2024</div>
                     <p>Analysis of the arbitral award in the Gulf of Piran maritime dispute between Slovenia and Croatia.</p>
                 </article>
+                </div>
             </div>
 
             <!-- Ship Operations -->
             <div class="pub-section">
-                <h2>Ship Operations</h2>
+                <h2 onclick="toggleSection(this)">Ship Operations</h2>
+                <div class="pub-section-content">
 
                 <article class="pub">
                     <h3><a href="https://archive.org/details/lexploitationdes0000laig" target="_blank">L'exploitation des navires citernes: pétroliers, chimiquiers, gaziers</a></h3>
                     <div class="pub-meta">Infomer • Nov 18, 2008 • 424 pages</div>
                     <p>Comprehensive guide to tanker operations: oil tankers, chemical carriers, and gas carriers.</p>
                 </article>
+                </div>
             </div>
         </div>
     </section>
+
+    <script>
+    function toggleSection(header) {
+        const content = header.nextElementSibling;
+        header.classList.toggle('collapsed');
+        content.classList.toggle('hidden');
+    }
+    </script>
 
     <footer>
         <div class="container">
