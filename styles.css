@@ -1,17 +1,17 @@
-/* Dark Minimalist Theme */
+/* GitHub-Inspired Theme */
 :root {
-    --bg: #0a0a0a;
-    --bg-secondary: #111;
-    --bg-card: #141414;
-    --text: #e5e5e5;
-    --text-secondary: #a0a0a0;
-    --text-tertiary: #707070;
-    --accent: #3b82f6;
-    --accent-hover: #60a5fa;
-    --border: #222;
-    --border-hover: #333;
+    --bg: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-card: #161b22;
+    --text: #c9d1d9;
+    --text-secondary: #8b949e;
+    --text-tertiary: #6e7681;
+    --accent: #58a6ff;
+    --accent-hover: #79c0ff;
+    --border: #30363d;
+    --border-hover: #484f58;
     --orange: #ff6b35;
-    --blue-hover: #3b82f6;
+    --blue-hover: #58a6ff;
 }
 
 * {
@@ -116,12 +116,13 @@ nav a.active {
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 1.25rem;
-    border-radius: 0.25rem;
+    border-radius: 6px;
     font-size: 0.9375rem;
     font-weight: 500;
     transition: all 0.2s;
     border: none;
     cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .btn-primary {
@@ -131,6 +132,8 @@ nav a.active {
 
 .btn-primary:hover {
     background: var(--accent-hover);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+    transform: translateY(-2px);
 }
 
 .btn-secondary {
@@ -142,6 +145,8 @@ nav a.active {
 .btn-secondary:hover {
     border-color: var(--border-hover);
     background: var(--bg-secondary);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+    transform: translateY(-2px);
 }
 
 /* Sections */
@@ -155,25 +160,24 @@ section:last-of-type {
 }
 
 h1 {
-    color: var(--orange);
+    color: var(--orange) !important;
     transition: color 0.2s;
 }
 
 h1:hover {
-    color: var(--blue-hover);
+    color: var(--blue-hover) !important;
 }
 
 h2 {
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 2rem;
-    color: var(--orange);
+    color: var(--orange) !important;
     transition: color 0.2s;
-    cursor: pointer;
 }
 
 h2:hover {
-    color: var(--blue-hover);
+    color: var(--blue-hover) !important;
 }
 
 h3 {
@@ -202,14 +206,17 @@ p {
 
 .card {
     background: var(--bg-card);
-    padding: 2rem;
-    border-radius: 0.5rem;
+    padding: 1.5rem;
+    border-radius: 6px;
     border: 1px solid var(--border);
     transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .card:hover {
     border-color: var(--border-hover);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+    transform: translateY(-2px);
 }
 
 .card h3 {
@@ -226,15 +233,18 @@ p {
 /* Project Card */
 .project {
     background: var(--bg-card);
-    padding: 2rem;
-    border-radius: 0.5rem;
+    padding: 1.5rem;
+    border-radius: 6px;
     border: 1px solid var(--border);
     margin-bottom: 1.5rem;
     transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .project:hover {
     border-color: var(--border-hover);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+    transform: translateY(-2px);
 }
 
 .project-header {
@@ -282,14 +292,17 @@ p {
 .pub {
     background: var(--bg-card);
     padding: 1.5rem;
-    border-radius: 0.5rem;
+    border-radius: 6px;
     border: 1px solid var(--border);
     margin-bottom: 1rem;
     transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .pub:hover {
     border-color: var(--border-hover);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+    transform: translateY(-2px);
 }
 
 .pub h3 {
@@ -325,9 +338,10 @@ p {
     font-size: 1.5rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--border);
-    color: var(--orange);
+    color: var(--orange) !important;
     cursor: pointer;
     user-select: none;
+    margin-bottom: 1.5rem;
 }
 
 .pub-section h2::after {
@@ -335,10 +349,11 @@ p {
     font-size: 0.8em;
     transition: transform 0.3s;
     display: inline-block;
+    margin-left: 0.5rem;
 }
 
 .pub-section h2.collapsed::after {
-    transform: rotate(-90deg);
+    content: ' ▶';
 }
 
 .pub-section-content {
@@ -366,15 +381,18 @@ p {
     padding: 0.625rem 1.25rem;
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 0.25rem;
+    border-radius: 6px;
     color: var(--text);
     font-size: 0.9375rem;
     transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .social a:hover {
     border-color: var(--accent);
     color: var(--accent);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+    transform: translateY(-2px);
 }
 
 .social svg {
