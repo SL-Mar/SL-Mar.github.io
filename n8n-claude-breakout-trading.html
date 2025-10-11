@@ -55,15 +55,6 @@
             padding: 0;
             background: none;
         }
-        .article-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-        .article-content table td {
-            padding: 0.5rem;
-            border: 1px solid var(--border);
-        }
         .back-link {
             display: inline-block;
             margin-bottom: 2rem;
@@ -275,15 +266,14 @@ const histArray = Array.isArray(hist) ? hist : [hist];
 <li><strong>AI-Assisted Development:</strong> Claude Code builds and validates workflows</li>
 <li><strong>Template-First Approach:</strong> Leverages proven n8n patterns</li>
 <li><strong>Multi-Layer Validation:</strong> Node validation → Workflow validation → Compilation</li>
-<li><strong>Transparent Scoring:</strong> Clear, auditable stock selection logic</li></ul><p>---</p><h2>Technical Stack Summary</h2><table>
-<tr><td>Component</td><td>Purpose</td><td>Key Feature</td></tr>
-<tr><td><strong>n8n</strong></td><td>Workflow automation</td><td>2,500+ templates, visual builder</td></tr>
-<tr><td><strong>n8n MCP</strong></td><td>Claude integration</td><td>Programmatic workflow control</td></tr>
-<tr><td><strong>Claude Code</strong></td><td>Development assistant</td><td>Natural language workflow creation</td></tr>
-<tr><td><strong>EODHD API</strong></td><td>Market data</td><td>Screener + real-time + historical</td></tr>
-<tr><td><strong>Notion</strong></td><td>Data storage</td><td>BREAKOUT SCORES database</td></tr>
-<tr><td><strong>QuantConnect</strong></td><td>Trading execution</td><td>Paper/live trading with LEAN engine</td></tr>
-</table><p>---</p><h2>Lessons Learned</h2><h3>What Worked Well</h3><p>✅ <strong>Template Discovery:</strong> n8n's 2,500+ templates accelerated development
+<li><strong>Transparent Scoring:</strong> Clear, auditable stock selection logic</li></ul><p>---</p><h2>Technical Stack Summary</h2><p>| Component | Purpose | Key Feature |
+|-----------|---------|-------------|
+| <strong>n8n</strong> | Workflow automation | 2,500+ templates, visual builder |
+| <strong>n8n MCP</strong> | Claude integration | Programmatic workflow control |
+| <strong>Claude Code</strong> | Development assistant | Natural language workflow creation |
+| <strong>EODHD API</strong> | Market data | Screener + real-time + historical |
+| <strong>Notion</strong> | Data storage | BREAKOUT SCORES database |
+| <strong>QuantConnect</strong> | Trading execution | Paper/live trading with LEAN engine |</p><p>---</p><h2>Lessons Learned</h2><h3>What Worked Well</h3><p>✅ <strong>Template Discovery:</strong> n8n's 2,500+ templates accelerated development
 ✅ <strong>MCP Integration:</strong> Claude's ability to create workflows from natural language
 ✅ <strong>Validation Layers:</strong> Caught errors before deployment
 ✅ <strong>Volume Surge Filter:</strong> Strong signal for breakout confirmation</p><h3>Challenges Overcome</h3><p>⚠️ <strong>API Limitations:</strong> Russell 3000 not available → Used screener filters instead

@@ -55,15 +55,6 @@
             padding: 0;
             background: none;
         }
-        .article-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-        .article-content table td {
-            padding: 0.5rem;
-            border: 1px solid var(--border);
-        }
         .back-link {
             display: inline-block;
             margin-bottom: 2rem;
@@ -92,9 +83,7 @@
             <h1>Expected Shortfall Risk Parity: A Coherent Approach to Portfolio Optimization</h1><p><strong>Author</strong>: Independent Quantitative Researcher
 <strong>Date</strong>: October 2025
 <strong>Target Audience</strong>: QuantConnect Research Team
-<strong>Algorithm</strong>: Risk-Based ES Portfolio Strategy (QC Project ID: 25575276)</p><p>---</p><h2>Executive Summary</h2><p>This article presents an implementation of a risk parity portfolio strategy using Expected Shortfall (ES) as the risk measure, based on recent academic research on coherent risk estimation. Unlike traditional mean-variance optimization, this approach leverages the superior mathematical properties of ES—particularly its coherence and subadditivity—to construct portfolios that are more resilient to tail risk events.</p><p>The algorithm implements the L-estimator methodology from Aichele et al. (2025) "Coherent estimation of risk measures" (arXiv:2510.05809), using a 2.5% confidence level ES calculation over 250-day rolling windows. Backtested on a diversified ETF universe (SPY, QQQ, IWM, EFA, TLT, GLD) from 2020-2024, the strategy demonstrates the practical application of cutting-edge risk measure theory to real-world portfolio management.</p><p><strong>Key Innovation</strong>: The alpha in this strategy comes not from predicting returns, but from <strong>superior risk measurement</strong>—using a coherent risk metric that properly accounts for tail risk and correlation structure, leading to more stable allocations during market stress.</p><p>---</p><h2>1. Theoretical Foundation</h2><h3>1.1 Why Expected Shortfall?</h3><p>Expected Shortfall (ES), also known as Conditional Value-at-Risk (CVaR), represents a fundamental advancement over traditional risk metrics like Value-at-Risk (VaR). While VaR only identifies the threshold loss at a given confidence level, ES measures the <strong>average loss beyond that threshold</strong>.</p><p><strong>Mathematical Definition</strong>:</p><p>For a portfolio with returns $X$ and confidence level $\alpha$:</p><table>
-<tr></tr>
-</table><p>In our implementation, we use $\alpha = 2.5\%$, meaning we measure the average loss in the worst 2.5% of scenarios.</p><h3>1.2 Coherent Risk Measures</h3><p>ES satisfies all four axioms of coherent risk measures (Artzner et al., 1999):</p><ul><li><strong>Monotonicity</strong>: If portfolio A always loses less than portfolio B, ES(A) ≤ ES(B)</li>
+<strong>Algorithm</strong>: Risk-Based ES Portfolio Strategy (QuantConnect Algorithm)</p><p>---</p><h2>Executive Summary</h2><p>This article presents an implementation of a risk parity portfolio strategy using Expected Shortfall (ES) as the risk measure, based on recent academic research on coherent risk estimation. Unlike traditional mean-variance optimization, this approach leverages the superior mathematical properties of ES—particularly its coherence and subadditivity—to construct portfolios that are more resilient to tail risk events.</p><p>The algorithm implements the L-estimator methodology from Aichele et al. (2025) "Coherent estimation of risk measures" (arXiv:2510.05809), using a 2.5% confidence level ES calculation over 250-day rolling windows. Backtested on a diversified ETF universe (SPY, QQQ, IWM, EFA, TLT, GLD) from 2020-2024, the strategy demonstrates the practical application of cutting-edge risk measure theory to real-world portfolio management.</p><p><strong>Key Innovation</strong>: The alpha in this strategy comes not from predicting returns, but from <strong>superior risk measurement</strong>—using a coherent risk metric that properly accounts for tail risk and correlation structure, leading to more stable allocations during market stress.</p><p>---</p><h2>1. Theoretical Foundation</h2><h3>1.1 Why Expected Shortfall?</h3><p>Expected Shortfall (ES), also known as Conditional Value-at-Risk (CVaR), represents a fundamental advancement over traditional risk metrics like Value-at-Risk (VaR). While VaR only identifies the threshold loss at a given confidence level, ES measures the <strong>average loss beyond that threshold</strong>.</p><p><strong>Mathematical Definition</strong>:</p><p>For a portfolio with returns $X$ and confidence level $\alpha$:</p><p>$$\text{ES}_\alpha(X) = -\mathbb{E}[X | X \leq \text{VaR}_\alpha(X)]$$</p><p>In our implementation, we use $\alpha = 2.5\%$, meaning we measure the average loss in the worst 2.5% of scenarios.</p><h3>1.2 Coherent Risk Measures</h3><p>ES satisfies all four axioms of coherent risk measures (Artzner et al., 1999):</p><ul><li><strong>Monotonicity</strong>: If portfolio A always loses less than portfolio B, ES(A) ≤ ES(B)</li>
 <li><strong>Translation Invariance</strong>: Adding cash reduces risk proportionally</li>
 <li><strong>Positive Homogeneity</strong>: Doubling position size doubles risk</li>
 <li><strong>Subadditivity</strong>: ES(A + B) ≤ ES(A) + ES(B) ✅</li></ul><p>The <strong>subadditivity property</strong> is critical: it means that diversification is always beneficial, and portfolio risk is less than the sum of component risks. VaR famously violates this property, making it unsuitable for portfolio optimization in the presence of tail risk.</p><h3>1.3 L-Estimator Methodology</h3><p>The Aichele et al. (2025) paper introduces a rigorous statistical framework for ES estimation using L-estimators—linear combinations of order statistics. The key insight is that coherent risk estimators should inherit the economic properties of risk measures while maintaining statistical robustness.</p><p><strong>Our Implementation</strong> (from the paper's Example 3.5, equation 3.1):</p><p>$$\text{ES}^1_{\alpha,n}(x) := -\frac{1}{\lfloor \alpha n \rfloor} \sum_{i=1}^{\lfloor \alpha n \rfloor} x_{i:n}$$</p><p>Where:
@@ -144,14 +133,13 @@ def Rebalance(self):
 </code></pre><p><strong>Rebalancing Triggers</strong>:
 <li>Scheduled: Every Monday at market open + 60 minutes (allows opening volatility to settle)</li>
 <li>Frequency: Weekly (configurable via <code>rebalance_frequency</code> parameter)</li>
-<li>Safeguards: Only rebalance if minimum data requirements are met</li></ul><p>---</p><h2>4. Practical Considerations</h2><h3>4.1 Parameter Choices</h3><table>
-<tr><td>Parameter</td><td>Value</td><td>Rationale</td></tr>
-<tr><td>Confidence Level (α)</td><td>2.5%</td><td>Standard regulatory level (Basel III); captures extreme tail</td></tr>
-<tr><td>Lookback Period (n)</td><td>250 days</td><td>~1 year of data; balances responsiveness vs. stability</td></tr>
-<tr><td>Rebalancing Frequency</td><td>Weekly</td><td>Practical balance between transaction costs and adaptability</td></tr>
-<tr><td>Minimum Sample Size</td><td>100 days</td><td>Statistical minimum for reliable ES estimation</td></tr>
-<tr><td>Universe Size</td><td>6 ETFs</td><td>Sufficient diversification without over-parameterization</td></tr>
-</table><h3>4.2 Advantages Over Traditional Approaches</h3><p><strong>vs. Mean-Variance Optimization</strong>:
+<li>Safeguards: Only rebalance if minimum data requirements are met</li></ul><p>---</p><h2>4. Practical Considerations</h2><h3>4.1 Parameter Choices</h3><p>| Parameter | Value | Rationale |
+|-----------|-------|-----------|
+| Confidence Level (α) | 2.5% | Standard regulatory level (Basel III); captures extreme tail |
+| Lookback Period (n) | 250 days | ~1 year of data; balances responsiveness vs. stability |
+| Rebalancing Frequency | Weekly | Practical balance between transaction costs and adaptability |
+| Minimum Sample Size | 100 days | Statistical minimum for reliable ES estimation |
+| Universe Size | 6 ETFs | Sufficient diversification without over-parameterization |</p><h3>4.2 Advantages Over Traditional Approaches</h3><p><strong>vs. Mean-Variance Optimization</strong>:
 <li>✅ No need to estimate expected returns (notoriously unstable)</li>
 <li>✅ Focus on risk only (more reliably estimated)</li>
 <li>✅ Coherent risk measure (VaR-based approaches are not)</li>
