@@ -1,4 +1,4 @@
-/* GitHub-Inspired Theme - v2.0 */
+/* GitHub-Inspired Theme - v2.1 */
 :root {
     --bg: #0d1117;
     --bg-secondary: #161b22;
@@ -10,8 +10,6 @@
     --accent-hover: #79c0ff;
     --border: #30363d;
     --border-hover: #484f58;
-    --orange: #ff6b35;
-    --blue-hover: #58a6ff;
 }
 
 * {
@@ -161,24 +159,24 @@ section:last-of-type {
 }
 
 h1 {
-    color: var(--text) !important;
+    color: #c9d1d9 !important;
     transition: color 0.2s;
 }
 
 h1:hover {
-    color: var(--accent-hover) !important;
+    color: #79c0ff !important;
 }
 
 h2 {
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 2rem;
-    color: var(--text) !important;
+    color: #c9d1d9 !important;
     transition: color 0.2s;
 }
 
 h2:hover {
-    color: var(--accent-hover) !important;
+    color: #79c0ff !important;
 }
 
 h3 {
@@ -339,7 +337,7 @@ p {
     font-size: 1.5rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--border);
-    color: var(--text) !important;
+    color: #c9d1d9 !important;
     cursor: pointer;
     user-select: none;
     margin-bottom: 1.5rem;
