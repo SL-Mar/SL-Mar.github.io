@@ -3,19 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Projects by Sebastien M. Laignel - QuantCoder, Trading Tools, AI Agents">
+    <meta name="description" content="Projects by Sebastien M. Laignel - Open Source Tools for Quantitative Finance">
     <title>Projects | Sebastien M. Laignel</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
+    <nav>
         <div class="container">
             <a href="index.html" class="logo">Sebastien M. Laignel</a>
-            <ul class="nav-links">
-                <li><a href="index.html#about">About</a></li>
+            <ul>
+                <li><a href="index.html">Home</a></li>
                 <li><a href="publications.html">Publications</a></li>
                 <li><a href="projects.html" class="active">Projects</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
@@ -23,237 +20,181 @@
         </div>
     </nav>
 
-    <header class="page-header">
+    <section class="hero">
         <div class="container">
-            <h1 class="page-title">Projects</h1>
-            <p class="page-description">
-                Open-source tools and applications bridging quantitative finance research with practical implementation.
+            <h1>Projects</h1>
+            <p>
+                Open-source tools and applications for quantitative finance, AI automation, and trading research.
             </p>
         </div>
-    </header>
+    </section>
 
-    <section class="section">
+    <section>
         <div class="container">
-            <!-- Featured Project: QuantCoder -->
-            <div id="quantcoder" class="project-featured">
-                <div class="project-badge">Featured Project</div>
-                <h2 class="project-title">QuantCoder FS</h2>
-                <p class="project-tagline">Local-First Agent-Based Workflow Platform for Quantitative Finance</p>
-
-                <div class="project-content">
-                    <div class="project-description">
-                        <h3>Overview</h3>
-                        <p>
-                            QuantCoder FS is an AI-powered automation platform that transforms academic finance papers
-                            into executable trading algorithms. Built with a local-first architecture, it provides
-                            a complete pipeline from PDF research papers to backtestable code.
-                        </p>
-
-                        <h3>Key Features</h3>
-                        <ul class="feature-list">
-                            <li><strong>🧠 Dual LLM Support:</strong> OpenAI (cloud) + Ollama (local GLM-4)</li>
-                            <li><strong>🚀 RTX GPU Optimized:</strong> GLM-4 9B runs on RTX 4080 16GB (4-bit quantization)</li>
-                            <li><strong>🤖 Agent-Based Pipeline:</strong> PDF → Summary → Algorithm using CrewAI</li>
-                            <li><strong>📊 LEAN Integration:</strong> Direct backtesting with QuantConnect's LEAN engine</li>
-                            <li><strong>🔒 Local-First:</strong> Run entirely on your machine with Ollama</li>
-                            <li><strong>⚡ FastAPI Backend:</strong> Modern async Python API server</li>
-                            <li><strong>📱 Next.js Frontend:</strong> Clean, responsive web interface</li>
-                        </ul>
-
-                        <h3>Architecture</h3>
-                        <p>
-                            The platform uses a multi-agent workflow where specialized AI agents handle different
-                            stages of the research-to-code pipeline:
-                        </p>
-                        <ul class="feature-list">
-                            <li><strong>Extractor Agent:</strong> Reads academic PDFs and extracts key strategy concepts</li>
-                            <li><strong>Summarizer Agent:</strong> Creates structured summaries with trading rules</li>
-                            <li><strong>Coder Agent:</strong> Generates QuantConnect-compatible Python algorithms</li>
-                            <li><strong>Reviewer Agent:</strong> Validates code quality and trading logic</li>
-                        </ul>
-
-                        <h3>Technology Stack</h3>
-                        <div class="tech-grid">
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">FastAPI</span>
-                            <span class="tech-tag">CrewAI</span>
-                            <span class="tech-tag">Ollama</span>
-                            <span class="tech-tag">GLM-4</span>
-                            <span class="tech-tag">Next.js</span>
-                            <span class="tech-tag">LEAN</span>
-                            <span class="tech-tag">Docker</span>
-                        </div>
-
-                        <h3>Use Cases</h3>
-                        <ul class="feature-list">
-                            <li>Rapidly prototype trading strategies from academic research</li>
-                            <li>Automate the tedious process of manual algorithm coding</li>
-                            <li>Test multiple paper implementations quickly</li>
-                            <li>Maintain a local research-to-code pipeline</li>
-                        </ul>
-
-                        <div class="project-links">
-                            <a href="https://github.com/SL-Mar/quantcoderfs" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                                </svg>
-                                View on GitHub
-                            </a>
-                            <a href="https://ai.gopubby.com/towards-automating-quantitative-finance-research-b23a5b0c0c1a" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-                                Read Article
-                            </a>
-                        </div>
+            <article class="project">
+                <div class="project-header">
+                    <div>
+                        <h3>QuantCoderFS</h3>
+                        <p>A full-stack application that automates trading algorithm generation from academic papers</p>
                     </div>
                 </div>
-            </div>
+                <div class="project-meta">
+                    <span>TypeScript</span>
+                    <span>FastAPI</span>
+                    <span>CrewAI</span>
+                </div>
+                <p>
+                    QuantCoderFS automates the transformation of academic finance papers into executable
+                    trading algorithms. Built with a full-stack architecture using Next.js frontend, FastAPI
+                    backend, and CrewAI for multi-agent workflows. Supports both cloud LLMs (OpenAI) and local
+                    models via Ollama for privacy-first research automation.
+                </p>
+                <p><strong>Key Features:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
+                    <li>PDF paper extraction and summarization</li>
+                    <li>Multi-agent pipeline for code generation</li>
+                    <li>QuantConnect LEAN integration</li>
+                    <li>Local-first AI with Ollama support</li>
+                    <li>JWT authentication and user management</li>
+                </ul>
+                <div class="tech">
+                    <span>TypeScript</span>
+                    <span>Python</span>
+                    <span>FastAPI</span>
+                    <span>Next.js</span>
+                    <span>CrewAI</span>
+                    <span>Ollama</span>
+                    <span>Docker</span>
+                </div>
+                <a href="https://github.com/SL-Mar/quantcoderfs" target="_blank" class="btn btn-primary" style="margin-top: 1rem;">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+            </article>
 
-            <!-- Other Projects -->
-            <div class="projects-grid">
-                <article class="project-card">
-                    <h3 class="project-card-title">MyShell AI Bots</h3>
-                    <p class="project-card-description">
-                        Collection of AI bot configurations for trading operations and language assistance.
-                        Custom prompts and workflows for financial analysis and maritime communication.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">AI Bots</span>
-                        <span class="tech-tag">Prompt Engineering</span>
+            <article class="project">
+                <div class="project-header">
+                    <div>
+                        <h3>Chat with Fundamentals</h3>
+                        <p>AI-powered fundamental analysis and stock analytics using natural language</p>
                     </div>
-                    <h4>Bot Configurations:</h4>
-                    <ul class="project-list">
-                        <li><strong>Trading Operator:</strong> Real-time market analysis and trade idea generation</li>
-                        <li><strong>Language Assistant:</strong> Maritime terminology and technical translation</li>
-                        <li><strong>Research Assistant:</strong> Academic paper summarization and citation extraction</li>
-                    </ul>
-                    <a href="https://github.com/SL-Mar" class="project-link">View Details →</a>
-                </article>
+                </div>
+                <div class="project-meta">
+                    <span>TypeScript</span>
+                    <span>React</span>
+                    <span>OpenAI</span>
+                </div>
+                <p>
+                    Interactive application for querying and analyzing fundamental stock data using natural language.
+                    Integrates with EODHD API for historical data, fundamental metrics, and financial news. Built
+                    with modern TypeScript and React for a responsive user experience.
+                </p>
+                <p><strong>Key Features:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
+                    <li>Natural language queries for stock analysis</li>
+                    <li>Real-time fundamental data integration</li>
+                    <li>Historical price and volume analysis</li>
+                    <li>Financial news aggregation</li>
+                    <li>AI-powered insights and recommendations</li>
+                </ul>
+                <div class="tech">
+                    <span>TypeScript</span>
+                    <span>React</span>
+                    <span>OpenAI</span>
+                    <span>EODHD API</span>
+                    <span>Chart.js</span>
+                </div>
+                <a href="https://github.com/SL-Mar/chat-with-fundamentals" target="_blank" class="btn btn-primary" style="margin-top: 1rem;">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+            </article>
 
-                <article class="project-card">
-                    <h3 class="project-card-title">Trading Strategy Library</h3>
-                    <p class="project-card-description">
-                        Open-source collection of backtested trading strategies implemented in Python/QuantConnect.
-                        Includes momentum, mean-reversion, and multi-factor approaches.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">QuantConnect</span>
-                        <span class="tech-tag">LEAN</span>
+            <article class="project">
+                <div class="project-header">
+                    <div>
+                        <h3>QuantCoder Legacy</h3>
+                        <p>Core workflows for transforming finance research into trading strategies</p>
                     </div>
-                    <h4>Strategy Categories:</h4>
-                    <ul class="project-list">
-                        <li><strong>Momentum:</strong> Trend-following and relative strength strategies</li>
-                        <li><strong>Mean-Reversion:</strong> Statistical arbitrage and pairs trading</li>
-                        <li><strong>Calendar Effects:</strong> Monthly turnover and seasonal patterns</li>
-                        <li><strong>Multi-Factor:</strong> Combined fundamental and technical screening</li>
-                    </ul>
-                    <a href="https://github.com/SL-Mar" class="project-link">Explore Strategies →</a>
-                </article>
+                </div>
+                <div class="project-meta">
+                    <span>Python</span>
+                    <span>LangChain</span>
+                </div>
+                <p>
+                    The legacy version of QuantCoder containing proven workflows for automated code generation
+                    from finance research papers. Focused on QuantConnect algorithm generation with robust
+                    PDF parsing and structured code output.
+                </p>
+                <p><strong>Key Features:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
+                    <li>PDF research paper extraction</li>
+                    <li>QuantConnect Python code generation</li>
+                    <li>Trading strategy templating</li>
+                    <li>Academic paper classification</li>
+                </ul>
+                <div class="tech">
+                    <span>Python</span>
+                    <span>LangChain</span>
+                    <span>OpenAI</span>
+                    <span>PyPDF2</span>
+                </div>
+                <a href="https://github.com/SL-Mar/quantcoder-legacy" target="_blank" class="btn btn-primary" style="margin-top: 1rem;">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+            </article>
 
-                <article class="project-card">
-                    <h3 class="project-card-title">Market Data Tools</h3>
-                    <p class="project-card-description">
-                        Python utilities for fetching, processing, and analyzing market data from multiple sources.
-                        Interactive Brokers, EOD Historical Data, and CrossRef API integrations.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">APIs</span>
-                        <span class="tech-tag">Data Engineering</span>
+            <article class="project">
+                <div class="project-header">
+                    <div>
+                        <h3>Research & MarketPlace</h3>
+                        <p>Curated repository of research notebooks and quantitative finance tools</p>
                     </div>
-                    <h4>Features:</h4>
-                    <ul class="project-list">
-                        <li><strong>IB Integration:</strong> Historical data fetching via IB_insync</li>
-                        <li><strong>EOD Screener:</strong> Stock screening by fundamentals and technicals</li>
-                        <li><strong>Academic Search:</strong> CrossRef API for research paper discovery</li>
-                        <li><strong>Data Pipeline:</strong> Automated data collection and storage</li>
-                    </ul>
-                    <a href="https://github.com/SL-Mar" class="project-link">View Tools →</a>
-                </article>
-
-                <article class="project-card">
-                    <h3 class="project-card-title">Algorithmic Trading Tutorials</h3>
-                    <p class="project-card-description">
-                        Educational resources and tutorials for learning algorithmic trading development.
-                        From basic concepts to advanced strategy implementation.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Education</span>
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Jupyter</span>
-                    </div>
-                    <h4>Topics Covered:</h4>
-                    <ul class="project-list">
-                        <li><strong>Getting Started:</strong> Setting up development environment</li>
-                        <li><strong>Strategy Development:</strong> From idea to backtest</li>
-                        <li><strong>Risk Management:</strong> Position sizing and stop losses</li>
-                        <li><strong>Live Trading:</strong> Deployment and monitoring best practices</li>
-                    </ul>
-                    <a href="publications.html" class="project-link">Read Tutorials →</a>
-                </article>
-
-                <article class="project-card">
-                    <h3 class="project-card-title">Maritime AI Applications</h3>
-                    <p class="project-card-description">
-                        Research and tools applying AI to maritime operations, legal analysis, and logistics optimization.
-                        Experimental applications of LLMs to maritime domain.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">AI</span>
-                        <span class="tech-tag">Maritime</span>
-                        <span class="tech-tag">Legal Tech</span>
-                    </div>
-                    <h4>Applications:</h4>
-                    <ul class="project-list">
-                        <li><strong>Legal Analysis:</strong> LLM-assisted maritime law research</li>
-                        <li><strong>Documentation:</strong> Automated ship documentation processing</li>
-                        <li><strong>Route Optimization:</strong> AI-driven voyage planning</li>
-                        <li><strong>Compliance:</strong> Regulatory compliance checking</li>
-                    </ul>
-                    <a href="publications.html#legal" class="project-link">Learn More →</a>
-                </article>
-
-                <article class="project-card">
-                    <h3 class="project-card-title">n8n Automation Workflows</h3>
-                    <p class="project-card-description">
-                        Custom n8n workflows for automating trading operations, market screening, and research management.
-                        Integration of various APIs and services.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">n8n</span>
-                        <span class="tech-tag">Automation</span>
-                        <span class="tech-tag">APIs</span>
-                    </div>
-                    <h4>Workflows:</h4>
-                    <ul class="project-list">
-                        <li><strong>Market Screener:</strong> Daily stock screening with alerts</li>
-                        <li><strong>Research Pipeline:</strong> Automated paper discovery and summarization</li>
-                        <li><strong>Trade Notifications:</strong> Real-time alerts via Telegram</li>
-                        <li><strong>Data Collection:</strong> Scheduled market data gathering</li>
-                    </ul>
-                    <a href="https://github.com/SL-Mar" class="project-link">View Workflows →</a>
-                </article>
-            </div>
+                </div>
+                <div class="project-meta">
+                    <span>Jupyter Notebook</span>
+                    <span>Python</span>
+                </div>
+                <p>
+                    Collection of research notebooks, trading strategy implementations, and marketplace resources
+                    for quantitative finance and algorithmic trading. Includes backtesting frameworks, data
+                    analysis tools, and AI applications for finance.
+                </p>
+                <p><strong>Contents:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
+                    <li>Trading strategy notebooks and backtests</li>
+                    <li>Data analysis and visualization tools</li>
+                    <li>Market research and academic paper summaries</li>
+                    <li>AI/ML applications in finance</li>
+                </ul>
+                <div class="tech">
+                    <span>Jupyter</span>
+                    <span>Python</span>
+                    <span>Pandas</span>
+                    <span>NumPy</span>
+                    <span>Matplotlib</span>
+                </div>
+                <a href="https://github.com/SL-Mar/Research_and_MarketPlace" target="_blank" class="btn btn-primary" style="margin-top: 1rem;">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+            </article>
         </div>
     </section>
 
-    <section class="section cta-section">
+    <footer>
         <div class="container">
-            <h2 class="section-title">Interested in Collaboration?</h2>
-            <p class="cta-text">
-                I'm always open to discussing quantitative finance research, AI applications in trading,
-                or maritime technology projects.
-            </p>
-            <div class="cta-buttons">
-                <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
-                <a href="https://github.com/SL-Mar" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">View GitHub</a>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 Sebastien M. Laignel. All rights reserved.</p>
-            <p class="footer-tagline">AI for Quantitative Finance and Maritime Applications</p>
+            <p>&copy; 2025 Sebastien M. Laignel</p>
+            <p>AI for Quantitative Finance and Maritime Applications</p>
         </div>
     </footer>
 </body>
