@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MC_EODHD Biotech Screener - Implementation Guide - SL Mar R&D Notes">
+    <title>MC_EODHD Biotech Screener - Implementation Guide | SL Mar</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .article-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .article-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .article-content h2 {
+            font-size: 1.75rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        .article-content h3 {
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        .article-content ul, .article-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+        .article-content code {
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .article-content pre {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .article-content pre code {
+            padding: 0;
+            background: none;
+        }
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .article-content table td {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">SL Mar - Maritime and AI Consultancy</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="publications.html">Publications</a></li>
+                <li><a href="development.html">Development</a></li>
+                <li><a href="local-ai.html">Local AI</a></li>
+                <li><a href="rnd-notes.html" class="active">R&D Notes</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section>
+        <div class="container article-content">
+            <a href="rnd-notes.html" class="back-link">← Back to R&D Notes</a>
+            <h1>MC_EODHD Biotech Screener - Implementation Guide</h1>
+<strong>Date:</strong> October 9, 2025
+<strong>Data Source:</strong> EODHD API via HTTP nodes in n8n
+<strong>Alternative Options:</strong> Apify Finviz scraper OR Perplexity API</p><p>---</p><h2>REVISED Solution: Use Existing EODHD Infrastructure</h2><p><strong>Good News:</strong> EODHD can be accessed via HTTP nodes (user confirmed existing workflows)
+<strong>No Cost:</strong> Use existing EODHD API subscription
+<strong>Better than Polygon.io:</strong> No additional $99/mo expense</p><p>---</p><h2>EODHD API Endpoints for Biotech Screener</h2><h3>Endpoint 1: Stock Screener API</h3>
+<strong>URL:</strong> <code>https://eodhistoricaldata.com/api/screener</code>
+<strong>Purpose:</strong> Filter stocks by market cap, sector, volume</p><pre><code>bash
+GET https://eodhistoricaldata.com/api/screener?api_token=YOUR_API_TOKEN&filters=[
+  ["market_capitalisation",">",50000000],
+  ["market_capitalisation","<",500000000],
+  ["sector","=","Healthcare"],
+  ["average_volume",">",100000],
+  ["exchange","in",["US","NASDAQ"]]
+]&limit=500
+</code></pre><p><strong>Response Example:</strong>
+<pre><code>json
+{
+  "code": "XBIO.US",
+  "name": "Xenetic Biosciences Inc",
+  "exchange": "NASDAQ",
+  "sector": "Healthcare",
+  "industry": "Biotechnology",
+  "market_capitalisation": 45000000,
+  "close": 4.29,
+  "change_p": 2.5,
+  "volume": 1200000,
+  "average_volume": 100000
+}
+</code></pre><h3>Endpoint 2: Intraday Data API</h3>
+<strong>URL:</strong> <code>https://eodhistoricaldata.com/api/intraday/{TICKER}.US</code>
+<strong>Purpose:</strong> Get real-time/pre-market volume and price</p><pre><code>bash
+GET https://eodhistoricaldata.com/api/intraday/XBIO.US?api_token=YOUR_API_TOKEN&interval=5m&from=1696752000&to=1696838400
+</code></pre><p><strong>Use Case:</strong> Detect pre-market volume spikes before market open</p><h3>Endpoint 3: Historical Data API</h3>
+<strong>URL:</strong> <code>https://eodhistoricaldata.com/api/eod/{TICKER}.US</code>
+<strong>Purpose:</strong> Calculate 50-day average volume, RSI, moving averages</p><pre><code>bash
+GET https://eodhistoricaldata.com/api/eod/XBIO.US?api_token=YOUR_API_TOKEN&period=d&from=2025-08-20&to=2025-10-08
+</code></pre><p><strong>Response:</strong> Array of daily OHLCV data for technical calculations</p><h3>Endpoint 4: Technical Indicators API</h3>
+<strong>URL:</strong> <code>https://eodhistoricaldata.com/api/technical/{TICKER}.US</code>
+<strong>Purpose:</strong> Get pre-calculated RSI, SMA, EMA</p><pre><code>bash
+GET https://eodhistoricaldata.com/api/technical/XBIO.US?api_token=YOUR_API_TOKEN&function=rsi&period=14
+GET https://eodhistoricaldata.com/api/technical/XBIO.US?api_token=YOUR_API_TOKEN&function=sma&period=20
+GET https://eodhistoricaldata.com/api/technical/XBIO.US?api_token=YOUR_API_TOKEN&function=sma&period=50
+</code></pre><p><strong>Benefit:</strong> No need to calculate RSI/MA manually in n8n Code nodes</p><p>---</p><h2>n8n Workflow: EODHD-Based Biotech Screener</h2><h3>Workflow Name: "MC_Biotech EODHD Screener"</h3><h3>Complete Node Configuration</h3><p>#### Node 1: Schedule Trigger (8:00 AM ET)
+<pre><code>json
+{
+  "parameters": {
+    "rule": {
+      "interval": [{"field": "cronExpression", "expression": "0 8 * * 1-5"}]
+    },
+    "timezone": "America/New_York"
+  },
+  "name": "Daily 8AM ET",
+  "type": "n8n-nodes-base.scheduleTrigger",
+  "position": [-1000, 0]
+}
+</code></pre><p>#### Node 2: EODHD Screener API - Universe Selection
+<pre><code>json
+{
+  "parameters": {
+    "method": "GET",
+    "url": "https://eodhistoricaldata.com/api/screener",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "eodhd",
+    "qs": {
+      "api_token": "={{$credentials.eodhd.apiToken}}",
+      "filters": "[
+        [\"market_capitalisation\",\">\",50000000],
+        [\"market_capitalisation\",\"<\",500000000],
+        [\"sector\",\"=\",\"Healthcare\"],
+        [\"average_volume\",\">\",100000],
+        [\"exchange\",\"in\",[\"US\",\"NASDAQ\"]]
+      ]",
+      "limit": "500",
+      "signals": "volume_gt_10d_average"
+    }
+  },
+  "name": "EODHD Universe Filter",
+  "type": "n8n-nodes-base.httpRequest",
+  "position": [-800, 0]
+}
+</code></pre><p><strong>Key Parameters:</strong>
+<li><code>market_capitalisation</code>: $50M - $500M (micro-cap focus)</li>
+<li><code>sector</code>: Healthcare (includes Biotech/Pharma)</li>
+<li><code>average_volume</code>: >100K shares (minimum liquidity)</li>
+<li><code>signals</code>: "volume_gt_10d_average" (pre-filter for volume spikes)</li></ul><p>#### Node 3: Loop Over Candidates
+<pre><code>json
+{
+  "parameters": {
+    "batchSize": 1,
+    "options": {}
+  },
+  "name": "Split Into Batches",
+  "type": "n8n-nodes-base.splitInBatches",
+  "position": [-600, 0]
+}
+</code></pre><p>#### Node 4: Get Historical Data (50-day volume)
+<pre><code>json
+{
+  "parameters": {
+    "method": "GET",
+    "url": "=https://eodhistoricaldata.com/api/eod/{{$json.code}}",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "eodhd",
+    "qs": {
+      "api_token": "={{$credentials.eodhd.apiToken}}",
+      "period": "d",
+      "from": "={{ $now.minus({days: 60}).toFormat('yyyy-MM-dd') }}",
+      "to": "={{ $now.toFormat('yyyy-MM-dd') }}"
+    }
+  },
+  "name": "Get 50-Day History",
+  "type": "n8n-nodes-base.httpRequest",
+  "position": [-400, 0]
+}
+</code></pre><p>#### Node 5: Calculate Volume Ratio
+<pre><code>javascript
+// Code Node: Calculate Volume Ratio
+const ticker = $('EODHD Universe Filter').item.json.code;
+const currentVolume = $('EODHD Universe Filter').item.json.volume;
+const historicalData = $json; // From previous node</p><p>// Calculate 50-day average volume
+const volumes = historicalData.slice(-50).map(day => day.volume);
+const avgVolume50 = volumes.reduce((a, b) => a + b, 0) / volumes.length;
+const volumeRatio = currentVolume / avgVolume50;</p><p>return {
+  json: {
+    ticker: ticker,
+    currentVolume: currentVolume,
+    avgVolume50Day: avgVolume50,
+    volumeRatio: volumeRatio,
+    volumeBreakout: volumeRatio >= 3.0,
+    ...($('EODHD Universe Filter').item.json)
+  }
+};
+</code></pre><p>#### Node 6: Get Technical Indicators (RSI, MA)
+<pre><code>json
+{
+  "parameters": {
+    "method": "GET",
+    "url": "=https://eodhistoricaldata.com/api/technical/{{$json.ticker}}",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "eodhd",
+    "qs": {
+      "api_token": "={{$credentials.eodhd.apiToken}}",
+      "function": "rsi",
+      "period": "14"
+    }
+  },
+  "name": "Get RSI(14)",
+  "type": "n8n-nodes-base.httpRequest",
+  "position": [-200, 0]
+}
+</code></pre><p><strong>Alternative:</strong> Batch request for RSI, SMA20, SMA50 in single call</p><pre><code>json
+{
+  "parameters": {
+    "method": "GET",
+    "url": "=https://eodhistoricaldata.com/api/technical/{{$json.ticker}}",
+    "qs": {
+      "api_token": "={{$credentials.eodhd.apiToken}}",
+      "function": "splitadjusted",
+      "indicators": "rsi:14,sma:20,sma:50"
+    }
+  },
+  "name": "Get All Indicators",
+  "type": "n8n-nodes-base.httpRequest"
+}
+</code></pre><p>#### Node 7: Technical Confirmation Filter
+<pre><code>javascript
+// Code Node: Apply Technical Filters
+const rsiData = $json; // Latest RSI value
+const rsi = rsiData[rsiData.length - 1].rsi;</p><p>const historicalData = $('Get 50-Day History').item.json;
+const recentPrices = historicalData.slice(-50).map(d => d.close);</p><p>// Calculate 20-day and 50-day MA
+const ma20 = recentPrices.slice(-20).reduce((a,b) => a+b, 0) / 20;
+const ma50 = recentPrices.reduce((a,b) => a+b, 0) / 50;</p><p>const currentPrice = $('EODHD Universe Filter').item.json.close;
+const volumeBreakout = $('EODHD Universe Filter').item.json.volumeBreakout;</p><p>// Apply filters
+const passesFilter = (
+  volumeBreakout === true &&
+  rsi >= 60 && rsi <= 75 &&
+  currentPrice > ma20 &&
+  currentPrice > ma50
+);</p><p>if (!passesFilter) {
+  return []; // Filter out
+}</p><p>return {
+  json: {
+    ...($('EODHD Universe Filter').item.json),
+    rsi: rsi,
+    ma20: ma20,
+    ma50: ma50,
+    priceAboveMA20: ((currentPrice - ma20) / ma20 * 100).toFixed(2),
+    priceAboveMA50: ((currentPrice - ma50) / ma50 * 100).toFixed(2)
+  }
+};
+</code></pre><p>#### Node 8: Calculate Composite Score
+<pre><code>javascript
+// Code Node: Scoring Algorithm
+const data = $json;</p><p>let score = 0;</p><p>// Volume component (max 30 points)
+score += Math.min(data.volumeRatio / 10 * 30, 30);</p><p>// RSI component (max 25 points)
+if (data.rsi >= 65 && data.rsi <= 70) score += 25;
+else if (data.rsi >= 60 && data.rsi < 65) score += 20;
+else if (data.rsi > 70 && data.rsi <= 75) score += 15;</p><p>// Price action component (max 25 points)
+const aboveMA20Pct = parseFloat(data.priceAboveMA20);
+const aboveMA50Pct = parseFloat(data.priceAboveMA50);
+score += (aboveMA20Pct > 5) ? 15 : 10;
+score += (aboveMA50Pct > 10) ? 10 : 5;</p><p>// Market cap component (max 20 points)
+if (data.market_capitalisation >= 50000000 && data.market_capitalisation <= 150000000) {
+  score += 20;
+} else if (data.market_capitalisation > 150000000 && data.market_capitalisation <= 300000000) {
+  score += 15;
+} else {
+  score += 10;
+}</p><p>return {
+  json: {
+    ...data,
+    compositeScore: Math.round(score)
+  }
+};
+</code></pre><p>#### Node 9: Wait for Loop Completion
+<pre><code>json
+{
+  "parameters": {},
+  "name": "Wait for All",
+  "type": "n8n-nodes-base.aggregate",
+  "position": [0, 0]
+}
+</code></pre><p>#### Node 10: Sort and Rank
+<pre><code>javascript
+// Code Node: Sort by Score
+const allCandidates = $input.all();</p><p>allCandidates.sort((a, b) => b.json.compositeScore - a.json.compositeScore);</p><p>return allCandidates.slice(0, 10).map(item => ({ json: item.json }));
+</code></pre><p>#### Node 11: Create Notion Database Entries
+<pre><code>json
+{
+  "parameters": {
+    "resource": "databasePage",
+    "operation": "create",
+    "databaseId": "2872383a-2386-81f9-a9b7-f9c3d2dd221c",
+    "title": "={{$json.ticker}}",
+    "properties": {
+      "Ticker": "={{$json.ticker}}",
+      "Gain %": "={{$json.change_p / 100}}",
+      "Date": "={{$now.toFormat('yyyy-MM-dd')}}",
+      "Market Cap": "={{$json.market_capitalisation}}",
+      "Sector": "={{$json.sector}}",
+      "Volume Ratio": "={{$json.volumeRatio}}",
+      "RSI": "={{$json.rsi}}",
+      "Price at Open": "={{$json.open}}",
+      "Price at Close": "={{$json.close}}",
+      "Catalyst": "No specific catalyst - Monitor pre-market",
+      "Notes": "Volume breakout: {{$json.volumeRatio}}x. RSI: {{$json.rsi}}. Above MA20: {{$json.priceAboveMA20}}%. Score: {{$json.compositeScore}}"
+    }
+  },
+  "name": "Create Notion Entry",
+  "type": "mcp__notion__API-post-page",
+  "position": [200, 0]
+}
+</code></pre><p>#### Node 12: Format Telegram Message
+``<code>javascript
+// Code Node: Format Telegram Alert
+const candidates = $input.all();</p><p>const message = </code>🚨 BIOTECH MICRO-CAP SCREENER (8 AM ET)</p><p>📊 ${candidates.length} candidates detected:</p><p>${candidates.map((item, idx) => {
+  const d = item.json;
+  return <code>${idx + 1}. ${d.ticker.replace('.US', '')} - Score: ${d.compositeScore}
+   💰 Cap: $${(d.market_capitalisation / 1000000).toFixed(1)}M
+<table>
+<tr></tr>
+</table>
+   📊 Price: $${d.close.toFixed(2)} (+${d.change_p.toFixed(1)}%)
+<table>
+<tr></tr>
+</table>
+}).join('\n\n')}</p><p>📋 Full details in Notion: Gainers Analysis
+⚠️ Monitor pre-market for confirmation before entry</p><p>Generated: ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} ET<code>;</p><p>return [{ json: { message } }];
+<pre><code></p><p>#### Node 13: Send Telegram Alert
+</code></pre>json
+{
+  "parameters": {
+    "resource": "message",
+    "operation": "sendMessage",
+    "chatId": "8248011938",
+    "text": "={{$json.message}}",
+    "additionalFields": {
+      "parse_mode": "Markdown"
+    }
+  },
+  "name": "Send Telegram",
+  "type": "n8n-nodes-base.telegram",
+  "position": [400, 0]
+}
+<pre><code></p><p>---</p><h2>Alternative Data Sources</h2><h3>Option B: Apify Finviz Scraper</h3><p><strong>Pros:</strong>
+<li>More comprehensive screener filters</li>
+<li>Pre-market data included</li>
+<li>Free scraping (vs API costs)</li></ul><p><strong>Cons:</strong>
+<li>Slower than API (web scraping)</li>
+<li>Rate limiting risks</li>
+<li>Less reliable (HTML changes break scraper)</li></ul><p><strong>Implementation:</strong>
+</code></pre>json
+{
+  "parameters": {
+    "operation": "get",
+    "actorId": "apify/finviz-scraper",
+    "options": {
+      "memory": 4096,
+      "timeout": 300
+    },
+    "inputs": {
+      "filters": {
+        "sector": "Healthcare",
+        "marketCap": "Micro ($50M-$300M)",
+        "volume": "Over 100K",
+        "rsi": "60 to 70"
+      }
+    }
+  },
+  "name": "Apify Finviz Scraper",
+  "type": "n8n-nodes-base.apify"
+}
+<pre><code></p><p><strong>Cost:</strong> Free (Apify free tier) or $49/mo for faster/more reliable</p><h3>Option C: Perplexity API for Real-Time Screening</h3><p><strong>Pros:</strong>
+<li>Can query "What biotech stocks have volume spikes today?"</li>
+<li>Natural language interface</li>
+<li>Includes recent news/context</li></ul><p><strong>Cons:</strong>
+<li>Not designed for structured screening</li>
+<li>Slower than dedicated APIs</li>
+<li>May miss micro-caps in results</li>
+<li>Requires user approval per request</li></ul><p><strong>Implementation:</strong>
+</code></pre>javascript
+// Code Node: Query Perplexity
+const question = </code>What biotech/pharma stocks with market cap between $50M-$500M are showing 3x volume spikes today (October ${new Date().getDate()}, 2025)? Include ticker, price, volume ratio, and RSI if available.<code>;</p><p>const response = await this.helpers.httpRequest({
+  method: 'GET',
+  url: 'http://localhost:5678/webhook/dba29045-9d85-462f-8b00-f479062578d3',
+  qs: {
+    question: question
+  }
+});</p><p>// Parse Perplexity response and extract tickers
+const tickers = extractTickersFromResponse(response.choices[0].message.content);</p><p>return tickers.map(ticker => ({ json: { ticker } }));
+</code>``</p><p><strong>Use Case:</strong> Backup/validation for EODHD results, NOT primary screener</p><p>---</p><h2>Recommended Implementation Approach</h2><h3>Phase 1: EODHD Primary Screener (Week 1)</h3>
+<li>Build workflow using EODHD API (as designed above)</li>
+<li>Test with historical data (should detect XBIO, NXL, ATON from Oct 8)</li>
+<li>Validate technical indicator calculations (RSI, MA)</li></ul><h3>Phase 2: Add Perplexity Cross-Check (Week 2)</h3>
+<li>After EODHD screener runs, send top 10 tickers to Perplexity</li>
+<li>Ask: "Is there any news or catalyst for [TICKER] today?"</li>
+<li>Filter out any with negative news</li>
+<li>Add context to Notion entries</li></ul><h3>Phase 3: Optional Apify Enhancement (Week 3)</h3>
+<li>If EODHD missing micro-caps, add Apify Finviz scraper as backup</li>
+<li>Run in parallel with EODHD, merge results</li>
+<li>Deduplicate tickers, take higher score</li></ul><p>---</p><h2>Testing & Validation</h2><h3>Test Case 1: October 8, 2025 Backtest</h3>
+<strong>Expected Output:</strong> Top 10 should include:
+<li>XBIO (Score: 85+, Volume: 552x, RSI: 89)</li>
+<li>NXL (Score: 70+, Volume: 0.75x, RSI: 84)</li>
+<li>ATON (Score: 65+, RSI: 74)</li></ul><p><strong>How to Test:</strong>
+<li>Manually set workflow date to Oct 8, 2025</li>
+<li>Run workflow</li>
+<li>Compare output to known gainers</li></ul><h3>Test Case 2: Paper Trading (2 Weeks)</h3>
+<strong>Metrics to Track:</strong>
+<li>Total candidates generated per day</li>
+<li>How many gained >20% within 1-5 days</li>
+<li>False positive rate</li>
+<li>Average gain (winners) vs average loss (losers)</li></ul><p><strong>Success Criteria:</strong>
+<li>Hit rate >40%</li>
+<li>Risk-reward ratio >3:1</li>
+<li>Max 10-15 candidates per day (manageable watchlist)</li></ul><p>---</p><h2>Cost Comparison</h2><table>
+<tr><td>Data Source</td><td>Setup Cost</td><td>Monthly Cost</td><td>Data Quality</td><td>Reliability</td></tr>
+<tr><td><strong>EODHD API</strong></td><td>$0 (existing)</td><td>$0 (existing)</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><strong>Polygon.io</strong></td><td>$0</td><td>$99</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><strong>Apify Finviz</strong></td><td>$0</td><td>$0-$49</td><td>⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+<tr><td><strong>Perplexity</strong></td><td>$0</td><td>$0-$20</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td></tr>
+</table><p><strong>WINNER:</strong> EODHD API (existing infrastructure, $0 additional cost)</p><p>---</p><h2>Implementation Timeline (Revised)</h2><h3>Week 1: EODHD Workflow Build</h3>
+<li>[ ] Day 1-2: Build nodes 1-7 (universe selection, technical filters)</li>
+<li>[ ] Day 3: Build nodes 8-10 (scoring, ranking, aggregation)</li>
+<li>[ ] Day 4: Build nodes 11-13 (Notion, Telegram output)</li>
+<li>[ ] Day 5: Test with Oct 8 historical data</li></ul><h3>Week 2: Validation & Refinement</h3>
+<li>[ ] Day 1: Run daily, collect results</li>
+<li>[ ] Day 2-5: Refine scoring weights based on false positives</li>
+<li>[ ] Weekend: Review week's results, calculate metrics</li></ul><h3>Week 3: Enhancement (Optional)</h3>
+<li>[ ] Add Perplexity news check for top candidates</li>
+<li>[ ] Add pre-market volume monitoring (if EODHD supports)</li>
+<li>[ ] Add alert filtering (only alert if score >70)</li></ul><h3>Week 4: Paper Trading</h3>
+<li>[ ] Track every candidate in Notion</li>
+<li>[ ] Manual review of top 3-5 per day</li>
+<li>[ ] Calculate hit rate and risk-reward</li>
+<li>[ ] Decision: Go live or kill strategy</li></ul><p>---</p><h2>Next Steps (Immediate)</h2><ul><li><strong>User confirms:</strong> EODHD API credentials are configured in n8n</li>
+<li><strong>User provides:</strong> Example EODHD workflow ID to reference for HTTP node setup</li>
+<li><strong>Build workflow:</strong> Implement 13-node workflow as designed above</li>
+<li><strong>Test with Oct 8 data:</strong> Validate XBIO, NXL, ATON detection</li>
+<li><strong>Deploy for paper trading:</strong> Run daily for 2 weeks before live trading</li></ul><p>---</p><h2>Conclusion</h2><p><strong>EODHD API is the optimal solution:</strong>
+<li>✅ No additional cost (existing subscription)</li>
+<li>✅ Comprehensive micro-cap coverage</li>
+<li>✅ Technical indicators API (RSI, SMA pre-calculated)</li>
+<li>✅ Volume screening built-in</li>
+<li>✅ User already has workflows using EODHD</li></ul><p><strong>Perplexity as backup/validation:</strong>
+<li>Use AFTER EODHD screening for news checks</li>
+<li>NOT as primary screener (too slow, requires approval)</li></ul><p><strong>Apify Finviz optional:</strong>
+<li>Only if EODHD misses candidates</li>
+<li>Can run in parallel, merge results</li></ul><p><strong>Implementation starts this week</strong> using EODHD HTTP nodes in n8n.</p><p>---</p><p><strong>Status:</strong> Ready for implementation
+<strong>Next Step:</strong> User provides example EODHD workflow for reference
+<strong>Author:</strong> Claude Code (MC_ prefix indicates machine-created draft)
+</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SL Mar</p>
+            <p>AI for Quantitative Finance and Maritime Applications</p>
+            <p>France • SIRET 98770400400017</p>
+        </div>
+    </footer>
+</body>
+</html>

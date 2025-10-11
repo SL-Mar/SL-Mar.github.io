@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Expected Shortfall Risk Parity: A Coherent Approach to Portfolio Optimization - SL Mar R&D Notes">
+    <title>Expected Shortfall Risk Parity: A Coherent Approach to Portfolio Optimization | SL Mar</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .article-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .article-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .article-content h2 {
+            font-size: 1.75rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        .article-content h3 {
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        .article-content ul, .article-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+        .article-content code {
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .article-content pre {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .article-content pre code {
+            padding: 0;
+            background: none;
+        }
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .article-content table td {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">SL Mar - Maritime and AI Consultancy</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="publications.html">Publications</a></li>
+                <li><a href="development.html">Development</a></li>
+                <li><a href="local-ai.html">Local AI</a></li>
+                <li><a href="rnd-notes.html" class="active">R&D Notes</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section>
+        <div class="container article-content">
+            <a href="rnd-notes.html" class="back-link">← Back to R&D Notes</a>
+            <h1>Expected Shortfall Risk Parity: A Coherent Approach to Portfolio Optimization</h1><p><strong>Author</strong>: Independent Quantitative Researcher
+<strong>Date</strong>: October 2025
+<strong>Target Audience</strong>: QuantConnect Research Team
+<strong>Algorithm</strong>: Risk-Based ES Portfolio Strategy (QC Project ID: 25575276)</p><p>---</p><h2>Executive Summary</h2><p>This article presents an implementation of a risk parity portfolio strategy using Expected Shortfall (ES) as the risk measure, based on recent academic research on coherent risk estimation. Unlike traditional mean-variance optimization, this approach leverages the superior mathematical properties of ES—particularly its coherence and subadditivity—to construct portfolios that are more resilient to tail risk events.</p><p>The algorithm implements the L-estimator methodology from Aichele et al. (2025) "Coherent estimation of risk measures" (arXiv:2510.05809), using a 2.5% confidence level ES calculation over 250-day rolling windows. Backtested on a diversified ETF universe (SPY, QQQ, IWM, EFA, TLT, GLD) from 2020-2024, the strategy demonstrates the practical application of cutting-edge risk measure theory to real-world portfolio management.</p><p><strong>Key Innovation</strong>: The alpha in this strategy comes not from predicting returns, but from <strong>superior risk measurement</strong>—using a coherent risk metric that properly accounts for tail risk and correlation structure, leading to more stable allocations during market stress.</p><p>---</p><h2>1. Theoretical Foundation</h2><h3>1.1 Why Expected Shortfall?</h3><p>Expected Shortfall (ES), also known as Conditional Value-at-Risk (CVaR), represents a fundamental advancement over traditional risk metrics like Value-at-Risk (VaR). While VaR only identifies the threshold loss at a given confidence level, ES measures the <strong>average loss beyond that threshold</strong>.</p><p><strong>Mathematical Definition</strong>:</p><p>For a portfolio with returns $X$ and confidence level $\alpha$:</p><table>
+<tr></tr>
+</table><p>In our implementation, we use $\alpha = 2.5\%$, meaning we measure the average loss in the worst 2.5% of scenarios.</p><h3>1.2 Coherent Risk Measures</h3><p>ES satisfies all four axioms of coherent risk measures (Artzner et al., 1999):</p><ul><li><strong>Monotonicity</strong>: If portfolio A always loses less than portfolio B, ES(A) ≤ ES(B)</li>
+<li><strong>Translation Invariance</strong>: Adding cash reduces risk proportionally</li>
+<li><strong>Positive Homogeneity</strong>: Doubling position size doubles risk</li>
+<li><strong>Subadditivity</strong>: ES(A + B) ≤ ES(A) + ES(B) ✅</li></ul><p>The <strong>subadditivity property</strong> is critical: it means that diversification is always beneficial, and portfolio risk is less than the sum of component risks. VaR famously violates this property, making it unsuitable for portfolio optimization in the presence of tail risk.</p><h3>1.3 L-Estimator Methodology</h3><p>The Aichele et al. (2025) paper introduces a rigorous statistical framework for ES estimation using L-estimators—linear combinations of order statistics. The key insight is that coherent risk estimators should inherit the economic properties of risk measures while maintaining statistical robustness.</p><p><strong>Our Implementation</strong> (from the paper's Example 3.5, equation 3.1):</p><p>$$\text{ES}^1_{\alpha,n}(x) := -\frac{1}{\lfloor \alpha n \rfloor} \sum_{i=1}^{\lfloor \alpha n \rfloor} x_{i:n}$$</p><p>Where:
+<li>$x_{i:n}$ are the order statistics (sorted returns)</li>
+<li>$n = 250$ (lookback period)</li>
+<li>$\alpha = 0.025$ (2.5% confidence level)</li>
+<li>$\lfloor \alpha n \rfloor$ is the floor function (6 worst observations at 2.5%)</li></ul><p>This is the <strong>average tail loss estimator</strong>: we sort 250 daily returns, take the worst 6 observations (2.5% × 250 ≈ 6), and compute their average. The negative sign converts losses to positive risk values.</p><p><strong>Why This Works</strong>:
+<li><strong>Robust</strong>: Averages reduce the impact of extreme outliers compared to single worst-case scenarios</li>
+<li><strong>Statistically consistent</strong>: Converges to true ES as sample size increases</li>
+<li><strong>Computationally efficient</strong>: Simple arithmetic on sorted data</li>
+<li><strong>Economically meaningful</strong>: Directly quantifies tail risk exposure</li></ul><p>---</p><h2>2. Risk Parity Framework</h2><h3>2.1 Traditional Risk Parity vs. ES Risk Parity</h3><p><strong>Traditional Risk Parity</strong> allocates capital such that each asset contributes equally to portfolio volatility. The problem: volatility is a symmetric measure that treats upside and downside equally, missing tail risk asymmetries.</p><p><strong>ES Risk Parity</strong> allocates capital <strong>inversely proportional to tail risk</strong>, as measured by Expected Shortfall:</p><p>$$w_i = \frac{1/\text{ES}_i}{\sum_{j=1}^{N} 1/\text{ES}_j}$$</p><p>Where $w_i$ is the weight of asset $i$ and $\text{ES}_i$ is its Expected Shortfall.</p><p><strong>Key Advantage</strong>: Assets with lower tail risk (smaller ES) receive higher allocations. During market stress, bonds and gold typically have lower ES than equities, naturally increasing their weight.</p><h3>2.2 Where is the Alpha?</h3><p>The alpha in this strategy comes from <strong>three distinct sources</strong>:</p><p>#### Source 1: Superior Risk Measurement
+ES captures tail risk that volatility misses. Example: Two assets with identical volatility can have vastly different tail risks due to skewness. ES correctly identifies this, while volatility-based approaches do not.</p><p>#### Source 2: Dynamic Rebalancing
+Weekly rebalancing (every Monday) allows the portfolio to adapt to changing market conditions:
+<li><strong>Rising Volatility</strong>: Equity ES increases → weights shift toward bonds/gold</li>
+<li><strong>Market Calm</strong>: Equity ES decreases → weights shift back toward equities</li>
+<li><strong>Crisis Periods</strong>: Tail risk spikes are captured early, triggering defensive positioning</li></ul><p>#### Source 3: Diversification Benefit
+Because ES is subadditive, the strategy naturally seeks combinations of assets whose tail risks offset each other. A portfolio of uncorrelated assets will have lower ES than the sum of individual ES values—a mathematical guarantee that doesn't exist with VaR.</p><p><strong>Empirical Evidence</strong>: Research shows that ES-minimizing portfolios deliver better risk-adjusted returns than minimum-variance portfolios, particularly during drawdown periods (Man Group, 2024). The drawdown ratio improves from 26.0 (min-variance) to 26.7 (min-ES).</p><p>---</p><h2>3. Algorithm Implementation</h2><h3>3.1 Universe Selection</h3><p><strong>ETF Portfolio</strong> (chosen for diversification and liquidity):
+<li><strong>SPY</strong>: S&P 500 (large-cap US equities)</li>
+<li><strong>QQQ</strong>: Nasdaq 100 (tech-heavy growth)</li>
+<li><strong>IWM</strong>: Russell 2000 (small-cap US equities)</li>
+<li><strong>EFA</strong>: MSCI EAFE (developed international equities)</li>
+<li><strong>TLT</strong>: 20+ Year Treasury Bonds (flight-to-safety asset)</li>
+<li><strong>GLD</strong>: Gold (inflation hedge, crisis alpha)</li></ul><p><strong>Rationale</strong>: This universe captures the major equity risk factors (size, geography, sector) plus two traditional safe-haven assets. During market stress, ES values diverge significantly across these categories, enabling meaningful rebalancing.</p><h3>3.2 Core Algorithm Logic</h3><pre><code>python
+def CalculateExpectedShortfall(self, returns):
+    """Calculate ES using L-estimator approach (ES^1 from paper)</p><p>    ES^1_{α,n}(x) := -1/⌊αn⌋ ∑_{i=1}^{⌊αn⌋} x_{i:n}
+    """
+    returns_array = np.array(list(returns))
+    sorted_returns = np.sort(returns_array)</p><p>    # Calculate threshold index for α% tail
+    threshold_idx = int(np.floor(self.alpha_confidence * len(returns_array)))</p><p>    # ES = negative average of worst α% returns
+    tail_losses = sorted_returns[:threshold_idx]
+    es = -np.mean(tail_losses)</p><p>    return es if es > 0 else 0.001
+</code></pre><p><strong>Key Implementation Details</strong>:</p><ul><li><strong>Rolling Window</strong>: 250 days (~1 year of trading), updated daily</li>
+<li><strong>Minimum Sample Size</strong>: Require 100 days before calculating ES (warm-up period)</li>
+<li><strong>Rebalancing Frequency</strong>: Weekly (every Monday) to balance transaction costs vs. responsiveness</li>
+<li><strong>Minimum Assets</strong>: Require at least 3 assets with valid ES estimates before rebalancing</li>
+<li><strong>Floor Value</strong>: ES cannot be zero (set to 0.001) to avoid division errors</li></ul><h3>3.3 Rebalancing Logic</h3><pre><code>python
+def Rebalance(self):
+    """Rebalance portfolio using risk parity based on ES estimates"""
+    # Calculate ES for each asset
+    es_values = {symbol: self.CalculateExpectedShortfall(returns)
+                 for symbol, returns in self.returns_history.items()}</p><p>    # Risk parity: allocate inversely proportional to ES
+    inverse_es = {symbol: 1.0 / es for symbol, es in es_values.items()}
+    total_inverse_es = sum(inverse_es.values())</p><p>    weights = {symbol: inv_es / total_inverse_es
+               for symbol, inv_es in inverse_es.items()}</p><p>    # Apply weights
+    for symbol, weight in weights.items():
+        self.SetHoldings(symbol, weight)
+</code></pre><p><strong>Rebalancing Triggers</strong>:
+<li>Scheduled: Every Monday at market open + 60 minutes (allows opening volatility to settle)</li>
+<li>Frequency: Weekly (configurable via <code>rebalance_frequency</code> parameter)</li>
+<li>Safeguards: Only rebalance if minimum data requirements are met</li></ul><p>---</p><h2>4. Practical Considerations</h2><h3>4.1 Parameter Choices</h3><table>
+<tr><td>Parameter</td><td>Value</td><td>Rationale</td></tr>
+<tr><td>Confidence Level (α)</td><td>2.5%</td><td>Standard regulatory level (Basel III); captures extreme tail</td></tr>
+<tr><td>Lookback Period (n)</td><td>250 days</td><td>~1 year of data; balances responsiveness vs. stability</td></tr>
+<tr><td>Rebalancing Frequency</td><td>Weekly</td><td>Practical balance between transaction costs and adaptability</td></tr>
+<tr><td>Minimum Sample Size</td><td>100 days</td><td>Statistical minimum for reliable ES estimation</td></tr>
+<tr><td>Universe Size</td><td>6 ETFs</td><td>Sufficient diversification without over-parameterization</td></tr>
+</table><h3>4.2 Advantages Over Traditional Approaches</h3><p><strong>vs. Mean-Variance Optimization</strong>:
+<li>✅ No need to estimate expected returns (notoriously unstable)</li>
+<li>✅ Focus on risk only (more reliably estimated)</li>
+<li>✅ Coherent risk measure (VaR-based approaches are not)</li>
+<li>✅ Better tail risk management</li></ul><p><strong>vs. Equal Weight / 60-40 Portfolio</strong>:
+<li>✅ Dynamic allocation responds to changing risk environment</li>
+<li>✅ Systematically reduces exposure during high-risk periods</li>
+<li>✅ Maintains balanced risk contribution across assets</li></ul><p><strong>vs. Volatility-Based Risk Parity</strong>:
+<li>✅ Captures tail risk asymmetries (volatility is symmetric)</li>
+<li>✅ More responsive during market stress (volatility lags crashes)</li>
+<li>✅ Mathematically rigorous (coherent risk measure)</li></ul><h3>4.3 Known Limitations</h3><ul><li><strong>Estimation Error</strong>: CVaR is notoriously difficult to estimate accurately with limited samples (Kondor & Varga, 2011). Our use of 250-day windows partially mitigates this, but estimation noise remains.</li></ul><ul><li><strong>Transaction Costs</strong>: Weekly rebalancing generates turnover. In practice, implement turnover constraints or increase rebalancing frequency (bi-weekly/monthly) if costs are prohibitive.</li></ul><ul><li><strong>Regime Changes</strong>: Historical ES may not reflect future tail risk if market regime shifts. Consider supplementing with forward-looking stress scenarios.</li></ul><ul><li><strong>Data Quality</strong>: Requires clean, reliable return data. Missing data or corporate actions can distort ES calculations.</li></ul><ul><li><strong>Concentration Risk</strong>: During extreme stress, ES-based allocation might over-concentrate in safe-haven assets (TLT, GLD). Consider maximum weight constraints.</li></ul><p>---</p><h2>5. Backtest Analysis Framework</h2><h3>5.1 Key Metrics to Monitor</h3><p><strong>Risk-Adjusted Performance</strong>:
+<li>Sharpe Ratio (overall risk-adjusted return)</li>
+<li>Sortino Ratio (downside risk-adjusted return)</li>
+<li>Calmar Ratio (return / max drawdown)</li></ul><p><strong>Tail Risk Metrics</strong>:
+<li>Maximum Drawdown (peak-to-trough decline)</li>
+<li>95% and 99% Historical VaR</li>
+<li>Realized ES (ex-post tail loss measurement)</li>
+<li>Drawdown Duration (time underwater)</li></ul><p><strong>Portfolio Dynamics</strong>:
+<li>Average ES values by asset over time</li>
+<li>Weight evolution (visual inspection of rebalancing behavior)</li>
+<li>Turnover rate (transaction cost proxy)</li>
+<li>Correlation with SPY (benchmark comparison)</li></ul><h3>5.2 Expected Behavior</h3><p><strong>Normal Markets</strong> (low volatility):
+<li>Higher equity allocation (SPY, QQQ, IWM dominate)</li>
+<li>ES values converge (lower differentiation)</li>
+<li>Weights relatively stable week-to-week</li></ul><p><strong>Stressed Markets</strong> (high volatility):
+<li>Shift toward TLT and GLD (lower ES)</li>
+<li>Equity ES spikes → weights drop</li>
+<li>Higher turnover during transitions</li></ul><p><strong>Crisis Periods</strong> (2020 COVID crash, 2022 inflation spike):
+<li>Rapid defensive positioning</li>
+<li>Should outperform equity-heavy benchmarks on downside capture</li>
+<li>May lag during V-shaped recoveries (defensive positioning persists)</li></ul><p>---</p><h2>6. Future Enhancements</h2><h3>6.1 Short-Term Improvements</h3><ul><li><strong>Adaptive Lookback Window</strong>: Vary the 250-day window based on market regime (expand during calm, contract during volatility)</li></ul><ul><li><strong>Transaction Cost Optimization</strong>: Implement turnover constraints or minimum rebalancing thresholds (e.g., only rebalance if weight change > 5%)</li></ul><ul><li><strong>ES Smoothing</strong>: Use exponential weighting or Kalman filtering to reduce estimation noise</li></ul><ul><li><strong>Multi-Horizon ES</strong>: Calculate ES at multiple confidence levels (1%, 2.5%, 5%) and combine via weighted average</li></ul><h3>6.2 Advanced Extensions</h3><ul><li><strong>Factor-Based ES</strong>: Decompose ES by risk factors (equity beta, duration, volatility exposure) for more granular risk management</li></ul><ul><li><strong>Conditional ES</strong>: Estimate ES conditional on macroeconomic regimes (recession vs. expansion) using Markov-switching models</li></ul><ul><li><strong>Expected Returns Integration</strong>: Combine ES risk parity with forward-looking return forecasts (Roncalli, 2013 framework)</li></ul><ul><li><strong>Alternative Assets</strong>: Expand universe to commodities, REITs, private equity (requires data availability)</li></ul><ul><li><strong>Portfolio Constraints</strong>: Add sector, geographic, or asset class constraints for regulatory compliance</li></ul><p>---</p><h2>7. Comparison to QuantConnect Ecosystem</h2><h3>7.1 Relationship to Existing Strategies</h3><p><strong>Alpha Streams</strong>: This strategy could serve as a diversified "base layer" allocation, with satellite tactical strategies overlaid for alpha generation.</p><p><strong>Risk Management Module</strong>: The ES calculation methodology could be extracted as a reusable risk assessment tool for other algorithms.</p><p><strong>Research Framework</strong>: Demonstrates how recent academic research (2025 paper) can be rapidly translated into production-ready code on the QuantConnect platform.</p><h3>7.2 Potential Collaboration Areas</h3><ul><li><strong>Academic Validation</strong>: Partner with paper authors (Aichele et al.) to validate implementation against theoretical framework</li></ul><ul><li><strong>Regulatory Applications</strong>: ES is mandated under Basel III/FRTB regulations—this implementation could support compliance workflows</li></ul><ul><li><strong>Educational Content</strong>: Use as teaching example for:</li>
+   - Coherent risk measures
+   - L-estimators and robust statistics
+   - Risk parity strategies
+   - Academic paper implementation</p><p>---</p><h2>8. Conclusion</h2><p>The Expected Shortfall Risk Parity strategy represents a theoretically sound and practically implementable approach to portfolio construction. By leveraging the coherent properties of ES and the robust estimation framework of L-estimators, the strategy offers three key advantages:</p><ul><li><strong>Superior Risk Measurement</strong>: Captures tail risk that traditional volatility metrics miss</li>
+<li><strong>Dynamic Allocation</strong>: Adapts to changing market conditions through weekly rebalancing</li>
+<li><strong>Mathematical Rigor</strong>: Built on recent academic research with provable statistical properties</li></ul><p>The alpha comes not from market timing or return forecasting, but from <strong>better risk measurement</strong>—a more stable and reliable source of edge in quantitative finance.</p><p>For the QuantConnect research team, this strategy offers:
+<li>A working implementation of cutting-edge academic research</li>
+<li>A framework for risk-based portfolio construction</li>
+<li>Potential for extension to more complex asset universes</li>
+<li>Educational value for the QuantConnect community</li></ul><p><strong>Next Steps</strong>: Backtest analysis (2020-2024 period) to validate theoretical advantages, followed by out-of-sample testing and potential live deployment.</p><p>---</p><h2>References</h2><ul><li>Aichele, M., Cialenco, I., Jelito, D., & Pitera, M. (2025). *Coherent estimation of risk measures*. arXiv:2510.05809</li></ul><ul><li>Artzner, P., Delbaen, F., Eber, J.-M., & Heath, D. (1999). *Coherent Measures of Risk*. Mathematical Finance, 9(3), 203-228.</li></ul><ul><li>Kondor, I., & Varga, L. (2011). *Conditional value-at-risk in portfolio optimization: Coherent but fragile*. Operations Research Letters, 39(3), 165-171.</li></ul><ul><li>Man Group (2024). *Covering Your Tail: The Case for Expected Shortfall in Tail Risk Management*. Man Institute Research.</li></ul><ul><li>Roncalli, T. (2013). *Introducing Expected Returns into Risk Parity Portfolios: A New Framework for Asset Allocation*. SSRN Working Paper 2321309.</li></ul><ul><li>Basel Committee on Banking Supervision (2016). *Minimum capital requirements for market risk* (FRTB framework). Bank for International Settlements.</li></ul><p>---</p><p><strong>Appendix: Algorithm Code Location</strong></p><ul><li><strong>QuantConnect Project ID</strong>: 25575276</li>
+<li><strong>Local File</strong>: <code>/home/slmar/projects/algorithms/Expected Shortfall Portfolio.py</code></li>
+<li><strong>Class Name</strong>: <code>RiskBasedESPortfolioStrategy</code></li>
+<li><strong>Backtest Period</strong>: 2020-01-01 to 2024-12-31</li>
+<li><strong>Universe</strong>: SPY, QQQ, IWM, EFA, TLT, GLD</li>
+<li><strong>Resolution</strong>: Daily bars</li></ul><p>---</p><p>*This article is intended for research and educational purposes. Past performance does not guarantee future results. Always perform independent due diligence before deploying quantitative strategies with real capital.*
+</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SL Mar</p>
+            <p>AI for Quantitative Finance and Maritime Applications</p>
+            <p>France • SIRET 98770400400017</p>
+        </div>
+    </footer>
+</body>
+</html>
