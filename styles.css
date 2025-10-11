@@ -10,8 +10,8 @@
     --accent-hover: #60a5fa;
     --border: #222;
     --border-hover: #333;
-    --dark-blue: #1e3a8a;
-    --dark-blue-hover: #2563eb;
+    --orange: #ff6b35;
+    --blue-hover: #3b82f6;
 }
 
 * {
@@ -155,7 +155,12 @@ section:last-of-type {
 }
 
 h1, h2 {
-    color: var(--dark-blue);
+    color: var(--orange);
+    transition: color 0.2s;
+}
+
+h1:hover, h2:hover {
+    color: var(--blue-hover);
 }
 
 h2 {
