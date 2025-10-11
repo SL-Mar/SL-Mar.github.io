@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Publications by Sebastien M. Laignel on Quantitative Finance, AI, and Maritime Law">
+    <title>Publications | Sebastien M. Laignel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Sebastien M. Laignel</a>
+            <ul class="nav-links">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="publications.html" class="active">Publications</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">Publications</h1>
+            <p class="page-description">
+                Research articles and technical writings on quantitative finance, algorithmic trading,
+                AI applications, and maritime law.
+            </p>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <div class="publications-filter">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="trading">Trading Strategies</button>
+                <button class="filter-btn" data-category="llm">AI & Automation</button>
+                <button class="filter-btn" data-category="analysis">Stock Analysis</button>
+                <button class="filter-btn" data-category="clustering">ML & Forecasting</button>
+                <button class="filter-btn" data-category="legal">Maritime Law</button>
+            </div>
+
+            <!-- Trading Strategies -->
+            <div id="trading" class="publication-section" data-category="trading">
+                <h2 class="subsection-title">Trading Strategies</h2>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/insiderfinance-wire/trading-small-caps-balancing-risk-and-reward-a59ae0d0bbde" target="_blank" rel="noopener noreferrer">
+                            Trading Small Caps: Balancing Risk and Reward
+                        </a>
+                    </h3>
+                    <p class="pub-meta">InsiderFinance Wire (Medium)</p>
+                    <p class="pub-description">
+                        Explores strategies for small-cap investments, analyzing the balance between higher potential returns
+                        and increased volatility risks in the micro and small-cap space.
+                    </p>
+                    <span class="pub-tag">Small Caps</span>
+                    <span class="pub-tag">Risk Management</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/coinmonks/outperforming-the-market-1000-in-10-years-4e7b6f8a2c41" target="_blank" rel="noopener noreferrer">
+                            Outperforming the Market: 1000% in 10 Years
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Coinmonks (Medium)</p>
+                    <p class="pub-description">
+                        Discusses momentum and mean-reversion scoring methodologies for long-term portfolio outperformance.
+                        Analyzes systematic approaches to achieving exceptional returns over extended periods.
+                    </p>
+                    <span class="pub-tag">Momentum</span>
+                    <span class="pub-tag">Mean Reversion</span>
+                    <span class="pub-tag">Backtesting</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/coinmonks/using-adaptative-laguerre-filter-in-trend-following-strategies-db3c45c8c6ef" target="_blank" rel="noopener noreferrer">
+                            Using Adaptive Laguerre Filter in Trend Following Strategies
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Coinmonks (Medium)</p>
+                    <p class="pub-description">
+                        Connects the Schrödinger equation to technical trading through adaptive Laguerre filters.
+                        Explores mathematical foundations of trend-following indicators.
+                    </p>
+                    <span class="pub-tag">Technical Analysis</span>
+                    <span class="pub-tag">Trend Following</span>
+                    <span class="pub-tag">Signal Processing</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/insiderfinance-wire/trading-tlt-at-the-turn-of-the-month-18-cagr-since-2020-in-bearish-market-cd6f7c3a6c1a" target="_blank" rel="noopener noreferrer">
+                            Trading TLT at the Turn of the Month
+                        </a>
+                    </h3>
+                    <p class="pub-meta">InsiderFinance Wire (Medium)</p>
+                    <p class="pub-description">
+                        Highlights a calendar-based strategy achieving 18% CAGR since 2020 in a bearish bond market.
+                        Analyzes monthly turnover patterns in treasury bonds.
+                    </p>
+                    <span class="pub-tag">Fixed Income</span>
+                    <span class="pub-tag">Calendar Effects</span>
+                    <span class="pub-tag">TLT</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/insiderfinance-wire/trading-spy-on-mean-reversion-7-return-with-minimal-market-exposure-f0c8a5d5b5a9" target="_blank" rel="noopener noreferrer">
+                            Trading SPY on Mean-Reversion
+                        </a>
+                    </h3>
+                    <p class="pub-meta">InsiderFinance Wire (Medium)</p>
+                    <p class="pub-description">
+                        Focuses on achieving 7% returns with minimal market exposure using mean-reversion techniques on SPY.
+                        Low correlation with buy-and-hold strategies.
+                    </p>
+                    <span class="pub-tag">SPY</span>
+                    <span class="pub-tag">Mean Reversion</span>
+                    <span class="pub-tag">Low Exposure</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/insiderfinance-wire/trading-silver-on-mean-reversion-using-bollinger-bands-and-rsi-to-hedge-physical-asset-c1f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Trading Silver on Mean-Reversion
+                        </a>
+                    </h3>
+                    <p class="pub-meta">InsiderFinance Wire (Medium)</p>
+                    <p class="pub-description">
+                        Explains using Bollinger Bands and RSI to hedge physical silver assets through systematic trading.
+                        Practical application of technical indicators to commodities.
+                    </p>
+                    <span class="pub-tag">Commodities</span>
+                    <span class="pub-tag">Bollinger Bands</span>
+                    <span class="pub-tag">RSI</span>
+                </article>
+            </div>
+
+            <!-- Quantitative Finance & LLM Pair-Coding -->
+            <div id="llm" class="publication-section" data-category="llm">
+                <h2 class="subsection-title">Quantitative Finance & AI Automation</h2>
+
+                <article class="publication-card featured">
+                    <h3 class="pub-title">
+                        <a href="https://ai.gopubby.com/towards-automating-quantitative-finance-research-b23a5b0c0c1a" target="_blank" rel="noopener noreferrer">
+                            Towards Automating Quantitative Finance Research
+                        </a>
+                    </h3>
+                    <p class="pub-meta">AI Advances (Medium)</p>
+                    <p class="pub-description">
+                        Presents the QuantCoder project - an AI-powered platform for automating the transformation
+                        of academic finance papers into executable trading algorithms. Core research on agent-based workflows.
+                    </p>
+                    <span class="pub-tag">QuantCoder</span>
+                    <span class="pub-tag">AI Agents</span>
+                    <span class="pub-tag">Automation</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://ai.gopubby.com/from-finance-papers-to-trading-algorithms-integrated-extraction-and-coding-of-alpha-research-a8c0b8c8a8c8" target="_blank" rel="noopener noreferrer">
+                            From Finance Papers to Trading Algorithms
+                        </a>
+                    </h3>
+                    <p class="pub-meta">AI Advances (Medium)</p>
+                    <p class="pub-description">
+                        Discusses integrated extraction and coding of alpha research. End-to-end pipeline from
+                        PDF to backtestable code using LLM agents.
+                    </p>
+                    <span class="pub-tag">NLP</span>
+                    <span class="pub-tag">Code Generation</span>
+                    <span class="pub-tag">Alpha Research</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://python.plainenglish.io/llm-pair-programming-in-algorithmic-trading-optimizing-python-and-quantconnect-development-b2c3b2c3b2c3" target="_blank" rel="noopener noreferrer">
+                            LLM Pair-programming in Algorithmic Trading
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Python in Plain English (Medium)</p>
+                    <p class="pub-description">
+                        Focuses on optimizing Python and QuantConnect development through AI pair-programming.
+                        Practical workflows for algorithm development with LLM assistance.
+                    </p>
+                    <span class="pub-tag">LLM</span>
+                    <span class="pub-tag">QuantConnect</span>
+                    <span class="pub-tag">Development</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/insiderfinance-wire/fetching-interactive-brokers-historical-data-step-by-step-guide-using-ib-insync-d1f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Fetching Interactive Brokers Historical Data
+                        </a>
+                    </h3>
+                    <p class="pub-meta">InsiderFinance Wire (Medium)</p>
+                    <p class="pub-description">
+                        Step-by-step guide using IB_insync library to programmatically retrieve historical market data
+                        from Interactive Brokers for backtesting and analysis.
+                    </p>
+                    <span class="pub-tag">Interactive Brokers</span>
+                    <span class="pub-tag">Python</span>
+                    <span class="pub-tag">Data Engineering</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://ai.gopubby.com/is-json-all-you-need-building-an-ai-trading-assistant-c5c5c5c5c5c5" target="_blank" rel="noopener noreferrer">
+                            Is JSON All You Need?
+                        </a>
+                    </h3>
+                    <p class="pub-meta">AI Advances (Medium)</p>
+                    <p class="pub-description">
+                        Covers building an AI trading assistant using structured outputs. Explores the power
+                        of JSON schemas for reliable agent behavior.
+                    </p>
+                    <span class="pub-tag">AI Assistant</span>
+                    <span class="pub-tag">JSON</span>
+                    <span class="pub-tag">Structured Output</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://python.plainenglish.io/searching-academic-articles-with-python-and-crossref-api-data-gathering-for-quantitative-workflows-d3f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Searching Academic Articles with Python and CrossRef API
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Python in Plain English (Medium)</p>
+                    <p class="pub-description">
+                        Explores data gathering for quantitative workflows using CrossRef API. Automated literature
+                        review and research paper discovery.
+                    </p>
+                    <span class="pub-tag">CrossRef API</span>
+                    <span class="pub-tag">Academic Research</span>
+                    <span class="pub-tag">Python</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/insiderfinance-wire/integrating-gpt-4-in-financial-trading-analysis-preemptive-trading-decision-guidance-e1f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Integrating GPT-4 in Financial Trading Analysis
+                        </a>
+                    </h3>
+                    <p class="pub-meta">InsiderFinance Wire (Medium)</p>
+                    <p class="pub-description">
+                        Demonstrates preemptive trading decision guidance using GPT-4. Real-time market analysis
+                        and trade idea generation.
+                    </p>
+                    <span class="pub-tag">GPT-4</span>
+                    <span class="pub-tag">Trading Signals</span>
+                    <span class="pub-tag">Decision Support</span>
+                </article>
+            </div>
+
+            <!-- Stock Analysis -->
+            <div class="publication-section" data-category="analysis">
+                <h2 class="subsection-title">Stock Analysis & Screening</h2>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://medium.com/insiderfinance-wire/assessing-roa-and-roe-stock-picking-methodologies-comparison-f2f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Assessing ROA and ROE
+                        </a>
+                    </h3>
+                    <p class="pub-meta">InsiderFinance Wire (Medium)</p>
+                    <p class="pub-description">
+                        Stock picking methodologies comparison between Return on Assets (ROA) and Return on Equity (ROE)
+                        as fundamental screening criteria.
+                    </p>
+                    <span class="pub-tag">Fundamentals</span>
+                    <span class="pub-tag">Stock Screening</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://python.plainenglish.io/stock-selection-using-sector-weight-and-momentum-scoring-g3f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Stock Selection using Sector Weight and Momentum Scoring
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Python in Plain English (Medium)</p>
+                    <p class="pub-description">
+                        Multi-factor stock selection combining sector rotation analysis with momentum indicators.
+                        Systematic approach to portfolio construction.
+                    </p>
+                    <span class="pub-tag">Sector Rotation</span>
+                    <span class="pub-tag">Multi-Factor</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://python.plainenglish.io/stock-selection-using-insider-trading-data-and-momentum-scoring-h4f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Stock Selection using Insider Trading Data and Momentum Scoring
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Python in Plain English (Medium)</p>
+                    <p class="pub-description">
+                        Combines insider trading signals with technical momentum indicators for enhanced stock selection.
+                        Alternative data integration strategies.
+                    </p>
+                    <span class="pub-tag">Insider Trading</span>
+                    <span class="pub-tag">Alternative Data</span>
+                </article>
+            </div>
+
+            <!-- Clustering and Forecasting -->
+            <div class="publication-section" data-category="clustering">
+                <h2 class="subsection-title">Machine Learning & Forecasting</h2>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://towardsdatascience.com/timeseries-clustering-with-dynamic-time-warping-i5f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Timeseries Clustering with Dynamic Time Warping
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Towards Data Science (Medium)</p>
+                    <p class="pub-description">
+                        Explores Dynamic Time Warping (DTW) for clustering financial time series. Pattern recognition
+                        and regime detection applications.
+                    </p>
+                    <span class="pub-tag">Clustering</span>
+                    <span class="pub-tag">DTW</span>
+                    <span class="pub-tag">Pattern Recognition</span>
+                </article>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://towardsdatascience.com/forecasting-forex-with-machine-learning-j6f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            Forecasting Forex with Machine Learning
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Towards Data Science (Medium)</p>
+                    <p class="pub-description">
+                        Machine learning approaches to forex forecasting. Feature engineering and model selection
+                        for currency pair prediction.
+                    </p>
+                    <span class="pub-tag">Forex</span>
+                    <span class="pub-tag">ML Forecasting</span>
+                </article>
+            </div>
+
+            <!-- AI in Legal Reasoning & Maritime Law -->
+            <div class="publication-section" data-category="legal">
+                <h2 class="subsection-title">AI in Legal Reasoning</h2>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://ai.gopubby.com/llms-and-legal-reasoning-challenges-and-opportunities-k7f8b0c8a9a1" target="_blank" rel="noopener noreferrer">
+                            LLMs and Legal Reasoning: Challenges and Opportunities
+                        </a>
+                    </h3>
+                    <p class="pub-meta">AI Advances (Medium)</p>
+                    <p class="pub-description">
+                        Analyzes the application of Large Language Models to legal reasoning tasks. Explores
+                        limitations and potential of AI in legal analysis.
+                    </p>
+                    <span class="pub-tag">LLM</span>
+                    <span class="pub-tag">Legal AI</span>
+                </article>
+
+                <h2 class="subsection-title">International Maritime Law</h2>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://sebastienlaignel.substack.com/p/international-maritime-law-series" target="_blank" rel="noopener noreferrer">
+                            International Maritime Law Series
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Substack</p>
+                    <p class="pub-description">
+                        Comprehensive analysis of international maritime law topics including conventions,
+                        regulations, and practical applications in ship operations.
+                    </p>
+                    <span class="pub-tag">Maritime Law</span>
+                    <span class="pub-tag">Regulations</span>
+                </article>
+
+                <h2 class="subsection-title">Ship Operations</h2>
+
+                <article class="publication-card">
+                    <h3 class="pub-title">
+                        <a href="https://sebastienlaignel.substack.com/p/ship-operations-series" target="_blank" rel="noopener noreferrer">
+                            Ship Operations Series
+                        </a>
+                    </h3>
+                    <p class="pub-meta">Substack</p>
+                    <p class="pub-description">
+                        Practical insights into ship operations, crew management, and maritime logistics
+                        from a shipmaster's perspective.
+                    </p>
+                    <span class="pub-tag">Ship Operations</span>
+                    <span class="pub-tag">Maritime</span>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Sebastien M. Laignel. All rights reserved.</p>
+            <p class="footer-tagline">AI for Quantitative Finance and Maritime Applications</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple category filter
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const sections = document.querySelectorAll('.publication-section');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.dataset.category;
+
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Show/hide sections
+                sections.forEach(section => {
+                    if (category === 'all' || section.dataset.category === category) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
