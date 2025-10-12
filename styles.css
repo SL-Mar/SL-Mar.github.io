@@ -58,6 +58,7 @@ nav .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -65,12 +66,15 @@ nav .container {
     font-weight: 600;
     color: var(--text);
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 nav ul {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     list-style: none;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 nav a {
