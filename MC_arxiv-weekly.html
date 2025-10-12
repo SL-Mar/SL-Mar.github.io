@@ -7,55 +7,49 @@
     <meta name="description" content="Weekly ArXiv CS.LG Highlights - Best Machine Learning Papers">
     <title>ArXiv Weekly | SL Mar</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        .article-highlight {
+        .article-content {
             background: var(--bg-card);
             padding: 2rem;
             border-radius: 6px;
             border: 1px solid var(--border);
             margin-bottom: 2rem;
-            transition: all 0.2s;
-        }
-        .article-highlight:hover {
-            border-color: var(--accent);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
-        }
-        .article-meta {
-            color: var(--text-tertiary);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
-        .article-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-        .article-authors {
-            color: var(--text-secondary);
-            font-size: 0.9375rem;
-            margin-bottom: 1rem;
-        }
-        .article-summary {
             line-height: 1.8;
-            margin-bottom: 1.5rem;
         }
-        .article-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+        .article-content h2 {
+            color: var(--accent);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
         }
-        .article-links a {
-            padding: 0.5rem 1rem;
+        .article-content h3 {
+            color: var(--text);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .article-content a:hover {
+            text-decoration: underline;
+        }
+        .article-content code {
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 0.875rem;
-            transition: all 0.2s;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
         }
-        .article-links a:hover {
-            border-color: var(--accent);
-            background: var(--bg);
+        .article-content pre {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        .loading {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem;
         }
     </style>
 </head>
@@ -83,19 +77,8 @@
 
     <section>
         <div class="container">
-            <div id="articles-container">
-                <div class="article-highlight">
-                    <div class="article-meta">Selected October 12, 2025 • Score: 21</div>
-                    <h2 class="article-title">Deep Learning for Short Term Equity Trend Forecasting: A Behavior Driven Multi Factor Approach</h2>
-                    <div class="article-authors">Li et al.</div>
-                    <div class="article-summary">
-                        <p>This paper presents a novel deep learning architecture for predicting short-term equity trends by combining behavioral finance factors with traditional technical indicators. We employ transformer-based attention mechanisms to capture complex interactions between market sentiment, investor behavior, and price dynamics. Our model achieves state-of-the-art performance in forecasting daily returns across multiple equity markets, demonstrating practical applications for algorithmic trading systems.</p>
-                    </div>
-                    <div class="article-links">
-                        <a href="https://arxiv.org/abs/2510.02345" target="_blank">View on arXiv</a>
-                        <a href="https://arxiv.org/pdf/2510.02345" target="_blank">Download PDF</a>
-                    </div>
-                </div>
+            <div id="content" class="article-content">
+                <div class="loading">Loading weekly article...</div>
             </div>
         </div>
     </section>
@@ -107,6 +90,18 @@
             <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions légales</a></p>
         </div>
     </footer>
+
+    <script>
+        // Fetch and render markdown file
+        fetch('arxiv-weekly-article.md')
+            .then(response => response.text())
+            .then(markdown => {
+                document.getElementById('content').innerHTML = marked.parse(markdown);
+            })
+            .catch(error => {
+                document.getElementById('content').innerHTML =
+                    '<p>No article selected yet. Check back next week!</p>';
+            });
+    </script>
 </body>
 </html>
-
