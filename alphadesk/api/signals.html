@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signals API - AlphaDesk Documentation</title>
+    <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="../docs.html" class="docs-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>AlphaDesk</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="../docs.html">Documentation</a></li>
+                    <li><a href="https://github.com/SL-Mar/alphadesk" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="../guides/installation.html"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="../guides/quick-start.html"><i class="fas fa-rocket"></i> Quick Start</a></li>
+                    <li><a href="../guides/configuration.html"><i class="fas fa-cog"></i> Configuration</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core Features</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../guides/marketsense-ai.html"><i class="fas fa-robot"></i> MarketSense AI</a></li>
+                    <li><a href="../guides/stock-data.html"><i class="fas fa-database"></i> Stock Data Management</a></li>
+                    <li><a href="../guides/signal-generation.html"><i class="fas fa-signal"></i> Signal Generation</a></li>
+                    <li><a href="../guides/llm-providers.html"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="overview.html"><i class="fas fa-book"></i> API Overview</a></li>
+                    <li><a href="stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
+                    <li><a href="signals.html" class="active"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="settings.html"><i class="fas fa-sliders-h"></i> Settings API</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Examples</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../examples/generate-signal.html"><i class="fas fa-code"></i> Generate Trading Signal</a></li>
+                    <li><a href="../examples/python-client.html"><i class="fab fa-python"></i> Python Client</a></li>
+                    <li><a href="../examples/javascript-integration.html"><i class="fab fa-js"></i> JavaScript Integration</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Development</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../guides/architecture.html"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                    <li><a href="../guides/deployment.html"><i class="fas fa-server"></i> Deployment</a></li>
+                    <li><a href="../guides/contributing.html"><i class="fas fa-users"></i> Contributing</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="docs-main">
+            <div class="docs-content">
+                <h1>Signals API</h1>
+                <p class="docs-subtitle">Generate and retrieve AI-powered trading signals using multi-agent analysis</p>
+
+                <div class="info-box info-box-note">
+                    <div class="info-box-title">
+                        <i class="fas fa-info-circle"></i>
+                        Base URL
+                    </div>
+                    <p><code>http://localhost:8004/api</code> (development)</p>
+                </div>
+
+                <h2>Overview</h2>
+                <p>The Signals API provides endpoints for generating and retrieving trading signals based on the MarketSense AI multi-agent framework. Each signal includes:</p>
+                <ul>
+                    <li><strong>Signal Type</strong>: BUY, HOLD, or SELL recommendation</li>
+                    <li><strong>Conviction Score</strong>: 0-100 score indicating signal strength</li>
+                    <li><strong>Confidence Level</strong>: 0-100 score indicating confidence in the analysis</li>
+                    <li><strong>Reasoning</strong>: Chain-of-Thought explanation from the signal generation agent</li>
+                    <li><strong>Agent Outputs</strong>: Detailed analysis from each specialized agent</li>
+                </ul>
+
+                <h2>Endpoints</h2>
+
+                <!-- Generate Signal -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-post">POST</span>
+                        <span class="api-path">/signals/generate/{ticker}</span>
+                    </div>
+                    <p class="api-description">Generate a new trading signal for the specified ticker using multi-agent AI analysis.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">ticker</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Stock ticker symbol (e.g., "AAPL.US", "MSFT.US")</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Query Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">llm_provider</span>
+                                    <span class="param-type">string</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">LLM provider to use: "openai" (default), "anthropic", or "ollama"</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl -X POST "http://localhost:8004/api/signals/generate/AAPL.US?llm_provider=openai" \
+  -H "Content-Type: application/json"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "ticker": "AAPL.US",
+  "signal": "BUY",
+  "conviction_score": 72.5,
+  "confidence": 85.0,
+  "reasoning": "Based on comprehensive analysis across fundamentals, news sentiment, technical indicators, and macroeconomic factors, AAPL demonstrates strong buy signals...",
+  "weighted_score": 68.2,
+  "price_at_signal": 185.45,
+  "generated_at": "2025-10-14T10:30:00Z",
+  "llm_provider": "openai",
+  "agent_outputs": {
+    "fundamentals": {
+      "score": 75.0,
+      "confidence": 90.0,
+      "summary": "Strong fundamentals with healthy revenue growth, solid profit margins, and robust balance sheet..."
+    },
+    "news": {
+      "score": 68.0,
+      "confidence": 80.0,
+      "summary": "Positive sentiment over the past 60 days. Key narratives include new product launches and market share gains..."
+    },
+    "price_dynamics": {
+      "score": 70.0,
+      "confidence": 85.0,
+      "summary": "Upward momentum with price above key moving averages. Technical indicators suggest continued strength..."
+    },
+    "macro": {
+      "score": 65.0,
+      "confidence": 50.0,
+      "summary": "Neutral to slightly positive macroeconomic environment. Interest rate stability supports equity valuations..."
+    }
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Error Responses</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>400</td>
+                                    <td>Invalid ticker format or missing required data</td>
+                                </tr>
+                                <tr>
+                                    <td>404</td>
+                                    <td>Stock not found or no data available</td>
+                                </tr>
+                                <tr>
+                                    <td>500</td>
+                                    <td>Internal server error or LLM provider error</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Get Signal History -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/signals/history/{ticker}</span>
+                    </div>
+                    <p class="api-description">Retrieve historical signals for a specific ticker.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">ticker</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Stock ticker symbol</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Query Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">days</span>
+                                    <span class="param-type">integer</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Number of days to look back (default: 30)</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">limit</span>
+                                    <span class="param-type">integer</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Maximum number of signals to return (default: 10, max: 100)</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/signals/history/AAPL.US?days=30&limit=20"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "ticker": "AAPL.US",
+  "signals": [
+    {
+      "id": "sig_abc123",
+      "signal": "BUY",
+      "conviction_score": 72.5,
+      "confidence": 85.0,
+      "price_at_signal": 185.45,
+      "generated_at": "2025-10-14T10:30:00Z"
+    },
+    {
+      "id": "sig_def456",
+      "signal": "HOLD",
+      "conviction_score": 55.0,
+      "confidence": 70.0,
+      "price_at_signal": 182.30,
+      "generated_at": "2025-10-10T14:15:00Z"
+    }
+  ],
+  "count": 2
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Get Latest Signals -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/signals/latest</span>
+                    </div>
+                    <p class="api-description">Retrieve the most recent signals across all tickers.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Query Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">limit</span>
+                                    <span class="param-type">integer</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Number of signals to return (default: 20, max: 100)</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">signal_type</span>
+                                    <span class="param-type">string</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Filter by signal type: "BUY", "HOLD", or "SELL"</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">min_conviction</span>
+                                    <span class="param-type">float</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Minimum conviction score (0-100)</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/signals/latest?signal_type=BUY&min_conviction=70&limit=10"</code></pre>
+                    </div>
+                </div>
+
+                <h2>Signal Scoring</h2>
+                <p>Signals are generated using a weighted scoring system based on outputs from four specialized agents:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent</th>
+                            <th>Weight</th>
+                            <th>Focus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fundamentals Summarizer</td>
+                            <td>30%</td>
+                            <td>Financial statements, ratios, metrics</td>
+                        </tr>
+                        <tr>
+                            <td>Progressive News Summarizer</td>
+                            <td>25%</td>
+                            <td>60-day rolling news sentiment</td>
+                        </tr>
+                        <tr>
+                            <td>Stock-Price Dynamics Summarizer</td>
+                            <td>25%</td>
+                            <td>Technical indicators, peer comparison</td>
+                        </tr>
+                        <tr>
+                            <td>Macroeconomic Environment Summarizer</td>
+                            <td>20%</td>
+                            <td>Economic conditions, interest rates</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box info-box-success">
+                    <div class="info-box-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Signal Interpretation
+                    </div>
+                    <ul>
+                        <li><strong>BUY</strong>: Weighted score ≥ 60 and positive sentiment from majority of agents</li>
+                        <li><strong>SELL</strong>: Weighted score ≤ 40 and negative sentiment from majority of agents</li>
+                        <li><strong>HOLD</strong>: Weighted score between 40-60 or mixed agent sentiment</li>
+                        <li><strong>Conviction Score</strong>: Higher scores (70+) indicate stronger consensus among agents</li>
+                        <li><strong>Confidence Level</strong>: Reflects data quality and agent agreement (80+ is high confidence)</li>
+                    </ul>
+                </div>
+
+                <h2>Rate Limits</h2>
+                <p>Signal generation involves multiple LLM API calls and can take 30-60 seconds to complete. Recommended rate limits:</p>
+                <ul>
+                    <li><strong>OpenAI/Anthropic</strong>: 5 signals per minute (API cost considerations)</li>
+                    <li><strong>Ollama (local)</strong>: No strict limit, but depends on hardware</li>
+                </ul>
+
+                <div class="info-box info-box-warning">
+                    <div class="info-box-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Important Notes
+                    </div>
+                    <ul>
+                        <li>Signal generation requires valid stock data. Ensure the ticker exists in your database before generating signals.</li>
+                        <li>LLM provider API keys must be configured in settings before use.</li>
+                        <li>Signals are stored in the database and can be retrieved via history endpoints.</li>
+                        <li><strong>Signals are for research purposes only and not financial advice.</strong></li>
+                    </ul>
+                </div>
+
+                <h2>Next Steps</h2>
+                <ul>
+                    <li><a href="../examples/generate-signal.html">Code Example: Generate Trading Signal</a></li>
+                    <li><a href="../guides/marketsense-ai.html">Deep Dive: MarketSense AI System</a></li>
+                    <li><a href="stocks.html">Stocks API</a> - Manage stock data for signal generation</li>
+                    <li><a href="../guides/llm-providers.html">Configure LLM Providers</a></li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>&copy; 2025 AlphaDesk Documentation | Open Source Project | <a href="../../index.html">Back to Main Site</a></p>
+    </footer>
+
+    <script src="../assets/js/docs.js"></script>
+</body>
+</html>

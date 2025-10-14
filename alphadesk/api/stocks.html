@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks API - AlphaDesk Documentation</title>
+    <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="../docs.html" class="docs-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>AlphaDesk</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="../docs.html">Documentation</a></li>
+                    <li><a href="https://github.com/SL-Mar/alphadesk" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="../guides/installation.html"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="../guides/quick-start.html"><i class="fas fa-rocket"></i> Quick Start</a></li>
+                    <li><a href="../guides/configuration.html"><i class="fas fa-cog"></i> Configuration</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core Features</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../guides/marketsense-ai.html"><i class="fas fa-robot"></i> MarketSense AI</a></li>
+                    <li><a href="../guides/stock-data.html"><i class="fas fa-database"></i> Stock Data Management</a></li>
+                    <li><a href="../guides/signal-generation.html"><i class="fas fa-signal"></i> Signal Generation</a></li>
+                    <li><a href="../guides/llm-providers.html"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="overview.html"><i class="fas fa-book"></i> API Overview</a></li>
+                    <li><a href="stocks.html" class="active"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
+                    <li><a href="signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="settings.html"><i class="fas fa-sliders-h"></i> Settings API</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Examples</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../examples/generate-signal.html"><i class="fas fa-code"></i> Generate Trading Signal</a></li>
+                    <li><a href="../examples/python-client.html"><i class="fab fa-python"></i> Python Client</a></li>
+                    <li><a href="../examples/javascript-integration.html"><i class="fab fa-js"></i> JavaScript Integration</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Development</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../guides/architecture.html"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                    <li><a href="../guides/deployment.html"><i class="fas fa-server"></i> Deployment</a></li>
+                    <li><a href="../guides/contributing.html"><i class="fas fa-users"></i> Contributing</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="docs-main">
+            <div class="docs-content">
+                <h1>Stocks API</h1>
+                <p class="docs-subtitle">Manage stock projects and retrieve market data from EODHD API</p>
+
+                <h2>Overview</h2>
+                <p>The Stocks API provides endpoints for creating stock projects and fetching comprehensive market data including:</p>
+                <ul>
+                    <li><strong>End-of-Day (EOD) Pricing</strong> - Historical price data with OHLCV</li>
+                    <li><strong>Fundamentals</strong> - Financial statements, ratios, and key metrics</li>
+                    <li><strong>Company News</strong> - Latest news articles with sentiment analysis</li>
+                    <li><strong>Technical Indicators</strong> - Pre-calculated indicators for analysis</li>
+                </ul>
+
+                <h2>Endpoints</h2>
+
+                <!-- Create Stock Project -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-post">POST</span>
+                        <span class="api-path">/stocks</span>
+                    </div>
+                    <p class="api-description">Create a new stock project and fetch initial data from EODHD API.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Request Body</h4>
+                        <pre><code>{
+  "ticker": "AAPL.US"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl -X POST "http://localhost:8004/api/stocks" \
+  -H "Content-Type: application/json" \
+  -d '{"ticker": "AAPL.US"}'</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (201 Created)</h4>
+                        <pre><code>{
+  "id": 1,
+  "ticker": "AAPL.US",
+  "company_name": "Apple Inc",
+  "exchange": "NASDAQ",
+  "created_at": "2025-10-14T10:30:00Z",
+  "updated_at": "2025-10-14T10:30:00Z",
+  "data_fetched": true,
+  "eod_count": 252,
+  "news_count": 50
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Get Stock Data -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/stocks/{ticker}</span>
+                    </div>
+                    <p class="api-description">Retrieve complete stock data including pricing, fundamentals, and news.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">ticker</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Stock ticker symbol (e.g., "AAPL.US")</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "stock": {
+    "id": 1,
+    "ticker": "AAPL.US",
+    "company_name": "Apple Inc",
+    "exchange": "NASDAQ",
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "latest_price": {
+    "date": "2025-10-13",
+    "open": 184.20,
+    "high": 186.50,
+    "low": 183.80,
+    "close": 185.45,
+    "volume": 52341000,
+    "adjusted_close": 185.45
+  },
+  "fundamentals": {
+    "market_cap": 2850000000000,
+    "pe_ratio": 28.5,
+    "eps": 6.50,
+    "dividend_yield": 0.52,
+    "book_value": 4.25,
+    "roe": 0.45,
+    "debt_to_equity": 1.85
+  },
+  "news": [
+    {
+      "title": "Apple Announces New Product Line",
+      "date": "2025-10-13",
+      "sentiment": "positive",
+      "link": "https://..."
+    }
+  ],
+  "eod_data_count": 252,
+  "news_count": 50
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- List All Stocks -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/stocks</span>
+                    </div>
+                    <p class="api-description">List all stock projects in the database.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "stocks": [
+    {
+      "id": 1,
+      "ticker": "AAPL.US",
+      "company_name": "Apple Inc",
+      "created_at": "2025-10-14T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "ticker": "MSFT.US",
+      "company_name": "Microsoft Corporation",
+      "created_at": "2025-10-14T11:00:00Z"
+    }
+  ],
+  "count": 2
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Get EOD Data -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/stocks/{ticker}/eod</span>
+                    </div>
+                    <p class="api-description">Retrieve end-of-day pricing data for a stock.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Query Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">from</span>
+                                    <span class="param-type">string (date)</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Start date (YYYY-MM-DD format)</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">to</span>
+                                    <span class="param-type">string (date)</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">End date (YYYY-MM-DD format)</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">limit</span>
+                                    <span class="param-type">integer</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Maximum number of records (default: 252)</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/eod?from=2025-01-01&to=2025-10-14"</code></pre>
+                    </div>
+                </div>
+
+                <!-- Delete Stock -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-delete">DELETE</span>
+                        <span class="api-path">/stocks/{ticker}</span>
+                    </div>
+                    <p class="api-description">Delete a stock project and all associated data.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl -X DELETE "http://localhost:8004/api/stocks/AAPL.US"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "message": "Stock project deleted successfully",
+  "ticker": "AAPL.US"
+}</code></pre>
+                    </div>
+                </div>
+
+                <h2>Data Models</h2>
+
+                <h3>Stock Project</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>integer</td>
+                            <td>Unique identifier</td>
+                        </tr>
+                        <tr>
+                            <td><code>ticker</code></td>
+                            <td>string</td>
+                            <td>Stock ticker symbol</td>
+                        </tr>
+                        <tr>
+                            <td><code>company_name</code></td>
+                            <td>string</td>
+                            <td>Company legal name</td>
+                        </tr>
+                        <tr>
+                            <td><code>exchange</code></td>
+                            <td>string</td>
+                            <td>Exchange code (NASDAQ, NYSE, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td><code>created_at</code></td>
+                            <td>datetime</td>
+                            <td>Project creation timestamp</td>
+                        </tr>
+                        <tr>
+                            <td><code>updated_at</code></td>
+                            <td>datetime</td>
+                            <td>Last update timestamp</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>EOD Price Data</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>date</code></td>
+                            <td>date</td>
+                            <td>Trading date</td>
+                        </tr>
+                        <tr>
+                            <td><code>open</code></td>
+                            <td>float</td>
+                            <td>Opening price</td>
+                        </tr>
+                        <tr>
+                            <td><code>high</code></td>
+                            <td>float</td>
+                            <td>High price</td>
+                        </tr>
+                        <tr>
+                            <td><code>low</code></td>
+                            <td>float</td>
+                            <td>Low price</td>
+                        </tr>
+                        <tr>
+                            <td><code>close</code></td>
+                            <td>float</td>
+                            <td>Closing price</td>
+                        </tr>
+                        <tr>
+                            <td><code>volume</code></td>
+                            <td>integer</td>
+                            <td>Trading volume</td>
+                        </tr>
+                        <tr>
+                            <td><code>adjusted_close</code></td>
+                            <td>float</td>
+                            <td>Adjusted closing price</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box info-box-note">
+                    <div class="info-box-title">
+                        <i class="fas fa-info-circle"></i>
+                        EODHD API Integration
+                    </div>
+                    <p>AlphaDesk fetches data from <a href="https://eodhd.com" target="_blank">EODHD Financial APIs</a>. You need a valid API key configured in Settings. Free tier includes:</p>
+                    <ul>
+                        <li>20 years of historical EOD data</li>
+                        <li>Fundamental data (financial statements, ratios)</li>
+                        <li>Company news and sentiment</li>
+                        <li>100 API requests per day (free tier)</li>
+                    </ul>
+                </div>
+
+                <h2>Error Responses</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Status Code</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>400</td>
+                            <td>Invalid request (missing ticker, invalid format)</td>
+                        </tr>
+                        <tr>
+                            <td>404</td>
+                            <td>Stock not found in database</td>
+                        </tr>
+                        <tr>
+                            <td>409</td>
+                            <td>Stock project already exists</td>
+                        </tr>
+                        <tr>
+                            <td>500</td>
+                            <td>Internal server error or EODHD API error</td>
+                        </tr>
+                        <tr>
+                            <td>503</td>
+                            <td>EODHD API unavailable</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Next Steps</h2>
+                <ul>
+                    <li><a href="signals.html">Signals API</a> - Generate trading signals using stock data</li>
+                    <li><a href="../examples/python-client.html">Python Client Example</a></li>
+                    <li><a href="../guides/configuration.html">Configure EODHD API Key</a></li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>&copy; 2025 AlphaDesk Documentation | Open Source Project | <a href="../../index.html">Back to Main Site</a></p>
+    </footer>
+
+    <script src="../assets/js/docs.js"></script>
+</body>
+</html>
