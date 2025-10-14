@@ -33,58 +33,25 @@
                 <div class="sidebar-title">Getting Started</div>
                 <ul class="sidebar-menu">
                     <li><a href="docs.html" class="active"><i class="fas fa-home"></i> Overview</a></li>
-                    <li><a href="guides/installation.html"><i class="fas fa-download"></i> Installation</a></li>
-                    <li><a href="guides/quick-start.html"><i class="fas fa-rocket"></i> Quick Start</a></li>
-                    <li><a href="guides/configuration.html"><i class="fas fa-cog"></i> Configuration</a></li>
-                </ul>
-            </div>
-
-            <div class="sidebar-section">
-                <div class="sidebar-title">Market Intelligence</div>
-                <ul class="sidebar-menu">
-                    <li><a href="guides/marketsense-ai.html"><i class="fas fa-robot"></i> MarketSense AI</a></li>
-                    <li><a href="guides/stock-data.html"><i class="fas fa-database"></i> Stock Data Management</a></li>
-                    <li><a href="guides/signal-generation.html"><i class="fas fa-signal"></i> Signal Generation</a></li>
-                </ul>
-            </div>
-
-            <div class="sidebar-section">
-                <div class="sidebar-title">Strategy Generation</div>
-                <ul class="sidebar-menu">
-                    <li><a href="guides/paper-extraction.html"><i class="fas fa-file-pdf"></i> Paper Extraction</a></li>
-                    <li><a href="guides/code-generation.html"><i class="fas fa-code"></i> Algorithm Generation</a></li>
-                    <li><a href="guides/quantconnect-integration.html"><i class="fas fa-rocket"></i> QuantConnect Integration</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs#installation" target="_blank"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs#usage" target="_blank"><i class="fas fa-rocket"></i> Quick Start</a></li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
                 <div class="sidebar-title">API Reference</div>
                 <ul class="sidebar-menu">
-                    <li><a href="api/overview.html"><i class="fas fa-book"></i> API Overview</a></li>
                     <li><a href="api/stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
                     <li><a href="api/signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
-                    <li><a href="api/strategies.html"><i class="fas fa-code"></i> Strategies API</a></li>
-                    <li><a href="api/backtest.html"><i class="fas fa-rocket"></i> Backtest API</a></li>
-                    <li><a href="api/settings.html"><i class="fas fa-sliders-h"></i> Settings API</a></li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
-                <div class="sidebar-title">Examples</div>
+                <div class="sidebar-title">Resources</div>
                 <ul class="sidebar-menu">
-                    <li><a href="examples/generate-signal.html"><i class="fas fa-chart-line"></i> Generate Trading Signal</a></li>
-                    <li><a href="examples/generate-strategy.html"><i class="fas fa-code"></i> Generate Strategy from Paper</a></li>
-                    <li><a href="examples/full-workflow.html"><i class="fas fa-project-diagram"></i> Complete Workflow</a></li>
-                    <li><a href="examples/python-client.html"><i class="fab fa-python"></i> Python Client</a></li>
-                </ul>
-            </div>
-
-            <div class="sidebar-section">
-                <div class="sidebar-title">Development</div>
-                <ul class="sidebar-menu">
-                    <li><a href="guides/architecture.html"><i class="fas fa-sitemap"></i> Architecture</a></li>
-                    <li><a href="guides/deployment.html"><i class="fas fa-server"></i> Deployment</a></li>
-                    <li><a href="guides/contributing.html"><i class="fas fa-users"></i> Contributing</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub Repository</a></li>
+                    <li><a href="https://arxiv.org/abs/2401.03737" target="_blank"><i class="fas fa-file-pdf"></i> MarketSense AI Paper</a></li>
+                    <li><a href="https://www.quantconnect.com" target="_blank"><i class="fas fa-rocket"></i> QuantConnect</a></li>
                 </ul>
             </div>
         </aside>
@@ -104,11 +71,11 @@
                 </div>
 
                 <h2>What is QuantCoderFS?</h2>
-                <p>QuantCoderFS is a unified quantitative research and algorithm development platform that merges two powerful workflows into one seamless experience. It combines AI-powered market intelligence (inspired by the <strong>MarketSense AI</strong> research paper) with automated strategy generation from academic papers, enabling complete end-to-end quantitative research and deployment.</p>
+                <p>QuantCoderFS is a unified quantitative research and algorithm development platform that merges two powerful workflows into one seamless experience. It combines AI-powered equity research (inspired by the <a href="https://arxiv.org/abs/2401.03737" target="_blank">MarketSense AI</a> research paper by Fatouros et al., 2024) with automated strategy generation from academic papers, enabling complete end-to-end quantitative research and deployment.</p>
 
                 <h3>Market Intelligence Features</h3>
                 <ul>
-                    <li><strong>Multi-Agent AI System</strong> - MarketSense AI framework with specialized agents analyzing fundamentals, news sentiment, price dynamics, and macroeconomic conditions</li>
+                    <li><strong>Multi-Agent AI System</strong> - Equity research framework inspired by MarketSense AI, with specialized agents analyzing fundamentals, news sentiment, price dynamics, and macroeconomic conditions</li>
                     <li><strong>Stock Data Aggregation</strong> - Comprehensive EOD pricing, fundamentals, and news data</li>
                     <li><strong>Signal Generation</strong> - BUY/HOLD/SELL signals with conviction scores and confidence levels</li>
                     <li><strong>TradingView Charts</strong> - Interactive price charts with technical indicators</li>
@@ -133,20 +100,21 @@
                     <li><strong>Database</strong> - SQLite (dev), PostgreSQL-ready</li>
                 </ul>
 
-                <h2>MarketSense AI Architecture</h2>
-                <p>QuantCoderFS implements a multi-agent LLM framework based on the MarketSense AI research paper (<a href="https://arxiv.org/abs/2401.03737" target="_blank">Fatouros et al., 2024</a>). The system uses five specialized agents working in orchestration:</p>
+                <h2>Equity Research Architecture</h2>
+                <p>QuantCoderFS equity research is inspired by the MarketSense AI research paper (<a href="https://arxiv.org/abs/2401.03737" target="_blank">Fatouros et al., 2024</a>). The system uses a multi-agent framework with specialized agents working in orchestration:</p>
 
                 <div class="info-box info-box-success">
                     <div class="info-box-title">
                         <i class="fas fa-chart-line"></i>
-                        Research Performance Metrics
+                        MarketSense AI Research Results
                     </div>
-                    <p>In academic testing on S&P 100 stocks over 15 months:</p>
+                    <p>The original MarketSense AI paper (Fatouros et al., 2024) reported the following results from academic testing on S&P 100 stocks over 15 months:</p>
                     <ul>
                         <li>Excess alpha: <strong>10-30%</strong></li>
                         <li>Cumulative return: Up to <strong>72%</strong></li>
                         <li>Multi-agent consensus outperformed individual agents significantly</li>
                     </ul>
+                    <p><em>Note: These are research results from the original paper. QuantCoderFS is inspired by this framework but is not identical to the research implementation.</em></p>
                 </div>
 
                 <h3>Agent Architecture</h3>
@@ -286,15 +254,15 @@ curl -X POST "http://localhost:8000/api/backtest/trigger-backtest" \
   -d '{"code": "[algorithm code]", "project_name": "My Strategy"}'</code></pre>
                 <p>Creates QuantConnect project, uploads code, compiles, and starts backtest automatically.</p>
 
-                <p>For complete API documentation, see the <a href="api/overview.html">API Reference</a>.</p>
+                <p>For complete API documentation, see the <a href="api/signals.html">Signals API</a> and <a href="api/stocks.html">Stocks API</a> pages.</p>
 
                 <h2>Next Steps</h2>
                 <ul>
-                    <li><a href="guides/installation.html">Complete Installation Guide</a> - Detailed setup instructions</li>
-                    <li><a href="guides/quick-start.html">Quick Start Tutorial</a> - Your first analysis in 5 minutes</li>
-                    <li><a href="guides/marketsense-ai.html">MarketSense AI Deep Dive</a> - Understanding the multi-agent system</li>
-                    <li><a href="api/overview.html">API Reference</a> - Complete API documentation</li>
-                    <li><a href="examples/generate-signal.html">Code Examples</a> - Practical usage examples</li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs#installation" target="_blank">Installation Guide</a> - Detailed setup instructions</li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs#usage" target="_blank">Quick Start Tutorial</a> - Your first analysis workflow</li>
+                    <li><a href="api/signals.html">Signals API</a> - Generate trading signals</li>
+                    <li><a href="api/stocks.html">Stocks API</a> - Manage stock data</li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank">GitHub Repository</a> - Source code and examples</li>
                 </ul>
 
                 <div class="info-box info-box-warning">
