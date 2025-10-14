@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantCoderFS v2.0 Documentation - Quantitative Research Platform</title>
+    <title>QuantCoderFS v2.0 Documentation - Technical Reference</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -32,17 +32,37 @@
             <div class="sidebar-section">
                 <div class="sidebar-title">Getting Started</div>
                 <ul class="sidebar-menu">
-                    <li><a href="docs.html" class="active"><i class="fas fa-home"></i> Overview</a></li>
-                    <li><a href="https://github.com/SL-Mar/quantcoderfs#installation" target="_blank"><i class="fas fa-download"></i> Installation</a></li>
-                    <li><a href="https://github.com/SL-Mar/quantcoderfs#usage" target="_blank"><i class="fas fa-rocket"></i> Quick Start</a></li>
+                    <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                    <li><a href="#installation"><i class="fas fa-download"></i> Installation</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">System Components</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#market-intelligence"><i class="fas fa-chart-bar"></i> Market Intelligence</a></li>
+                    <li><a href="#strategy-generator"><i class="fas fa-code"></i> Strategy Generator</a></li>
+                    <li><a href="#dependencies"><i class="fas fa-cubes"></i> Dependencies</a></li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
                 <div class="sidebar-title">API Reference</div>
                 <ul class="sidebar-menu">
-                    <li><a href="api/stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
+                    <li><a href="api/stocks.html"><i class="fas fa-database"></i> Stocks API</a></li>
                     <li><a href="api/signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
+                    <li><a href="#api-backtest"><i class="fas fa-rocket"></i> Backtest API</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Advanced Topics</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#agents"><i class="fas fa-robot"></i> Agentic Frameworks</a></li>
+                    <li><a href="#llm-providers"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                    <li><a href="#database"><i class="fas fa-table"></i> Database Schema</a></li>
                 </ul>
             </div>
 
@@ -51,7 +71,7 @@
                 <ul class="sidebar-menu">
                     <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub Repository</a></li>
                     <li><a href="https://arxiv.org/abs/2401.03737" target="_blank"><i class="fas fa-file-pdf"></i> MarketSense AI Paper</a></li>
-                    <li><a href="https://www.quantconnect.com" target="_blank"><i class="fas fa-rocket"></i> QuantConnect</a></li>
+                    <li><a href="https://www.quantconnect.com/docs" target="_blank"><i class="fas fa-book"></i> QuantConnect Docs</a></li>
                 </ul>
             </div>
         </aside>
@@ -59,212 +79,661 @@
         <!-- Main Content -->
         <main class="docs-main">
             <div class="docs-content">
-                <h1>QuantCoderFS v2.0 Documentation</h1>
-                <p class="docs-subtitle">Unified quantitative research and algorithm development platform combining market intelligence with automated strategy generation</p>
 
-                <div class="info-box info-box-note">
-                    <div class="info-box-title">
-                        <i class="fas fa-info-circle"></i>
-                        Project Status
+                <!-- OVERVIEW SECTION -->
+                <section id="overview">
+                    <h1>QuantCoderFS v2.0 Technical Documentation</h1>
+                    <p class="docs-subtitle">Complete reference for quantitative research and algorithm development platform</p>
+
+                    <div class="info-box info-box-note">
+                        <div class="info-box-title">
+                            <i class="fas fa-info-circle"></i>
+                            Version Information
+                        </div>
+                        <p><strong>Version:</strong> 2.0.0 | <strong>Status:</strong> Active Development | <strong>Updated:</strong> October 2025</p>
                     </div>
-                    <p>QuantCoderFS is currently in active development (v2.0). This unified platform merges market intelligence capabilities with automated algorithm generation. This is a research and educational tool - not financial advice.</p>
-                </div>
 
-                <h2>What is QuantCoderFS?</h2>
-                <p>QuantCoderFS is a unified quantitative research and algorithm development platform that merges two powerful workflows into one seamless experience. It combines AI-powered equity research (inspired by the <a href="https://arxiv.org/abs/2401.03737" target="_blank">MarketSense AI</a> research paper by Fatouros et al., 2024) with automated strategy generation from academic papers, enabling complete end-to-end quantitative research and deployment.</p>
+                    <h2>What is QuantCoderFS?</h2>
+                    <p>QuantCoderFS is a unified quantitative research platform that combines two distinct modules:</p>
 
-                <h3>Market Intelligence Features</h3>
-                <ul>
-                    <li><strong>Multi-Agent AI System</strong> - Equity research framework inspired by MarketSense AI, with specialized agents analyzing fundamentals, news sentiment, price dynamics, and macroeconomic conditions</li>
-                    <li><strong>Stock Data Aggregation</strong> - Comprehensive EOD pricing, fundamentals, and news data</li>
-                    <li><strong>Signal Generation</strong> - BUY/HOLD/SELL signals with conviction scores and confidence levels</li>
-                    <li><strong>TradingView Charts</strong> - Interactive price charts with technical indicators</li>
-                    <li><strong>Research Notes</strong> - Built-in note-taking for trading ideas and observations</li>
-                </ul>
-
-                <h3>Strategy Generation Features</h3>
-                <ul>
-                    <li><strong>PDF Paper Upload</strong> - Extract and summarize academic finance papers</li>
-                    <li><strong>Automated Code Generation</strong> - CrewAI multi-agent workflow generates production-ready QuantConnect algorithms</li>
-                    <li><strong>Monaco Code Editor</strong> - Professional code editing with syntax highlighting</li>
-                    <li><strong>QuantConnect Integration</strong> - Push generated code directly to QuantConnect for backtesting and live trading</li>
-                    <li><strong>Trading Notes</strong> - Generate structured trading notes from strategies</li>
-                </ul>
-
-                <h3>Technology Stack</h3>
-                <ul>
-                    <li><strong>Backend</strong> - Python, FastAPI, CrewAI, SQLAlchemy</li>
-                    <li><strong>Frontend</strong> - Next.js 15, React 19, TypeScript, Tailwind CSS</li>
-                    <li><strong>AI Frameworks</strong> - CrewAI for agent orchestration, MarketSense AI for signal generation</li>
-                    <li><strong>Integrations</strong> - QuantConnect REST API, market data providers</li>
-                    <li><strong>Database</strong> - SQLite (dev), PostgreSQL-ready</li>
-                </ul>
-
-                <h2>Equity Research Architecture</h2>
-                <p>QuantCoderFS equity research is inspired by the MarketSense AI research paper (<a href="https://arxiv.org/abs/2401.03737" target="_blank">Fatouros et al., 2024</a>). The system uses a multi-agent framework with specialized agents working in orchestration:</p>
-
-                <div class="info-box info-box-success">
-                    <div class="info-box-title">
-                        <i class="fas fa-chart-line"></i>
-                        MarketSense AI Research Results
-                    </div>
-                    <p>The original MarketSense AI paper (Fatouros et al., 2024) reported the following results from academic testing on S&P 100 stocks over 15 months:</p>
+                    <h3>1. Market Intelligence Module</h3>
                     <ul>
-                        <li>Excess alpha: <strong>10-30%</strong></li>
-                        <li>Cumulative return: Up to <strong>72%</strong></li>
-                        <li>Multi-agent consensus outperformed individual agents significantly</li>
+                        <li><strong>Purpose:</strong> Multi-agent equity research inspired by <a href="https://arxiv.org/abs/2401.03737" target="_blank">MarketSense AI</a> (Fatouros et al., 2024)</li>
+                        <li><strong>Input:</strong> Stock tickers (e.g., AAPL.US, TSLA.US)</li>
+                        <li><strong>Output:</strong> BUY/HOLD/SELL trading signals with conviction scores (1-10)</li>
+                        <li><strong>Technology:</strong> Custom multi-agent system with 4 specialized agents + 1 orchestrator</li>
                     </ul>
-                    <p><em>Note: These are research results from the original paper. QuantCoderFS is inspired by this framework but is not identical to the research implementation.</em></p>
-                </div>
 
-                <h3>Agent Architecture</h3>
-                <ol>
-                    <li><strong>Fundamentals Summarizer</strong> (30% weight) - Analyzes quarterly financial statements with automated scoring</li>
-                    <li><strong>Progressive News Summarizer</strong> (25% weight) - Tracks 60-day rolling news sentiment and narratives</li>
-                    <li><strong>Stock-Price Dynamics Summarizer</strong> (25% weight) - Technical analysis with S&P 500 peer comparison</li>
-                    <li><strong>Macroeconomic Environment Summarizer</strong> (20% weight) - Two-stage macro analysis (individual → consensus)</li>
-                    <li><strong>Signal-Generation Agent</strong> - Master orchestrator with Chain-of-Thought reasoning, produces final BUY/HOLD/SELL recommendation</li>
-                </ol>
+                    <h3>2. Strategy Generator Module</h3>
+                    <ul>
+                        <li><strong>Purpose:</strong> Automated trading algorithm generation from academic research papers</li>
+                        <li><strong>Input:</strong> PDF research papers</li>
+                        <li><strong>Output:</strong> Production-ready QuantConnect algorithm code (Python)</li>
+                        <li><strong>Technology:</strong> CrewAI multi-agent workflow with PDF extraction and code generation</li>
+                    </ul>
 
-                <pre><code>┌─────────────────────────────────────────────────────────┐
-│                    Signal Orchestrator                   │
-└───────────────────────┬─────────────────────────────────┘
-                        │
-        ┌───────────────┼───────────────┐
-        │               │               │
-   ┌────▼────┐    ┌────▼────┐    ┌────▼────┐    ┌────────┐
-   │Fundament│    │  News   │    │  Price  │    │ Macro  │
-   │  Agent  │    │  Agent  │    │ Dynamics│    │ Agent  │
-   └────┬────┘    └────┬────┘    └────┬────┘    └────┬───┘
-        │               │               │              │
-        └───────────────┼───────────────┘              │
-                        │                              │
-                   ┌────▼──────────────────────────────▼───┐
-                   │      Signal Generation Agent          │
-                   │  (Chain-of-Thought Integration)       │
-                   └────────────────┬──────────────────────┘
-                                    │
-                            ┌───────▼────────┐
-                            │ BUY/HOLD/SELL  │
-                            │ + Conviction   │
-                            │ + Confidence   │
-                            └────────────────┘</code></pre>
+                    <h3>Core Technology Stack</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Layer</th>
+                                <th>Technology</th>
+                                <th>Version</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Backend Framework</td>
+                                <td>FastAPI</td>
+                                <td>0.115.12</td>
+                            </tr>
+                            <tr>
+                                <td>Frontend Framework</td>
+                                <td>Next.js (React 19)</td>
+                                <td>15.3.2</td>
+                            </tr>
+                            <tr>
+                                <td>Database</td>
+                                <td>SQLite / PostgreSQL</td>
+                                <td>SQLAlchemy 2.0.41</td>
+                            </tr>
+                            <tr>
+                                <td>AI Framework (Strategies)</td>
+                                <td>CrewAI</td>
+                                <td>Latest</td>
+                            </tr>
+                            <tr>
+                                <td>AI Framework (Signals)</td>
+                                <td>Custom Multi-Agent</td>
+                                <td>Inspired by MarketSense AI</td>
+                            </tr>
+                            <tr>
+                                <td>Code Editor</td>
+                                <td>Monaco Editor</td>
+                                <td>4.7.0</td>
+                            </tr>
+                            <tr>
+                                <td>Charts</td>
+                                <td>Lightweight Charts</td>
+                                <td>4.2.3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
 
-                <h2>System Architecture</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Component</th>
-                            <th>Technology</th>
-                            <th>Purpose</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Backend</td>
-                            <td>Python, FastAPI, SQLAlchemy</td>
-                            <td>REST API and business logic</td>
-                        </tr>
-                        <tr>
-                            <td>Frontend</td>
-                            <td>Next.js 15, React 19, TypeScript</td>
-                            <td>User interface and visualization</td>
-                        </tr>
-                        <tr>
-                            <td>AI Orchestration</td>
-                            <td>CrewAI</td>
-                            <td>Multi-agent workflow automation</td>
-                        </tr>
-                        <tr>
-                            <td>Signal Generation</td>
-                            <td>MarketSense AI framework</td>
-                            <td>Multi-agent market analysis</td>
-                        </tr>
-                        <tr>
-                            <td>Charts</td>
-                            <td>Lightweight Charts (TradingView)</td>
-                            <td>Technical analysis visualization</td>
-                        </tr>
-                        <tr>
-                            <td>Code Editor</td>
-                            <td>Monaco Editor</td>
-                            <td>Algorithm code editing</td>
-                        </tr>
-                        <tr>
-                            <td>Database</td>
-                            <td>SQLite (dev), PostgreSQL-ready</td>
-                            <td>Data persistence</td>
-                        </tr>
-                        <tr>
-                            <td>Trading Platform</td>
-                            <td>QuantConnect REST API</td>
-                            <td>Backtesting and live trading</td>
-                        </tr>
-                        <tr>
-                            <td>Data Provider</td>
-                            <td>Market data APIs</td>
-                            <td>EOD prices, fundamentals, news</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- ARCHITECTURE SECTION -->
+                <section id="architecture">
+                    <h2>System Architecture</h2>
 
-                <h2>Quick Start</h2>
-                <p>Get QuantCoderFS running in minutes:</p>
+                    <h3>High-Level Architecture</h3>
+                    <pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    Frontend (Next.js 15)                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│  │   Stocks     │  │  Strategies  │  │   Settings   │     │
+│  │ (Research)   │  │ (Code Gen)   │  │              │     │
+│  └──────────────┘  └──────────────┘  └──────────────┘     │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ HTTP/REST API
+┌──────────────────────────┴──────────────────────────────────┐
+│                Backend (FastAPI + Python)                    │
+│  ┌─────────────────────┐    ┌─────────────────────┐        │
+│  │ Market Intelligence │    │ Strategy Generator  │        │
+│  │ • Stock Handler     │    │ • PDF Extraction    │        │
+│  │ • Signal Agents     │    │ • Code Generation   │        │
+│  │ • Data Aggregation  │    │ • QC Integration    │        │
+│  └─────────────────────┘    └─────────────────────┘        │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              SQLite/PostgreSQL Database              │  │
+│  └──────────────────────────────────────────────────────┘  │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+        ┌──────────────────┼──────────────────┐
+        │                  │                  │
+   ┌────▼─────┐    ┌──────▼──────┐   ┌──────▼──────────┐
+   │ EODHD    │    │  OpenAI/    │   │  QuantConnect  │
+   │   API    │    │  Anthropic  │   │   REST API     │
+   └──────────┘    └─────────────┘   └────────────────┘</code></pre>
 
-                <pre><code><span class="comment"># Clone the repository</span>
+                    <h3>Module Structure</h3>
+                    <p><strong>Backend Directory Structure:</strong></p>
+                    <pre><code>backend/
+├── market_intelligence/          # Market Intelligence Module
+│   ├── agents/                   # Multi-agent system (5 agents)
+│   ├── api/routers/              # REST API endpoints
+│   ├── core/                     # Business logic
+│   └── db/                       # Database models & migrations
+├── strategy_generator/           # Strategy Generator Module
+│   ├── agents/                   # CrewAI agents
+│   ├── routers/                  # REST API endpoints
+│   └── tools/                    # CrewAI tools
+├── shared/                       # Shared utilities
+└── main.py                       # FastAPI app entry point</code></pre>
+                </section>
+
+                <!-- DEPENDENCIES SECTION -->
+                <section id="dependencies">
+                    <h2>Dependencies & Third-Party Services</h2>
+
+                    <h3>Backend Dependencies</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Package</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>fastapi</td>
+                                <td>0.115.12</td>
+                                <td>REST API framework</td>
+                            </tr>
+                            <tr>
+                                <td>uvicorn</td>
+                                <td>0.34.2</td>
+                                <td>ASGI server</td>
+                            </tr>
+                            <tr>
+                                <td>sqlalchemy</td>
+                                <td>2.0.41</td>
+                                <td>ORM for database</td>
+                            </tr>
+                            <tr>
+                                <td>pydantic</td>
+                                <td>2.11.5</td>
+                                <td>Data validation</td>
+                            </tr>
+                            <tr>
+                                <td>crewai</td>
+                                <td>Latest</td>
+                                <td>Multi-agent workflows (strategies)</td>
+                            </tr>
+                            <tr>
+                                <td>openai</td>
+                                <td>Latest</td>
+                                <td>OpenAI API client</td>
+                            </tr>
+                            <tr>
+                                <td>anthropic</td>
+                                <td>Latest</td>
+                                <td>Anthropic Claude API client</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Required Third-Party Services</h3>
+
+                    <div class="info-box info-box-warning">
+                        <div class="info-box-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Required API Keys
+                        </div>
+                        <p>The following services require API keys configured in Settings:</p>
+                    </div>
+
+                    <h4>1. EODHD API (Market Data Provider)</h4>
+                    <ul>
+                        <li><strong>Purpose:</strong> Stock EOD prices, fundamentals, financial news</li>
+                        <li><strong>Endpoint:</strong> <code>https://eodhd.com/api/</code></li>
+                        <li><strong>Authentication:</strong> API key</li>
+                        <li><strong>Cost:</strong> Paid subscription required</li>
+                        <li><strong>Usage:</strong> Market Intelligence module</li>
+                    </ul>
+
+                    <h4>2. OpenAI API (Primary LLM Provider)</h4>
+                    <ul>
+                        <li><strong>Purpose:</strong> AI-powered signal generation and code generation</li>
+                        <li><strong>Models Used:</strong> GPT-4, GPT-3.5-turbo</li>
+                        <li><strong>Authentication:</strong> API key (sk-...)</li>
+                        <li><strong>Cost:</strong> ~$0.03 per 1K tokens (GPT-4)</li>
+                        <li><strong>Usage:</strong> Both modules (signals + strategy generation)</li>
+                    </ul>
+
+                    <h3>Optional Third-Party Services</h3>
+
+                    <h4>3. Anthropic Claude API (Alternative LLM)</h4>
+                    <ul>
+                        <li><strong>Purpose:</strong> Alternative LLM provider</li>
+                        <li><strong>Models:</strong> Claude 3 Opus, Claude 3 Sonnet</li>
+                        <li><strong>Usage:</strong> Signal generation (user selectable)</li>
+                        <li><strong>Cost:</strong> ~$0.015 per 1K tokens</li>
+                    </ul>
+
+                    <h4>4. Ollama (Local LLM)</h4>
+                    <ul>
+                        <li><strong>Purpose:</strong> Local LLM inference (no API costs)</li>
+                        <li><strong>Models:</strong> llama2, mixtral, etc.</li>
+                        <li><strong>Authentication:</strong> None (local)</li>
+                        <li><strong>Cost:</strong> Free (requires local GPU)</li>
+                    </ul>
+
+                    <h4>5. Tavily API (Web Search)</h4>
+                    <ul>
+                        <li><strong>Purpose:</strong> Macro environment research</li>
+                        <li><strong>Usage:</strong> Macro agent in Market Intelligence</li>
+                        <li><strong>Cost:</strong> Free tier available</li>
+                    </ul>
+
+                    <h4>6. QuantConnect API (Trading Platform)</h4>
+                    <ul>
+                        <li><strong>Purpose:</strong> Deploy algorithms for backtesting/live trading</li>
+                        <li><strong>Endpoint:</strong> <code>https://www.quantconnect.com/api/v2/</code></li>
+                        <li><strong>Authentication:</strong> User ID + API Token</li>
+                        <li><strong>Cost:</strong> Free tier available, paid for live trading</li>
+                    </ul>
+                </section>
+
+                <!-- MARKET INTELLIGENCE SECTION -->
+                <section id="market-intelligence">
+                    <h2>Market Intelligence Module</h2>
+
+                    <h3>Purpose</h3>
+                    <p>Multi-agent equity research system inspired by <a href="https://arxiv.org/abs/2401.03737" target="_blank">MarketSense AI paper</a> (Fatouros et al., 2024).</p>
+
+                    <h3>Agent Architecture</h3>
+                    <p>The system uses <strong>5 specialized agents</strong> working in orchestration:</p>
+
+                    <h4>1. Fundamentals Summarizer Agent (30% weight)</h4>
+                    <ul>
+                        <li><strong>Input:</strong> Quarterly financial statements, company highlights</li>
+                        <li><strong>Processing:</strong> Financial health score, revenue growth, profit margins</li>
+                        <li><strong>Output:</strong> Summary (100-200 words) + Score (0-100)</li>
+                    </ul>
+
+                    <h4>2. Progressive News Summarizer Agent (25% weight)</h4>
+                    <ul>
+                        <li><strong>Input:</strong> 60-day rolling news articles</li>
+                        <li><strong>Processing:</strong> Sentiment aggregation, narrative themes</li>
+                        <li><strong>Output:</strong> Summary + Sentiment score (0-100)</li>
+                    </ul>
+
+                    <h4>3. Stock-Price Dynamics Summarizer Agent (25% weight)</h4>
+                    <ul>
+                        <li><strong>Input:</strong> OHLCV price data (1 year), S&P 500 benchmark</li>
+                        <li><strong>Processing:</strong> Technical analysis (MA, RSI, MACD), volatility</li>
+                        <li><strong>Output:</strong> Summary + Technical score (0-100)</li>
+                    </ul>
+
+                    <h4>4. Macroeconomic Environment Summarizer Agent (20% weight)</h4>
+                    <ul>
+                        <li><strong>Input:</strong> Sector information, web search results (via Tavily)</li>
+                        <li><strong>Processing:</strong> Sector analysis, economic cycle assessment</li>
+                        <li><strong>Output:</strong> Summary + Macro score (0-100)</li>
+                    </ul>
+
+                    <h4>5. Signal Generation Agent (Master Orchestrator)</h4>
+                    <ul>
+                        <li><strong>Input:</strong> Outputs from all 4 summarizer agents</li>
+                        <li><strong>Processing:</strong> Chain-of-Thought reasoning, weighted consensus</li>
+                        <li><strong>Output:</strong> Final BUY/HOLD/SELL signal with conviction (1-10) and confidence (0.0-1.0)</li>
+                    </ul>
+
+                    <h3>Signal Calculation Formula</h3>
+                    <pre><code>weighted_score = (
+    fundamentals_score * 0.30 +
+    news_score * 0.25 +
+    price_dynamics_score * 0.25 +
+    macro_score * 0.20
+)
+
+if weighted_score >= 70:
+    signal = "BUY"
+elif weighted_score <= 40:
+    signal = "SELL"
+else:
+    signal = "HOLD"</code></pre>
+
+                    <div class="info-box info-box-success">
+                        <div class="info-box-title">
+                            <i class="fas fa-chart-line"></i>
+                            MarketSense AI Research Results
+                        </div>
+                        <p>The original MarketSense AI paper (Fatouros et al., 2024) reported the following results from academic testing on S&P 100 stocks over 15 months:</p>
+                        <ul>
+                            <li>Excess alpha: <strong>10-30%</strong></li>
+                            <li>Cumulative return: Up to <strong>72%</strong></li>
+                            <li>Multi-agent consensus outperformed individual agents significantly</li>
+                        </ul>
+                        <p><em>Note: These are research results from the original paper. QuantCoderFS is inspired by this framework but is not identical to the research implementation.</em></p>
+                    </div>
+
+                    <h3>Data Flow</h3>
+                    <ol>
+                        <li>User creates stock project (<code>POST /api/stocks/create</code>)</li>
+                        <li>System fetches data from EODHD API (EOD prices, fundamentals, news)</li>
+                        <li>Data stored in file system: <code>user_workdir/stocks/{ticker}_{timestamp}/</code></li>
+                        <li>User generates signal (<code>POST /api/signals/generate/{project_id}</code>)</li>
+                        <li>Signal Orchestrator runs agents in sequence (60-90 seconds)</li>
+                        <li>Results saved to database + file system</li>
+                        <li>Frontend displays signal with agent breakdowns</li>
+                    </ol>
+                </section>
+
+                <!-- STRATEGY GENERATOR SECTION -->
+                <section id="strategy-generator">
+                    <h2>Strategy Generator Module</h2>
+
+                    <h3>Purpose</h3>
+                    <p>Automated QuantConnect algorithm generation from academic research papers using <strong>CrewAI</strong>.</p>
+
+                    <h3>CrewAI Workflow</h3>
+
+                    <h4>Crew 1: Paper Extraction</h4>
+                    <ul>
+                        <li><strong>Agent:</strong> Paper Analyzer Agent</li>
+                        <li><strong>Role:</strong> Extract strategy from research paper</li>
+                        <li><strong>Tool:</strong> PDFAnalyserTool (PDF parsing)</li>
+                        <li><strong>Output:</strong> Structured strategy summary (JSON)</li>
+                    </ul>
+
+                    <h4>Crew 2: Code Generation</h4>
+                    <ul>
+                        <li><strong>Agent 1:</strong> Strategy Summarizer (condense paper into trading rules)</li>
+                        <li><strong>Agent 2:</strong> Code Generator (write QuantConnect algorithm)</li>
+                        <li><strong>Agent 3:</strong> Code Validator (review and fix code issues)</li>
+                        <li><strong>Output:</strong> Complete QuantConnect <code>.py</code> algorithm file</li>
+                    </ul>
+
+                    <h3>QuantConnect Integration</h3>
+                    <p><strong>Endpoint:</strong> <code>POST /api/backtest/trigger-backtest</code></p>
+
+                    <p><strong>Workflow:</strong></p>
+                    <ol>
+                        <li>Get QC credentials from database</li>
+                        <li>Create QC project via REST API</li>
+                        <li>Upload algorithm code to project</li>
+                        <li>Compile code</li>
+                        <li>Wait for compilation</li>
+                        <li>Create backtest</li>
+                        <li>Return backtest ID and project URL</li>
+                    </ol>
+
+                    <p><strong>Request Example:</strong></p>
+                    <pre><code>{
+  "code": "# QuantConnect algorithm code",
+  "project_name": "My Momentum Strategy"
+}</code></pre>
+
+                    <p><strong>Response Example:</strong></p>
+                    <pre><code>{
+  "status": "success",
+  "project_id": 12345678,
+  "backtest_id": "abc123",
+  "project_url": "https://www.quantconnect.com/project/12345678"
+}</code></pre>
+                </section>
+
+                <!-- API REFERENCE SECTIONS -->
+                <section id="api-strategies">
+                    <h2>Strategies API Reference</h2>
+
+                    <h3>Upload PDF Paper</h3>
+                    <pre><code>POST /api/papers/upload
+Content-Type: multipart/form-data
+
+file: (binary PDF data)
+
+Response 200:
+{
+  "filename": "momentum_strategy.pdf",
+  "size": 1024000,
+  "path": "/path/to/papers/momentum_strategy.pdf"
+}</code></pre>
+
+                    <h3>List Papers</h3>
+                    <pre><code>GET /api/papers/list
+
+Response 200:
+[
+  {
+    "filename": "momentum_strategy.pdf",
+    "size_kb": 1000,
+    "uploaded": "2025-10-14T10:00:00"
+  }
+]</code></pre>
+
+                    <h3>Generate Code from Paper</h3>
+                    <pre><code>POST /api/papers/generate-code/momentum_strategy.pdf
+
+Response 200:
+{
+  "filename": "momentum_strategy.py",
+  "code": "# region imports\nfrom AlgorithmImports import *\n...",
+  "summary": "Strategy extracted from paper"
+}</code></pre>
+
+                    <h3>List Generated Code</h3>
+                    <pre><code>GET /api/papers/list?folder=codes
+
+Response 200:
+[
+  {
+    "filename": "momentum_strategy.py",
+    "size_kb": 15,
+    "generated": "2025-10-14T10:30:00"
+  }
+]</code></pre>
+                </section>
+
+                <section id="api-backtest">
+                    <h2>Backtest API Reference</h2>
+
+                    <h3>Push to QuantConnect</h3>
+                    <pre><code>POST /api/backtest/trigger-backtest
+Content-Type: application/json
+
+{
+  "code": "# Algorithm code here",
+  "project_name": "My Momentum Strategy"
+}
+
+Response 200:
+{
+  "status": "success",
+  "project_id": 12345678,
+  "backtest_id": "abc123def456",
+  "project_url": "https://www.quantconnect.com/project/12345678"
+}</code></pre>
+
+                    <div class="info-box info-box-note">
+                        <div class="info-box-title">
+                            <i class="fas fa-info-circle"></i>
+                            QuantConnect Credentials Required
+                        </div>
+                        <p>You must configure QuantConnect User ID and API Token in Settings before using this endpoint.</p>
+                    </div>
+                </section>
+
+                <!-- AGENTS SECTION -->
+                <section id="agents">
+                    <h2>Agentic Frameworks</h2>
+
+                    <h3>Market Intelligence: Custom Multi-Agent System</h3>
+                    <p><strong>Inspiration:</strong> MarketSense AI (Fatouros et al., 2024)</p>
+                    <p><strong>Paper:</strong> <a href="https://arxiv.org/abs/2401.03737" target="_blank">https://arxiv.org/abs/2401.03737</a></p>
+
+                    <p><strong>Agent Weighting:</strong></p>
+                    <ul>
+                        <li>Fundamentals: <strong>30%</strong></li>
+                        <li>News: <strong>25%</strong></li>
+                        <li>Price Dynamics: <strong>25%</strong></li>
+                        <li>Macro: <strong>20%</strong></li>
+                    </ul>
+
+                    <p><strong>Key Differences from MarketSense AI Paper:</strong></p>
+                    <ul>
+                        <li>Implementation uses FastAPI instead of standalone Python scripts</li>
+                        <li>LLM provider is configurable (OpenAI/Anthropic/Ollama)</li>
+                        <li>Agents use different prompts tuned for specific data sources</li>
+                        <li>Signal persistence in SQL database</li>
+                    </ul>
+
+                    <h3>Strategy Generator: CrewAI</h3>
+                    <p><strong>Framework:</strong> CrewAI (<a href="https://www.crewai.com/" target="_blank">https://www.crewai.com/</a>)</p>
+
+                    <p><strong>Crew Structure:</strong></p>
+                    <ul>
+                        <li><strong>Extraction Crew:</strong> Paper Analyzer Agent</li>
+                        <li><strong>Code Generation Crew:</strong> Summarizer → Coder → Validator</li>
+                        <li><strong>Process:</strong> Sequential execution</li>
+                    </ul>
+                </section>
+
+                <!-- LLM PROVIDERS SECTION -->
+                <section id="llm-providers">
+                    <h2>LLM Providers</h2>
+
+                    <h3>Supported Providers</h3>
+
+                    <h4>1. OpenAI (Default)</h4>
+                    <ul>
+                        <li><strong>Models Used:</strong> GPT-4, GPT-3.5-turbo</li>
+                        <li><strong>Cost:</strong> ~$0.03 per 1K tokens (GPT-4)</li>
+                        <li><strong>Usage:</strong> Both modules</li>
+                    </ul>
+
+                    <h4>2. Anthropic Claude</h4>
+                    <ul>
+                        <li><strong>Models Used:</strong> Claude 3 Opus, Claude 3 Sonnet</li>
+                        <li><strong>Cost:</strong> ~$0.015 per 1K tokens</li>
+                        <li><strong>Usage:</strong> Market Intelligence signals only (user selectable)</li>
+                    </ul>
+
+                    <h4>3. Ollama (Local)</h4>
+                    <ul>
+                        <li><strong>Models Used:</strong> llama2, mixtral, etc.</li>
+                        <li><strong>Cost:</strong> Free (requires local GPU)</li>
+                        <li><strong>Usage:</strong> Market Intelligence signals only (user selectable)</li>
+                    </ul>
+
+                    <h3>Provider Selection</h3>
+                    <ul>
+                        <li><strong>Market Intelligence:</strong> User chooses via query parameter (<code>?llm_provider=openai</code>)</li>
+                        <li><strong>Strategy Generator:</strong> Always uses OpenAI (CrewAI default)</li>
+                    </ul>
+                </section>
+
+                <!-- DATABASE SECTION -->
+                <section id="database">
+                    <h2>Database Schema</h2>
+
+                    <h3>UserSettings Table</h3>
+                    <pre><code>CREATE TABLE user_settings (
+    id INTEGER PRIMARY KEY,
+    eodhd_api_key TEXT,
+    openai_api_key TEXT,
+    anthropic_api_key TEXT,
+    tavily_api_key TEXT,
+    qc_user_id TEXT,
+    qc_api_token TEXT,
+    qc_organization_id TEXT,
+    default_llm_provider TEXT DEFAULT 'openai',
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);</code></pre>
+
+                    <h3>TradingSignal Table</h3>
+                    <pre><code>CREATE TABLE trading_signals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ticker TEXT NOT NULL,
+    signal TEXT NOT NULL,  -- BUY, HOLD, SELL
+    conviction INTEGER,     -- 1-10
+    confidence REAL,        -- 0.0-1.0
+    reasoning TEXT,
+    weighted_score REAL,
+    llm_provider TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+                    <h3>AgentOutput Table</h3>
+                    <pre><code>CREATE TABLE agent_outputs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    signal_id INTEGER NOT NULL,  -- FK to trading_signals
+    agent_name TEXT NOT NULL,    -- fundamentals, news, etc.
+    summary TEXT,
+    score REAL,
+    raw_output TEXT,             -- JSON blob
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (signal_id) REFERENCES trading_signals(id)
+);</code></pre>
+                </section>
+
+                <!-- INSTALLATION SECTION -->
+                <section id="installation">
+                    <h2>Installation & Setup</h2>
+
+                    <h3>Prerequisites</h3>
+                    <ul>
+                        <li>Python 3.12+</li>
+                        <li>Node.js 18+</li>
+                        <li>EODHD API key (required)</li>
+                        <li>OpenAI API key (required)</li>
+                    </ul>
+
+                    <h3>Backend Setup</h3>
+                    <pre><code># Clone repository
 git clone https://github.com/SL-Mar/quantcoderfs.git
-cd quantcoderfs
+cd quantcoderfs/backend
 
-<span class="comment"># Backend setup</span>
-cd backend
+# Create virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-<span class="comment"># Frontend setup</span>
-cd ../electron
+# Run database migrations
+alembic upgrade head
+
+# Start backend server
+uvicorn main:app --reload --port 8000</code></pre>
+
+                    <p><strong>Backend runs at:</strong> <code>http://localhost:8000</code></p>
+                    <p><strong>API docs:</strong> <code>http://localhost:8000/docs</code></p>
+
+                    <h3>Frontend Setup</h3>
+                    <pre><code>cd ../electron
+
+# Install dependencies
 npm install
 
-<span class="comment"># Launch the application</span>
-cd ..
-./launch.sh</code></pre>
+# Create environment file
+echo "NEXT_PUBLIC_API_BASE_URL=http://localhost:8000" > .env.local
 
-                <p>For detailed installation instructions, see the <a href="guides/installation.html">Installation Guide</a>.</p>
+# Start development server
+npm run dev</code></pre>
 
-                <h2>API Examples</h2>
+                    <p><strong>Frontend runs at:</strong> <code>http://localhost:3001</code></p>
 
-                <h3>Market Intelligence - Generate Trading Signal</h3>
-                <pre><code><span class="comment"># Generate AI-powered signal for a stock</span>
-curl -X POST "http://localhost:8000/api/signals/generate/AAPL.US"</code></pre>
-                <p>Response includes signal (BUY/HOLD/SELL), conviction score, confidence level, and detailed agent outputs from MarketSense AI framework.</p>
+                    <h3>Configuration</h3>
+                    <ol>
+                        <li>Open <code>http://localhost:3001</code></li>
+                        <li>Navigate to <strong>Settings</strong> page</li>
+                        <li>Enter API keys:
+                            <ul>
+                                <li>EODHD API Key (required)</li>
+                                <li>OpenAI API Key (required)</li>
+                                <li>Tavily API Key (optional)</li>
+                                <li>QuantConnect User ID (optional)</li>
+                                <li>QuantConnect API Token (optional)</li>
+                            </ul>
+                        </li>
+                        <li>Save settings</li>
+                    </ol>
 
-                <h3>Strategy Generation - Generate Algorithm from Paper</h3>
-                <pre><code><span class="comment"># Upload paper</span>
-curl -X POST "http://localhost:8000/api/papers/upload" \
-  -F "file=@research_paper.pdf"
+                    <div class="info-box info-box-success">
+                        <div class="info-box-title">
+                            <i class="fas fa-rocket"></i>
+                            Quick Start
+                        </div>
+                        <p>Use the launch script for one-command startup:</p>
+                        <pre><code>./launch.sh</code></pre>
+                    </div>
+                </section>
 
-<span class="comment"># Generate QuantConnect algorithm</span>
-curl -X POST "http://localhost:8000/api/papers/generate-code/research_paper.pdf"</code></pre>
-                <p>Returns generated QuantConnect algorithm code ready for backtesting and deployment.</p>
-
-                <h3>QuantConnect Integration - Push to Trading Platform</h3>
-                <pre><code><span class="comment"># Push algorithm to QuantConnect</span>
-curl -X POST "http://localhost:8000/api/backtest/trigger-backtest" \
-  -H "Content-Type: application/json" \
-  -d '{"code": "[algorithm code]", "project_name": "My Strategy"}'</code></pre>
-                <p>Creates QuantConnect project, uploads code, compiles, and starts backtest automatically.</p>
-
-                <p>For complete API documentation, see the <a href="api/signals.html">Signals API</a> and <a href="api/stocks.html">Stocks API</a> pages.</p>
-
-                <h2>Next Steps</h2>
-                <ul>
-                    <li><a href="https://github.com/SL-Mar/quantcoderfs#installation" target="_blank">Installation Guide</a> - Detailed setup instructions</li>
-                    <li><a href="https://github.com/SL-Mar/quantcoderfs#usage" target="_blank">Quick Start Tutorial</a> - Your first analysis workflow</li>
-                    <li><a href="api/signals.html">Signals API</a> - Generate trading signals</li>
-                    <li><a href="api/stocks.html">Stocks API</a> - Manage stock data</li>
-                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank">GitHub Repository</a> - Source code and examples</li>
-                </ul>
-
+                <!-- DISCLAIMER -->
                 <div class="info-box info-box-warning">
                     <div class="info-box-title">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -272,6 +741,17 @@ curl -X POST "http://localhost:8000/api/backtest/trigger-backtest" \
                     </div>
                     <p>QuantCoderFS is a research and educational tool. All generated signals, analyses, and trading algorithms are for informational purposes only and should not be considered financial advice. Always conduct your own research and consult with qualified financial advisors before making investment decisions.</p>
                 </div>
+
+                <!-- REFERENCES -->
+                <section>
+                    <h2>References</h2>
+                    <ol>
+                        <li>Fatouros, G., Soldatos, J., Kouroumali, K., Makridis, G., & Kyriazis, D. (2024). MarketSense AI: Multi-Agent LLM Framework for Stock Market Analysis. <em>arXiv preprint arXiv:2401.03737</em>. <a href="https://arxiv.org/abs/2401.03737" target="_blank">https://arxiv.org/abs/2401.03737</a></li>
+                        <li>QuantConnect. (2025). LEAN Algorithmic Trading Engine Documentation. <a href="https://www.quantconnect.com/docs" target="_blank">https://www.quantconnect.com/docs</a></li>
+                        <li>CrewAI. (2025). Multi-Agent Framework Documentation. <a href="https://docs.crewai.com" target="_blank">https://docs.crewai.com</a></li>
+                    </ol>
+                </section>
+
             </div>
         </main>
     </div>
