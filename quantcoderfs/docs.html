@@ -50,6 +50,7 @@
             <div class="sidebar-section">
                 <div class="sidebar-title">API Reference</div>
                 <ul class="sidebar-menu">
+                    <li><a href="#api-overview"><i class="fas fa-book"></i> API Overview</a></li>
                     <li><a href="api/stocks.html"><i class="fas fa-database"></i> Stocks API</a></li>
                     <li><a href="api/signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
                     <li><a href="#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
@@ -322,6 +323,111 @@
                         <li><strong>Endpoint:</strong> <code>https://www.quantconnect.com/api/v2/</code></li>
                         <li><strong>Authentication:</strong> User ID + API Token</li>
                         <li><strong>Cost:</strong> Free tier available, paid for live trading</li>
+                    </ul>
+                </section>
+
+                <!-- API OVERVIEW SECTION -->
+                <section id="api-overview">
+                    <h2>API Overview</h2>
+
+                    <h3>Core Functionality</h3>
+                    <p>QuantCoderFS provides a RESTful API for two main workflows:</p>
+
+                    <div class="info-box info-box-info">
+                        <div class="info-box-title">
+                            <i class="fas fa-info-circle"></i>
+                            Data Source: EODHD APIs
+                        </div>
+                        <p>
+                            <strong>All market data is sourced from <a href="https://eodhd.com" target="_blank">EODHD Financial APIs</a>.</strong>
+                            This includes end-of-day stock prices, fundamental data (financial statements, ratios),
+                            and company news. An active EODHD subscription is required.
+                        </p>
+                        <p>
+                            <strong>From this data, QuantCoderFS generates AI-powered trading signals</strong> using a multi-agent
+                            system that analyzes fundamentals, news sentiment, price dynamics, and macroeconomic conditions.
+                        </p>
+                    </div>
+
+                    <h3>Module 1: Market Intelligence API</h3>
+                    <p>Automated equity research and signal generation using EODHD market data.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Method</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>/api/stocks/create</code></td>
+                                <td>POST</td>
+                                <td>Create stock project and fetch EODHD data</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/stocks/list</code></td>
+                                <td>GET</td>
+                                <td>List all stock projects</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/stocks/load</code></td>
+                                <td>GET</td>
+                                <td>Load stock project with all EODHD data</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/signals/generate/{project_id}</code></td>
+                                <td>POST</td>
+                                <td>Generate BUY/HOLD/SELL signal using multi-agent AI</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Module 2: Strategy Generator API</h3>
+                    <p>Automated QuantConnect algorithm generation from academic papers.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Method</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>/api/papers/upload</code></td>
+                                <td>POST</td>
+                                <td>Upload research paper (PDF)</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/papers/list</code></td>
+                                <td>GET</td>
+                                <td>List uploaded papers</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/strategy/generate</code></td>
+                                <td>POST</td>
+                                <td>Generate QuantConnect algorithm from paper</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/backtest/trigger-backtest</code></td>
+                                <td>POST</td>
+                                <td>Deploy algorithm to QuantConnect</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Authentication</h3>
+                    <p>API endpoints are currently unauthenticated (localhost development). For production deployment, implement JWT or API key authentication.</p>
+
+                    <h3>Detailed API Documentation</h3>
+                    <ul>
+                        <li><a href="api/stocks.html">Stocks API</a> - Complete reference for stock data management</li>
+                        <li><a href="api/signals.html">Signals API</a> - Complete reference for signal generation</li>
+                        <li><a href="#api-strategies">Strategies API</a> - Algorithm generation endpoints</li>
+                        <li><a href="#api-backtest">Backtest API</a> - QuantConnect deployment</li>
                     </ul>
                 </section>
 
