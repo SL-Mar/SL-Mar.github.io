@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signals API - AlphaDesk Documentation</title>
+    <title>Signals API - QuantCoderFS Documentation</title>
     <link rel="stylesheet" href="../assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,12 +12,12 @@
         <div class="docs-header-content">
             <a href="../docs.html" class="docs-logo">
                 <i class="fas fa-chart-line"></i>
-                <span>AlphaDesk</span>
+                <span>QuantCoderFS</span>
             </a>
             <nav>
                 <ul class="docs-nav">
                     <li><a href="../docs.html">Documentation</a></li>
-                    <li><a href="https://github.com/SL-Mar/alphadesk" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
                 </ul>
             </nav>
             <a href="../../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
@@ -30,47 +30,44 @@
                 <div class="sidebar-title">Getting Started</div>
                 <ul class="sidebar-menu">
                     <li><a href="../docs.html"><i class="fas fa-home"></i> Overview</a></li>
-                    <li><a href="../guides/installation.html"><i class="fas fa-download"></i> Installation</a></li>
-                    <li><a href="../guides/quick-start.html"><i class="fas fa-rocket"></i> Quick Start</a></li>
-                    <li><a href="../guides/configuration.html"><i class="fas fa-cog"></i> Configuration</a></li>
+                    <li><a href="../docs.html#installation"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="../docs.html#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
-                <div class="sidebar-title">Core Features</div>
+                <div class="sidebar-title">System Components</div>
                 <ul class="sidebar-menu">
-                    <li><a href="../guides/marketsense-ai.html"><i class="fas fa-robot"></i> MarketSense AI</a></li>
-                    <li><a href="../guides/stock-data.html"><i class="fas fa-database"></i> Stock Data Management</a></li>
-                    <li><a href="../guides/signal-generation.html"><i class="fas fa-signal"></i> Signal Generation</a></li>
-                    <li><a href="../guides/llm-providers.html"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                    <li><a href="../docs.html#market-intelligence"><i class="fas fa-robot"></i> Market Intelligence</a></li>
+                    <li><a href="../docs.html#strategy-generator"><i class="fas fa-code"></i> Strategy Generator</a></li>
+                    <li><a href="../docs.html#dependencies"><i class="fas fa-cubes"></i> Dependencies</a></li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
                 <div class="sidebar-title">API Reference</div>
                 <ul class="sidebar-menu">
-                    <li><a href="overview.html"><i class="fas fa-book"></i> API Overview</a></li>
                     <li><a href="stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
                     <li><a href="signals.html" class="active"><i class="fas fa-lightbulb"></i> Signals API</a></li>
-                    <li><a href="settings.html"><i class="fas fa-sliders-h"></i> Settings API</a></li>
+                    <li><a href="../docs.html#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
+                    <li><a href="../docs.html#api-backtest"><i class="fas fa-rocket"></i> Backtest API</a></li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
-                <div class="sidebar-title">Examples</div>
+                <div class="sidebar-title">Advanced Topics</div>
                 <ul class="sidebar-menu">
-                    <li><a href="../examples/generate-signal.html"><i class="fas fa-code"></i> Generate Trading Signal</a></li>
-                    <li><a href="../examples/python-client.html"><i class="fab fa-python"></i> Python Client</a></li>
-                    <li><a href="../examples/javascript-integration.html"><i class="fab fa-js"></i> JavaScript Integration</a></li>
+                    <li><a href="../docs.html#agents"><i class="fas fa-robot"></i> Agentic Frameworks</a></li>
+                    <li><a href="../docs.html#llm-providers"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                    <li><a href="../docs.html#database"><i class="fas fa-table"></i> Database Schema</a></li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
-                <div class="sidebar-title">Development</div>
+                <div class="sidebar-title">Resources</div>
                 <ul class="sidebar-menu">
-                    <li><a href="../guides/architecture.html"><i class="fas fa-sitemap"></i> Architecture</a></li>
-                    <li><a href="../guides/deployment.html"><i class="fas fa-server"></i> Deployment</a></li>
-                    <li><a href="../guides/contributing.html"><i class="fas fa-users"></i> Contributing</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="https://arxiv.org/abs/2401.03737" target="_blank"><i class="fas fa-file-pdf"></i> MarketSense AI Paper</a></li>
                 </ul>
             </div>
         </aside>
@@ -397,17 +394,17 @@
 
                 <h2>Next Steps</h2>
                 <ul>
-                    <li><a href="../examples/generate-signal.html">Code Example: Generate Trading Signal</a></li>
-                    <li><a href="../guides/marketsense-ai.html">Deep Dive: MarketSense AI System</a></li>
+                    <li><a href="../docs.html#market-intelligence">Deep Dive: Market Intelligence System</a></li>
                     <li><a href="stocks.html">Stocks API</a> - Manage stock data for signal generation</li>
-                    <li><a href="../guides/llm-providers.html">Configure LLM Providers</a></li>
+                    <li><a href="../docs.html#llm-providers">Configure LLM Providers</a></li>
+                    <li><a href="../docs.html#agents">Agentic Frameworks</a></li>
                 </ul>
             </div>
         </main>
     </div>
 
     <footer class="docs-footer">
-        <p>&copy; 2025 AlphaDesk Documentation | Open Source Project | <a href="../../index.html">Back to Main Site</a></p>
+        <p>&copy; 2025 QuantCoderFS Documentation | Open Source Project | <a href="../../index.html">Back to Main Site</a></p>
     </footer>
 
     <script src="../assets/js/docs.js"></script>
