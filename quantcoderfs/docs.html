@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlphaDesk Documentation - AI-Powered Financial Analysis Platform</title>
+    <title>QuantCoderFS v2.0 Documentation - Quantitative Research Platform</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -13,12 +13,12 @@
         <div class="docs-header-content">
             <a href="docs.html" class="docs-logo">
                 <i class="fas fa-chart-line"></i>
-                <span>AlphaDesk</span>
+                <span>QuantCoderFS</span>
             </a>
             <nav>
                 <ul class="docs-nav">
                     <li><a href="docs.html" class="active">Documentation</a></li>
-                    <li><a href="https://github.com/SL-Mar/alphadesk" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
                 </ul>
             </nav>
             <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
@@ -40,12 +40,20 @@
             </div>
 
             <div class="sidebar-section">
-                <div class="sidebar-title">Core Features</div>
+                <div class="sidebar-title">Market Intelligence</div>
                 <ul class="sidebar-menu">
                     <li><a href="guides/marketsense-ai.html"><i class="fas fa-robot"></i> MarketSense AI</a></li>
                     <li><a href="guides/stock-data.html"><i class="fas fa-database"></i> Stock Data Management</a></li>
                     <li><a href="guides/signal-generation.html"><i class="fas fa-signal"></i> Signal Generation</a></li>
-                    <li><a href="guides/llm-providers.html"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Strategy Generation</div>
+                <ul class="sidebar-menu">
+                    <li><a href="guides/paper-extraction.html"><i class="fas fa-file-pdf"></i> Paper Extraction</a></li>
+                    <li><a href="guides/code-generation.html"><i class="fas fa-code"></i> Algorithm Generation</a></li>
+                    <li><a href="guides/quantconnect-integration.html"><i class="fas fa-rocket"></i> QuantConnect Integration</a></li>
                 </ul>
             </div>
 
@@ -55,6 +63,8 @@
                     <li><a href="api/overview.html"><i class="fas fa-book"></i> API Overview</a></li>
                     <li><a href="api/stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
                     <li><a href="api/signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="api/strategies.html"><i class="fas fa-code"></i> Strategies API</a></li>
+                    <li><a href="api/backtest.html"><i class="fas fa-rocket"></i> Backtest API</a></li>
                     <li><a href="api/settings.html"><i class="fas fa-sliders-h"></i> Settings API</a></li>
                 </ul>
             </div>
@@ -62,9 +72,10 @@
             <div class="sidebar-section">
                 <div class="sidebar-title">Examples</div>
                 <ul class="sidebar-menu">
-                    <li><a href="examples/generate-signal.html"><i class="fas fa-code"></i> Generate Trading Signal</a></li>
+                    <li><a href="examples/generate-signal.html"><i class="fas fa-chart-line"></i> Generate Trading Signal</a></li>
+                    <li><a href="examples/generate-strategy.html"><i class="fas fa-code"></i> Generate Strategy from Paper</a></li>
+                    <li><a href="examples/full-workflow.html"><i class="fas fa-project-diagram"></i> Complete Workflow</a></li>
                     <li><a href="examples/python-client.html"><i class="fab fa-python"></i> Python Client</a></li>
-                    <li><a href="examples/javascript-integration.html"><i class="fab fa-js"></i> JavaScript Integration</a></li>
                 </ul>
             </div>
 
@@ -81,32 +92,49 @@
         <!-- Main Content -->
         <main class="docs-main">
             <div class="docs-content">
-                <h1>AlphaDesk Documentation</h1>
-                <p class="docs-subtitle">AI-powered financial analysis platform for quantitative traders and market researchers</p>
+                <h1>QuantCoderFS v2.0 Documentation</h1>
+                <p class="docs-subtitle">Unified quantitative research and algorithm development platform combining market intelligence with automated strategy generation</p>
 
                 <div class="info-box info-box-note">
                     <div class="info-box-title">
                         <i class="fas fa-info-circle"></i>
                         Project Status
                     </div>
-                    <p>AlphaDesk is currently in active development (v0.2.0). Features and architecture are subject to change. This is a research and educational project - not financial advice.</p>
+                    <p>QuantCoderFS is currently in active development (v2.0). This unified platform merges market intelligence capabilities with automated algorithm generation. This is a research and educational tool - not financial advice.</p>
                 </div>
 
-                <h2>What is AlphaDesk?</h2>
-                <p>AlphaDesk is a comprehensive financial data aggregation and analysis platform that combines institutional-grade market intelligence with cutting-edge AI technology. Inspired by the <strong>MarketSense AI</strong> research paper, AlphaDesk implements a multi-agent framework for sophisticated market analysis.</p>
+                <h2>What is QuantCoderFS?</h2>
+                <p>QuantCoderFS is a unified quantitative research and algorithm development platform that merges two powerful workflows into one seamless experience. It combines AI-powered market intelligence (inspired by the <strong>MarketSense AI</strong> research paper) with automated strategy generation from academic papers, enabling complete end-to-end quantitative research and deployment.</p>
 
-                <h3>Key Features</h3>
+                <h3>Market Intelligence Features</h3>
                 <ul>
-                    <li><strong>Multi-Agent AI System</strong> - Specialized agents analyze fundamentals, news sentiment, price dynamics, and macroeconomic conditions</li>
-                    <li><strong>Real-Time Market Data</strong> - Comprehensive EOD pricing, fundamentals, and news from EODHD API</li>
+                    <li><strong>Multi-Agent AI System</strong> - MarketSense AI framework with specialized agents analyzing fundamentals, news sentiment, price dynamics, and macroeconomic conditions</li>
+                    <li><strong>Stock Data Aggregation</strong> - Comprehensive EOD pricing, fundamentals, and news data</li>
                     <li><strong>Signal Generation</strong> - BUY/HOLD/SELL signals with conviction scores and confidence levels</li>
-                    <li><strong>LLM Provider Support</strong> - OpenAI, Anthropic Claude, and local models via Ollama</li>
-                    <li><strong>Modern UI</strong> - Next.js frontend with GitHub dark theme and TradingView charts</li>
-                    <li><strong>REST API</strong> - Clean FastAPI backend with comprehensive endpoints</li>
+                    <li><strong>TradingView Charts</strong> - Interactive price charts with technical indicators</li>
+                    <li><strong>Research Notes</strong> - Built-in note-taking for trading ideas and observations</li>
+                </ul>
+
+                <h3>Strategy Generation Features</h3>
+                <ul>
+                    <li><strong>PDF Paper Upload</strong> - Extract and summarize academic finance papers</li>
+                    <li><strong>Automated Code Generation</strong> - CrewAI multi-agent workflow generates production-ready QuantConnect algorithms</li>
+                    <li><strong>Monaco Code Editor</strong> - Professional code editing with syntax highlighting</li>
+                    <li><strong>QuantConnect Integration</strong> - Push generated code directly to QuantConnect for backtesting and live trading</li>
+                    <li><strong>Trading Notes</strong> - Generate structured trading notes from strategies</li>
+                </ul>
+
+                <h3>Technology Stack</h3>
+                <ul>
+                    <li><strong>Backend</strong> - Python, FastAPI, CrewAI, SQLAlchemy</li>
+                    <li><strong>Frontend</strong> - Next.js 15, React 19, TypeScript, Tailwind CSS</li>
+                    <li><strong>AI Frameworks</strong> - CrewAI for agent orchestration, MarketSense AI for signal generation</li>
+                    <li><strong>Integrations</strong> - QuantConnect REST API, market data providers</li>
+                    <li><strong>Database</strong> - SQLite (dev), PostgreSQL-ready</li>
                 </ul>
 
                 <h2>MarketSense AI Architecture</h2>
-                <p>AlphaDesk implements a multi-agent LLM framework based on the MarketSense AI research paper (<a href="https://arxiv.org/abs/2401.03737" target="_blank">Fatouros et al., 2024</a>). The system uses five specialized agents working in orchestration:</p>
+                <p>QuantCoderFS implements a multi-agent LLM framework based on the MarketSense AI research paper (<a href="https://arxiv.org/abs/2401.03737" target="_blank">Fatouros et al., 2024</a>). The system uses five specialized agents working in orchestration:</p>
 
                 <div class="info-box info-box-success">
                     <div class="info-box-title">
@@ -154,7 +182,7 @@
                             │ + Confidence   │
                             └────────────────┘</code></pre>
 
-                <h2>Technology Stack</h2>
+                <h2>System Architecture</h2>
                 <table>
                     <thead>
                         <tr>
@@ -175,9 +203,24 @@
                             <td>User interface and visualization</td>
                         </tr>
                         <tr>
+                            <td>AI Orchestration</td>
+                            <td>CrewAI</td>
+                            <td>Multi-agent workflow automation</td>
+                        </tr>
+                        <tr>
+                            <td>Signal Generation</td>
+                            <td>MarketSense AI framework</td>
+                            <td>Multi-agent market analysis</td>
+                        </tr>
+                        <tr>
                             <td>Charts</td>
                             <td>Lightweight Charts (TradingView)</td>
                             <td>Technical analysis visualization</td>
+                        </tr>
+                        <tr>
+                            <td>Code Editor</td>
+                            <td>Monaco Editor</td>
+                            <td>Algorithm code editing</td>
                         </tr>
                         <tr>
                             <td>Database</td>
@@ -185,31 +228,30 @@
                             <td>Data persistence</td>
                         </tr>
                         <tr>
-                            <td>Data Provider</td>
-                            <td>EODHD API</td>
-                            <td>Market data, fundamentals, news</td>
+                            <td>Trading Platform</td>
+                            <td>QuantConnect REST API</td>
+                            <td>Backtesting and live trading</td>
                         </tr>
                         <tr>
-                            <td>LLM Providers</td>
-                            <td>OpenAI, Anthropic, Ollama</td>
-                            <td>AI-powered analysis</td>
+                            <td>Data Provider</td>
+                            <td>Market data APIs</td>
+                            <td>EOD prices, fundamentals, news</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <h2>Quick Start</h2>
-                <p>Get AlphaDesk running in minutes:</p>
+                <p>Get QuantCoderFS running in minutes:</p>
 
                 <pre><code><span class="comment"># Clone the repository</span>
-git clone https://github.com/SL-Mar/alphadesk.git
-cd alphadesk
+git clone https://github.com/SL-Mar/quantcoderfs.git
+cd quantcoderfs
 
 <span class="comment"># Backend setup</span>
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-alembic upgrade head
 
 <span class="comment"># Frontend setup</span>
 cd ../electron
@@ -217,23 +259,34 @@ npm install
 
 <span class="comment"># Launch the application</span>
 cd ..
-./launch-ad.sh</code></pre>
+./launch.sh</code></pre>
 
                 <p>For detailed installation instructions, see the <a href="guides/installation.html">Installation Guide</a>.</p>
 
-                <h2>API Example</h2>
-                <p>Generate a trading signal for a stock:</p>
+                <h2>API Examples</h2>
 
-                <pre><code><span class="comment"># Using OpenAI (default)</span>
-curl -X POST "http://localhost:8004/api/signals/generate/AAPL.US"
+                <h3>Market Intelligence - Generate Trading Signal</h3>
+                <pre><code><span class="comment"># Generate AI-powered signal for a stock</span>
+curl -X POST "http://localhost:8000/api/signals/generate/AAPL.US"</code></pre>
+                <p>Response includes signal (BUY/HOLD/SELL), conviction score, confidence level, and detailed agent outputs from MarketSense AI framework.</p>
 
-<span class="comment"># Using Ollama (local LLM)</span>
-curl -X POST "http://localhost:8004/api/signals/generate/AAPL.US?llm_provider=ollama"
+                <h3>Strategy Generation - Generate Algorithm from Paper</h3>
+                <pre><code><span class="comment"># Upload paper</span>
+curl -X POST "http://localhost:8000/api/papers/upload" \
+  -F "file=@research_paper.pdf"
 
-<span class="comment"># Using Anthropic Claude</span>
-curl -X POST "http://localhost:8004/api/signals/generate/AAPL.US?llm_provider=anthropic"</code></pre>
+<span class="comment"># Generate QuantConnect algorithm</span>
+curl -X POST "http://localhost:8000/api/papers/generate-code/research_paper.pdf"</code></pre>
+                <p>Returns generated QuantConnect algorithm code ready for backtesting and deployment.</p>
 
-                <p>Response includes signal (BUY/HOLD/SELL), conviction score, confidence level, and detailed agent outputs. See the <a href="api/signals.html">Signals API documentation</a> for complete details.</p>
+                <h3>QuantConnect Integration - Push to Trading Platform</h3>
+                <pre><code><span class="comment"># Push algorithm to QuantConnect</span>
+curl -X POST "http://localhost:8000/api/backtest/trigger-backtest" \
+  -H "Content-Type: application/json" \
+  -d '{"code": "[algorithm code]", "project_name": "My Strategy"}'</code></pre>
+                <p>Creates QuantConnect project, uploads code, compiles, and starts backtest automatically.</p>
+
+                <p>For complete API documentation, see the <a href="api/overview.html">API Reference</a>.</p>
 
                 <h2>Next Steps</h2>
                 <ul>
@@ -249,7 +302,7 @@ curl -X POST "http://localhost:8004/api/signals/generate/AAPL.US?llm_provider=an
                         <i class="fas fa-exclamation-triangle"></i>
                         Disclaimer
                     </div>
-                    <p>AlphaDesk is a research and educational project. All generated signals and analyses are for informational purposes only and should not be considered financial advice. Always conduct your own research and consult with qualified financial advisors before making investment decisions.</p>
+                    <p>QuantCoderFS is a research and educational tool. All generated signals, analyses, and trading algorithms are for informational purposes only and should not be considered financial advice. Always conduct your own research and consult with qualified financial advisors before making investment decisions.</p>
                 </div>
             </div>
         </main>
@@ -257,7 +310,7 @@ curl -X POST "http://localhost:8004/api/signals/generate/AAPL.US?llm_provider=an
 
     <!-- Footer -->
     <footer class="docs-footer">
-        <p>&copy; 2025 AlphaDesk Documentation | Open Source Project | <a href="../index.html">Back to Main Site</a></p>
+        <p>&copy; 2025 QuantCoderFS Documentation | Open Source Project | <a href="../index.html">Back to Main Site</a></p>
     </footer>
 
     <script src="assets/js/docs.js"></script>
