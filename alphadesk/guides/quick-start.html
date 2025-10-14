@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start - AlphaDesk Documentation</title>
+    <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="../docs.html" class="docs-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>AlphaDesk</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="../docs.html">Documentation</a></li>
+                    <li><a href="https://github.com/SL-Mar/alphadesk" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="installation.html"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="quick-start.html" class="active"><i class="fas fa-rocket"></i> Quick Start</a></li>
+                    <li><a href="configuration.html"><i class="fas fa-cog"></i> Configuration</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../api/overview.html"><i class="fas fa-book"></i> API Overview</a></li>
+                    <li><a href="../api/stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
+                    <li><a href="../api/signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="docs-main">
+            <div class="docs-content">
+                <h1>Quick Start Guide</h1>
+                <p class="docs-subtitle">Get your first analysis running in 5 minutes</p>
+
+                <p>This guide assumes you've completed the <a href="installation.html">installation</a>.</p>
+
+                <h2>Step 1: Start AlphaDesk</h2>
+                <pre><code>./launch-ad.sh</code></pre>
+
+                <h2>Step 2: Create a Stock Project</h2>
+                <pre><code>curl -X POST "http://localhost:8004/api/stocks" \
+  -H "Content-Type: application/json" \
+  -d '{"ticker": "AAPL.US"}'</code></pre>
+
+                <h2>Step 3: Generate a Trading Signal</h2>
+                <pre><code>curl -X POST "http://localhost:8004/api/signals/generate/AAPL.US"</code></pre>
+
+                <p>The response will include BUY/HOLD/SELL recommendation with AI analysis. See <a href="../api/signals.html">Signals API</a> for details.</p>
+
+                <h2>Next Steps</h2>
+                <ul>
+                    <li><a href="configuration.html">Configure LLM Providers</a></li>
+                    <li><a href="marketsense-ai.html">Understand MarketSense AI</a></li>
+                    <li><a href="../api/overview.html">Explore Full API</a></li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>&copy; 2025 AlphaDesk Documentation | <a href="../../index.html">Back to Main Site</a></p>
+    </footer>
+
+    <script src="../assets/js/docs.js"></script>
+</body>
+</html>

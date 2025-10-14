@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings API - AlphaDesk Documentation</title>
+    <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="../docs.html" class="docs-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>AlphaDesk</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="../docs.html">Documentation</a></li>
+                    <li><a href="https://github.com/SL-Mar/alphadesk" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="../guides/installation.html"><i class="fas fa-download"></i> Installation</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="overview.html"><i class="fas fa-book"></i> API Overview</a></li>
+                    <li><a href="stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
+                    <li><a href="signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="settings.html" class="active"><i class="fas fa-sliders-h"></i> Settings API</a></li>
+                </ul>
+            </div>
+        </aside>
+        <main class="docs-main">
+            <div class="docs-content">
+                <h1>Settings API</h1>
+                <p class="docs-subtitle">Manage API keys and application configuration</p>
+                
+                <h2>Endpoints</h2>
+                
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/settings</span>
+                    </div>
+                    <p class="api-description">Retrieve current settings (API keys are masked).</p>
+                </div>
+
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-put">PUT</span>
+                        <span class="api-path">/api/settings</span>
+                    </div>
+                    <p class="api-description">Update settings including API keys.</p>
+                    
+                    <h4>Request Body</h4>
+                    <pre><code>{
+  "eodhd_api_key": "your_eodhd_key",
+  "openai_api_key": "your_openai_key",
+  "anthropic_api_key": "your_anthropic_key",
+  "tavily_api_key": "your_tavily_key"
+}</code></pre>
+                </div>
+
+                <p>Configure these settings through the UI at <code>http://localhost:3004/settings</code> or via API.</p>
+            </div>
+        </main>
+    </div>
+    <footer class="docs-footer">
+        <p>&copy; 2025 AlphaDesk Documentation | <a href="../../index.html">Back to Main Site</a></p>
+    </footer>
+    <script src="../assets/js/docs.js"></script>
+</body>
+</html>
