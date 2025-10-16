@@ -2,18 +2,714 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=../docs.html#dependencies">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting to Configuration Documentation</title>
+    <title>Settings API - QuantCoderFS Documentation</title>
     <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 2rem;">
-        <div>
-            <h1>Page Moved</h1>
-            <p>Settings and configuration documentation has been integrated into the main documentation.</p>
-            <p>Redirecting to <a href="../docs.html#dependencies">Dependencies & Configuration section</a>...</p>
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="../docs.html" class="docs-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>QuantCoderFS</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="../docs.html">Documentation</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
         </div>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="../docs.html#installation"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="../docs.html#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">System Components</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html#market-intelligence"><i class="fas fa-robot"></i> Market Intelligence</a></li>
+                    <li><a href="../docs.html#strategy-generator"><i class="fas fa-code"></i> Strategy Generator</a></li>
+                    <li><a href="../docs.html#dependencies"><i class="fas fa-cubes"></i> Dependencies</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
+                    <li><a href="signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> Settings API</a></li>
+                    <li><a href="research.html"><i class="fas fa-microscope"></i> Research API</a></li>
+                    <li><a href="../docs.html#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
+                    <li><a href="../docs.html#api-backtest"><i class="fas fa-rocket"></i> Backtest API</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Advanced Topics</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html#agents"><i class="fas fa-robot"></i> Agentic Frameworks</a></li>
+                    <li><a href="../docs.html#llm-providers"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                    <li><a href="../docs.html#database"><i class="fas fa-table"></i> Database Schema</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <ul class="sidebar-menu">
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="https://arxiv.org/abs/2401.03737" target="_blank"><i class="fas fa-file-pdf"></i> MarketSense AI Paper</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="docs-main">
+            <div class="docs-content">
+                <h1>Settings API</h1>
+                <p class="docs-subtitle">Manage API keys and credentials for third-party services</p>
+
+                <div class="info-box info-box-note">
+                    <div class="info-box-title">
+                        <i class="fas fa-info-circle"></i>
+                        Last Updated
+                    </div>
+                    <p>16 Oct 2025 - Current Implementation</p>
+                </div>
+
+                <h2>Overview</h2>
+                <p>The Settings API provides secure management of API keys and credentials for:</p>
+                <ul>
+                    <li><strong>LLM Providers</strong> - OpenAI and Anthropic API keys for signal generation</li>
+                    <li><strong>Data Providers</strong> - EODHD API key for stock market data</li>
+                    <li><strong>Research Tools</strong> - Tavily API key for web search capabilities</li>
+                    <li><strong>QuantConnect</strong> - User ID, API token, and organization ID for algorithm deployment</li>
+                </ul>
+
+                <div class="info-box info-box-warning">
+                    <div class="info-box-title">
+                        <i class="fas fa-lock"></i>
+                        Security Notes
+                    </div>
+                    <ul>
+                        <li>API keys are stored in SQLite database (<code>market_intelligence.db</code>)</li>
+                        <li>QuantConnect tokens are masked in responses (first 4 chars + asterisks)</li>
+                        <li>Never commit the database file to version control</li>
+                        <li>For production, use environment variables or secret management services</li>
+                        <li>All credentials are transmitted over HTTPS in production</li>
+                    </ul>
+                </div>
+
+                <h2>General Settings Endpoints</h2>
+
+                <!-- Read Settings -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/settings</span>
+                    </div>
+                    <p class="api-description">Read all user settings and API keys (credentials are masked).</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/settings"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "openai_key": "sk-proj-1234...",
+  "anthropic_key": "sk-ant-api03-5678...",
+  "eodhd_key": "67545463280a10.78461538",
+  "tavily_key": "tvly-abcd...",
+  "qc_user_id": "12345678",
+  "qc_api_token_masked": "a1b2************************************************************",
+  "qc_organization_id": "5cad178b20a1d52567b534553413b691",
+  "qc_verified": true,
+  "qc_verified_at": "2025-10-16T10:30:00Z",
+  "updated_at": "2025-10-16T14:30:00Z"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response Fields</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>openai_key</code></td>
+                                    <td>string</td>
+                                    <td>OpenAI API key (starts with "sk-proj-" or "sk-")</td>
+                                </tr>
+                                <tr>
+                                    <td><code>anthropic_key</code></td>
+                                    <td>string</td>
+                                    <td>Anthropic API key (starts with "sk-ant-api03-")</td>
+                                </tr>
+                                <tr>
+                                    <td><code>eodhd_key</code></td>
+                                    <td>string</td>
+                                    <td>EODHD API key</td>
+                                </tr>
+                                <tr>
+                                    <td><code>tavily_key</code></td>
+                                    <td>string</td>
+                                    <td>Tavily API key (starts with "tvly-")</td>
+                                </tr>
+                                <tr>
+                                    <td><code>qc_user_id</code></td>
+                                    <td>string</td>
+                                    <td>QuantConnect user ID</td>
+                                </tr>
+                                <tr>
+                                    <td><code>qc_api_token_masked</code></td>
+                                    <td>string</td>
+                                    <td>Masked QuantConnect API token (first 4 chars visible)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>qc_organization_id</code></td>
+                                    <td>string</td>
+                                    <td>QuantConnect organization ID</td>
+                                </tr>
+                                <tr>
+                                    <td><code>qc_verified</code></td>
+                                    <td>boolean</td>
+                                    <td>Whether QC credentials have been verified</td>
+                                </tr>
+                                <tr>
+                                    <td><code>qc_verified_at</code></td>
+                                    <td>datetime</td>
+                                    <td>Timestamp of last successful QC verification</td>
+                                </tr>
+                                <tr>
+                                    <td><code>updated_at</code></td>
+                                    <td>datetime</td>
+                                    <td>Last settings update timestamp</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Update Settings -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-post">POST</span>
+                        <span class="api-path">/api/settings</span>
+                    </div>
+                    <p class="api-description">Update user settings and API keys (only provided fields are updated).</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Request Body</h4>
+                        <pre><code>{
+  "openai_key": "sk-proj-1234567890abcdef...",
+  "anthropic_key": "sk-ant-api03-1234567890abcdef...",
+  "eodhd_key": "67545463280a10.78461538",
+  "tavily_key": "tvly-1234567890abcdef..."
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Request Parameters</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>openai_key</code></td>
+                                    <td>string</td>
+                                    <td>No</td>
+                                    <td>OpenAI API key for GPT-4 based signal generation</td>
+                                </tr>
+                                <tr>
+                                    <td><code>anthropic_key</code></td>
+                                    <td>string</td>
+                                    <td>No</td>
+                                    <td>Anthropic API key for Claude-based signal generation</td>
+                                </tr>
+                                <tr>
+                                    <td><code>eodhd_key</code></td>
+                                    <td>string</td>
+                                    <td>No</td>
+                                    <td>EODHD API key for stock market data (required for Stocks API)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>tavily_key</code></td>
+                                    <td>string</td>
+                                    <td>No</td>
+                                    <td>Tavily API key for web search (used by macro agent and research)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request (cURL)</h4>
+                        <pre><code>curl -X POST "http://localhost:8004/api/settings" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "openai_key": "sk-proj-1234567890abcdef...",
+    "eodhd_key": "67545463280a10.78461538"
+  }'</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request (Python)</h4>
+                        <pre><code>import requests
+
+response = requests.post(
+    "http://localhost:8004/api/settings",
+    json={
+        "openai_key": "sk-proj-1234567890abcdef...",
+        "eodhd_key": "67545463280a10.78461538",
+        "tavily_key": "tvly-1234567890abcdef..."
+    }
+)
+
+settings = response.json()
+print(f"Settings updated at: {settings['updated_at']}")</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "openai_key": "sk-proj-1234...",
+  "anthropic_key": null,
+  "eodhd_key": "67545463280a10.78461538",
+  "tavily_key": "tvly-abcd...",
+  "qc_user_id": null,
+  "qc_api_token_masked": null,
+  "qc_organization_id": null,
+  "qc_verified": null,
+  "qc_verified_at": null,
+  "updated_at": "2025-10-16T14:30:00Z"
+}</code></pre>
+                    </div>
+                </div>
+
+                <h2>QuantConnect Credentials Endpoints</h2>
+
+                <!-- Update QC Credentials -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-post">POST</span>
+                        <span class="api-path">/api/settings/quantconnect</span>
+                    </div>
+                    <p class="api-description">Update QuantConnect credentials (user ID, API token, organization ID).</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Request Body</h4>
+                        <pre><code>{
+  "qc_user_id": "12345678",
+  "qc_api_token": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
+  "qc_organization_id": "5cad178b20a1d52567b534553413b691"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Request Parameters</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>qc_user_id</code></td>
+                                    <td>string</td>
+                                    <td>Yes</td>
+                                    <td>Your QuantConnect user ID (found in account settings)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>qc_api_token</code></td>
+                                    <td>string</td>
+                                    <td>Yes</td>
+                                    <td>Your QuantConnect API token (64 character hex string)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>qc_organization_id</code></td>
+                                    <td>string</td>
+                                    <td>Yes</td>
+                                    <td>Your QuantConnect organization ID</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="info-box info-box-success">
+                        <div class="info-box-title">
+                            <i class="fas fa-key"></i>
+                            Getting QuantConnect Credentials
+                        </div>
+                        <p>To find your QuantConnect credentials:</p>
+                        <ol>
+                            <li>Log in to <a href="https://www.quantconnect.com" target="_blank">QuantConnect</a></li>
+                            <li>Go to <strong>Account</strong> → <strong>API Access</strong></li>
+                            <li>Copy your <strong>User ID</strong>, <strong>API Token</strong>, and <strong>Organization ID</strong></li>
+                            <li>Paste them into the settings form or API request</li>
+                        </ol>
+                        <p><strong>Note:</strong> The API token is stored raw (unhashed) in the database, but is hashed with a timestamp during API authentication calls.</p>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request (cURL)</h4>
+                        <pre><code>curl -X POST "http://localhost:8004/api/settings/quantconnect" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "qc_user_id": "12345678",
+    "qc_api_token": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
+    "qc_organization_id": "5cad178b20a1d52567b534553413b691"
+  }'</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request (Python)</h4>
+                        <pre><code>import requests
+
+response = requests.post(
+    "http://localhost:8004/api/settings/quantconnect",
+    json={
+        "qc_user_id": "12345678",
+        "qc_api_token": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
+        "qc_organization_id": "5cad178b20a1d52567b534553413b691"
+    }
+)
+
+status = response.json()
+print(f"QC Credentials: configured={status['configured']}, verified={status['verified']}")</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "configured": true,
+  "verified": false,
+  "user_id": "12345678",
+  "organization_id": "5cad178b20a1d52567b534553413b691",
+  "verified_at": null
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Important Notes</h4>
+                        <ul>
+                            <li>When credentials are updated, <code>qc_verified</code> is automatically reset to <code>false</code></li>
+                            <li>Use the <code>/api/settings/quantconnect/test</code> endpoint to verify credentials</li>
+                            <li>Verification status is tracked in <code>qc_verified</code> and <code>qc_verified_at</code> fields</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Get QC Credentials Status -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/settings/quantconnect</span>
+                    </div>
+                    <p class="api-description">Get QuantConnect credentials status (token is masked).</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/settings/quantconnect"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK) - Configured</h4>
+                        <pre><code>{
+  "configured": true,
+  "verified": true,
+  "user_id": "12345678",
+  "organization_id": "5cad178b20a1d52567b534553413b691",
+  "verified_at": "2025-10-16T10:30:00Z"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK) - Not Configured</h4>
+                        <pre><code>{
+  "configured": false,
+  "verified": false,
+  "user_id": null,
+  "organization_id": null,
+  "verified_at": null
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Test QC Connection -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-post">POST</span>
+                        <span class="api-path">/api/settings/quantconnect/test</span>
+                    </div>
+                    <p class="api-description">Test QuantConnect API connection and verify credentials.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl -X POST "http://localhost:8004/api/settings/quantconnect/test"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Processing Flow</h4>
+                        <p>This endpoint performs the following verification steps:</p>
+                        <ol>
+                            <li>Checks if QuantConnect credentials are configured</li>
+                            <li>Creates proper authentication headers (timestamp-based hashing)</li>
+                            <li>Calls QuantConnect API <code>/projects/read</code> endpoint as a test</li>
+                            <li>If successful, updates <code>qc_verified</code> to <code>true</code> and sets <code>qc_verified_at</code></li>
+                            <li>Returns detailed status and error messages</li>
+                        </ol>
+                        <p><strong>Timeout:</strong> 10 seconds</p>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK) - Success</h4>
+                        <pre><code>{
+  "success": true,
+  "message": "QuantConnect credentials verified successfully",
+  "user_id": "12345678",
+  "organization_id": "5cad178b20a1d52567b534553413b691"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK) - Invalid Credentials</h4>
+                        <pre><code>{
+  "success": false,
+  "message": "Verification failed: Invalid credentials",
+  "user_id": "12345678",
+  "organization_id": "5cad178b20a1d52567b534553413b691"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK) - Connection Timeout</h4>
+                        <pre><code>{
+  "success": false,
+  "message": "Connection timeout - please try again",
+  "user_id": "12345678",
+  "organization_id": "5cad178b20a1d52567b534553413b691"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Error Response (400 Bad Request)</h4>
+                        <pre><code>{
+  "detail": "QuantConnect credentials not configured"
+}</code></pre>
+                    </div>
+
+                    <div class="info-box info-box-warning">
+                        <div class="info-box-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Verification Best Practices
+                        </div>
+                        <ul>
+                            <li>Test credentials immediately after updating them</li>
+                            <li>Re-verify if you encounter deployment errors in Strategy Generator</li>
+                            <li>Check your QuantConnect account for API rate limits</li>
+                            <li>Ensure your organization ID matches your actual QuantConnect organization</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Delete QC Credentials -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-delete">DELETE</span>
+                        <span class="api-path">/api/settings/quantconnect</span>
+                    </div>
+                    <p class="api-description">Remove QuantConnect credentials from settings.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl -X DELETE "http://localhost:8004/api/settings/quantconnect"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "message": "QuantConnect credentials removed successfully"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Error Response (404 Not Found)</h4>
+                        <pre><code>{
+  "detail": "Settings not found"
+}</code></pre>
+                    </div>
+                </div>
+
+                <h2>Token Masking</h2>
+                <p>For security, API tokens are masked when returned in API responses:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Masking Format</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>QuantConnect API Token</td>
+                            <td>First 4 chars + 60 asterisks</td>
+                            <td><code>a1b2************************************************************</code></td>
+                        </tr>
+                        <tr>
+                            <td>Other API Keys</td>
+                            <td>Full key visible</td>
+                            <td><code>sk-proj-1234...</code> (truncated in docs)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box info-box-note">
+                    <div class="info-box-title">
+                        <i class="fas fa-info-circle"></i>
+                        Why Mask Only QC Token?
+                    </div>
+                    <p>QuantConnect tokens are 64-character hex strings that are particularly sensitive because they provide full access to your algorithmic trading account. Other API keys (OpenAI, EODHD, etc.) are shown in full for easier debugging, but you should still protect them.</p>
+                </div>
+
+                <h2>Data Storage</h2>
+                <p>All settings are stored in the <code>user_settings</code> table in the SQLite database:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>INTEGER</td>
+                            <td>Primary key (always 1, single-user system)</td>
+                        </tr>
+                        <tr>
+                            <td><code>openai_key</code></td>
+                            <td>TEXT</td>
+                            <td>OpenAI API key</td>
+                        </tr>
+                        <tr>
+                            <td><code>anthropic_key</code></td>
+                            <td>TEXT</td>
+                            <td>Anthropic API key</td>
+                        </tr>
+                        <tr>
+                            <td><code>eodhd_key</code></td>
+                            <td>TEXT</td>
+                            <td>EODHD API key</td>
+                        </tr>
+                        <tr>
+                            <td><code>tavily_key</code></td>
+                            <td>TEXT</td>
+                            <td>Tavily API key</td>
+                        </tr>
+                        <tr>
+                            <td><code>qc_user_id</code></td>
+                            <td>TEXT</td>
+                            <td>QuantConnect user ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>qc_api_token</code></td>
+                            <td>TEXT</td>
+                            <td>QuantConnect API token (stored raw, not hashed)</td>
+                        </tr>
+                        <tr>
+                            <td><code>qc_organization_id</code></td>
+                            <td>TEXT</td>
+                            <td>QuantConnect organization ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>qc_verified</code></td>
+                            <td>BOOLEAN</td>
+                            <td>Whether QC credentials have been verified</td>
+                        </tr>
+                        <tr>
+                            <td><code>qc_verified_at</code></td>
+                            <td>DATETIME</td>
+                            <td>Timestamp of last successful QC verification</td>
+                        </tr>
+                        <tr>
+                            <td><code>updated_at</code></td>
+                            <td>DATETIME</td>
+                            <td>Last settings update timestamp</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Error Responses</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Status Code</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>400</td>
+                            <td>Invalid request (missing required fields, invalid format)</td>
+                        </tr>
+                        <tr>
+                            <td>404</td>
+                            <td>Settings not found (only for DELETE operations)</td>
+                        </tr>
+                        <tr>
+                            <td>500</td>
+                            <td>Internal server error</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Next Steps</h2>
+                <ul>
+                    <li><a href="stocks.html">Stocks API</a> - Requires EODHD API key</li>
+                    <li><a href="signals.html">Signals API</a> - Requires OpenAI or Anthropic key</li>
+                    <li><a href="research.html">Research API</a> - Requires OpenAI and Tavily keys</li>
+                    <li><a href="../docs.html#api-strategies">Strategies API</a> - Requires QuantConnect credentials</li>
+                    <li><a href="../docs.html#dependencies">Dependencies & Third-Party Services</a></li>
+                </ul>
+            </div>
+        </main>
     </div>
+
+    <footer class="docs-footer">
+        <p>&copy; 2025 QuantCoderFS Documentation | Open Source Project | <a href="../../index.html">Back to Main Site</a></p>
+    </footer>
+
+    <script src="../assets/js/docs.js"></script>
 </body>
 </html>

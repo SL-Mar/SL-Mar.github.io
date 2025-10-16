@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research API - QuantCoderFS Documentation</title>
+    <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="../docs.html" class="docs-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>QuantCoderFS</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="../docs.html">Documentation</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="../docs.html#installation"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="../docs.html#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">System Components</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html#market-intelligence"><i class="fas fa-robot"></i> Market Intelligence</a></li>
+                    <li><a href="../docs.html#strategy-generator"><i class="fas fa-code"></i> Strategy Generator</a></li>
+                    <li><a href="../docs.html#dependencies"><i class="fas fa-cubes"></i> Dependencies</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
+                    <li><a href="signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings API</a></li>
+                    <li><a href="research.html" class="active"><i class="fas fa-microscope"></i> Research API</a></li>
+                    <li><a href="../docs.html#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
+                    <li><a href="../docs.html#api-backtest"><i class="fas fa-rocket"></i> Backtest API</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Advanced Topics</div>
+                <ul class="sidebar-menu">
+                    <li><a href="../docs.html#agents"><i class="fas fa-robot"></i> Agentic Frameworks</a></li>
+                    <li><a href="../docs.html#llm-providers"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                    <li><a href="../docs.html#database"><i class="fas fa-table"></i> Database Schema</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <ul class="sidebar-menu">
+                    <li><a href="https://github.com/SL-Mar/quantcoderfs" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="https://arxiv.org/abs/2401.03737" target="_blank"><i class="fas fa-file-pdf"></i> MarketSense AI Paper</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="docs-main">
+            <div class="docs-content">
+                <h1>Research API</h1>
+                <p class="docs-subtitle">Generate comprehensive research reports using GPT-Researcher and web search</p>
+
+                <div class="info-box info-box-note">
+                    <div class="info-box-title">
+                        <i class="fas fa-info-circle"></i>
+                        Last Updated
+                    </div>
+                    <p>16 Oct 2025 - Current Implementation</p>
+                </div>
+
+                <h2>Overview</h2>
+                <p>The Research API provides AI-powered research report generation using <a href="https://github.com/assafelovic/gpt-researcher" target="_blank">GPT-Researcher</a>. Generate comprehensive, well-sourced research reports on stocks with:</p>
+                <ul>
+                    <li><strong>Web Search Integration</strong> - Automatically searches and synthesizes information from the web</li>
+                    <li><strong>Predefined Templates</strong> - Deep dive, industry analysis, risk assessment, growth opportunities</li>
+                    <li><strong>Custom Queries</strong> - Ask any research question about a stock</li>
+                    <li><strong>Source Citations</strong> - All reports include full source URLs</li>
+                    <li><strong>Markdown Output</strong> - Professional, well-formatted reports saved to snapshot folders</li>
+                </ul>
+
+                <div class="info-box info-box-warning">
+                    <div class="info-box-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Requirements
+                    </div>
+                    <ul>
+                        <li><strong>OpenAI API Key</strong> - Required for GPT-4 based research (configure in <a href="settings.html">Settings API</a>)</li>
+                        <li><strong>Tavily API Key</strong> - Required for web search capabilities (configure in <a href="settings.html">Settings API</a>)</li>
+                        <li><strong>Stock Snapshot</strong> - Research reports are associated with specific snapshots</li>
+                        <li><strong>Processing Time</strong> - Reports typically take 60-120 seconds to generate</li>
+                    </ul>
+                </div>
+
+                <h2>Research Templates</h2>
+                <p>QuantCoderFS provides four predefined research templates optimized for equity research:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Template</th>
+                            <th>Value</th>
+                            <th>Focus</th>
+                            <th>Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Deep Dive</td>
+                            <td><code>deep_dive</code></td>
+                            <td>Comprehensive analysis of company, products, competitive position</td>
+                            <td>New stock research, initial due diligence</td>
+                        </tr>
+                        <tr>
+                            <td>Industry Analysis</td>
+                            <td><code>industry</code></td>
+                            <td>Sector trends, competitive landscape, market dynamics</td>
+                            <td>Understanding industry context</td>
+                        </tr>
+                        <tr>
+                            <td>Risk Assessment</td>
+                            <td><code>risk</code></td>
+                            <td>Business risks, regulatory concerns, competitive threats</td>
+                            <td>Risk management, downside analysis</td>
+                        </tr>
+                        <tr>
+                            <td>Growth Opportunities</td>
+                            <td><code>growth</code></td>
+                            <td>Expansion plans, new markets, product pipeline</td>
+                            <td>Identifying catalysts, upside potential</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Core Endpoints</h2>
+
+                <!-- Generate Research Report -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-post">POST</span>
+                        <span class="api-path">/api/stocks/{ticker}/snapshots/{snapshot_id}/research/generate</span>
+                    </div>
+                    <p class="api-description">Generate a comprehensive research report using GPT-Researcher.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">ticker</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Stock ticker symbol (e.g., "AAPL.US")</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">snapshot_id</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Snapshot ID (format: YYYYMMDD_HHMMSS)</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Request Body</h4>
+                        <pre><code>{
+  "query": "Provide a comprehensive analysis of Apple Inc.",
+  "template": "deep_dive"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Request Parameters</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>query</code></td>
+                                    <td>string</td>
+                                    <td>Yes</td>
+                                    <td>Research question or topic to investigate</td>
+                                </tr>
+                                <tr>
+                                    <td><code>template</code></td>
+                                    <td>string</td>
+                                    <td>No</td>
+                                    <td>Predefined template: "deep_dive", "industry", "risk", or "growth" (null for custom query)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request - Template (cURL)</h4>
+                        <pre><code>curl -X POST \
+  "http://localhost:8004/api/stocks/AAPL.US/snapshots/20251016_143022/research/generate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Provide a comprehensive analysis of Apple Inc.",
+    "template": "deep_dive"
+  }'</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request - Custom Query (Python)</h4>
+                        <pre><code>import requests
+
+response = requests.post(
+    "http://localhost:8004/api/stocks/AAPL.US/snapshots/20251016_143022/research/generate",
+    json={
+        "query": "What are Apple's competitive advantages in the smartphone market?",
+        "template": null  # Custom query, no template
+    }
+)
+
+research = response.json()
+print(f"Report saved to: {research['saved_path']}")
+print(f"Sources: {len(research['sources'])}")
+print(research['report'][:500])  # Print first 500 chars</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Processing Flow</h4>
+                        <p>This endpoint performs the following research steps:</p>
+                        <ol>
+                            <li>Validates API keys (OpenAI and Tavily) from Settings</li>
+                            <li>Initializes GPT-Researcher with ticker and API keys</li>
+                            <li>If template specified: Uses predefined research query and methodology</li>
+                            <li>If custom query: Researches the exact question provided</li>
+                            <li>Searches the web using Tavily API (10-20 sources)</li>
+                            <li>Synthesizes findings using GPT-4</li>
+                            <li>Generates structured Markdown report with sources</li>
+                            <li>Saves report to <code>/stocks/{ticker}/{snapshot_id}/research/</code></li>
+                            <li>Returns report content and metadata</li>
+                        </ol>
+                        <p><strong>Typical execution time:</strong> 60-120 seconds</p>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "query": "Provide a comprehensive analysis of Apple Inc.",
+  "report": "# Apple Inc. - Comprehensive Analysis\n\n## Executive Summary\n\nApple Inc. (NASDAQ: AAPL) is the world's largest technology company...\n\n## Company Overview\n\nFounded in 1976, Apple has evolved from a personal computer manufacturer...\n\n## Products and Services\n\n### iPhone\nThe iPhone represents approximately 52% of total revenue...\n\n### Services\nApple's services segment has grown to $85B annually...\n\n## Competitive Position\n\nApple maintains strong competitive moats through...\n\n## Financial Performance\n\nRevenue: $394B (FY2023)\nGross Margin: 44%\nNet Income: $97B\n\n## Outlook\n\nKey growth drivers include...\n\n## Conclusion\n\nApple demonstrates exceptional fundamentals...",
+  "sources": [
+    "https://www.apple.com/investor/",
+    "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193",
+    "https://www.bloomberg.com/quote/AAPL:US",
+    "https://www.cnbc.com/apple/",
+    "https://9to5mac.com/guides/iphone/",
+    "https://www.macrumors.com/",
+    "https://www.statista.com/statistics/apple/",
+    "https://www.marketwatch.com/investing/stock/aapl"
+  ],
+  "report_type": "deep_dive",
+  "ticker": "AAPL.US",
+  "saved_path": "/home/user/stocks/AAPL.US/20251016_143022/research/research_deep_dive_20251016_153045.md"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response Fields</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>query</code></td>
+                                    <td>string</td>
+                                    <td>The research query that was executed</td>
+                                </tr>
+                                <tr>
+                                    <td><code>report</code></td>
+                                    <td>string</td>
+                                    <td>Full markdown report content</td>
+                                </tr>
+                                <tr>
+                                    <td><code>sources</code></td>
+                                    <td>array</td>
+                                    <td>List of source URLs used in the research</td>
+                                </tr>
+                                <tr>
+                                    <td><code>report_type</code></td>
+                                    <td>string</td>
+                                    <td>Template used ("deep_dive", "industry", "risk", "growth", or "custom")</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ticker</code></td>
+                                    <td>string</td>
+                                    <td>Stock ticker symbol</td>
+                                </tr>
+                                <tr>
+                                    <td><code>saved_path</code></td>
+                                    <td>string</td>
+                                    <td>Absolute path where report was saved</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Error Responses</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>400</td>
+                                    <td>OpenAI and Tavily API keys must be configured in Settings</td>
+                                </tr>
+                                <tr>
+                                    <td>404</td>
+                                    <td>Stock snapshot not found</td>
+                                </tr>
+                                <tr>
+                                    <td>500</td>
+                                    <td>Error generating research report (API error, timeout, etc.)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h2>Research File Management</h2>
+
+                <!-- List Research Files -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/snapshots/{snapshot_id}/research/files</span>
+                    </div>
+                    <p class="api-description">List all research report files for a specific snapshot.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">ticker</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Stock ticker symbol</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">snapshot_id</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Snapshot ID (format: YYYYMMDD_HHMMSS)</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/snapshots/20251016_143022/research/files"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>[
+  {
+    "filename": "research_deep_dive_20251016_153045.md",
+    "path": "/home/user/stocks/AAPL.US/20251016_143022/research/research_deep_dive_20251016_153045.md",
+    "size_kb": 52.3,
+    "modified": 1729089045.234
+  },
+  {
+    "filename": "research_risk_20251016_145022.md",
+    "path": "/home/user/stocks/AAPL.US/20251016_143022/research/research_risk_20251016_145022.md",
+    "size_kb": 38.7,
+    "modified": 1729087822.156
+  },
+  {
+    "filename": "research_custom_20251016_140512.md",
+    "path": "/home/user/stocks/AAPL.US/20251016_143022/research/research_custom_20251016_140512.md",
+    "size_kb": 28.1,
+    "modified": 1729086312.789
+  }
+]</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response Fields</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>filename</code></td>
+                                    <td>string</td>
+                                    <td>Report filename (format: research_{template}_{timestamp}.md)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>path</code></td>
+                                    <td>string</td>
+                                    <td>Absolute file path</td>
+                                </tr>
+                                <tr>
+                                    <td><code>size_kb</code></td>
+                                    <td>float</td>
+                                    <td>File size in kilobytes</td>
+                                </tr>
+                                <tr>
+                                    <td><code>modified</code></td>
+                                    <td>float</td>
+                                    <td>Unix timestamp of last modification</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><strong>Note:</strong> Results are sorted by modified date (newest first).</p>
+                    </div>
+                </div>
+
+                <!-- Get Research Content -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/snapshots/{snapshot_id}/research/content/{filename}</span>
+                    </div>
+                    <p class="api-description">Get the content of a specific research report.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">ticker</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Stock ticker symbol</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">snapshot_id</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Snapshot ID</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">filename</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Research report filename (must start with "research_" and end with ".md")</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/snapshots/20251016_143022/research/content/research_deep_dive_20251016_153045.md"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "filename": "research_deep_dive_20251016_153045.md",
+  "content": "# Research Report: Provide a comprehensive analysis of Apple Inc.\n\n**Ticker:** AAPL.US\n\n**Report Type:** deep_dive\n\n---\n\n# Apple Inc. - Comprehensive Analysis\n\n## Executive Summary\n\nApple Inc. (NASDAQ: AAPL) is the world's largest technology company...\n\n[Full markdown content here]\n\n---\n\n## Sources\n\n1. https://www.apple.com/investor/\n2. https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193\n3. https://www.bloomberg.com/quote/AAPL:US\n..."
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Security Validation</h4>
+                        <p>This endpoint validates filenames to prevent directory traversal attacks:</p>
+                        <ul>
+                            <li>Must start with <code>research_</code></li>
+                            <li>Must end with <code>.md</code></li>
+                            <li>Cannot contain <code>/</code> or <code>..</code></li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Error Responses</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>400</td>
+                                    <td>Invalid filename (security validation failed)</td>
+                                </tr>
+                                <tr>
+                                    <td>404</td>
+                                    <td>Research file not found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Delete Research File -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-delete">DELETE</span>
+                        <span class="api-path">/api/stocks/{ticker}/snapshots/{snapshot_id}/research/{filename}</span>
+                    </div>
+                    <p class="api-description">Delete a specific research report file from a snapshot.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">ticker</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Stock ticker symbol</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">snapshot_id</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Snapshot ID</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">filename</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Research report filename to delete</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl -X DELETE \
+  "http://localhost:8004/api/stocks/AAPL.US/snapshots/20251016_143022/research/research_custom_20251016_140512.md"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "message": "Research file deleted successfully",
+  "filename": "research_custom_20251016_140512.md"
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Error Responses</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>400</td>
+                                    <td>Invalid filename</td>
+                                </tr>
+                                <tr>
+                                    <td>404</td>
+                                    <td>Research file not found</td>
+                                </tr>
+                                <tr>
+                                    <td>500</td>
+                                    <td>Failed to delete file</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h2>Report Structure</h2>
+                <p>All research reports are saved as Markdown files with the following structure:</p>
+
+                <div class="api-section">
+                    <h4 class="api-section-title">Example Report Structure</h4>
+                    <pre><code># Research Report: [Query]
+
+**Ticker:** AAPL.US
+
+**Report Type:** deep_dive
+
+---
+
+# [Report Title]
+
+## Executive Summary
+
+[High-level overview of findings]
+
+## Section 1
+
+[Detailed analysis...]
+
+## Section 2
+
+[Detailed analysis...]
+
+## Conclusion
+
+[Summary and recommendations]
+
+---
+
+## Sources
+
+1. https://source1.com
+2. https://source2.com
+3. https://source3.com
+...</code></pre>
+                </div>
+
+                <h2>File Naming Convention</h2>
+                <p>Research report filenames follow a consistent pattern:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pattern</th>
+                            <th>Example</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>research_{template}_{timestamp}.md</code></td>
+                            <td><code>research_deep_dive_20251016_153045.md</code></td>
+                            <td>Template-based report</td>
+                        </tr>
+                        <tr>
+                            <td><code>research_custom_{timestamp}.md</code></td>
+                            <td><code>research_custom_20251016_140512.md</code></td>
+                            <td>Custom query report</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>GPT-Researcher Integration</h2>
+                <div class="info-box info-box-success">
+                    <div class="info-box-title">
+                        <i class="fas fa-robot"></i>
+                        About GPT-Researcher
+                    </div>
+                    <p>QuantCoderFS uses <a href="https://github.com/assafelovic/gpt-researcher" target="_blank">GPT-Researcher</a>, an autonomous research agent that:</p>
+                    <ul>
+                        <li><strong>Plans</strong> - Generates a research plan based on the query</li>
+                        <li><strong>Searches</strong> - Uses Tavily API to find relevant web sources</li>
+                        <li><strong>Scrapes</strong> - Extracts content from source pages</li>
+                        <li><strong>Filters</strong> - Identifies most relevant information</li>
+                        <li><strong>Synthesizes</strong> - Uses GPT-4 to write comprehensive reports</li>
+                        <li><strong>Cites</strong> - Includes full source URLs for verification</li>
+                    </ul>
+                    <p><strong>Benefits:</strong> More comprehensive than simple web search, well-structured outputs, proper source attribution</p>
+                </div>
+
+                <h2>Best Practices</h2>
+                <ul>
+                    <li><strong>Specific Queries</strong> - More specific questions yield better, more focused reports</li>
+                    <li><strong>Template Selection</strong> - Use templates for standard research needs, custom queries for specific questions</li>
+                    <li><strong>Multiple Reports</strong> - Generate multiple reports (e.g., deep_dive + risk) for comprehensive coverage</li>
+                    <li><strong>Source Verification</strong> - Always review source URLs to assess report quality and bias</li>
+                    <li><strong>Timing</strong> - Reports take 1-2 minutes; consider implementing async generation for production</li>
+                    <li><strong>API Costs</strong> - Each report uses GPT-4 and web search credits; monitor API usage</li>
+                </ul>
+
+                <div class="info-box info-box-warning">
+                    <div class="info-box-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Important Notes
+                    </div>
+                    <ul>
+                        <li>Research reports are for informational purposes only, not investment advice</li>
+                        <li>Web sources may contain outdated or inaccurate information</li>
+                        <li>GPT-4 can occasionally hallucinate facts; verify important claims</li>
+                        <li>Tavily API free tier has rate limits (1000 requests/month)</li>
+                        <li>Reports are stored locally and not backed up automatically</li>
+                    </ul>
+                </div>
+
+                <h2>Error Responses</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Status Code</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>400</td>
+                            <td>Invalid request (missing API keys, invalid filename)</td>
+                        </tr>
+                        <tr>
+                            <td>404</td>
+                            <td>Stock snapshot or research file not found</td>
+                        </tr>
+                        <tr>
+                            <td>500</td>
+                            <td>Error generating research (API timeout, service unavailable)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Next Steps</h2>
+                <ul>
+                    <li><a href="stocks.html">Stocks API</a> - Create stock snapshots for research</li>
+                    <li><a href="signals.html">Signals API</a> - Generate trading signals based on research</li>
+                    <li><a href="settings.html">Settings API</a> - Configure OpenAI and Tavily API keys</li>
+                    <li><a href="../docs.html#dependencies">Dependencies & Third-Party Services</a></li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>&copy; 2025 QuantCoderFS Documentation | Open Source Project | <a href="../../index.html">Back to Main Site</a></p>
+    </footer>
+
+    <script src="../assets/js/docs.js"></script>
+</body>
+</html>

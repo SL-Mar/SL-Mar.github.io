@@ -53,6 +53,8 @@
                     <li><a href="#api-overview"><i class="fas fa-book"></i> API Overview</a></li>
                     <li><a href="api/stocks.html"><i class="fas fa-database"></i> Stocks API</a></li>
                     <li><a href="api/signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="api/settings.html"><i class="fas fa-cog"></i> Settings API</a></li>
+                    <li><a href="api/research.html"><i class="fas fa-microscope"></i> Research API</a></li>
                     <li><a href="#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
                     <li><a href="#api-backtest"><i class="fas fa-rocket"></i> Backtest API</a></li>
                 </ul>
@@ -353,34 +355,100 @@
                     <h3>Module 1: Market Intelligence API</h3>
                     <p>Automated equity research and signal generation using EODHD market data.</p>
 
+                    <h4>API Endpoints Overview</h4>
                     <table>
                         <thead>
                             <tr>
+                                <th>Category</th>
                                 <th>Endpoint</th>
                                 <th>Method</th>
-                                <th>Purpose</th>
+                                <th>Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><code>/api/stocks/create</code></td>
+                                <td rowspan="6">Stocks</td>
+                                <td>/api/stocks/create</td>
                                 <td>POST</td>
-                                <td>Create stock project and fetch EODHD data</td>
+                                <td>Create stock snapshot</td>
                             </tr>
                             <tr>
-                                <td><code>/api/stocks/list</code></td>
+                                <td>/api/stocks/tickers</td>
                                 <td>GET</td>
-                                <td>List all stock projects</td>
+                                <td>List all tickers</td>
                             </tr>
                             <tr>
-                                <td><code>/api/stocks/load</code></td>
+                                <td>/api/stocks/{ticker}/snapshots</td>
                                 <td>GET</td>
-                                <td>Load stock project with all EODHD data</td>
+                                <td>List snapshots</td>
                             </tr>
                             <tr>
-                                <td><code>/api/signals/generate/{project_id}</code></td>
+                                <td>/api/stocks/{ticker}/snapshots/{id}</td>
+                                <td>GET</td>
+                                <td>Load snapshot</td>
+                            </tr>
+                            <tr>
+                                <td>/api/stocks/refresh</td>
                                 <td>POST</td>
-                                <td>Generate BUY/HOLD/SELL signal using multi-agent AI</td>
+                                <td>Refresh data</td>
+                            </tr>
+                            <tr>
+                                <td>/api/stocks/{ticker}/files/*</td>
+                                <td>GET</td>
+                                <td>Download files</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4">Signals</td>
+                                <td>/api/signals/generate/{project_id}</td>
+                                <td>POST</td>
+                                <td>Generate signal</td>
+                            </tr>
+                            <tr>
+                                <td>/api/signals/snapshot/{ticker}/{id}</td>
+                                <td>GET</td>
+                                <td>Get snapshot signal</td>
+                            </tr>
+                            <tr>
+                                <td>/api/signals/history/{ticker}</td>
+                                <td>GET</td>
+                                <td>Signal history</td>
+                            </tr>
+                            <tr>
+                                <td>/api/signals/latest</td>
+                                <td>GET</td>
+                                <td>Latest signals</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">Research</td>
+                                <td>/api/stocks/{ticker}/snapshots/{id}/research/generate</td>
+                                <td>POST</td>
+                                <td>Generate report</td>
+                            </tr>
+                            <tr>
+                                <td>/api/stocks/{ticker}/snapshots/{id}/research/files</td>
+                                <td>GET</td>
+                                <td>List reports</td>
+                            </tr>
+                            <tr>
+                                <td>/api/stocks/{ticker}/snapshots/{id}/research/content/{file}</td>
+                                <td>GET</td>
+                                <td>Get report content</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">Settings</td>
+                                <td>/api/settings</td>
+                                <td>GET/POST</td>
+                                <td>Manage API keys</td>
+                            </tr>
+                            <tr>
+                                <td>/api/settings/quantconnect</td>
+                                <td>GET/POST/DELETE</td>
+                                <td>QC credentials</td>
+                            </tr>
+                            <tr>
+                                <td>/api/settings/quantconnect/test</td>
+                                <td>POST</td>
+                                <td>Test connection</td>
                             </tr>
                         </tbody>
                     </table>
@@ -423,10 +491,34 @@
                     <h3>Authentication</h3>
                     <p>API endpoints are currently unauthenticated (localhost development). For production deployment, implement JWT or API key authentication.</p>
 
+                    <h3>Snapshot Architecture</h3>
+                    <p>QuantCoderFS v2.0 introduced a snapshot-based architecture for stock data management:</p>
+
+                    <h4>Key Concepts</h4>
+                    <ul>
+                        <li><strong>Snapshot ID:</strong> Timestamp in format <code>YYYYMMDD_HHMMSS</code> (e.g., <code>20251016_143022</code>)</li>
+                        <li><strong>Multiple Snapshots:</strong> Each ticker can have multiple snapshots taken at different times</li>
+                        <li><strong>Immutable Data:</strong> Once created, snapshot data doesn't change (refresh creates new snapshot)</li>
+                        <li><strong>File Storage:</strong> All data stored in <code>/stocks/{ticker}/{snapshot_id}/</code> directory</li>
+                        <li><strong>Independent Analysis:</strong> Each snapshot has its own signals and research reports</li>
+                    </ul>
+
+                    <h4>Benefits</h4>
+                    <ul>
+                        <li>Track how market conditions evolve over time</li>
+                        <li>Compare signals generated on different dates</li>
+                        <li>Reproducible analysis - same snapshot always yields same signal</li>
+                        <li>Easy cleanup - delete old snapshots without affecting recent data</li>
+                    </ul>
+
+                    <p>See the <a href="api/stocks.html#snapshot-architecture">Stocks API documentation</a> for detailed snapshot management endpoints.</p>
+
                     <h3>Detailed API Documentation</h3>
                     <ul>
                         <li><a href="api/stocks.html">Stocks API</a> - Complete reference for stock data management</li>
                         <li><a href="api/signals.html">Signals API</a> - Complete reference for signal generation</li>
+                        <li><a href="api/settings.html">Settings API</a> - Manage API keys and credentials</li>
+                        <li><a href="api/research.html">Research API</a> - Generate comprehensive research reports</li>
                         <li><a href="#api-strategies">Strategies API</a> - Algorithm generation endpoints</li>
                         <li><a href="#api-backtest">Backtest API</a> - QuantConnect deployment</li>
                     </ul>
