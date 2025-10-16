@@ -419,6 +419,12 @@
                                 <td>Latest signals</td>
                             </tr>
                             <tr>
+                                <td rowspan="1">Returns</td>
+                                <td>/api/stocks/{ticker}/snapshots/{id}/returns</td>
+                                <td>GET</td>
+                                <td>Calculate return statistics</td>
+                            </tr>
+                            <tr>
                                 <td rowspan="3">Research</td>
                                 <td>/api/stocks/{ticker}/snapshots/{id}/research/generate</td>
                                 <td>POST</td>
@@ -543,6 +549,67 @@
                         <h4>Analysis Tab - AI Trading Signals</h4>
                         <img src="assets/images/quantcoder33.png" alt="QuantCoderFS Market Intelligence - Trading Signal" style="width: 100%; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem;">
                         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Multi-agent generated BUY/HOLD/SELL signals with conviction score, confidence level, and detailed reasoning from fundamentals, news, price dynamics, and macro agents.</p>
+                    </div>
+
+                    <div style="margin: 2rem 0;">
+                        <h4>Returns Tab - Statistical Return Analysis</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Comprehensive statistical analysis of historical return distributions with interactive histogram visualization.
+                        </p>
+                        <div class="info-box info-box-info">
+                            <div class="info-box-title">
+                                <i class="fas fa-chart-bar"></i>
+                                Return Distribution Methodology
+                            </div>
+                            <p><strong>Return Calculation:</strong></p>
+                            <div style="font-family: 'Courier New', monospace; background-color: var(--bg-secondary); padding: 10px; border-radius: 4px; margin: 10px 0;">
+                                Return(t) = [(Price(t) - Price(t-1)) / Price(t-1)] × 100
+                            </div>
+                            <p><strong>Supported Periods:</strong> Daily, Weekly (Friday close), Monthly (month-end)</p>
+                            <p><strong>Lookback Options:</strong> 3M, 6M, 1Y, 2Y, 3Y, 5Y</p>
+
+                            <p style="margin-top: 1rem;"><strong>Key Statistics Displayed:</strong></p>
+                            <ul>
+                                <li><strong>Mean Return:</strong> Average return over the period (positive = upward trend)</li>
+                                <li><strong>Volatility (σ):</strong> Standard deviation of returns (higher = more risk)</li>
+                                <li><strong>Sharpe Ratio (Annualized):</strong> Risk-adjusted return metric
+                                    <div style="font-size: 0.85em; color: var(--text-secondary); margin-left: 20px;">
+                                        Formula: Sharpe = (Mean / StdDev) × √periods_per_year<br>
+                                        Interpretation: &gt;1 = good, 0-1 = modest, &lt;0 = poor risk-adjusted returns
+                                    </div>
+                                </li>
+                                <li><strong>Skewness:</strong> Distribution asymmetry
+                                    <div style="font-size: 0.85em; color: var(--text-secondary); margin-left: 20px;">
+                                        Positive = right tail longer (large gains more likely)<br>
+                                        Negative = left tail longer (large losses more likely)
+                                    </div>
+                                </li>
+                                <li><strong>Kurtosis:</strong> Tail heaviness (values &gt;3 = heavy tails, higher extreme return probability)</li>
+                                <li><strong>Win Rate:</strong> Percentage of periods with positive returns</li>
+                                <li><strong>Min/Max Returns:</strong> Extreme value ranges</li>
+                            </ul>
+
+                            <p style="margin-top: 1rem;"><strong>Histogram Visualization:</strong></p>
+                            <p>30-bin frequency distribution revealing:</p>
+                            <ul>
+                                <li>Return clustering patterns (most common return ranges)</li>
+                                <li>Distribution shape (symmetric, skewed, or multi-modal)</li>
+                                <li>Tail behavior (frequency of extreme gains/losses)</li>
+                                <li>Deviation from normal distribution assumptions</li>
+                            </ul>
+
+                            <p style="margin-top: 1rem;"><strong>Example Interpretation:</strong></p>
+                            <div style="background-color: rgba(88, 166, 255, 0.1); padding: 10px; border-left: 3px solid #58a6ff; margin-top: 10px;">
+                                <p style="margin: 0; font-weight: bold;">Daily Analysis: Mean 0.5%, σ 2.1%, Sharpe 1.5, Skewness -0.3, Kurtosis 4.2, Win Rate 55%</p>
+                                <ul style="margin-top: 5px; font-size: 0.9em;">
+                                    <li>✓ Positive average daily return (upward trend)</li>
+                                    <li>✓ Good risk-adjusted returns (Sharpe &gt;1)</li>
+                                    <li>⚠ Left-skewed (downside tail longer — larger losses more likely)</li>
+                                    <li>⚠ Heavy tails (elevated risk of extreme moves)</li>
+                                    <li>✓ 55% of days positive (slight edge)</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
                     <div style="margin: 2rem 0;">
