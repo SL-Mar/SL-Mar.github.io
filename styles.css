@@ -76,7 +76,7 @@ nav {
 }
 
 .logo {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--text);
     white-space: nowrap;
@@ -87,12 +87,11 @@ nav {
     display: flex;
     gap: 2rem;
     list-style: none;
-    justify-content: flex-end;
 }
 
 .nav-center a {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 1rem;
     white-space: nowrap;
     font-weight: 500;
 }
