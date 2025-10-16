@@ -28,7 +28,7 @@ body {
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -203,6 +203,12 @@ p {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-top: 2rem;
+    align-items: stretch;
+}
+
+.cards > a {
+    display: flex;
+    min-height: 100%;
 }
 
 @media (max-width: 768px) {
