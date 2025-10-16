@@ -49,6 +49,8 @@
                 <ul class="sidebar-menu">
                     <li><a href="stocks.html" class="active"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
                     <li><a href="signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings API</a></li>
+                    <li><a href="research.html"><i class="fas fa-microscope"></i> Research API</a></li>
                     <li><a href="../docs.html#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
                     <li><a href="../docs.html#api-backtest"><i class="fas fa-rocket"></i> Backtest API</a></li>
                 </ul>
@@ -75,64 +77,256 @@
         <main class="docs-main">
             <div class="docs-content">
                 <h1>Stocks API</h1>
-                <p class="docs-subtitle">Manage stock projects and retrieve market data from EODHD API</p>
+                <p class="docs-subtitle">Manage stock snapshots and retrieve market data from EODHD API</p>
+
+                <div class="info-box info-box-note">
+                    <div class="info-box-title">
+                        <i class="fas fa-info-circle"></i>
+                        Last Updated
+                    </div>
+                    <p>16 Oct 2025 - Current Implementation</p>
+                </div>
 
                 <h2>Overview</h2>
-                <p>The Stocks API provides endpoints for creating stock projects and fetching comprehensive market data including:</p>
+                <p>The Stocks API provides endpoints for creating and managing stock data snapshots. Each snapshot represents a point-in-time capture of:</p>
                 <ul>
-                    <li><strong>End-of-Day (EOD) Pricing</strong> - Historical price data with OHLCV</li>
+                    <li><strong>End-of-Day (EOD) Pricing</strong> - Historical OHLCV price data</li>
                     <li><strong>Fundamentals</strong> - Financial statements, ratios, and key metrics</li>
-                    <li><strong>Company News</strong> - Latest news articles with sentiment analysis</li>
-                    <li><strong>Technical Indicators</strong> - Pre-calculated indicators for analysis</li>
+                    <li><strong>Company News</strong> - Latest news articles</li>
+                    <li><strong>Technical Indicators</strong> - Pre-calculated indicators</li>
                 </ul>
 
-                <h2>Endpoints</h2>
+                <h2>Snapshot Architecture</h2>
+                <div class="info-box info-box-success">
+                    <div class="info-box-title">
+                        <i class="fas fa-camera"></i>
+                        Understanding Snapshots
+                    </div>
+                    <p>QuantCoderFS uses a <strong>snapshot-based architecture</strong> to track stock data over time:</p>
+                    <ul>
+                        <li><strong>Snapshot ID Format:</strong> <code>YYYYMMDD_HHMMSS</code> (e.g., <code>20251016_143022</code>)</li>
+                        <li><strong>Multiple Snapshots:</strong> Each ticker can have multiple snapshots taken at different times</li>
+                        <li><strong>Independent Data:</strong> Each snapshot contains its own EOD data, fundamentals, news, and analysis</li>
+                        <li><strong>File Storage:</strong> Data is stored in <code>/stocks/{ticker}/{snapshot_id}/</code></li>
+                        <li><strong>Versioning:</strong> Track how market conditions and analysis change over time</li>
+                    </ul>
+                    <p><strong>Legacy Format:</strong> The old <code>project_id</code> format (<code>ticker_timestamp</code>) is still supported but deprecated.</p>
+                </div>
 
-                <!-- Create Stock Project -->
+                <h2>Core Endpoints</h2>
+
+                <!-- Create Stock Snapshot -->
                 <div class="api-endpoint">
                     <div>
                         <span class="api-method method-post">POST</span>
-                        <span class="api-path">/stocks</span>
+                        <span class="api-path">/api/stocks/create</span>
                     </div>
-                    <p class="api-description">Create a new stock project and fetch initial data from EODHD API.</p>
+                    <p class="api-description">Create a new stock snapshot and fetch data from EODHD API.</p>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Request Body</h4>
                         <pre><code>{
-  "ticker": "AAPL.US"
+  "ticker": "AAPL.US",
+  "lookback_years": 1,
+  "period": "1d",
+  "limit": 250
 }</code></pre>
                     </div>
 
                     <div class="api-section">
-                        <h4 class="api-section-title">Example Request</h4>
-                        <pre><code>curl -X POST "http://localhost:8004/api/stocks" \
+                        <h4 class="api-section-title">Request Parameters</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>ticker</code></td>
+                                    <td>string</td>
+                                    <td>Yes</td>
+                                    <td>Stock ticker symbol (e.g., "AAPL.US")</td>
+                                </tr>
+                                <tr>
+                                    <td><code>lookback_years</code></td>
+                                    <td>integer</td>
+                                    <td>No</td>
+                                    <td>Years of historical data (default: 1)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>period</code></td>
+                                    <td>string</td>
+                                    <td>No</td>
+                                    <td>Granularity: '1m', '5m', '1h', '1d', '1w', '1M' (default: '1d')</td>
+                                </tr>
+                                <tr>
+                                    <td><code>limit</code></td>
+                                    <td>integer</td>
+                                    <td>No</td>
+                                    <td>Number of candles to fetch (default: 250)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request (cURL)</h4>
+                        <pre><code>curl -X POST "http://localhost:8004/api/stocks/create" \
   -H "Content-Type: application/json" \
-  -d '{"ticker": "AAPL.US"}'</code></pre>
+  -d '{
+    "ticker": "AAPL.US",
+    "lookback_years": 1,
+    "period": "1d",
+    "limit": 250
+  }'</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request (Python)</h4>
+                        <pre><code>import requests
+
+response = requests.post(
+    "http://localhost:8004/api/stocks/create",
+    json={
+        "ticker": "AAPL.US",
+        "lookback_years": 1,
+        "period": "1d",
+        "limit": 250
+    }
+)
+
+data = response.json()
+print(f"Snapshot ID: {data['snapshot_id']}")</code></pre>
                     </div>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Response (201 Created)</h4>
                         <pre><code>{
-  "id": 1,
   "ticker": "AAPL.US",
-  "company_name": "Apple Inc",
-  "exchange": "NASDAQ",
-  "created_at": "2025-10-14T10:30:00Z",
-  "updated_at": "2025-10-14T10:30:00Z",
-  "data_fetched": true,
-  "eod_count": 252,
-  "news_count": 50
+  "snapshot_id": "20251016_143022",
+  "stock": {
+    "ticker": "AAPL.US",
+    "eod_data": {
+      "code": "AAPL.US",
+      "data": [
+        {
+          "code": "AAPL.US",
+          "exchange_short_name": "NASDAQ",
+          "data": [
+            {
+              "date": "2025-10-15",
+              "open": 184.20,
+              "high": 186.50,
+              "low": 183.80,
+              "close": 185.45,
+              "adjusted_close": 185.45,
+              "volume": 52341000
+            }
+          ]
+        }
+      ]
+    },
+    "fundamentals": {
+      "General": {
+        "Code": "AAPL",
+        "Type": "Common Stock",
+        "Name": "Apple Inc",
+        "Exchange": "NASDAQ",
+        "Sector": "Technology",
+        "Industry": "Consumer Electronics"
+      },
+      "Highlights": {
+        "MarketCapitalization": 2850000000000,
+        "PERatio": 28.5,
+        "DividendYield": 0.0052
+      }
+    },
+    "news": {
+      "articles": [
+        {
+          "date": "2025-10-15",
+          "title": "Apple Announces New Product Line",
+          "content": "...",
+          "sentiment": {
+            "polarity": 0.65,
+            "neg": 0.1,
+            "neu": 0.3,
+            "pos": 0.6
+          }
+        }
+      ]
+    }
+  }
 }</code></pre>
                     </div>
                 </div>
 
-                <!-- Get Stock Data -->
+                <!-- List Tickers -->
                 <div class="api-endpoint">
                     <div>
                         <span class="api-method method-get">GET</span>
-                        <span class="api-path">/stocks/{ticker}</span>
+                        <span class="api-path">/api/stocks/tickers</span>
                     </div>
-                    <p class="api-description">Retrieve complete stock data including pricing, fundamentals, and news.</p>
+                    <p class="api-description">List all tickers that have stock data.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/tickers"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>["AAPL.US", "MSFT.US", "GOOGL.US", "TSLA.US"]</code></pre>
+                    </div>
+                </div>
+
+                <!-- List Snapshots -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/snapshots</span>
+                    </div>
+                    <p class="api-description">List all snapshots for a specific ticker.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/snapshots"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>[
+  {
+    "snapshot_id": "20251016_143022",
+    "created_at": "2025-10-16T14:30:22Z",
+    "size_mb": 2.5,
+    "has_eod": true,
+    "has_fundamentals": true,
+    "has_news": true
+  },
+  {
+    "snapshot_id": "20251015_091500",
+    "created_at": "2025-10-15T09:15:00Z",
+    "size_mb": 2.4,
+    "has_eod": true,
+    "has_fundamentals": true,
+    "has_news": true
+  }
+]</code></pre>
+                    </div>
+                </div>
+
+                <!-- Load Snapshot -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/snapshots/{snapshot_id}</span>
+                    </div>
+                    <p class="api-description">Load a specific snapshot with all data.</p>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Path Parameters</h4>
@@ -145,143 +339,236 @@
                                 </div>
                                 <div class="param-description">Stock ticker symbol (e.g., "AAPL.US")</div>
                             </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">snapshot_id</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Snapshot ID (format: YYYYMMDD_HHMMSS)</div>
+                            </li>
                         </ul>
                     </div>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Example Request</h4>
-                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US"</code></pre>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/snapshots/20251016_143022"</code></pre>
                     </div>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Response (200 OK)</h4>
                         <pre><code>{
-  "stock": {
-    "id": 1,
-    "ticker": "AAPL.US",
-    "company_name": "Apple Inc",
-    "exchange": "NASDAQ",
-    "sector": "Technology",
-    "industry": "Consumer Electronics"
-  },
-  "latest_price": {
-    "date": "2025-10-13",
-    "open": 184.20,
-    "high": 186.50,
-    "low": 183.80,
-    "close": 185.45,
-    "volume": 52341000,
-    "adjusted_close": 185.45
-  },
-  "fundamentals": {
-    "market_cap": 2850000000000,
-    "pe_ratio": 28.5,
-    "eps": 6.50,
-    "dividend_yield": 0.52,
-    "book_value": 4.25,
-    "roe": 0.45,
-    "debt_to_equity": 1.85
-  },
-  "news": [
+  "ticker": "AAPL.US",
+  "eod_data": { ... },
+  "fundamentals": { ... },
+  "news": { ... }
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Error Responses</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>404</td>
+                                    <td>Snapshot not found for ticker/snapshot_id</td>
+                                </tr>
+                                <tr>
+                                    <td>500</td>
+                                    <td>Internal server error</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h2>Data Management Endpoints</h2>
+
+                <!-- Refresh Stock Data -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-post">POST</span>
+                        <span class="api-path">/api/stocks/refresh</span>
+                    </div>
+                    <p class="api-description">Incrementally refresh stock data (fetch only missing EOD records, optionally refresh fundamentals/news).</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Request Body</h4>
+                        <pre><code>{
+  "ticker": "AAPL.US",
+  "refresh_fundamentals": true,
+  "refresh_news": true
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "ticker": "AAPL.US",
+  "eod_records_added": 5,
+  "news_articles_added": 12,
+  "fundamentals_refreshed": true,
+  "errors": [],
+  "stock": { ... }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h2>File Storage Endpoints</h2>
+
+                <!-- List Files -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/files</span>
+                    </div>
+                    <p class="api-description">List all files available for a stock (directory structure with metadata).</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "ticker": "AAPL.US",
+  "data_files": [
     {
-      "title": "Apple Announces New Product Line",
-      "date": "2025-10-13",
-      "sentiment": "positive",
-      "link": "https://..."
+      "filename": "eod_prices.csv",
+      "size_kb": 52.3,
+      "modified": 1697456789
+    },
+    {
+      "filename": "fundamentals.json",
+      "size_kb": 124.5,
+      "modified": 1697456790
+    },
+    {
+      "filename": "news.txt",
+      "size_kb": 89.2,
+      "modified": 1697456791
     }
   ],
-  "eod_data_count": 252,
+  "snapshots": [
+    {
+      "snapshot_id": "20251016_143022",
+      "size_mb": 2.5
+    }
+  ]
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Download EOD CSV -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/files/eod</span>
+                    </div>
+                    <p class="api-description">Download EOD prices CSV file.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/files/eod" \
+  --output aapl_eod_prices.csv</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <p>Returns CSV file with headers:</p>
+                        <pre><code>date,open,high,low,close,adjusted_close,volume
+2024-10-16,184.20,186.50,183.80,185.45,185.45,52341000
+...</code></pre>
+                    </div>
+                </div>
+
+                <!-- Download Fundamentals JSON -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/files/fundamentals</span>
+                    </div>
+                    <p class="api-description">Download fundamentals JSON file.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/files/fundamentals" \
+  --output aapl_fundamentals.json</code></pre>
+                    </div>
+                </div>
+
+                <!-- Download News TXT -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/files/news</span>
+                    </div>
+                    <p class="api-description">Download news articles TXT file (line-delimited JSON).</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/files/news" \
+  --output aapl_news.txt</code></pre>
+                    </div>
+                </div>
+
+                <!-- Get Metadata -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/stocks/{ticker}/files/metadata</span>
+                    </div>
+                    <p class="api-description">Get metadata.json contents.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "ticker": "AAPL.US",
+  "created_at": "2025-10-16T14:30:22Z",
+  "lookback_years": 1,
+  "period": "1d",
+  "limit": 250,
+  "eod_count": 252,
   "news_count": 50
 }</code></pre>
                     </div>
                 </div>
 
-                <!-- List All Stocks -->
+                <h2>Delete Endpoints</h2>
+
+                <!-- Delete Snapshot -->
                 <div class="api-endpoint">
                     <div>
-                        <span class="api-method method-get">GET</span>
-                        <span class="api-path">/stocks</span>
+                        <span class="api-method method-delete">DELETE</span>
+                        <span class="api-path">/api/stocks/{ticker}/snapshots/{snapshot_id}</span>
                     </div>
-                    <p class="api-description">List all stock projects in the database.</p>
+                    <p class="api-description">Delete an entire snapshot (all data, analysis, research).</p>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Example Request</h4>
-                        <pre><code>curl "http://localhost:8004/api/stocks"</code></pre>
+                        <pre><code>curl -X DELETE \
+  "http://localhost:8004/api/stocks/AAPL.US/snapshots/20251016_143022"</code></pre>
                     </div>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Response (200 OK)</h4>
                         <pre><code>{
-  "stocks": [
-    {
-      "id": 1,
-      "ticker": "AAPL.US",
-      "company_name": "Apple Inc",
-      "created_at": "2025-10-14T10:30:00Z"
-    },
-    {
-      "id": 2,
-      "ticker": "MSFT.US",
-      "company_name": "Microsoft Corporation",
-      "created_at": "2025-10-14T11:00:00Z"
-    }
-  ],
-  "count": 2
+  "status": "deleted",
+  "ticker": "AAPL.US",
+  "snapshot_id": "20251016_143022"
 }</code></pre>
                     </div>
                 </div>
 
-                <!-- Get EOD Data -->
-                <div class="api-endpoint">
-                    <div>
-                        <span class="api-method method-get">GET</span>
-                        <span class="api-path">/stocks/{ticker}/eod</span>
-                    </div>
-                    <p class="api-description">Retrieve end-of-day pricing data for a stock.</p>
-
-                    <div class="api-section">
-                        <h4 class="api-section-title">Query Parameters</h4>
-                        <ul class="api-params">
-                            <li class="api-param">
-                                <div>
-                                    <span class="param-name">from</span>
-                                    <span class="param-type">string (date)</span>
-                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
-                                </div>
-                                <div class="param-description">Start date (YYYY-MM-DD format)</div>
-                            </li>
-                            <li class="api-param">
-                                <div>
-                                    <span class="param-name">to</span>
-                                    <span class="param-type">string (date)</span>
-                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
-                                </div>
-                                <div class="param-description">End date (YYYY-MM-DD format)</div>
-                            </li>
-                            <li class="api-param">
-                                <div>
-                                    <span class="param-name">limit</span>
-                                    <span class="param-type">integer</span>
-                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
-                                </div>
-                                <div class="param-description">Maximum number of records (default: 252)</div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="api-section">
-                        <h4 class="api-section-title">Example Request</h4>
-                        <pre><code>curl "http://localhost:8004/api/stocks/AAPL.US/eod?from=2025-01-01&to=2025-10-14"</code></pre>
-                    </div>
-                </div>
-
-                <!-- Delete Stock -->
+                <!-- Delete Ticker -->
                 <div class="api-endpoint">
                     <div>
                         <span class="api-method method-delete">DELETE</span>
-                        <span class="api-path">/stocks/{ticker}</span>
+                        <span class="api-path">/api/stocks/{ticker}</span>
                     </div>
-                    <p class="api-description">Delete a stock project and all associated data.</p>
+                    <p class="api-description">Delete entire ticker directory with all snapshots.</p>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Example Request</h4>
@@ -291,15 +578,29 @@
                     <div class="api-section">
                         <h4 class="api-section-title">Response (200 OK)</h4>
                         <pre><code>{
-  "message": "Stock project deleted successfully",
+  "status": "deleted",
   "ticker": "AAPL.US"
 }</code></pre>
                     </div>
                 </div>
 
+                <h2>Legacy Endpoints (Deprecated)</h2>
+
+                <div class="info-box info-box-warning">
+                    <div class="info-box-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Deprecated Endpoints
+                    </div>
+                    <p>The following endpoints are maintained for backward compatibility but should not be used in new code:</p>
+                    <ul>
+                        <li><code>GET /api/stocks/list</code> - Use <code>GET /api/stocks/tickers</code> instead</li>
+                        <li><code>GET /api/stocks/load?project_id={ticker}_{timestamp}</code> - Use <code>GET /api/stocks/{ticker}/snapshots/{snapshot_id}</code> instead</li>
+                    </ul>
+                </div>
+
                 <h2>Data Models</h2>
 
-                <h3>Stock Project</h3>
+                <h3>Stock Model</h3>
                 <table>
                     <thead>
                         <tr>
@@ -310,39 +611,29 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><code>id</code></td>
-                            <td>integer</td>
-                            <td>Unique identifier</td>
-                        </tr>
-                        <tr>
                             <td><code>ticker</code></td>
                             <td>string</td>
                             <td>Stock ticker symbol</td>
                         </tr>
                         <tr>
-                            <td><code>company_name</code></td>
-                            <td>string</td>
-                            <td>Company legal name</td>
+                            <td><code>eod_data</code></td>
+                            <td>EODResult</td>
+                            <td>Historical price data</td>
                         </tr>
                         <tr>
-                            <td><code>exchange</code></td>
-                            <td>string</td>
-                            <td>Exchange code (NASDAQ, NYSE, etc.)</td>
+                            <td><code>fundamentals</code></td>
+                            <td>StockFundamentals</td>
+                            <td>Financial statements and ratios</td>
                         </tr>
                         <tr>
-                            <td><code>created_at</code></td>
-                            <td>datetime</td>
-                            <td>Project creation timestamp</td>
-                        </tr>
-                        <tr>
-                            <td><code>updated_at</code></td>
-                            <td>datetime</td>
-                            <td>Last update timestamp</td>
+                            <td><code>news</code></td>
+                            <td>NewsData</td>
+                            <td>News articles with sentiment</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <h3>EOD Price Data</h3>
+                <h3>EOD Price Record</h3>
                 <table>
                     <thead>
                         <tr>
@@ -399,7 +690,7 @@
                     <ul>
                         <li>20 years of historical EOD data</li>
                         <li>Fundamental data (financial statements, ratios)</li>
-                        <li>Company news and sentiment</li>
+                        <li>Company news</li>
                         <li>100 API requests per day (free tier)</li>
                     </ul>
                 </div>
@@ -419,28 +710,21 @@
                         </tr>
                         <tr>
                             <td>404</td>
-                            <td>Stock not found in database</td>
-                        </tr>
-                        <tr>
-                            <td>409</td>
-                            <td>Stock project already exists</td>
+                            <td>Stock/snapshot not found</td>
                         </tr>
                         <tr>
                             <td>500</td>
                             <td>Internal server error or EODHD API error</td>
-                        </tr>
-                        <tr>
-                            <td>503</td>
-                            <td>EODHD API unavailable</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <h2>Next Steps</h2>
                 <ul>
-                    <li><a href="signals.html">Signals API</a> - Generate trading signals using stock data</li>
+                    <li><a href="signals.html">Signals API</a> - Generate trading signals using stock snapshots</li>
+                    <li><a href="research.html">Research API</a> - Generate comprehensive research reports</li>
+                    <li><a href="settings.html">Settings API</a> - Configure API keys and credentials</li>
                     <li><a href="../docs.html#dependencies">Dependencies & Third-Party Services</a></li>
-                    <li><a href="../docs.html#installation">Installation & Configuration</a></li>
                 </ul>
             </div>
         </main>

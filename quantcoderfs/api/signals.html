@@ -49,6 +49,8 @@
                 <ul class="sidebar-menu">
                     <li><a href="stocks.html"><i class="fas fa-chart-bar"></i> Stocks API</a></li>
                     <li><a href="signals.html" class="active"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings API</a></li>
+                    <li><a href="research.html"><i class="fas fa-microscope"></i> Research API</a></li>
                     <li><a href="../docs.html#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
                     <li><a href="../docs.html#api-backtest"><i class="fas fa-rocket"></i> Backtest API</a></li>
                 </ul>
@@ -80,9 +82,9 @@
                 <div class="info-box info-box-note">
                     <div class="info-box-title">
                         <i class="fas fa-info-circle"></i>
-                        Base URL
+                        Last Updated
                     </div>
-                    <p><code>http://localhost:8004/api</code> (development)</p>
+                    <p>16 Oct 2025 - Current Implementation</p>
                 </div>
 
                 <h2>Overview</h2>
@@ -95,15 +97,30 @@
                     <li><strong>Agent Outputs</strong>: Detailed analysis from each specialized agent</li>
                 </ul>
 
-                <h2>Endpoints</h2>
+                <h2>Project ID Format</h2>
+                <div class="info-box info-box-success">
+                    <div class="info-box-title">
+                        <i class="fas fa-tag"></i>
+                        Understanding Project IDs
+                    </div>
+                    <p>The <code>project_id</code> parameter uses the format: <code>ticker:timestamp</code></p>
+                    <ul>
+                        <li><strong>New Format:</strong> <code>AAPL.US:20251016_143022</code> (ticker:snapshot_id)</li>
+                        <li><strong>Legacy Format:</strong> <code>aapl.us_20251016_143022</code> (ticker_snapshot_id) - still supported</li>
+                        <li><strong>Components:</strong> Ticker symbol + colon + snapshot ID (YYYYMMDD_HHMMSS)</li>
+                        <li><strong>Purpose:</strong> Links signals to specific stock data snapshots for reproducibility</li>
+                    </ul>
+                </div>
 
-                <!-- Generate Signal -->
+                <h2>Core Endpoints</h2>
+
+                <!-- Get Snapshot Signal -->
                 <div class="api-endpoint">
                     <div>
-                        <span class="api-method method-post">POST</span>
-                        <span class="api-path">/signals/generate/{ticker}</span>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/signals/snapshot/{ticker}/{snapshot_id}</span>
                     </div>
-                    <p class="api-description">Generate a new trading signal for the specified ticker using multi-agent AI analysis.</p>
+                    <p class="api-description">Get the latest signal for a specific snapshot (from file storage, not database).</p>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Path Parameters</h4>
@@ -114,29 +131,22 @@
                                     <span class="param-type">string</span>
                                     <span class="param-required">required</span>
                                 </div>
-                                <div class="param-description">Stock ticker symbol (e.g., "AAPL.US", "MSFT.US")</div>
+                                <div class="param-description">Stock ticker symbol (e.g., "AAPL.US")</div>
                             </li>
-                        </ul>
-                    </div>
-
-                    <div class="api-section">
-                        <h4 class="api-section-title">Query Parameters</h4>
-                        <ul class="api-params">
                             <li class="api-param">
                                 <div>
-                                    <span class="param-name">llm_provider</span>
+                                    <span class="param-name">snapshot_id</span>
                                     <span class="param-type">string</span>
-                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                    <span class="param-required">required</span>
                                 </div>
-                                <div class="param-description">LLM provider to use: "openai" (default), "anthropic", or "ollama"</div>
+                                <div class="param-description">Snapshot ID (format: YYYYMMDD_HHMMSS)</div>
                             </li>
                         </ul>
                     </div>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Example Request</h4>
-                        <pre><code>curl -X POST "http://localhost:8004/api/signals/generate/AAPL.US?llm_provider=openai" \
-  -H "Content-Type: application/json"</code></pre>
+                        <pre><code>curl "http://localhost:8004/api/signals/snapshot/AAPL.US/20251016_143022"</code></pre>
                     </div>
 
                     <div class="api-section">
@@ -146,31 +156,31 @@
   "signal": "BUY",
   "conviction_score": 72.5,
   "confidence": 85.0,
-  "reasoning": "Based on comprehensive analysis across fundamentals, news sentiment, technical indicators, and macroeconomic factors, AAPL demonstrates strong buy signals...",
+  "reasoning": "Based on comprehensive analysis...",
   "weighted_score": 68.2,
   "price_at_signal": 185.45,
-  "generated_at": "2025-10-14T10:30:00Z",
+  "generated_at": "2025-10-16T14:30:00Z",
   "llm_provider": "openai",
   "agent_outputs": {
     "fundamentals": {
       "score": 75.0,
       "confidence": 90.0,
-      "summary": "Strong fundamentals with healthy revenue growth, solid profit margins, and robust balance sheet..."
+      "summary": "Strong fundamentals..."
     },
     "news": {
       "score": 68.0,
       "confidence": 80.0,
-      "summary": "Positive sentiment over the past 60 days. Key narratives include new product launches and market share gains..."
+      "summary": "Positive sentiment..."
     },
     "price_dynamics": {
       "score": 70.0,
       "confidence": 85.0,
-      "summary": "Upward momentum with price above key moving averages. Technical indicators suggest continued strength..."
+      "summary": "Upward momentum..."
     },
     "macro": {
       "score": 65.0,
       "confidence": 50.0,
-      "summary": "Neutral to slightly positive macroeconomic environment. Interest rate stability supports equity valuations..."
+      "summary": "Neutral macro environment..."
     }
   }
 }</code></pre>
@@ -187,19 +197,270 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>400</td>
-                                    <td>Invalid ticker format or missing required data</td>
-                                </tr>
-                                <tr>
                                     <td>404</td>
-                                    <td>Stock not found or no data available</td>
+                                    <td>No signal found for this snapshot</td>
                                 </tr>
                                 <tr>
                                     <td>500</td>
-                                    <td>Internal server error or LLM provider error</td>
+                                    <td>Error loading signal</td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Generate Signal -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-post">POST</span>
+                        <span class="api-path">/api/signals/generate/{project_id}</span>
+                    </div>
+                    <p class="api-description">Generate a new trading signal for a stock using multi-agent AI analysis.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">project_id</span>
+                                    <span class="param-type">string</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Stock project ID in format <code>ticker:timestamp</code> (e.g., "AAPL.US:20251016_143022")</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Query Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">llm_provider</span>
+                                    <span class="param-type">string</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">LLM provider to use: "openai" (default), "anthropic", or "ollama"</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">save_to_db</span>
+                                    <span class="param-type">boolean</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Save signal to database (default: true)</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request (cURL)</h4>
+                        <pre><code>curl -X POST \
+  "http://localhost:8004/api/signals/generate/AAPL.US:20251016_143022?llm_provider=openai&save_to_db=true"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request (Python)</h4>
+                        <pre><code>import requests
+
+response = requests.post(
+    "http://localhost:8004/api/signals/generate/AAPL.US:20251016_143022",
+    params={
+        "llm_provider": "openai",
+        "save_to_db": True
+    }
+)
+
+signal = response.json()
+print(f"Signal: {signal['signal']}, Conviction: {signal['conviction_score']}")</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "ticker": "AAPL.US",
+  "signal": "BUY",
+  "conviction_score": 72.5,
+  "confidence": 85.0,
+  "reasoning": "Based on comprehensive analysis across fundamentals, news sentiment, technical indicators, and macroeconomic factors, AAPL demonstrates strong buy signals. The company shows healthy revenue growth, solid profit margins, and robust balance sheet. Recent news sentiment is overwhelmingly positive with key narratives around new product launches. Technical indicators suggest upward momentum with price above key moving averages. The macroeconomic environment is neutral to slightly positive.",
+  "weighted_score": 68.2,
+  "price_at_signal": 185.45,
+  "generated_at": "2025-10-16T14:30:00Z",
+  "llm_provider": "openai",
+  "agent_outputs": {
+    "fundamentals": {
+      "score": 75.0,
+      "confidence": 90.0,
+      "summary": "Strong fundamentals with healthy revenue growth (15% YoY), solid profit margins (25%), and robust balance sheet. PE ratio of 28.5 is reasonable for the growth profile. ROE of 45% indicates excellent capital efficiency.",
+      "metadata": {
+        "revenue_growth": 0.15,
+        "profit_margin": 0.25,
+        "pe_ratio": 28.5,
+        "roe": 0.45
+      }
+    },
+    "news": {
+      "score": 68.0,
+      "confidence": 80.0,
+      "summary": "Positive sentiment over the past 60 days. Key narratives include new product launches (iPhone 16 series), market share gains in China, and partnership announcements. Sentiment analysis shows 65% positive, 25% neutral, 10% negative.",
+      "metadata": {
+        "sentiment_positive": 0.65,
+        "sentiment_neutral": 0.25,
+        "sentiment_negative": 0.10,
+        "article_count": 50
+      }
+    },
+    "price_dynamics": {
+      "score": 70.0,
+      "confidence": 85.0,
+      "summary": "Upward momentum with price above 20, 50, and 200-day SMAs. RSI at 62 suggests strength without overbought conditions. Volume increasing on up days. Bollinger Bands show expanding volatility with price at upper band.",
+      "metadata": {
+        "rsi": 62,
+        "sma_20": 182.0,
+        "sma_50": 178.5,
+        "sma_200": 170.2,
+        "current_price": 185.45
+      }
+    },
+    "macro": {
+      "score": 65.0,
+      "confidence": 50.0,
+      "summary": "Neutral to slightly positive macroeconomic environment. Fed interest rate stability supports equity valuations. Tech sector showing resilience. Consumer spending remains strong. Some concerns around potential economic slowdown in 2026.",
+      "metadata": {
+        "interest_rate_stable": true,
+        "sector_performance": "positive",
+        "economic_outlook": "neutral"
+      }
+    }
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Processing Flow</h4>
+                        <p>This endpoint performs the following steps:</p>
+                        <ol>
+                            <li>Parses <code>project_id</code> to extract ticker and snapshot_id</li>
+                            <li>Loads stock snapshot from file storage</li>
+                            <li>Fetches macro sources via Tavily API (if configured)</li>
+                            <li>Runs 4 specialized agents in parallel:
+                                <ul>
+                                    <li>Fundamentals Summarizer (30% weight)</li>
+                                    <li>Progressive News Summarizer (25% weight)</li>
+                                    <li>Stock-Price Dynamics Summarizer (25% weight)</li>
+                                    <li>Macroeconomic Environment Summarizer (20% weight)</li>
+                                </ul>
+                            </li>
+                            <li>Signal Orchestrator aggregates scores and generates final signal</li>
+                            <li>Saves signal to snapshot's analysis folder as JSON</li>
+                            <li>Optionally saves to database (if <code>save_to_db=true</code>)</li>
+                        </ol>
+                        <p><strong>Typical execution time:</strong> 30-60 seconds depending on LLM provider</p>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Error Responses</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>400</td>
+                                    <td>Invalid project_id format</td>
+                                </tr>
+                                <tr>
+                                    <td>404</td>
+                                    <td>Stock snapshot not found</td>
+                                </tr>
+                                <tr>
+                                    <td>500</td>
+                                    <td>Error generating signal (LLM provider error, etc.)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h2>Database Endpoints</h2>
+
+                <!-- Get Signal Details -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-get">GET</span>
+                        <span class="api-path">/api/signals/{signal_id}</span>
+                    </div>
+                    <p class="api-description">Get detailed information for a specific signal (from database).</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Path Parameters</h4>
+                        <ul class="api-params">
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">signal_id</span>
+                                    <span class="param-type">integer</span>
+                                    <span class="param-required">required</span>
+                                </div>
+                                <div class="param-description">Signal ID from database</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl "http://localhost:8004/api/signals/123"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "id": 123,
+  "ticker": "AAPL.US",
+  "signal": "BUY",
+  "conviction_score": 72.5,
+  "confidence": 85.0,
+  "reasoning": "Based on comprehensive analysis...",
+  "weighted_score": 68.2,
+  "price_at_signal": 185.45,
+  "created_at": "2025-10-16T14:30:00Z",
+  "agent_outputs": [
+    {
+      "agent_name": "fundamentals",
+      "score": 75.0,
+      "confidence": 90.0,
+      "summary": "Strong fundamentals...",
+      "metadata": {...},
+      "created_at": "2025-10-16T14:29:55Z"
+    },
+    {
+      "agent_name": "news",
+      "score": 68.0,
+      "confidence": 80.0,
+      "summary": "Positive sentiment...",
+      "metadata": {...},
+      "created_at": "2025-10-16T14:29:56Z"
+    },
+    {
+      "agent_name": "price_dynamics",
+      "score": 70.0,
+      "confidence": 85.0,
+      "summary": "Upward momentum...",
+      "metadata": {...},
+      "created_at": "2025-10-16T14:29:57Z"
+    },
+    {
+      "agent_name": "macro",
+      "score": 65.0,
+      "confidence": 50.0,
+      "summary": "Neutral macro environment...",
+      "metadata": {...},
+      "created_at": "2025-10-16T14:29:58Z"
+    }
+  ]
+}</code></pre>
                     </div>
                 </div>
 
@@ -207,7 +468,7 @@
                 <div class="api-endpoint">
                     <div>
                         <span class="api-method method-get">GET</span>
-                        <span class="api-path">/signals/history/{ticker}</span>
+                        <span class="api-path">/api/signals/history/{ticker}</span>
                     </div>
                     <p class="api-description">Retrieve historical signals for a specific ticker.</p>
 
@@ -230,52 +491,56 @@
                         <ul class="api-params">
                             <li class="api-param">
                                 <div>
-                                    <span class="param-name">days</span>
-                                    <span class="param-type">integer</span>
-                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
-                                </div>
-                                <div class="param-description">Number of days to look back (default: 30)</div>
-                            </li>
-                            <li class="api-param">
-                                <div>
                                     <span class="param-name">limit</span>
                                     <span class="param-type">integer</span>
                                     <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
                                 </div>
-                                <div class="param-description">Maximum number of signals to return (default: 10, max: 100)</div>
+                                <div class="param-description">Number of signals to return (default: 10, max: 100)</div>
+                            </li>
+                            <li class="api-param">
+                                <div>
+                                    <span class="param-name">days</span>
+                                    <span class="param-type">integer</span>
+                                    <span style="color: #666; font-size: 0.75rem; margin-left: 0.5rem;">optional</span>
+                                </div>
+                                <div class="param-description">Only signals from last N days</div>
                             </li>
                         </ul>
                     </div>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Example Request</h4>
-                        <pre><code>curl "http://localhost:8004/api/signals/history/AAPL.US?days=30&limit=20"</code></pre>
+                        <pre><code>curl "http://localhost:8004/api/signals/history/AAPL.US?limit=20&days=30"</code></pre>
                     </div>
 
                     <div class="api-section">
                         <h4 class="api-section-title">Response (200 OK)</h4>
-                        <pre><code>{
-  "ticker": "AAPL.US",
-  "signals": [
-    {
-      "id": "sig_abc123",
-      "signal": "BUY",
-      "conviction_score": 72.5,
-      "confidence": 85.0,
-      "price_at_signal": 185.45,
-      "generated_at": "2025-10-14T10:30:00Z"
-    },
-    {
-      "id": "sig_def456",
-      "signal": "HOLD",
-      "conviction_score": 55.0,
-      "confidence": 70.0,
-      "price_at_signal": 182.30,
-      "generated_at": "2025-10-10T14:15:00Z"
-    }
-  ],
-  "count": 2
-}</code></pre>
+                        <pre><code>[
+  {
+    "id": 123,
+    "ticker": "AAPL.US",
+    "signal": "BUY",
+    "conviction_score": 72.5,
+    "confidence": 85.0,
+    "reasoning": "Based on comprehensive analysis...",
+    "weighted_score": 68.2,
+    "price_at_signal": 185.45,
+    "created_at": "2025-10-16T14:30:00Z",
+    "agent_outputs": [...]
+  },
+  {
+    "id": 122,
+    "ticker": "AAPL.US",
+    "signal": "HOLD",
+    "conviction_score": 55.0,
+    "confidence": 70.0,
+    "reasoning": "Mixed signals...",
+    "weighted_score": 52.3,
+    "price_at_signal": 182.30,
+    "created_at": "2025-10-15T09:15:00Z",
+    "agent_outputs": [...]
+  }
+]</code></pre>
                     </div>
                 </div>
 
@@ -283,7 +548,7 @@
                 <div class="api-endpoint">
                     <div>
                         <span class="api-method method-get">GET</span>
-                        <span class="api-path">/signals/latest</span>
+                        <span class="api-path">/api/signals/latest</span>
                     </div>
                     <p class="api-description">Retrieve the most recent signals across all tickers.</p>
 
@@ -321,9 +586,58 @@
                         <h4 class="api-section-title">Example Request</h4>
                         <pre><code>curl "http://localhost:8004/api/signals/latest?signal_type=BUY&min_conviction=70&limit=10"</code></pre>
                     </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>[
+  {
+    "id": 125,
+    "ticker": "TSLA.US",
+    "signal": "BUY",
+    "conviction_score": 78.2,
+    "confidence": 88.0,
+    "reasoning": "Tesla shows exceptional momentum...",
+    "weighted_score": 75.5,
+    "price_at_signal": 245.80,
+    "created_at": "2025-10-16T15:45:00Z"
+  },
+  {
+    "id": 123,
+    "ticker": "AAPL.US",
+    "signal": "BUY",
+    "conviction_score": 72.5,
+    "confidence": 85.0,
+    "reasoning": "Based on comprehensive analysis...",
+    "weighted_score": 68.2,
+    "price_at_signal": 185.45,
+    "created_at": "2025-10-16T14:30:00Z"
+  }
+]</code></pre>
+                    </div>
                 </div>
 
-                <h2>Signal Scoring</h2>
+                <!-- Delete Signal -->
+                <div class="api-endpoint">
+                    <div>
+                        <span class="api-method method-delete">DELETE</span>
+                        <span class="api-path">/api/signals/{signal_id}</span>
+                    </div>
+                    <p class="api-description">Delete a signal and its agent outputs from the database.</p>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Example Request</h4>
+                        <pre><code>curl -X DELETE "http://localhost:8004/api/signals/123"</code></pre>
+                    </div>
+
+                    <div class="api-section">
+                        <h4 class="api-section-title">Response (200 OK)</h4>
+                        <pre><code>{
+  "message": "Signal 123 for AAPL.US deleted successfully"
+}</code></pre>
+                    </div>
+                </div>
+
+                <h2>Signal Scoring System</h2>
                 <p>Signals are generated using a weighted scoring system based on outputs from four specialized agents:</p>
 
                 <table>
@@ -332,52 +646,85 @@
                             <th>Agent</th>
                             <th>Weight</th>
                             <th>Focus</th>
+                            <th>Data Sources</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Fundamentals Summarizer</td>
                             <td>30%</td>
-                            <td>Financial statements, ratios, metrics</td>
+                            <td>Financial health, valuation</td>
+                            <td>Balance sheet, income statement, ratios</td>
                         </tr>
                         <tr>
                             <td>Progressive News Summarizer</td>
                             <td>25%</td>
-                            <td>60-day rolling news sentiment</td>
+                            <td>Sentiment, narratives</td>
+                            <td>60-day rolling news with sentiment scores</td>
                         </tr>
                         <tr>
                             <td>Stock-Price Dynamics Summarizer</td>
                             <td>25%</td>
-                            <td>Technical indicators, peer comparison</td>
+                            <td>Technical analysis, momentum</td>
+                            <td>Price history, volume, technical indicators</td>
                         </tr>
                         <tr>
                             <td>Macroeconomic Environment Summarizer</td>
                             <td>20%</td>
-                            <td>Economic conditions, interest rates</td>
+                            <td>Sector trends, economic conditions</td>
+                            <td>Tavily web search, sector analysis</td>
                         </tr>
                     </tbody>
                 </table>
 
+                <h3>Signal Classification Rules</h3>
                 <div class="info-box info-box-success">
                     <div class="info-box-title">
                         <i class="fas fa-lightbulb"></i>
-                        Signal Interpretation
+                        How Signals Are Determined
                     </div>
                     <ul>
-                        <li><strong>BUY</strong>: Weighted score ≥ 60 and positive sentiment from majority of agents</li>
-                        <li><strong>SELL</strong>: Weighted score ≤ 40 and negative sentiment from majority of agents</li>
+                        <li><strong>BUY</strong>: Weighted score >= 60 and positive sentiment from majority of agents</li>
+                        <li><strong>SELL</strong>: Weighted score <= 40 and negative sentiment from majority of agents</li>
                         <li><strong>HOLD</strong>: Weighted score between 40-60 or mixed agent sentiment</li>
                         <li><strong>Conviction Score</strong>: Higher scores (70+) indicate stronger consensus among agents</li>
                         <li><strong>Confidence Level</strong>: Reflects data quality and agent agreement (80+ is high confidence)</li>
                     </ul>
                 </div>
 
-                <h2>Rate Limits</h2>
-                <p>Signal generation involves multiple LLM API calls and can take 30-60 seconds to complete. Recommended rate limits:</p>
-                <ul>
-                    <li><strong>OpenAI/Anthropic</strong>: 5 signals per minute (API cost considerations)</li>
-                    <li><strong>Ollama (local)</strong>: No strict limit, but depends on hardware</li>
-                </ul>
+                <h2>LLM Provider Configuration</h2>
+                <p>The Signals API supports three LLM providers:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Provider</th>
+                            <th>Value</th>
+                            <th>API Key Required</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>OpenAI</td>
+                            <td><code>openai</code></td>
+                            <td>Yes (Settings)</td>
+                            <td>Default, most accurate, GPT-4 based</td>
+                        </tr>
+                        <tr>
+                            <td>Anthropic</td>
+                            <td><code>anthropic</code></td>
+                            <td>Yes (Settings)</td>
+                            <td>Claude-based, good for long context</td>
+                        </tr>
+                        <tr>
+                            <td>Ollama</td>
+                            <td><code>ollama</code></td>
+                            <td>No</td>
+                            <td>Local LLM, free, requires local Ollama server</td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <div class="info-box info-box-warning">
                     <div class="info-box-title">
@@ -385,19 +732,29 @@
                         Important Notes
                     </div>
                     <ul>
-                        <li>Signal generation requires valid stock data. Ensure the ticker exists in your database before generating signals.</li>
-                        <li>LLM provider API keys must be configured in settings before use.</li>
-                        <li>Signals are stored in the database and can be retrieved via history endpoints.</li>
+                        <li>Signal generation requires valid stock snapshot data. Create a stock snapshot first using the Stocks API.</li>
+                        <li>LLM provider API keys must be configured in Settings before use.</li>
+                        <li>Tavily API key is optional but recommended for better macro environment analysis.</li>
+                        <li>Signal generation takes 30-60 seconds. Consider implementing a queue for multiple requests.</li>
+                        <li><strong>Signals are saved to two locations:</strong> (1) Snapshot's analysis folder as JSON, (2) Database (if <code>save_to_db=true</code>)</li>
                         <li><strong>Signals are for research purposes only and not financial advice.</strong></li>
                     </ul>
                 </div>
 
+                <h2>Rate Limits</h2>
+                <p>Signal generation involves multiple LLM API calls. Recommended rate limits:</p>
+                <ul>
+                    <li><strong>OpenAI/Anthropic</strong>: 5 signals per minute (API cost considerations)</li>
+                    <li><strong>Ollama (local)</strong>: No strict limit, but depends on hardware capabilities</li>
+                </ul>
+
                 <h2>Next Steps</h2>
                 <ul>
                     <li><a href="../docs.html#market-intelligence">Deep Dive: Market Intelligence System</a></li>
-                    <li><a href="stocks.html">Stocks API</a> - Manage stock data for signal generation</li>
-                    <li><a href="../docs.html#llm-providers">Configure LLM Providers</a></li>
-                    <li><a href="../docs.html#agents">Agentic Frameworks</a></li>
+                    <li><a href="stocks.html">Stocks API</a> - Create stock snapshots for signal generation</li>
+                    <li><a href="settings.html">Settings API</a> - Configure LLM provider API keys</li>
+                    <li><a href="../docs.html#agents">Agentic Frameworks</a> - Learn about the 4 specialized agents</li>
+                    <li><a href="../docs.html#llm-providers">LLM Providers</a> - Configure OpenAI, Anthropic, or Ollama</li>
                 </ul>
             </div>
         </main>
