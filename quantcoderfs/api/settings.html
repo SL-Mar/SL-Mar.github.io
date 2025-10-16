@@ -130,7 +130,7 @@
                         <pre><code>{
   "openai_key": "sk-proj-1234...",
   "anthropic_key": "sk-ant-api03-5678...",
-  "eodhd_key": "67545463280a10.78461538",
+  "eodhd_key": "your_eodhd_api_key_here",
   "tavily_key": "tvly-abcd...",
   "qc_user_id": "12345678",
   "qc_api_token_masked": "a1b2************************************************************",
@@ -220,7 +220,7 @@
                         <pre><code>{
   "openai_key": "sk-proj-1234567890abcdef...",
   "anthropic_key": "sk-ant-api03-1234567890abcdef...",
-  "eodhd_key": "67545463280a10.78461538",
+  "eodhd_key": "your_eodhd_api_key_here",
   "tavily_key": "tvly-1234567890abcdef..."
 }</code></pre>
                     </div>
@@ -271,7 +271,7 @@
   -H "Content-Type: application/json" \
   -d '{
     "openai_key": "sk-proj-1234567890abcdef...",
-    "eodhd_key": "67545463280a10.78461538"
+    "eodhd_key": "your_eodhd_api_key_here"
   }'</code></pre>
                     </div>
 
@@ -283,7 +283,7 @@ response = requests.post(
     "http://localhost:8004/api/settings",
     json={
         "openai_key": "sk-proj-1234567890abcdef...",
-        "eodhd_key": "67545463280a10.78461538",
+        "eodhd_key": "your_eodhd_api_key_here",
         "tavily_key": "tvly-1234567890abcdef..."
     }
 )
@@ -297,7 +297,7 @@ print(f"Settings updated at: {settings['updated_at']}")</code></pre>
                         <pre><code>{
   "openai_key": "sk-proj-1234...",
   "anthropic_key": null,
-  "eodhd_key": "67545463280a10.78461538",
+  "eodhd_key": "your_eodhd_api_key_here",
   "tavily_key": "tvly-abcd...",
   "qc_user_id": null,
   "qc_api_token_masked": null,
