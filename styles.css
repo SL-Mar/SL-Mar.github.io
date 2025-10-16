@@ -87,6 +87,7 @@ nav {
     display: flex;
     gap: 2rem;
     list-style: none;
+    justify-content: flex-end;
 }
 
 .nav-center a {
