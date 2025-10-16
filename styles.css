@@ -28,7 +28,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -54,11 +54,22 @@ nav {
     z-index: 100;
 }
 
-nav .container {
+.nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: nowrap;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nav-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
 }
 
 .logo {
@@ -66,27 +77,26 @@ nav .container {
     font-weight: 600;
     color: var(--text);
     white-space: nowrap;
-    flex-shrink: 0;
-    margin-right: 2rem;
 }
 
-nav ul {
+.nav-center {
     display: flex;
-    gap: 1.25rem;
+    gap: 2rem;
     list-style: none;
-    flex-wrap: nowrap;
-    flex-shrink: 1;
-    min-width: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-nav a {
+.nav-center a {
     color: var(--text-secondary);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     white-space: nowrap;
+    font-weight: 500;
 }
 
-nav a:hover,
-nav a.active {
+.nav-center a:hover,
+.nav-center a.active {
     color: var(--text);
 }
 
@@ -447,12 +457,12 @@ footer p {
         font-size: 0.9rem;
     }
 
-    nav ul {
-        gap: 1rem;
+    .nav-center {
+        gap: 1.5rem;
     }
 
-    nav a {
-        font-size: 0.8125rem;
+    .nav-center a {
+        font-size: 0.85rem;
     }
 }
 
@@ -465,21 +475,23 @@ footer p {
         font-size: 2.25rem;
     }
 
-    nav .container {
-        flex-wrap: wrap;
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    .logo {
-        font-size: 0.875rem;
-        margin-right: 0;
-        margin-bottom: 0.5rem;
+    .nav-left {
         width: 100%;
+        justify-content: center;
     }
 
-    nav ul {
+    .nav-center {
+        position: static;
+        transform: none;
         width: 100%;
         justify-content: center;
         gap: 1rem;
+        flex-wrap: wrap;
     }
 
     .hero-cta,
@@ -495,12 +507,12 @@ footer p {
 }
 
 @media (max-width: 480px) {
-    nav ul {
+    .nav-center {
         flex-wrap: wrap;
         gap: 0.75rem;
     }
 
-    nav a {
+    .nav-center a {
         font-size: 0.8rem;
     }
 
