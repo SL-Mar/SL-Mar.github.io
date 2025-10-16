@@ -11,9 +11,12 @@
 </head>
 <body>
     <nav>
-        <div class="container">
-            <a href="index.html" class="logo">SL Mar - AI for Maritime and Quant Finance</a>
-            <ul>
+        <div class="container nav-container">
+            <div class="nav-left">
+                <img src="logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="index.html" class="logo">SL Mar - AI for Maritime and Quant Finance</a>
+            </div>
+            <ul class="nav-center">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="publications.html">Publications</a></li>
                 <li><a href="development.html" class="active">Development</a></li>
@@ -39,37 +42,38 @@
                 <div class="project-header">
                     <div>
                         <h3>QuantCoderFS</h3>
-                        <p>Desktop application for algorithmic trading research and development</p>
+                        <p>Unified quantitative research platform with AI-powered equity research and strategy generation</p>
                     </div>
                 </div>
                 <div class="project-meta">
-                    <span>Electron</span>
-                    <span>TypeScript</span>
-                    <span>QuantConnect</span>
+                    <span>Next.js</span>
+                    <span>FastAPI</span>
+                    <span>OpenAI</span>
                     <span>Last updated: 2025-01-11</span>
                 </div>
                 <p>
-                    QuantCoderFS is a comprehensive desktop application for algorithmic trading research and development.
-                    Built with Electron for cross-platform compatibility, it features an integrated PDF viewer for research papers,
-                    strategy backtesting, live algorithm deployment to QuantConnect, and multi-workspace management for organizing
-                    multiple trading strategies. Streamlines the workflow from research to deployment with integrated tools for
-                    quantitative finance.
+                    QuantCoderFS is a comprehensive quantitative finance platform that combines AI-powered equity research
+                    and algorithmic strategy generation. Built with FastAPI backend and Next.js frontend, it features two primary modules:
+                    <strong>Market Intelligence</strong> for multi-agent stock analysis with BUY/HOLD/SELL recommendations, and
+                    <strong>Strategy Generator</strong> for automated conversion of academic research papers into QuantConnect-compatible
+                    trading algorithms with ~90-95% success rate.
                 </p>
                 <p><strong>Key Features:</strong></p>
                 <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                    <li>Integrated PDF viewer for research papers</li>
-                    <li>Strategy backtesting with QuantConnect LEAN</li>
-                    <li>Live algorithm deployment to QuantConnect</li>
-                    <li>Multi-workspace management for strategy organization</li>
-                    <li>Real-time backtest monitoring and results visualization</li>
-                    <li>Cross-platform desktop application (Windows, macOS, Linux)</li>
+                    <li>Multi-agent AI stock analysis (fundamentals, news, price, macro)</li>
+                    <li>BUY/HOLD/SELL signals with conviction scores (1-10)</li>
+                    <li>Automated research paper to trading algorithm conversion</li>
+                    <li>QuantConnect Python code generation (5-phase AI workflow)</li>
+                    <li>Snapshot-based market analysis tracking</li>
+                    <li>Integration with multiple AI providers (OpenAI, Anthropic, Ollama)</li>
                 </ul>
                 <div class="tech">
-                    <span>Electron</span>
-                    <span>TypeScript</span>
-                    <span>React</span>
-                    <span>QuantConnect API</span>
-                    <span>Python</span>
+                    <span>FastAPI</span>
+                    <span>Next.js</span>
+                    <span>OpenAI</span>
+                    <span>Anthropic</span>
+                    <span>QuantConnect</span>
+                    <span>EODHD</span>
                 </div>
                 <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
                     <a href="quantcoderfs/docs.html" class="btn btn-primary">
