@@ -201,7 +201,7 @@ p {
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    gap: 2rem;
     margin-top: 2rem;
     align-items: stretch;
 }
@@ -209,6 +209,12 @@ p {
 .cards > a {
     display: flex;
     min-height: 100%;
+}
+
+@media (max-width: 900px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
@@ -219,7 +225,7 @@ p {
 
 .card {
     background: var(--bg-card);
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: 6px;
     border: 1px solid var(--border);
     transition: all 0.2s;
