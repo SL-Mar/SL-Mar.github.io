@@ -425,6 +425,12 @@
                                 <td>Calculate return statistics</td>
                             </tr>
                             <tr>
+                                <td rowspan="1">Benchmark</td>
+                                <td>/api/stocks/{ticker}/snapshots/{id}/benchmark</td>
+                                <td>GET</td>
+                                <td>Compare vs market benchmark</td>
+                            </tr>
+                            <tr>
                                 <td rowspan="3">Research</td>
                                 <td>/api/stocks/{ticker}/snapshots/{id}/research/generate</td>
                                 <td>POST</td>
@@ -607,6 +613,90 @@
                                     <li>⚠ Left-skewed (downside tail longer — larger losses more likely)</li>
                                     <li>⚠ Heavy tails (elevated risk of extreme moves)</li>
                                     <li>✓ 55% of days positive (slight edge)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin: 2rem 0;">
+                        <h4>Benchmark Tab - Market Comparison</h4>
+                        <img src="assets/images/quantcoder31.png" alt="QuantCoderFS Market Intelligence - Benchmark Comparison" style="width: 100%; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem;">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Compare stock performance against market benchmarks (SPY, QQQ, DIA, IWM) with Alpha, Beta, correlation metrics, and Up/Down capture ratios.</p>
+
+                        <div class="info-box info-box-info">
+                            <div class="info-box-title">
+                                <i class="fas fa-chart-area"></i>
+                                Benchmark Comparison Methodology
+                            </div>
+                            <p><strong>Key Metrics Calculated:</strong></p>
+                            <ul>
+                                <li><strong>Alpha (Annualized):</strong> Excess return compared to benchmark
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85em; color: #58a6ff; margin-top: 3px;">
+                                        Alpha = Mean(Stock Return - Benchmark Return) × 252
+                                    </div>
+                                    <div style="font-size: 0.85em; margin-top: 3px;">Positive alpha indicates outperformance; negative indicates underperformance.</div>
+                                </li>
+                                <li><strong>Beta:</strong> Systematic risk relative to benchmark
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85em; color: #58a6ff; margin-top: 3px;">
+                                        Beta = Cov(Stock, Benchmark) / Var(Benchmark)
+                                    </div>
+                                    <div style="font-size: 0.85em; margin-top: 3px;">Beta &gt; 1: More volatile; Beta &lt; 1: Less volatile; Beta ≈ 1: Similar volatility</div>
+                                </li>
+                                <li><strong>Correlation:</strong> Degree of linear relationship with benchmark
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85em; color: #58a6ff; margin-top: 3px;">
+                                        Correlation = Pearson(Stock Returns, Benchmark Returns)
+                                    </div>
+                                    <div style="font-size: 0.85em; margin-top: 3px;">Range: -1 to +1. High correlation (&gt;0.8): Moves with market; Low correlation (&lt;0.5): Independent behavior</div>
+                                </li>
+                                <li><strong>Tracking Error (Annualized):</strong> Deviation from benchmark
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85em; color: #58a6ff; margin-top: 3px;">
+                                        Tracking Error = StdDev(Excess Returns) × √252
+                                    </div>
+                                    <div style="font-size: 0.85em; margin-top: 3px;">Higher tracking error indicates more independent performance from benchmark.</div>
+                                </li>
+                                <li><strong>Information Ratio:</strong> Risk-adjusted alpha
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85em; color: #58a6ff; margin-top: 3px;">
+                                        IR = Alpha / Tracking Error
+                                    </div>
+                                    <div style="font-size: 0.85em; margin-top: 3px;">IR &gt; 0.5: Good risk-adjusted outperformance; IR &lt; 0: Underperformance</div>
+                                </li>
+                                <li><strong>Up Capture Ratio:</strong> Performance on benchmark's up days
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85em; color: #58a6ff; margin-top: 3px;">
+                                        Up Capture = [Mean(Stock Returns | Benchmark &gt; 0) / Mean(Benchmark Returns | Benchmark &gt; 0)] × 100
+                                    </div>
+                                    <div style="font-size: 0.85em; margin-top: 3px;">Up Capture &gt; 100%: Outperforms on up days; &lt;100%: Underperforms on up days</div>
+                                </li>
+                                <li><strong>Down Capture Ratio:</strong> Performance on benchmark's down days
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85em; color: #58a6ff; margin-top: 3px;">
+                                        Down Capture = [Mean(Stock Returns | Benchmark &lt; 0) / Mean(Benchmark Returns | Benchmark &lt; 0)] × 100
+                                    </div>
+                                    <div style="font-size: 0.85em; margin-top: 3px;">Down Capture &lt; 100%: Protects on down days (good); &gt;100%: Amplifies losses (bad)</div>
+                                </li>
+                                <li><strong>Sharpe Ratios:</strong> Risk-adjusted returns for both stock and benchmark
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85em; color: #58a6ff; margin-top: 3px;">
+                                        Sharpe = (Mean Return / StdDev) × √252
+                                    </div>
+                                    <div style="font-size: 0.85em; margin-top: 3px;">Compare Sharpe ratios to see which asset has better risk-adjusted returns.</div>
+                                </li>
+                            </ul>
+
+                            <p style="margin-top: 10px;"><strong>Normalized Performance Chart:</strong></p>
+                            <p style="font-size: 0.9em;">Both stock and benchmark prices are normalized to start at 100 to visualize relative performance over time. The stock line is solid, the benchmark line is dashed.</p>
+                        </div>
+
+                        <div style="background: var(--background-secondary); padding: 15px; border-left: 4px solid var(--accent); border-radius: 4px; margin-top: 1rem;">
+                            <div style="font-weight: bold; margin-bottom: 8px;">Example Interpretation:</div>
+                            <div style="font-size: 0.9em;">
+                                <p><strong>Stock:</strong> AAPL | <strong>Benchmark:</strong> SPY | <strong>Period:</strong> 12 months</p>
+                                <ul style="margin-top: 5px; font-size: 0.9em;">
+                                    <li>✓ Alpha = +5.2% (outperformed S&P 500 by 5.2% annualized)</li>
+                                    <li>✓ Beta = 1.15 (15% more volatile than market)</li>
+                                    <li>✓ Correlation = 0.82 (high correlation - moves with market)</li>
+                                    <li>✓ Information Ratio = 0.68 (good risk-adjusted outperformance)</li>
+                                    <li>✓ Up Capture = 112% (captures 12% more gains on up days)</li>
+                                    <li>✓ Down Capture = 95% (protects 5% better on down days)</li>
+                                    <li>✓ Tracking Error = 7.6% (moderate deviation from benchmark)</li>
+                                    <li>✓ Sharpe (AAPL) = 1.2 vs Sharpe (SPY) = 0.9 (better risk-adjusted returns)</li>
                                 </ul>
                             </div>
                         </div>
