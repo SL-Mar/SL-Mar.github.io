@@ -48,6 +48,8 @@
                     <li><a href="#benchmarks"><i class="fas fa-chart-line"></i> Benchmarks</a></li>
                     <li><a href="#strategy-generator"><i class="fas fa-code"></i> Strategy Generator</a></li>
                     <li><a href="#dependencies"><i class="fas fa-cubes"></i> Dependencies</a></li>
+                    <li><a href="#price-normalization"><i class="fas fa-adjust"></i> Price Normalization</a></li>
+                    <li><a href="#corporate-events"><i class="fas fa-calendar-alt"></i> Corporate Events</a></li>
                 </ul>
             </div>
 
@@ -334,6 +336,237 @@
                         <li><strong>Authentication:</strong> User ID + API Token</li>
                         <li><strong>Cost:</strong> Free tier available, paid for live trading</li>
                     </ul>
+                </section>
+
+                <!-- PRICE NORMALIZATION SECTION -->
+                <section id="price-normalization">
+                    <h2>Price Normalization</h2>
+                    <p class="docs-subtitle">Understanding adjusted vs. raw prices for accurate analysis</p>
+
+                    <div class="info-box info-box-warning">
+                        <div class="info-box-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Critical Feature
+                        </div>
+                        <p><strong>Price normalization is the first and most critical setting to understand.</strong> Incorrect settings will produce misleading charts, incorrect performance metrics, and invalid portfolio analysis.</p>
+                    </div>
+
+                    <h3>The Problem: Corporate Events Create Data Discontinuities</h3>
+                    <p>Stock splits and dividends create discontinuities in historical price data that make charts and calculations misleading without proper adjustment.</p>
+
+                    <h4>Example: NVDA 10-for-1 Stock Split (June 10, 2024)</h4>
+                    <p><strong>Without Normalization (Raw Prices):</strong></p>
+                    <pre><code>June 7, 2024:  Close = $1,208.88
+June 10, 2024: Close = $121.79  ← Appears as -90% crash!</code></pre>
+
+                    <p><strong>With Normalization (Adjusted Prices):</strong></p>
+                    <pre><code>June 7, 2024:  Adjusted Close = $120.84
+June 10, 2024: Adjusted Close = $121.74  ← Smooth transition (+0.7%)</code></pre>
+
+                    <p>The split was <strong>not a loss of value</strong> - shareholders received 10 shares for every 1 share they owned. But raw price data shows a misleading 90% drop.</p>
+
+                    <h3>How Price Normalization Works</h3>
+                    <p>QuantCoderFS uses EODHD API, which provides two price fields:</p>
+                    <ul>
+                        <li><strong><code>close</code></strong> - Raw closing price as actually traded</li>
+                        <li><strong><code>adjusted_close</code></strong> - Price adjusted backward for all corporate events</li>
+                    </ul>
+
+                    <p>EODHD adjusts historical prices <strong>backward</strong> from the present:</p>
+                    <pre><code>Before Split (historical):
+  Raw price: $1,208.88
+  Adjusted:  $120.84  (divided by split ratio 10:1)
+
+After Split (current):
+  Raw price: $121.79
+  Adjusted:  $121.74  (minimal difference)</code></pre>
+
+                    <p>This creates a <strong>continuous, meaningful price series</strong> for analysis.</p>
+
+                    <h3>Setting the Normalization Mode</h3>
+                    <p>Navigate to <strong>Parameters</strong> → <strong>Price Normalization</strong> section.</p>
+
+                    <h4>Options:</h4>
+                    <div class="info-box info-box-success">
+                        <div class="info-box-title">
+                            <i class="fas fa-check-circle"></i>
+                            Adjusted Prices (RECOMMENDED)
+                        </div>
+                        <ul>
+                            <li>Uses <code>adjusted_close</code> field from EODHD</li>
+                            <li>Accounts for stock splits, reverse splits, and dividends</li>
+                            <li>Creates smooth, continuous price curves</li>
+                            <li>Enables accurate performance comparisons</li>
+                            <li>Required for meaningful portfolio analysis</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box info-box-note">
+                        <div class="info-box-title">
+                            <i class="fas fa-info-circle"></i>
+                            Raw Close Prices
+                        </div>
+                        <ul>
+                            <li>Uses raw <code>close</code> field from EODHD</li>
+                            <li>Shows actual traded prices</li>
+                            <li>Will show gaps/jumps at corporate events</li>
+                            <li>Use only if you specifically need unadjusted data</li>
+                            <li><strong>NOT recommended for performance analysis</strong></li>
+                        </ul>
+                    </div>
+
+                    <h3>Impact Across the Platform</h3>
+                    <p>The normalization setting is <strong>global</strong> and affects every feature that uses price data:</p>
+                    <ul>
+                        <li><strong>Portfolio Analysis:</strong> Equal-weight, MVO, Min Variance, Black-Litterman optimization, all equity curves</li>
+                        <li><strong>Risk Analysis:</strong> Monte Carlo simulations (all 1000+ paths), VaR/CVaR calculations, volatility measurements</li>
+                        <li><strong>Pair Trading:</strong> Price series for both stocks, spread calculations, z-score analysis, backtest results</li>
+                        <li><strong>Peer Comparison:</strong> Normalized performance charts, relative performance metrics, correlation analysis</li>
+                    </ul>
+
+                    <h3>When to Use Each Mode</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Use Case</th>
+                                <th>Adjusted Prices</th>
+                                <th>Raw Prices</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Portfolio analysis</td>
+                                <td class="text-green">✅ Yes</td>
+                                <td class="text-red">❌ No</td>
+                            </tr>
+                            <tr>
+                                <td>Risk metrics (VaR, volatility)</td>
+                                <td class="text-green">✅ Yes</td>
+                                <td class="text-red">❌ No</td>
+                            </tr>
+                            <tr>
+                                <td>Peer comparison</td>
+                                <td class="text-green">✅ Yes</td>
+                                <td class="text-red">❌ No</td>
+                            </tr>
+                            <tr>
+                                <td>Shows corporate event gaps</td>
+                                <td class="text-red">❌ No</td>
+                                <td class="text-green">✅ Yes</td>
+                            </tr>
+                            <tr>
+                                <td>Matches broker statements</td>
+                                <td class="text-red">❌ No</td>
+                                <td class="text-green">✅ Yes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box info-box-success">
+                        <p><strong>Recommendation:</strong> Use <strong>Adjusted Prices</strong> (99% of cases). This is the industry standard for quantitative analysis.</p>
+                    </div>
+
+                    <p><a href="https://github.com/SL-Mar/quantcoderfs-v2/blob/main/docs/PRICE_NORMALIZATION.md" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Read the complete Price Normalization Guide
+                    </a></p>
+                </section>
+
+                <!-- CORPORATE EVENTS SECTION -->
+                <section id="corporate-events">
+                    <h2>Corporate Events Display</h2>
+                    <p class="docs-subtitle">Visual markers for stock splits and dividends on charts</p>
+
+                    <h3>Overview</h3>
+                    <p>When using adjusted prices, QuantCoderFS automatically displays corporate events (stock splits, reverse splits) as visual markers on all charts.</p>
+
+                    <div class="info-box info-box-info">
+                        <div class="info-box-title">
+                            <i class="fas fa-info-circle"></i>
+                            Automatic Detection
+                        </div>
+                        <p>Corporate events are fetched automatically from EODHD API and displayed only when using adjusted prices. Events are hidden when using raw prices to avoid confusion.</p>
+                    </div>
+
+                    <h3>Visual Representation</h3>
+                    <ul>
+                        <li><strong>Vertical dashed lines</strong> in orange (#d29922) mark the exact date of corporate events</li>
+                        <li><strong>Labels</strong> show format: <code>TICKER: SPLIT_RATIO</code> (e.g., "NVDA: 10/1")</li>
+                        <li>Labels positioned at the top of the line for clarity</li>
+                        <li>Works on all chart types: Portfolio Analysis (Chart.js) and Peer Comparison (Recharts)</li>
+                    </ul>
+
+                    <h3>Supported Events</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Event Type</th>
+                                <th>Display Format</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Stock Split</td>
+                                <td>TICKER: X/1</td>
+                                <td>NVDA: 10/1</td>
+                            </tr>
+                            <tr>
+                                <td>Reverse Split</td>
+                                <td>TICKER: 1/X</td>
+                                <td>TSLA: 1/3</td>
+                            </tr>
+                            <tr>
+                                <td>Dividends</td>
+                                <td><em>Not currently displayed</em></td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Where Events Appear</h3>
+                    <ul>
+                        <li><strong>Portfolio Analysis:</strong> Equal-weight, MVO, Min Variance, Black-Litterman equity curves</li>
+                        <li><strong>Risk Analysis:</strong> Monte Carlo simulation charts (all scenarios)</li>
+                        <li><strong>Peer Comparison:</strong> Normalized performance charts with sector peers</li>
+                    </ul>
+
+                    <h3>Recent Notable Splits</h3>
+                    <p>Events tracked by QuantCoderFS (last 5 years):</p>
+                    <ul>
+                        <li><strong>NVDA:</strong> 2024-06-10 (10:1 split)</li>
+                        <li><strong>TSLA:</strong> 2022-08-25 (3:1 split)</li>
+                        <li><strong>GOOGL:</strong> 2022-07-18 (20:1 split)</li>
+                        <li><strong>AAPL:</strong> 2020-08-31 (4:1 split)</li>
+                        <li><strong>AMZN:</strong> 2022-06-06 (20:1 split)</li>
+                    </ul>
+
+                    <h3>Technical Implementation</h3>
+                    <p><strong>Data Source:</strong> EODHD Splits API</p>
+                    <pre><code>GET https://eodhd.com/api/splits/{ticker}
+Parameters:
+  - api_token: Your EODHD API key
+  - from: Start date (YYYY-MM-DD)
+  - to: End date (YYYY-MM-DD)
+  - fmt: json
+
+Response: CSV format
+Date,"Stock Splits"
+2024-06-10,10.000000/1.000000</code></pre>
+
+                    <p><strong>Backend Module:</strong> <code>market_intelligence/core/corporate_events.py</code></p>
+                    <p><strong>Frontend Integration:</strong></p>
+                    <ul>
+                        <li>Chart.js: Uses <code>chartjs-plugin-annotation</code> for vertical line annotations</li>
+                        <li>Recharts: Uses <code>&lt;ReferenceLine&gt;</code> component with custom labels</li>
+                    </ul>
+
+                    <div class="info-box info-box-warning">
+                        <div class="info-box-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Visibility Behavior
+                        </div>
+                        <p>Corporate event markers <strong>only appear when using adjusted prices</strong>. If you switch to raw prices, the markers disappear to prevent confusion with the actual price gaps.</p>
+                    </div>
                 </section>
 
                 <!-- API OVERVIEW SECTION -->
