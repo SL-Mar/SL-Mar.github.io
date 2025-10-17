@@ -386,6 +386,11 @@ After Split (current):
                     <h3>Setting the Normalization Mode</h3>
                     <p>Navigate to <strong>Parameters</strong> → <strong>Price Normalization</strong> section.</p>
 
+                    <div class="screenshot">
+                        <img src="assets/images/quantcoder51.png" alt="Price Normalization Settings" />
+                        <p class="caption">Parameters page showing Price Normalization toggle between Adjusted and Raw prices</p>
+                    </div>
+
                     <h4>Options:</h4>
                     <div class="info-box info-box-success">
                         <div class="info-box-title">
@@ -494,6 +499,16 @@ After Split (current):
                         <li>Labels positioned at the top of the line for clarity</li>
                         <li>Works on all chart types: Portfolio Analysis (Chart.js) and Peer Comparison (Recharts)</li>
                     </ul>
+
+                    <div class="screenshot">
+                        <img src="assets/images/quantcoder52.png" alt="Corporate Events on Portfolio Chart" />
+                        <p class="caption">Portfolio chart showing corporate event markers (vertical orange dashed lines with labels)</p>
+                    </div>
+
+                    <div class="screenshot">
+                        <img src="assets/images/quantcoder53.png" alt="Corporate Events on Peer Comparison" />
+                        <p class="caption">Peer comparison chart displaying stock split events for multiple tickers</p>
+                    </div>
 
                     <h3>Supported Events</h3>
                     <table>
@@ -739,9 +754,6 @@ Date,"Stock Splits"
                             </tr>
                         </tbody>
                     </table>
-
-                    <h3>Authentication</h3>
-                    <p>API endpoints are currently unauthenticated (localhost development). For production deployment, implement JWT or API key authentication.</p>
 
                     <h3>Snapshot Architecture</h3>
                     <p>QuantCoderFS v2.0 introduced a snapshot-based architecture for stock data management:</p>
