@@ -42,6 +42,10 @@
                 <div class="sidebar-title">System Components</div>
                 <ul class="sidebar-menu">
                     <li><a href="#market-intelligence"><i class="fas fa-chart-bar"></i> Market Intelligence</a></li>
+                    <li><a href="#agent-console"><i class="fas fa-terminal"></i> Agent Console</a></li>
+                    <li><a href="#portfolio-optimization"><i class="fas fa-briefcase"></i> Portfolio Optimization</a></li>
+                    <li><a href="#pair-trading"><i class="fas fa-exchange-alt"></i> Pair Trading</a></li>
+                    <li><a href="#benchmarks"><i class="fas fa-chart-line"></i> Benchmarks</a></li>
                     <li><a href="#strategy-generator"><i class="fas fa-code"></i> Strategy Generator</a></li>
                     <li><a href="#dependencies"><i class="fas fa-cubes"></i> Dependencies</a></li>
                 </ul>
@@ -53,6 +57,9 @@
                     <li><a href="#api-overview"><i class="fas fa-book"></i> API Overview</a></li>
                     <li><a href="api/stocks.html"><i class="fas fa-database"></i> Stocks API</a></li>
                     <li><a href="api/signals.html"><i class="fas fa-lightbulb"></i> Signals API</a></li>
+                    <li><a href="#api-portfolios"><i class="fas fa-briefcase"></i> Portfolios API</a></li>
+                    <li><a href="#api-pairs"><i class="fas fa-exchange-alt"></i> Pairs API</a></li>
+                    <li><a href="#api-benchmarks"><i class="fas fa-chart-line"></i> Benchmarks API</a></li>
                     <li><a href="api/settings.html"><i class="fas fa-cog"></i> Settings API</a></li>
                     <li><a href="api/research.html"><i class="fas fa-microscope"></i> Research API</a></li>
                     <li><a href="#api-strategies"><i class="fas fa-file-code"></i> Strategies API</a></li>
@@ -823,6 +830,248 @@ else:
                     </ol>
                 </section>
 
+                <!-- AGENT CONSOLE SECTION -->
+                <section id="agent-console">
+                    <h2>Agent Console</h2>
+
+                    <h3>Purpose</h3>
+                    <p>Real-time WebSocket-based logging console for transparent AI agent execution monitoring.</p>
+
+                    <h3>Screenshot</h3>
+                    <img src="assets/images/quantcoder49.png" alt="QuantCoderFS Agent Console" style="width: 100%; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem;">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Agent Console: real-time WebSocket logging showing AI agent execution with color-coded status indicators.</p>
+
+                    <h3>Features</h3>
+                    <ul>
+                        <li><strong>Real-Time Logging:</strong> WebSocket connection displays agent activities as they execute</li>
+                        <li><strong>Color-Coded Status:</strong> Visual indicators for info (blue), progress (yellow), success (green), error (red)</li>
+                        <li><strong>Agent Filtering:</strong> Filter logs by agent type (All, Fundamentals, News, Price, Macro)</li>
+                        <li><strong>Export Capability:</strong> Download complete log history as text file for auditability</li>
+                        <li><strong>Auto-Scroll:</strong> Automatically scrolls to latest logs with minimize/expand controls</li>
+                    </ul>
+
+                    <h3>WebSocket Endpoint</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">WebSocket</span>
+                        </div>
+                        <pre><code>ws://localhost:8000/ws/agent-logs</code></pre>
+                    </div>
+
+                    <h3>Message Format</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">JSON</span>
+                        </div>
+                        <pre><code>{
+  "agent": "Fundamentals Agent",
+  "action": "Starting analysis",
+  "details": "Ticker: AAPL",
+  "status": "progress",
+  "timestamp": "2025-10-17T12:00:00.000Z"
+}</code></pre>
+                    </div>
+
+                    <h3>Agent Execution Flow Example</h3>
+                    <ol>
+                        <li>MarketSense Orchestrator → Starting multi-agent analysis (info)</li>
+                        <li>Fundamentals Agent → Fetching fundamentals (progress)</li>
+                        <li>Fundamentals Agent → Analysis complete - Score: 75/100 (success)</li>
+                        <li>News Agent → Analyzing sentiment (progress)</li>
+                        <li>News Agent → Analysis complete - Score: 80/100 (success)</li>
+                        <li>Price Dynamics Agent → Analyzing momentum (progress)</li>
+                        <li>Price Dynamics Agent → Analysis complete - Score: 70/100 (success)</li>
+                        <li>Macro Agent → Analyzing market environment (progress)</li>
+                        <li>Macro Agent → Analysis complete - Score: 65/100 (success)</li>
+                        <li>Signal Agent → Integrating agent outputs (progress)</li>
+                        <li>Signal Agent → Signal generated - BUY (Conviction: 80, Confidence: 84) (success)</li>
+                    </ol>
+                </section>
+
+                <!-- PORTFOLIO OPTIMIZATION SECTION -->
+                <section id="portfolio-optimization">
+                    <h2>Portfolio Optimization</h2>
+
+                    <h3>Purpose</h3>
+                    <p>Multi-stock portfolio construction with Modern Portfolio Theory optimization algorithms and comprehensive risk analysis.</p>
+
+                    <h3>Screenshot</h3>
+                    <img src="assets/images/quantcoder50.png" alt="QuantCoderFS Monte Carlo & VaR" style="width: 100%; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem;">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Risk analysis: Monte Carlo simulation (1,000 scenarios) and Value at Risk (VaR) metrics for portfolio management.</p>
+
+                    <h3>Optimization Algorithms</h3>
+                    <ul>
+                        <li><strong>Mean-Variance Optimization (MVO):</strong> Maximizes Sharpe ratio for optimal risk-adjusted returns</li>
+                        <li><strong>Black-Litterman Model:</strong> Bayesian approach incorporating investor views with market equilibrium</li>
+                        <li><strong>Minimum Variance Portfolio:</strong> Minimizes portfolio volatility for conservative risk management</li>
+                    </ul>
+
+                    <h3>Risk Analysis Tools</h3>
+                    <ul>
+                        <li><strong>Monte Carlo Simulation:</strong> 1,000-10,000 scenarios over configurable time horizon (252 trading days default)</li>
+                        <li><strong>Value at Risk (VaR):</strong> Historical and Parametric VaR at 95% confidence level</li>
+                        <li><strong>Conditional VaR (CVaR):</strong> Expected loss beyond VaR threshold</li>
+                        <li><strong>Stress Testing:</strong> Portfolio performance under extreme market conditions</li>
+                    </ul>
+
+                    <h3>Monte Carlo Output Metrics</h3>
+                    <ul>
+                        <li>Mean Final Value</li>
+                        <li>Median (50th percentile)</li>
+                        <li>Standard Deviation</li>
+                        <li>Min/Max scenarios</li>
+                        <li>5th and 95th Percentile ranges</li>
+                    </ul>
+
+                    <h3>Workflow</h3>
+                    <ol>
+                        <li>Create empty portfolio with drag-and-drop interface</li>
+                        <li>Add stocks from Stocks section</li>
+                        <li>Select optimization algorithm (MVO, Black-Litterman, Min Variance)</li>
+                        <li>System calculates optimal weights based on historical returns and covariance</li>
+                        <li>View allocation pie chart, expected return, volatility, Sharpe ratio</li>
+                        <li>Run Monte Carlo simulation for risk analysis</li>
+                        <li>Calculate VaR and CVaR for downside risk assessment</li>
+                    </ol>
+                </section>
+
+                <!-- PAIR TRADING SECTION -->
+                <section id="pair-trading">
+                    <h2>Pair Trading</h2>
+
+                    <h3>Purpose</h3>
+                    <p>Statistical arbitrage through cointegration analysis of stock pairs for mean-reversion trading strategies.</p>
+
+                    <h3>Screenshot</h3>
+                    <img src="assets/images/quantcoder48.png" alt="QuantCoderFS Pair Trading" style="width: 100%; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem;">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Pair trading analysis: cointegration test, z-score time series, and dual-axis price comparison for EGAN.US / LAES.US.</p>
+
+                    <h3>Statistical Methods</h3>
+                    <ul>
+                        <li><strong>Engle-Granger Cointegration Test:</strong> Tests for long-term equilibrium relationship (p-value < 0.05 indicates cointegration)</li>
+                        <li><strong>Augmented Dickey-Fuller (ADF):</strong> Stationarity test for spread time series</li>
+                        <li><strong>Ordinary Least Squares (OLS):</strong> Hedge ratio estimation for optimal position sizing</li>
+                        <li><strong>Half-Life Calculation:</strong> Mean-reversion speed using Ornstein-Uhlenbeck process</li>
+                    </ul>
+
+                    <h3>Key Metrics</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Description</th>
+                                <th>Interpretation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>p-value</td>
+                                <td>Cointegration test significance</td>
+                                <td>&lt; 0.05 = Cointegrated (statistically significant)</td>
+                            </tr>
+                            <tr>
+                                <td>Hedge Ratio</td>
+                                <td>Optimal ratio for position sizing</td>
+                                <td>e.g., 1.69 means 1.69 shares of Stock 2 per 1 share of Stock 1</td>
+                            </tr>
+                            <tr>
+                                <td>Half-Life</td>
+                                <td>Mean-reversion speed (days)</td>
+                                <td>Lower = faster mean-reversion (ideal: 5-30 days)</td>
+                            </tr>
+                            <tr>
+                                <td>Z-Score</td>
+                                <td>Current spread deviation</td>
+                                <td>&lt; -2.0 = LONG, &gt; 2.0 = SHORT, -2.0 to 2.0 = NEUTRAL</td>
+                            </tr>
+                            <tr>
+                                <td>Win Rate</td>
+                                <td>Historical success rate</td>
+                                <td>Percentage of profitable trades (> 60% preferred)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Trading Signals</h3>
+                    <ul>
+                        <li><strong>LONG:</strong> Z-score &lt; -2.0 (spread undervalued → buy Stock 1, sell Stock 2)</li>
+                        <li><strong>SHORT:</strong> Z-score &gt; 2.0 (spread overvalued → sell Stock 1, buy Stock 2)</li>
+                        <li><strong>NEUTRAL:</strong> -2.0 ≤ Z-score ≤ 2.0 (no position or close existing)</li>
+                    </ul>
+
+                    <h3>Workflow</h3>
+                    <ol>
+                        <li>Create empty pair with auto-generated name</li>
+                        <li>Drag and drop Stock 1 from Stocks section to Ticker 1 slot</li>
+                        <li>Drag and drop Stock 2 to Ticker 2 slot</li>
+                        <li>System automatically fetches 2 years of historical data</li>
+                        <li>Runs Engle-Granger cointegration test (10-20 seconds)</li>
+                        <li>Calculates hedge ratio, half-life, current z-score</li>
+                        <li>Generates trading signal based on z-score thresholds</li>
+                        <li>Displays z-score time series chart and dual-axis price comparison</li>
+                        <li>Shows historical performance metrics (win rate, avg profit, avg duration)</li>
+                    </ol>
+                </section>
+
+                <!-- BENCHMARKS SECTION -->
+                <section id="benchmarks">
+                    <h2>Benchmarks</h2>
+
+                    <h3>Purpose</h3>
+                    <p>Market index tracking and relative performance comparison for portfolio and stock analysis.</p>
+
+                    <h3>Supported Indices</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SPY</td>
+                                <td>S&P 500 ETF</td>
+                                <td>Large-cap US equities (500 stocks)</td>
+                            </tr>
+                            <tr>
+                                <td>QQQ</td>
+                                <td>Nasdaq 100 ETF</td>
+                                <td>Technology-heavy large-cap (100 stocks)</td>
+                            </tr>
+                            <tr>
+                                <td>DIA</td>
+                                <td>Dow Jones Industrial Average ETF</td>
+                                <td>Blue-chip US equities (30 stocks)</td>
+                            </tr>
+                            <tr>
+                                <td>IWM</td>
+                                <td>Russell 2000 ETF</td>
+                                <td>Small-cap US equities (2000 stocks)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Comparison Metrics</h3>
+                    <ul>
+                        <li><strong>Alpha (Annualized):</strong> Excess return compared to benchmark</li>
+                        <li><strong>Beta:</strong> Systematic risk relative to benchmark (1.0 = same volatility)</li>
+                        <li><strong>Correlation:</strong> Degree of linear relationship (-1 to 1)</li>
+                        <li><strong>Tracking Error:</strong> Standard deviation of return differences (annualized)</li>
+                        <li><strong>Up Capture Ratio:</strong> Performance on benchmark's up days (> 100% = outperformance)</li>
+                        <li><strong>Down Capture Ratio:</strong> Performance on benchmark's down days (< 100% = less downside)</li>
+                        <li><strong>Sharpe Ratios:</strong> Risk-adjusted returns for both stock and benchmark</li>
+                    </ul>
+
+                    <h3>Data Management</h3>
+                    <ul>
+                        <li><strong>Auto-Sync:</strong> Daily EOD data updates via cron job or manual trigger</li>
+                        <li><strong>Data Caching:</strong> Efficient storage with last-update tracking</li>
+                        <li><strong>Historical Range:</strong> 2+ years of daily OHLCV data</li>
+                    </ul>
+                </section>
+
                 <!-- STRATEGY GENERATOR SECTION -->
                 <section id="strategy-generator">
                     <h2>Strategy Generator Module</h2>
@@ -963,6 +1212,381 @@ Response 200:
                             QuantConnect Credentials Required
                         </div>
                         <p>You must configure QuantConnect User ID and API Token in Settings before using this endpoint.</p>
+                    </div>
+                </section>
+
+                <!-- PORTFOLIOS API SECTION -->
+                <section id="api-portfolios">
+                    <h2>Portfolios API Reference</h2>
+
+                    <h3>Create Portfolio</h3>
+                    <pre><code>POST /api/portfolios
+Content-Type: application/json
+
+{
+  "name": "Tech Portfolio"
+}
+
+Response 200:
+{
+  "id": 1,
+  "name": "Tech Portfolio",
+  "created_at": "2025-10-17T12:00:00Z"
+}</code></pre>
+
+                    <h3>List Portfolios</h3>
+                    <pre><code>GET /api/portfolios
+
+Response 200:
+{
+  "portfolios": [
+    {
+      "id": 1,
+      "name": "Tech Portfolio",
+      "stock_count": 5,
+      "created_at": "2025-10-17T12:00:00Z"
+    }
+  ]
+}</code></pre>
+
+                    <h3>Get Portfolio</h3>
+                    <pre><code>GET /api/portfolios/{portfolio_id}
+
+Response 200:
+{
+  "id": 1,
+  "name": "Tech Portfolio",
+  "stocks": [
+    {"ticker": "AAPL", "weight": 0.25},
+    {"ticker": "MSFT", "weight": 0.25},
+    {"ticker": "GOOGL", "weight": 0.25},
+    {"ticker": "AMZN", "weight": 0.25}
+  ],
+  "created_at": "2025-10-17T12:00:00Z",
+  "updated_at": "2025-10-17T12:30:00Z"
+}</code></pre>
+
+                    <h3>Update Portfolio (Rename)</h3>
+                    <pre><code>PATCH /api/portfolios/{portfolio_id}
+Content-Type: application/json
+
+{
+  "name": "New Portfolio Name"
+}
+
+Response 200:
+{
+  "id": 1,
+  "name": "New Portfolio Name",
+  "updated_at": "2025-10-17T12:30:00Z"
+}</code></pre>
+
+                    <h3>Add Stock to Portfolio</h3>
+                    <pre><code>POST /api/portfolios/{portfolio_id}/stocks
+Content-Type: application/json
+
+{
+  "ticker": "GOOGL"
+}
+
+Response 200:
+{
+  "message": "Stock added successfully",
+  "portfolio_id": 1,
+  "ticker": "GOOGL"
+}</code></pre>
+
+                    <h3>Remove Stock from Portfolio</h3>
+                    <pre><code>DELETE /api/portfolios/{portfolio_id}/stocks/{ticker}
+
+Response 200:
+{
+  "message": "Stock removed successfully"
+}</code></pre>
+
+                    <h3>Optimize Portfolio</h3>
+                    <pre><code>POST /api/portfolios/{portfolio_id}/optimize
+Content-Type: application/json
+
+{
+  "algorithm": "mvo",
+  "risk_free_rate": 0.02,
+  "target_return": 0.15
+}
+
+Response 200:
+{
+  "algorithm": "mvo",
+  "optimal_weights": {
+    "AAPL": 0.30,
+    "MSFT": 0.25,
+    "GOOGL": 0.25,
+    "AMZN": 0.20
+  },
+  "expected_return": 0.15,
+  "volatility": 0.18,
+  "sharpe_ratio": 0.72
+}</code></pre>
+
+                    <h3>Monte Carlo Simulation</h3>
+                    <pre><code>POST /api/portfolios/{portfolio_id}/monte-carlo
+Content-Type: application/json
+
+{
+  "num_simulations": 1000,
+  "time_horizon_days": 252
+}
+
+Response 200:
+{
+  "num_simulations": 1000,
+  "mean_return": 0.12,
+  "median_return": 0.11,
+  "std_dev": 0.18,
+  "percentiles": {
+    "5": -0.25,
+    "25": 0.05,
+    "50": 0.11,
+    "75": 0.20,
+    "95": 0.45
+  },
+  "probability_positive": 0.68
+}</code></pre>
+
+                    <h3>Calculate VaR</h3>
+                    <pre><code>POST /api/portfolios/{portfolio_id}/var
+Content-Type: application/json
+
+{
+  "confidence_level": 0.95,
+  "time_horizon_days": 1
+}
+
+Response 200:
+{
+  "var_95": -0.025,
+  "cvar_95": -0.035,
+  "confidence_level": 0.95,
+  "interpretation": "With 95% confidence, maximum 1-day loss is 2.5%"
+}</code></pre>
+
+                    <div class="info-box info-box-warning">
+                        <div class="info-box-title">
+                            <i class="fas fa-lock"></i>
+                            Substack Subscribers Only
+                        </div>
+                        <p>Portfolio endpoints require Substack subscriber tier license.</p>
+                    </div>
+                </section>
+
+                <!-- PAIRS API SECTION -->
+                <section id="api-pairs">
+                    <h2>Pairs API Reference</h2>
+
+                    <h3>Create Pair</h3>
+                    <pre><code>POST /api/pairs
+Content-Type: application/json
+
+{
+  "name": "Tech Pair",
+  "ticker1": "AAPL",  // Optional
+  "ticker2": "MSFT"   // Optional
+}
+
+Response 200:
+{
+  "id": 1,
+  "name": "Tech Pair",
+  "ticker1": null,
+  "ticker2": null,
+  "created_at": "2025-10-17T12:00:00Z"
+}</code></pre>
+
+                    <h3>List Pairs</h3>
+                    <pre><code>GET /api/pairs
+
+Response 200:
+{
+  "pairs": [
+    {
+      "id": 1,
+      "name": "AAPL / MSFT",
+      "ticker1": "AAPL",
+      "ticker2": "MSFT",
+      "is_cointegrated": true,
+      "last_signal": "LONG",
+      "created_at": "2025-10-17T12:00:00Z"
+    }
+  ]
+}</code></pre>
+
+                    <h3>Get Pair Analysis</h3>
+                    <pre><code>GET /api/pairs/{pair_id}
+
+Response 200 (Complete Pair):
+{
+  "pair": {
+    "id": 1,
+    "name": "AAPL / MSFT",
+    "ticker1": "AAPL",
+    "ticker2": "MSFT"
+  },
+  "cointegration": {
+    "is_cointegrated": true,
+    "p_value": 0.02,
+    "hedge_ratio": 1.25,
+    "half_life": 15.5
+  },
+  "current_status": {
+    "z_score": -2.5,
+    "signal": "LONG",
+    "signal_date": "2025-10-17T12:00:00Z"
+  },
+  "historical_performance": {
+    "win_rate": 0.65,
+    "avg_profit_per_trade": 0.03,
+    "avg_trade_duration": 12.5
+  },
+  "charts": {
+    "z_scores": [...],
+    "prices": [...]
+  }
+}
+
+Response 200 (Incomplete Pair):
+{
+  "pair": {
+    "id": 1,
+    "name": "New Pair 2025-10-17 12:00:00",
+    "ticker1": null,
+    "ticker2": null
+  },
+  "incomplete": true,
+  "message": "Add both tickers to run analysis"
+}</code></pre>
+
+                    <h3>Add Ticker to Pair</h3>
+                    <pre><code>POST /api/pairs/{pair_id}/tickers
+Content-Type: application/json
+
+{
+  "ticker": "AAPL",
+  "position": 1  // 1 or 2
+}
+
+Response 200:
+{
+  "id": 1,
+  "name": "AAPL / ...",
+  "ticker1": "AAPL",
+  "ticker2": null,
+  "message": "Ticker added. Analysis will run when both tickers are present."
+}</code></pre>
+
+                    <h3>Analyze Pair</h3>
+                    <pre><code>POST /api/pairs/{pair_id}/analyze
+
+Response 200:
+{
+  "message": "Analysis started",
+  "pair_id": 1
+}</code></pre>
+
+                    <h3>Delete Pair</h3>
+                    <pre><code>DELETE /api/pairs/{pair_id}
+
+Response 200:
+{
+  "message": "Pair deleted successfully"
+}</code></pre>
+
+                    <div class="info-box info-box-note">
+                        <div class="info-box-title">
+                            <i class="fas fa-chart-line"></i>
+                            Cointegration Analysis
+                        </div>
+                        <p>Pair analysis runs automatically when both tickers are added. Requires minimum 200 data points (approximately 1 year). Analysis takes 10-20 seconds including 2 years of historical data fetch.</p>
+                    </div>
+
+                    <div class="info-box info-box-warning">
+                        <div class="info-box-title">
+                            <i class="fas fa-lock"></i>
+                            Substack Subscribers Only
+                        </div>
+                        <p>Pair trading endpoints require Substack subscriber tier license.</p>
+                    </div>
+                </section>
+
+                <!-- BENCHMARKS API SECTION -->
+                <section id="api-benchmarks">
+                    <h2>Benchmarks API Reference</h2>
+
+                    <h3>List Benchmarks</h3>
+                    <pre><code>GET /api/benchmarks/list
+
+Response 200:
+{
+  "benchmarks": [
+    {
+      "ticker": "SPY",
+      "name": "S&P 500 ETF",
+      "last_updated": "2025-10-17T00:00:00Z"
+    },
+    {
+      "ticker": "QQQ",
+      "name": "Nasdaq 100 ETF",
+      "last_updated": "2025-10-17T00:00:00Z"
+    },
+    {
+      "ticker": "DIA",
+      "name": "Dow Jones Industrial Average ETF",
+      "last_updated": "2025-10-17T00:00:00Z"
+    },
+    {
+      "ticker": "IWM",
+      "name": "Russell 2000 ETF",
+      "last_updated": "2025-10-17T00:00:00Z"
+    }
+  ]
+}</code></pre>
+
+                    <h3>Sync Benchmark Data</h3>
+                    <pre><code>POST /api/benchmarks/sync/{ticker}
+
+Response 200:
+{
+  "ticker": "SPY",
+  "records_updated": 500,
+  "last_updated": "2025-10-17T12:00:00Z",
+  "message": "Benchmark data synced successfully"
+}</code></pre>
+
+                    <h3>Get Benchmark Data</h3>
+                    <pre><code>GET /api/benchmarks/{ticker}/data?start_date=2024-01-01&end_date=2025-01-01&limit=500
+
+Response 200:
+{
+  "ticker": "SPY",
+  "name": "S&P 500 ETF",
+  "data": [
+    {
+      "date": "2025-10-16",
+      "open": 450.0,
+      "high": 452.0,
+      "low": 449.0,
+      "close": 451.0,
+      "volume": 50000000,
+      "adjusted_close": 451.0
+    }
+  ]
+}</code></pre>
+
+                    <div class="info-box info-box-note">
+                        <div class="info-box-title">
+                            <i class="fas fa-sync"></i>
+                            Auto-Sync
+                        </div>
+                        <p>Benchmark data auto-syncs daily but requires manual trigger for first-time setup. Sync endpoint takes 5-10 seconds per index.</p>
                     </div>
                 </section>
 
