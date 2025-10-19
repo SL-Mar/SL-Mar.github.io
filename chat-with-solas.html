@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="Chat with SOLAS - AI-powered maritime regulations assistant with interactive PDF viewer and intelligent search">
+    <title>Chat with SOLAS | SL Mar - AI for Maritime and Quant Finance</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .project-image {
+            width: 100%;
+            max-width: 1200px;
+            height: auto;
+            border-radius: 8px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .feature-card h3 {
+            color: #4CAF50;
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .feature-card p {
+            margin-bottom: 0;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-badge {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .architecture-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid #4CAF50;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .architecture-section h3 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="nav-left">
+                <img src="logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="index.html" class="logo">SL Mar - AI for Maritime and Quant Finance</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="publications.html">Publications</a></li>
+                <li><a href="development.html">Development</a></li>
+                <li><a href="local-ai.html">Local AI</a></li>
+                <li><a href="rnd-notes.html">R&D Notes</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Chat with SOLAS</h1>
+            <p>
+                AI-powered maritime regulations assistant with hybrid search, intelligent reranking, and interactive PDF viewer
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <img src="Assets/solas3.png" alt="Chat with SOLAS - Interactive maritime regulations assistant" class="project-image">
+
+            <h2>Overview</h2>
+            <p>
+                <strong>Chat with SOLAS</strong> is a production-ready Retrieval-Augmented Generation (RAG) system designed for maritime professionals,
+                safety officers, and compliance teams. It provides instant access to SOLAS conventions, MARPOL regulations, and other IMO maritime
+                documentation through an intelligent conversational interface with full source traceability.
+            </p>
+
+            <h2>Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🔍 Hybrid Search Pipeline</h3>
+                    <p>
+                        Combines semantic vector search (OpenAI embeddings) with BM25 keyword matching,
+                        merged using Reciprocal Rank Fusion for optimal retrieval accuracy.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>⚡ Cross-Encoder Reranking</h3>
+                    <p>
+                        Local sentence-transformers reranking (ms-marco-MiniLM-L-6-v2) scores query-document
+                        pairs directly for superior relevance without external API calls.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📄 Interactive PDF Viewer</h3>
+                    <p>
+                        Click any citation to instantly jump to the exact page in the source PDF.
+                        Full-screen PDF navigation with page controls and zoom.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📚 Hierarchical Citations</h3>
+                    <p>
+                        Every answer includes complete hierarchical references:
+                        Convention → Chapter → Regulation → Paragraph with page numbers and rerank scores.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🎨 Modern UI</h3>
+                    <p>
+                        Dark-themed 3-panel interface with markdown-formatted answers,
+                        expandable citations, and Font Awesome icons throughout.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📱 Telegram Notifications</h3>
+                    <p>
+                        Receive indexing completion alerts via Telegram webhook integration
+                        for background document processing.
+                    </p>
+                </div>
+            </div>
+
+            <h2>Architecture</h2>
+            <div class="architecture-section">
+                <h3>4-Stage Retrieval Pipeline</h3>
+                <p><strong>Stage 1: Semantic Search</strong> - Qdrant vector database with OpenAI text-embedding-3-small embeddings (retrieves 30 candidates)</p>
+                <p><strong>Stage 2: Keyword Search</strong> - BM25 implementation using rank-bm25 (retrieves 30 candidates)</p>
+                <p><strong>Stage 3: RRF Fusion</strong> - Reciprocal Rank Fusion combines both result sets (returns 20 candidates for reranking)</p>
+                <p><strong>Stage 4: Cross-Encoder Reranking</strong> - Local sentence-transformers model scores each query-document pair (returns final top 10)</p>
+            </div>
+
+            <div class="architecture-section">
+                <h3>Smart Chunking with Hierarchy Detection</h3>
+                <p>
+                    Text extraction with PyPDF2 followed by intelligent chunking (~2400 chars per chunk, 100-word overlap)
+                    that preserves maritime document structure:
+                </p>
+                <ul style="color: #ccc; line-height: 1.8;">
+                    <li>Detects <strong>Convention</strong> (SOLAS, MARPOL, STCW)</li>
+                    <li>Extracts <strong>Annex</strong> identifiers (Annex I, Annex VI)</li>
+                    <li>Identifies <strong>Chapters</strong> (Chapter II-1, Chapter III)</li>
+                    <li>Parses <strong>Regulations</strong> (Regulation 15, Regulation 19)</li>
+                    <li>Captures <strong>Paragraphs</strong> (Para. 2.1, Para. 3.4.1)</li>
+                </ul>
+                <p>Each chunk stores complete hierarchical path for precise citations.</p>
+            </div>
+
+            <h2>Technology Stack</h2>
+            <div class="tech-stack">
+                <span class="tech-badge">FastAPI</span>
+                <span class="tech-badge">React 18</span>
+                <span class="tech-badge">TypeScript</span>
+                <span class="tech-badge">Qdrant Vector DB</span>
+                <span class="tech-badge">OpenAI GPT-4</span>
+                <span class="tech-badge">sentence-transformers</span>
+                <span class="tech-badge">rank-bm25</span>
+                <span class="tech-badge">PyPDF2</span>
+                <span class="tech-badge">PyMuPDF</span>
+                <span class="tech-badge">SQLite</span>
+                <span class="tech-badge">react-pdf</span>
+                <span class="tech-badge">react-markdown</span>
+            </div>
+
+            <h2>Example Queries</h2>
+            <div class="code-block">
+<strong>Query:</strong> "Explain the various safety drills we have to do onboard"
+
+<strong>Retrieved Sources:</strong>
+• SOLAS > Chapter II-2 > Regulation 15 (Page 257, Rerank: 3.32)
+• SOLAS > Chapter III > Regulation 19 (Page 308, Rerank: 1.76)
+• SOLAS > Chapter III (Page 310, Rerank: 0.48)
+
+<strong>Answer Includes:</strong>
+✓ Fire drills with specific procedures
+✓ Abandon ship drills
+✓ Enclosed space entry and rescue drills
+✓ Damage control drills
+✓ On-board training requirements with timelines
+            </div>
+
+            <h2>API Endpoints</h2>
+            <div class="code-block">
+POST /api/documents/upload     → Upload maritime PDF
+POST /api/documents/{id}/index → Index document with smart chunking
+POST /api/query                → Hybrid RAG query with reranking
+GET  /api/documents            → List all documents
+GET  /api/documents/{id}/preview → PDF preview by page
+            </div>
+
+            <h2>RAG Configuration</h2>
+            <div class="architecture-section">
+                <h3>Optimized for Complete Answers</h3>
+                <ul style="color: #ccc; line-height: 1.8;">
+                    <li><strong>retrieval_top_k:</strong> 10 chunks (retrieves 30 candidates, reranks to top 10)</li>
+                    <li><strong>llm_max_tokens:</strong> 3000 (allows detailed, comprehensive responses)</li>
+                    <li><strong>chat_model:</strong> gpt-4o (premium synthesis of multiple sources)</li>
+                    <li><strong>embedding_model:</strong> text-embedding-3-small (cost-effective, 1536 dimensions)</li>
+                    <li><strong>temperature:</strong> 0.3 (low for accuracy and consistency)</li>
+                </ul>
+            </div>
+
+            <h2>Why Cross-Encoder Reranking?</h2>
+            <p>
+                Traditional <strong>bi-encoders</strong> (semantic search) encode queries and documents separately, then compute similarity.
+                <strong>Cross-encoders</strong> score each query-document pair together, capturing deeper semantic relationships.
+            </p>
+            <p>
+                Our pipeline uses fast bi-encoders for initial retrieval (30 candidates from 854 documents), then applies a local
+                cross-encoder to rerank for maximum accuracy. This hybrid approach balances speed and precision without external API costs.
+            </p>
+
+            <h2>UI Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Documents Panel</h3>
+                    <p>
+                        Upload PDFs, view indexing status, file sizes. Click any document to load in PDF viewer.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>PDF Viewer Panel</h3>
+                    <p>
+                        Full-screen PDF rendering with page controls. Click citations from chat to auto-navigate to source page.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Chat Panel</h3>
+                    <p>
+                        Ask questions in natural language. Answers display with markdown formatting, expandable citations with rerank scores.
+                    </p>
+                </div>
+            </div>
+
+            <h2>Development Notes</h2>
+            <p>
+                <strong>Chat with SOLAS</strong> evolved from n8n workflows (<code>MC_SOLAS_RAG_Indexing</code> and <code>MC_SOLAS_RAG_Proper</code>)
+                into a production-ready full-stack application with:
+            </p>
+            <ul style="color: #ccc; line-height: 1.8;">
+                <li>Self-hosted infrastructure (no vendor lock-in)</li>
+                <li>Local reranking model (~80MB, CPU-only PyTorch)</li>
+                <li>Complete source traceability (every statement cited)</li>
+                <li>Extensible to other maritime conventions (MARPOL, STCW, COLREG)</li>
+            </ul>
+
+            <h2>Use Cases</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Safety Officers</h3>
+                    <p>Quick answers to compliance questions during inspections and audits.</p>
+                </div>
+                <div class="card">
+                    <h3>Training Departments</h3>
+                    <p>Create accurate training materials with verified SOLAS references.</p>
+                </div>
+                <div class="card">
+                    <h3>Ship Operators</h3>
+                    <p>Verify regulatory requirements for emergency procedures and equipment.</p>
+                </div>
+                <div class="card">
+                    <h3>Compliance Teams</h3>
+                    <p>Research regulatory changes and ensure fleet-wide adherence to IMO standards.</p>
+                </div>
+            </div>
+
+            <h2>Project Status</h2>
+            <p>
+                <strong>Production-ready</strong> with ongoing enhancements. Current focus areas:
+            </p>
+            <ul style="color: #ccc; line-height: 1.8;">
+                <li>✅ Hybrid search with cross-encoder reranking</li>
+                <li>✅ Interactive PDF viewer with citation navigation</li>
+                <li>✅ Markdown-formatted answers with hierarchical citations</li>
+                <li>✅ Document indexing with smart hierarchy detection</li>
+                <li>⚠️ PDF page number correction (re-indexing required)</li>
+                <li>🔄 Multi-convention support (MARPOL, STCW expansion)</li>
+                <li>🔄 Advanced query expansion and context handling</li>
+            </ul>
+
+            <h2>Technical Highlights</h2>
+            <div class="architecture-section">
+                <h3>Performance Metrics</h3>
+                <ul style="color: #ccc; line-height: 1.8;">
+                    <li><strong>Indexed Documents:</strong> 854 chunks from SOLAS Convention</li>
+                    <li><strong>Average Query Time:</strong> ~2-3 seconds (retrieval + reranking + LLM)</li>
+                    <li><strong>Retrieval Accuracy:</strong> Top-10 precision significantly improved with reranking</li>
+                    <li><strong>Context Window:</strong> ~21,600 characters sent to LLM per query</li>
+                    <li><strong>Answer Completeness:</strong> 3000 token budget for detailed responses</li>
+                </ul>
+            </div>
+
+            <h2>Future Roadmap</h2>
+            <ul style="color: #ccc; line-height: 1.8;">
+                <li>Expand to MARPOL annexes (pollution prevention regulations)</li>
+                <li>Add STCW certification and training requirements</li>
+                <li>Implement query expansion for complex multi-part questions</li>
+                <li>Add comparative analysis features (e.g., "Compare fire drill requirements between SOLAS II-2 and III")</li>
+                <li>Multi-language support (French, Spanish maritime regulations)</li>
+                <li>Export answers to PDF with full citations</li>
+            </ul>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SL Mar</p>
+            <p>AI for Maritime & Quant Finance</p>
+            <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions légales</a></p>
+        </div>
+    </footer>
+</body>
+</html>
