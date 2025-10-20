@@ -85,8 +85,8 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="publications.html">Publications</a></li>
                 <li><a href="development.html">Development</a></li>
-                <li><a href="n8n-automation.html" class="active">n8n Automation</a></li>
                 <li><a href="contact.html">Contact</a></li>
+                <li><a href="n8n-automation.html" class="active">n8n Automation</a></li>
             </ul>
         </div>
     </nav>
@@ -95,7 +95,7 @@
         <div class="container">
             <h1>n8n Workflow Automation</h1>
             <p>
-                Self-hosted AI automation pipelines for quantitative finance research, market intelligence, and maritime operations
+                Visual workflow automation for task automation, prototyping, and unit testing
             </p>
         </div>
     </section>
@@ -103,153 +103,26 @@
     <section>
         <div class="container">
             <img src="Assets/n8n1.png" alt="n8n workflow - AI news summarization and market data processing" class="project-image">
-            <img src="Assets/n8n2.png" alt="n8n workflow - RAG system with vector retrieval and AI chat models" class="project-image">
-            <img src="Assets/n8n3.png" alt="n8n workflow - Automated document processing and summarization" class="project-image">
 
-            <h2>Overview</h2>
+            <h2>What is n8n?</h2>
             <p>
-                Self-hosted workflow automation platform powering AI pipelines for market intelligence, research automation,
-                and operational workflows. Connects APIs, databases, AI models, and notification systems with visual workflow design.
+                n8n is a self-hosted workflow automation platform that enables visual programming through node-based workflows.
+                It serves three primary purposes: <strong>task automation</strong> (scheduling repetitive operations),
+                <strong>prototyping</strong> (rapid testing of API integrations and data pipelines), and
+                <strong>unit testing</strong> (validating individual components before production deployment).
             </p>
 
-            <h2>Capabilities</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>🤖 AI-Powered Research</h3>
-                    <p>
-                        Automated news summarization, market intelligence gathering, and research paper processing using
-                        OpenAI GPT-4, Claude, and local Ollama models.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <h3>📊 Market Data Processing</h3>
-                    <p>
-                        Real-time forex data retrieval, technical analysis, chart generation, and automated trading signal
-                        detection with EODHD and TradingView integration.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <h3>🔍 RAG Systems</h3>
-                    <p>
-                        Retrieval-Augmented Generation workflows with Qdrant vector database, semantic search,
-                        and hybrid retrieval for accurate question-answering.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <h3>📱 Telegram Integration</h3>
-                    <p>
-                        Real-time notifications, interactive commands, and mobile-first interfaces for monitoring
-                        workflows, trading signals, and system alerts.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <h3>🗄️ Notion Automation</h3>
-                    <p>
-                        Automated database population, research note creation, and knowledge management with
-                        Notion API integration for structured data storage.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <h3>📄 Document Intelligence</h3>
-                    <p>
-                        PDF parsing, XML processing, web scraping, and automated summarization for
-                        extracting insights from maritime regulations and financial reports.
-                    </p>
-                </div>
-            </div>
-
-            <h2>Featured Workflows</h2>
-
-            <div class="workflow-section">
-                <h3>1. AI Market Intelligence Pipeline</h3>
-                <p><strong>Trigger:</strong> Scheduled (every 4 hours)</p>
-                <p><strong>Components:</strong></p>
-                <ul style="color: #ccc; line-height: 1.8;">
-                    <li>EODHD News API for real-time financial news</li>
-                    <li>Dual-stage filtering (recent news + deduplication)</li>
-                    <li>OpenAI GPT-4 for news summarization</li>
-                    <li>Forex data retrieval (XAUUSD, EURUSD)</li>
-                    <li>Chart generation and technical analysis</li>
-                    <li>Notion database integration for research tracking</li>
-                    <li>Telegram notifications with formatted summaries</li>
-                </ul>
-                <p><strong>Output:</strong> Curated market intelligence reports with charts, summaries, and database entries</p>
-            </div>
-
-            <div class="workflow-section">
-                <h3>2. RAG Question-Answering System</h3>
-                <p><strong>Trigger:</strong> Webhook (POST request)</p>
-                <p><strong>Components:</strong></p>
-                <ul style="color: #ccc; line-height: 1.8;">
-                    <li>Webhook receiver for query extraction</li>
-                    <li>Qdrant vector store retrieval (semantic search)</li>
-                    <li>OpenAI embeddings (text-embedding-3-small)</li>
-                    <li>Question-Answer Chain with context injection</li>
-                    <li>OpenAI Chat Model (GPT-4) or Ollama (local LLMs)</li>
-                    <li>Webhook response with AI-generated answers</li>
-                </ul>
-                <p><strong>Output:</strong> Accurate answers with source citations from indexed documents</p>
-            </div>
-
-            <div class="workflow-section">
-                <h3>3. Automated Document Processing</h3>
-                <p><strong>Trigger:</strong> Scheduled (daily at configured time)</p>
-                <p><strong>Components:</strong></p>
-                <ul style="color: #ccc; line-height: 1.8;">
-                    <li>URL extraction from RSS/API feeds</li>
-                    <li>ArXiv research paper downloads</li>
-                    <li>XML parsing for metadata extraction</li>
-                    <li>PDF download and text extraction</li>
-                    <li>AI-powered summarization (GPT-4)</li>
-                    <li>Notion page creation with structured summaries</li>
-                    <li>Loop processing for batch operations</li>
-                </ul>
-                <p><strong>Output:</strong> Research library with automated summaries in Notion database</p>
-            </div>
-
-            <h2>Technology Stack</h2>
-            <div class="tech-stack">
-                <span class="tech-badge">n8n (self-hosted)</span>
-                <span class="tech-badge">Docker Compose</span>
-                <span class="tech-badge">OpenAI GPT-4</span>
-                <span class="tech-badge">Anthropic Claude</span>
-                <span class="tech-badge">Ollama (Local LLMs)</span>
-                <span class="tech-badge">Qdrant Vector DB</span>
-                <span class="tech-badge">Notion API</span>
-                <span class="tech-badge">Telegram Bot API</span>
-                <span class="tech-badge">EODHD Data</span>
-                <span class="tech-badge">PostgreSQL</span>
-                <span class="tech-badge">Python (Code nodes)</span>
-                <span class="tech-badge">JavaScript (Code nodes)</span>
-            </div>
-
-            <h2>Use Cases</h2>
-            <div class="cards">
-                <div class="card">
-                    <h3>Quantitative Research</h3>
-                    <p>Automated paper downloads, summarization, and strategy extraction for QuantConnect algorithm development.</p>
-                </div>
-                <div class="card">
-                    <h3>Market Surveillance</h3>
-                    <p>Real-time news monitoring, sentiment analysis, and market-moving event detection with instant alerts.</p>
-                </div>
-                <div class="card">
-                    <h3>Maritime Operations</h3>
-                    <p>Automated processing of SOLAS/MARPOL regulations, safety bulletin distribution, and compliance tracking.</p>
-                </div>
-                <div class="card">
-                    <h3>Knowledge Management</h3>
-                    <p>Automated indexing of PDFs, research papers, and documentation into searchable vector databases.</p>
-                </div>
-            </div>
+            <h2>Example Workflow</h2>
+            <p>
+                The screenshot above shows an <strong>AI Market Intelligence Pipeline</strong> that runs every 4 hours.
+                It fetches real-time financial news from EODHD API, filters recent articles, uses OpenAI GPT-4 to generate summaries,
+                retrieves forex data (XAUUSD, EURUSD), generates charts, stores results in a Notion database, and sends
+                formatted notifications via Telegram. This workflow automates the entire research pipeline from data collection
+                to delivery.
+            </p>
 
             <p style="margin-top: 2rem;">
-                For detailed setup instructions and workflow examples, refer to the
+                For more information, see the
                 <a href="https://docs.n8n.io" target="_blank" style="color: #2196F3;">official n8n documentation</a>
                 or the Local AI articles in the <a href="publications.html" style="color: #2196F3;">Publications</a> section.
             </p>
