@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with SOLAS Documentation - Technical Reference</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Documentation Header -->
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="docs.html" class="docs-logo">
+                <i class="fas fa-ship"></i>
+                <span>Chat with SOLAS</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="docs.html" class="active">Documentation</a></li>
+                    <li><a href="https://sl-mar.github.io/chat-with-solas.html" target="_blank"><i class="fas fa-globe"></i> Project Page</a></li>
+                </ul>
+            </nav>
+            <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+
+    <!-- Documentation Container -->
+    <div class="docs-container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                    <li><a href="#installation"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="#quick-start"><i class="fas fa-rocket"></i> Quick Start</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core Features</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#hybrid-search"><i class="fas fa-search"></i> Hybrid Search</a></li>
+                    <li><a href="#reranking"><i class="fas fa-sort"></i> Cross-Encoder Reranking</a></li>
+                    <li><a href="#pdf-viewer"><i class="fas fa-file-pdf"></i> PDF Viewer</a></li>
+                    <li><a href="#smart-chunking"><i class="fas fa-cut"></i> Smart Chunking</a></li>
+                    <li><a href="#category-filtering"><i class="fas fa-filter"></i> Category Filtering</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#api-overview"><i class="fas fa-book"></i> API Overview</a></li>
+                    <li><a href="#api-documents"><i class="fas fa-folder"></i> Documents API</a></li>
+                    <li><a href="#api-query"><i class="fas fa-question-circle"></i> Query API</a></li>
+                    <li><a href="#api-health"><i class="fas fa-heartbeat"></i> Health API</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Advanced Topics</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#rag-pipeline"><i class="fas fa-stream"></i> RAG Pipeline</a></li>
+                    <li><a href="#hierarchy-detection"><i class="fas fa-sitemap"></i> Hierarchy Detection</a></li>
+                    <li><a href="#database"><i class="fas fa-table"></i> Database Schema</a></li>
+                    <li><a href="#configuration"><i class="fas fa-cog"></i> Configuration</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#github"><i class="fab fa-github"></i> GitHub Repository</a></li>
+                    <li><a href="#use-cases"><i class="fas fa-users"></i> Use Cases</a></li>
+                    <li><a href="#roadmap"><i class="fas fa-map"></i> Roadmap</a></li>
+                    <li><a href="../contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-main">
+            <div class="docs-content">
+
+                <!-- OVERVIEW SECTION -->
+                <section id="overview">
+                    <h1>Chat with SOLAS Documentation</h1>
+                    <p class="docs-subtitle">AI-powered RAG system for maritime regulations with hybrid search and intelligent reranking</p>
+
+                    <div class="info-box info-box-note">
+                        <div class="info-box-title">
+                            <i class="fas fa-info-circle"></i>
+                            Version Information
+                        </div>
+                        <p><strong>Version:</strong> 1.0.0 | <strong>Status:</strong> Active Development | <strong>Updated:</strong> October 20, 2025</p>
+                    </div>
+
+                    <h2>What is Chat with SOLAS?</h2>
+                    <p>Chat with SOLAS is an AI-powered Retrieval-Augmented Generation (RAG) system designed for maritime safety professionals to quickly find accurate information in complex regulatory documents.</p>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li><strong>Hybrid Search:</strong> Combines semantic search (OpenAI embeddings) with BM25 keyword matching for optimal retrieval</li>
+                        <li><strong>Cross-Encoder Reranking:</strong> Local sentence-transformers model scores query-document pairs for maximum relevance</li>
+                        <li><strong>Interactive PDF Viewer:</strong> Click any citation to jump directly to the source page in the PDF</li>
+                        <li><strong>Hierarchical Citations:</strong> Complete navigation path (Convention → Chapter → Regulation → Paragraph) with page numbers</li>
+                        <li><strong>Category Filtering:</strong> Separate tabs for Conventions (SOLAS, MARPOL, etc.), SMS, and Emergency documents</li>
+                    </ul>
+
+                    <h3>Core Technology Stack</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Layer</th>
+                                <th>Technology</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Backend Framework</td>
+                                <td>FastAPI</td>
+                                <td>REST API and async document processing</td>
+                            </tr>
+                            <tr>
+                                <td>Frontend Framework</td>
+                                <td>React 18 + TypeScript</td>
+                                <td>Interactive UI with PDF viewer</td>
+                            </tr>
+                            <tr>
+                                <td>Vector Database</td>
+                                <td>Qdrant</td>
+                                <td>Semantic search with OpenAI embeddings</td>
+                            </tr>
+                            <tr>
+                                <td>Keyword Search</td>
+                                <td>rank-bm25</td>
+                                <td>Traditional keyword-based retrieval</td>
+                            </tr>
+                            <tr>
+                                <td>Reranking</td>
+                                <td>sentence-transformers</td>
+                                <td>Local cross-encoder (ms-marco-MiniLM-L-6-v2)</td>
+                            </tr>
+                            <tr>
+                                <td>LLM</td>
+                                <td>OpenAI GPT-4o</td>
+                                <td>Answer generation and synthesis</td>
+                            </tr>
+                            <tr>
+                                <td>PDF Processing</td>
+                                <td>PyPDF2 + PyMuPDF</td>
+                                <td>Text extraction and page rendering</td>
+                            </tr>
+                            <tr>
+                                <td>Database</td>
+                                <td>SQLite</td>
+                                <td>Document metadata and query logs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Supported Document Categories</h3>
+                    <ul>
+                        <li><strong>Conventions:</strong> SOLAS, MARPOL, MLC, STCW</li>
+                        <li><strong>SMS:</strong> Safety Management System procedures</li>
+                        <li><strong>Emergency:</strong> Emergency response plans (SMPEP, PUN, etc.)</li>
+                    </ul>
+                </section>
+
+                <!-- ARCHITECTURE SECTION -->
+                <section id="architecture">
+                    <h2>System Architecture</h2>
+
+                    <h3>High-Level Architecture</h3>
+                    <pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    Frontend (React 18)                       │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│  │  Documents   │  │  PDF Viewer  │  │     Chat     │     │
+│  │     List     │  │              │  │   Interface  │     │
+│  └──────────────┘  └──────────────┘  └──────────────┘     │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ HTTP/REST API
+┌──────────────────────────┴──────────────────────────────────┐
+│                Backend (FastAPI + Python)                    │
+│  ┌─────────────────────┐    ┌─────────────────────┐        │
+│  │  Document Indexing  │    │   RAG Query Engine  │        │
+│  │  • PDF Extraction   │    │  • Hybrid Search    │        │
+│  │  • Smart Chunking   │    │  • RRF Fusion       │        │
+│  │  • Hierarchy Parse  │    │  • Reranking        │        │
+│  └─────────────────────┘    └─────────────────────┘        │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              External Services                        │  │
+│  │  • Qdrant (Vector DB)    • OpenAI (LLM + Embeddings) │  │
+│  │  • sentence-transformers (Local Reranking)           │  │
+│  └──────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘</code></pre>
+
+                    <h3>4-Stage RAG Pipeline</h3>
+                    <div class="info-box info-box-tip">
+                        <div class="info-box-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Optimized for Precision
+                        </div>
+                        <p>The pipeline starts with 30 candidates each from semantic and keyword search, fuses them to 20, then reranks to final top 10 for maximum accuracy.</p>
+                    </div>
+
+                    <pre><code>Stage 1: Semantic Search (Qdrant)
+├─ OpenAI text-embedding-3-small (1536 dimensions)
+├─ Cosine similarity search
+└─ Returns: 30 candidates
+
+Stage 2: Keyword Search (BM25)
+├─ rank-bm25 implementation
+├─ TF-IDF scoring with term weighting
+└─ Returns: 30 candidates
+
+Stage 3: Reciprocal Rank Fusion (RRF)
+├─ Combines both result sets
+├─ Deduplicates and scores: 1 / (k + rank)
+└─ Returns: 20 candidates for reranking
+
+Stage 4: Cross-Encoder Reranking
+├─ sentence-transformers: ms-marco-MiniLM-L-6-v2
+├─ Scores each query-document pair directly
+├─ Filters by MIN_RERANK_SCORE = -2.0
+└─ Returns: Final top 10 chunks</code></pre>
+
+                    <h3>Data Flow</h3>
+                    <ol>
+                        <li><strong>Document Upload:</strong> User uploads PDF via frontend</li>
+                        <li><strong>Background Indexing:</strong> FastAPI BackgroundTasks trigger processing</li>
+                        <li><strong>Text Extraction:</strong> PyPDF2 extracts text from PDF</li>
+                        <li><strong>Smart Chunking:</strong> ~2400 chars per chunk, 100-word overlap</li>
+                        <li><strong>Hierarchy Detection:</strong> Regex patterns extract Convention, Chapter, Regulation, Paragraph</li>
+                        <li><strong>Vector Embedding:</strong> OpenAI embeddings for each chunk</li>
+                        <li><strong>Storage:</strong> Qdrant (vectors) + SQLite (metadata) + BM25 corpus</li>
+                        <li><strong>Query:</strong> User asks question → Hybrid search → Rerank → LLM synthesis</li>
+                        <li><strong>Response:</strong> Answer with citations, page numbers, rerank scores</li>
+                    </ol>
+                </section>
+
+                <!-- INSTALLATION SECTION -->
+                <section id="installation">
+                    <h2>Installation</h2>
+
+                    <h3>Prerequisites</h3>
+                    <ul>
+                        <li>Python 3.10+</li>
+                        <li>Node.js 18+</li>
+                        <li>Docker (for Qdrant)</li>
+                        <li>OpenAI API key</li>
+                    </ul>
+
+                    <h3>Backend Setup</h3>
+                    <pre><code># Clone repository
+git clone https://github.com/SL-Mar/Chat_with_SOLAS.git
+cd Chat_with_SOLAS
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+
+# Install dependencies
+pip install -r backend/requirements.txt
+
+# Create .env file
+cat > backend/.env << EOF
+OPENAI_API_KEY=your_openai_api_key_here
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+QDRANT_COLLECTION=maritime_rag
+APP_HOST=0.0.0.0
+APP_PORT=8001
+UPLOAD_DIR=uploads
+MAX_UPLOAD_SIZE_MB=100
+EOF
+
+# Start Qdrant with Docker
+docker run -d -p 6333:6333 -v $(pwd)/qdrant_storage:/qdrant/storage qdrant/qdrant
+
+# Run backend
+cd backend
+uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload</code></pre>
+
+                    <h3>Frontend Setup</h3>
+                    <pre><code># Install dependencies
+cd frontend
+npm install
+
+# Create .env file
+echo "VITE_API_URL=http://localhost:8001" > .env
+
+# Run frontend
+npm run dev
+
+# Open browser
+# http://localhost:5173</code></pre>
+
+                    <div class="info-box info-box-warning">
+                        <div class="info-box-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            First-Time Setup
+                        </div>
+                        <p>Download the sentence-transformers reranking model (~80MB) on first query. This is a one-time operation and runs locally (CPU-only PyTorch).</p>
+                    </div>
+                </section>
+
+                <!-- QUICK START SECTION -->
+                <section id="quick-start">
+                    <h2>Quick Start Guide</h2>
+
+                    <h3>1. Upload a Maritime Document</h3>
+                    <ol>
+                        <li>Navigate to the appropriate tab (Conventions/SMS/Emergency)</li>
+                        <li>Click the "+ Upload" button in the Documents panel</li>
+                        <li>Select a PDF file (max 100MB)</li>
+                        <li>Document is automatically indexed in the background</li>
+                        <li>Status changes: uploaded → indexing → indexed</li>
+                    </ol>
+
+                    <h3>2. Query the Documents</h3>
+                    <ol>
+                        <li>Ensure you're in the correct tab for your document type</li>
+                        <li>Type your question in the chat input (e.g., "What are the fire drill requirements?")</li>
+                        <li>Press Enter or click "Send"</li>
+                        <li>Answer appears with citations and rerank scores</li>
+                        <li>Click "X Source Citations" to expand and view chunk details</li>
+                    </ol>
+
+                    <h3>3. View Source in PDF</h3>
+                    <ol>
+                        <li>Click any citation in the chat panel</li>
+                        <li>PDF viewer automatically opens to the referenced page</li>
+                        <li>Document is loaded in the center panel</li>
+                        <li>Navigate with page controls or scroll</li>
+                    </ol>
+
+                    <h3>Example Query Flow</h3>
+                    <pre><code><strong>User Query:</strong> "Explain the various safety drills we have to do onboard"
+
+<strong>System Processing:</strong>
+1. Semantic search: 30 chunks from Qdrant
+2. BM25 search: 30 chunks from rank-bm25
+3. RRF fusion: 20 combined candidates
+4. Cross-encoder reranking: Top 10 chunks
+
+<strong>Retrieved Chunks:</strong>
+• SOLAS > Chapter II-2 > Regulation 15 (Page 257, Rerank: 3.32)
+• SOLAS > Chapter III > Regulation 19 (Page 308, Rerank: 1.76)
+• SOLAS > Chapter III (Page 310, Rerank: 0.48)
+
+<strong>Generated Answer:</strong>
+"According to SOLAS regulations, vessels must conduct the following safety drills:
+
+**Fire Drills** (Chapter II-2, Regulation 15):
+- Every crew member must participate in at least one fire drill monthly
+- Drills must include use of fire extinguishers and hoses
+- Emergency fire pump must be operated
+- Crew must report to their fire stations with protective equipment
+
+**Abandon Ship Drills** (Chapter III, Regulation 19):
+- Every crew member must participate in at least one abandon ship drill monthly
+- Must include donning of lifejackets
+- Reporting to muster stations
+- Launching of at least one lifeboat
+
+**Additional Drills:**
+- Enclosed space entry and rescue drills
+- Damage control drills
+- On-board training must occur within 2 weeks of joining the vessel"
+
+<strong>User Action:</strong>
+Click citation "SOLAS > Chapter II-2 > Regulation 15 (Page 257)" to view exact text in PDF</code></pre>
+                </section>
+
+                <!-- HYBRID SEARCH SECTION -->
+                <section id="hybrid-search">
+                    <h2>Hybrid Search</h2>
+
+                    <h3>Why Hybrid Search?</h3>
+                    <p>Traditional semantic search (embeddings) excels at understanding meaning but can miss exact keyword matches. BM25 keyword search is great for precise terms but struggles with synonyms and paraphrasing. Hybrid search combines both approaches for optimal recall and precision.</p>
+
+                    <h3>Semantic Search (Qdrant)</h3>
+                    <ul>
+                        <li><strong>Embedding Model:</strong> text-embedding-3-small (OpenAI)</li>
+                        <li><strong>Dimensions:</strong> 1536</li>
+                        <li><strong>Similarity Metric:</strong> Cosine similarity</li>
+                        <li><strong>Candidates:</strong> 30 chunks</li>
+                        <li><strong>Strengths:</strong> Understanding synonyms, paraphrasing, conceptual queries</li>
+                        <li><strong>Weaknesses:</strong> May miss exact keyword matches</li>
+                    </ul>
+
+                    <h3>Keyword Search (BM25)</h3>
+                    <ul>
+                        <li><strong>Implementation:</strong> rank-bm25 (Python library)</li>
+                        <li><strong>Algorithm:</strong> TF-IDF with term frequency saturation and length normalization</li>
+                        <li><strong>Candidates:</strong> 30 chunks</li>
+                        <li><strong>Strengths:</strong> Exact keyword matching, regulatory code references</li>
+                        <li><strong>Weaknesses:</strong> No understanding of synonyms or meaning</li>
+                    </ul>
+
+                    <h3>Reciprocal Rank Fusion (RRF)</h3>
+                    <p>RRF merges both result sets using a rank-based scoring formula:</p>
+                    <pre><code>RRF_score(chunk) = sum(1 / (k + rank_in_list))
+
+Where:
+- k = 60 (constant for smoothing)
+- rank_in_list = position in semantic or BM25 results
+- sum = across both lists
+
+Example:
+Chunk appears at rank 5 in semantic, rank 10 in BM25:
+RRF_score = 1/(60+5) + 1/(60+10) = 0.0154 + 0.0143 = 0.0297</code></pre>
+
+                    <h3>Category Filtering</h3>
+                    <p>Both semantic and BM25 searches are filtered by document_type metadata:</p>
+                    <ul>
+                        <li><strong>Conventions Tab:</strong> document_type IN (SOLAS, MARPOL, MLC, STCW)</li>
+                        <li><strong>SMS Tab:</strong> document_type = SMS</li>
+                        <li><strong>Emergency Tab:</strong> document_type = Emergency</li>
+                    </ul>
+
+                    <div class="info-box info-box-tip">
+                        <div class="info-box-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Best Practices
+                        </div>
+                        <ul>
+                            <li>Use natural language questions for semantic search</li>
+                            <li>Include specific regulatory codes for exact matches (e.g., "Regulation 15")</li>
+                            <li>Query in the correct tab for your document category</li>
+                            <li>Rephrase queries if initial results are not satisfactory</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- RERANKING SECTION -->
+                <section id="reranking">
+                    <h2>Cross-Encoder Reranking</h2>
+
+                    <h3>Why Reranking?</h3>
+                    <p>Traditional bi-encoder models (used in semantic search) encode queries and documents separately, then compute similarity. Cross-encoders encode query and document <em>together</em>, capturing deeper semantic relationships for superior relevance scoring.</p>
+
+                    <h3>Bi-Encoder vs Cross-Encoder</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>Bi-Encoder</th>
+                                <th>Cross-Encoder</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Speed</td>
+                                <td>Fast (pre-computed embeddings)</td>
+                                <td>Slower (pair scoring at query time)</td>
+                            </tr>
+                            <tr>
+                                <td>Accuracy</td>
+                                <td>Good</td>
+                                <td>Excellent</td>
+                            </tr>
+                            <tr>
+                                <td>Use Case</td>
+                                <td>Initial retrieval (1000s of docs)</td>
+                                <td>Reranking (10s of candidates)</td>
+                            </tr>
+                            <tr>
+                                <td>Encoding</td>
+                                <td>Separate (query || document)</td>
+                                <td>Joint (query + document together)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Implementation Details</h3>
+                    <ul>
+                        <li><strong>Model:</strong> cross-encoder/ms-marco-MiniLM-L-6-v2</li>
+                        <li><strong>Size:</strong> ~80MB</li>
+                        <li><strong>Inference:</strong> CPU-only PyTorch (local, no API calls)</li>
+                        <li><strong>Input:</strong> 20 candidates from RRF fusion</li>
+                        <li><strong>Output:</strong> Relevance scores for each query-document pair</li>
+                        <li><strong>Filtering:</strong> MIN_RERANK_SCORE = -2.0 (removes very low-quality matches)</li>
+                        <li><strong>Final Selection:</strong> Top 10 chunks by rerank score</li>
+                    </ul>
+
+                    <h3>Reranking Process</h3>
+                    <pre><code>from sentence_transformers import CrossEncoder
+
+# Initialize model (one-time download ~80MB)
+model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
+# Prepare query-document pairs
+pairs = [(query, chunk['text']) for chunk in candidates]
+
+# Score all pairs
+scores = model.predict(pairs)
+
+# Filter and sort
+filtered = [(chunk, score) for chunk, score in zip(candidates, scores)
+            if score >= MIN_RERANK_SCORE]
+top_10 = sorted(filtered, key=lambda x: x[1], reverse=True)[:10]</code></pre>
+
+                    <h3>Score Interpretation</h3>
+                    <ul>
+                        <li><strong>&gt; 3.0:</strong> Excellent relevance (highly confident match)</li>
+                        <li><strong>1.0 - 3.0:</strong> Good relevance (strong match)</li>
+                        <li><strong>0.0 - 1.0:</strong> Moderate relevance (potential match)</li>
+                        <li><strong>-2.0 - 0.0:</strong> Low relevance (weak match, still included)</li>
+                        <li><strong>&lt; -2.0:</strong> Filtered out (no relevance)</li>
+                    </ul>
+
+                    <div class="info-box info-box-note">
+                        <div class="info-box-title">
+                            <i class="fas fa-info-circle"></i>
+                            Performance Impact
+                        </div>
+                        <p>Reranking adds ~200-500ms to query time but dramatically improves answer quality. The model runs locally, so there are no additional API costs beyond OpenAI embeddings and LLM.</p>
+                    </div>
+                </section>
+
+                <!-- PDF VIEWER SECTION -->
+                <section id="pdf-viewer">
+                    <h2>Interactive PDF Viewer</h2>
+
+                    <h3>Features</h3>
+                    <ul>
+                        <li><strong>Page-by-Page Rendering:</strong> PyMuPDF renders each page as PNG at 300 DPI</li>
+                        <li><strong>Citation Navigation:</strong> Click any citation to jump to the exact page</li>
+                        <li><strong>Page Controls:</strong> Previous/Next buttons, page input, total pages display</li>
+                        <li><strong>Zoom:</strong> Fit-to-width, fit-to-height, or custom zoom levels</li>
+                        <li><strong>Full-Screen Mode:</strong> Expand PDF to full browser window</li>
+                    </ul>
+
+                    <h3>Backend API</h3>
+                    <pre><code>GET /api/documents/{document_id}/page/{page_num}
+
+Query Parameters:
+- search_text (optional): Highlight specific text on the page
+
+Response:
+{
+  "image": "data:image/png;base64,...",
+  "width": 2480,
+  "height": 3508,
+  "page_num": 257,
+  "total_pages": 854,
+  "text_positions": [
+    {"x": 15.2, "y": 42.1, "width": 8.3, "height": 1.2}
+  ]
+}</code></pre>
+
+                    <h3>Frontend Implementation</h3>
+                    <ul>
+                        <li><strong>Library:</strong> react-pdf for PDF rendering</li>
+                        <li><strong>State Management:</strong> React hooks for page navigation</li>
+                        <li><strong>Citation Linking:</strong> onClick handler updates selectedDocument and targetPage</li>
+                        <li><strong>Loading States:</strong> Skeleton screens while rendering pages</li>
+                    </ul>
+
+                    <h3>Usage Example</h3>
+                    <pre><code>// User clicks citation in chat
+&lt;div onClick={() => {
+  if (citationDoc) {
+    setSelectedDocument(citationDoc);
+    setTargetPage(citation.page);
+  }
+}}&gt;
+  SOLAS &gt; Chapter II-2 &gt; Regulation 15 (Page 257)
+&lt;/div&gt;
+
+// PDFViewer component receives props
+&lt;PDFViewer
+  documentId={selectedDocument.id}
+  filename={selectedDocument.original_filename}
+  initialPage={targetPage}  // Jump to page 257
+/&gt;</code></pre>
+                </section>
+
+                <!-- SMART CHUNKING SECTION -->
+                <section id="smart-chunking">
+                    <h2>Smart Chunking with Hierarchy Detection</h2>
+
+                    <h3>Why Smart Chunking?</h3>
+                    <p>Maritime regulations have strict hierarchical structure (Convention → Annex → Chapter → Regulation → Paragraph). Preserving this structure in chunk metadata enables precise citations and better retrieval accuracy.</p>
+
+                    <h3>Chunking Strategy</h3>
+                    <ul>
+                        <li><strong>Chunk Size:</strong> ~2400 characters (optimal for embedding models)</li>
+                        <li><strong>Overlap:</strong> 100 words between chunks (preserves context at boundaries)</li>
+                        <li><strong>Splitting:</strong> Sentence-based splitting to avoid mid-sentence cuts</li>
+                        <li><strong>Page Tracking:</strong> Each chunk stores its original page number</li>
+                    </ul>
+
+                    <h3>Hierarchy Detection Patterns</h3>
+                    <pre><code>Convention Patterns:
+- r'SOLAS'
+- r'MARPOL'
+- r'STCW'
+- r'MLC'
+
+Annex Patterns:
+- r'Annex\s+([IVX]+)'  → "Annex I", "Annex VI"
+
+Chapter Patterns:
+- r'Chapter\s+([IVX]+-?\d*)'  → "Chapter II-2", "Chapter III"
+- r'CHAPTER\s+([IVX]+-?\d*)'
+
+Regulation Patterns:
+- r'Regulation\s+(\d+\.?\d*)'  → "Regulation 15", "Regulation 19.2"
+- r'REGULATION\s+(\d+\.?\d*)'
+
+Paragraph Patterns:
+- r'(?:^|\n)(\d+\.\d+(?:\.\d+)?)\s'  → "2.1", "3.4.1"
+- r'Para(?:graph)?\.\s*(\d+\.\d+(?:\.\d+)?)'</code></pre>
+
+                    <h3>Metadata Structure</h3>
+                    <p>Each chunk stored in Qdrant includes:</p>
+                    <pre><code>{
+  "text": "Chunk text content...",
+  "page": 257,
+  "source": "SOLAS_2020.pdf",
+  "document_id": 1,
+  "document_type": "SOLAS",
+  "convention": "SOLAS",
+  "annex": "Annex I",
+  "chapter": "Chapter II-2",
+  "regulation": "Regulation 15",
+  "paragraph": "2.1",
+  "hierarchy_path": "SOLAS > Annex I > Chapter II-2 > Regulation 15 > Para. 2.1"
+}</code></pre>
+
+                    <h3>Citation Generation</h3>
+                    <pre><code>def build_citation(chunk):
+    parts = []
+    if chunk.get('convention'):
+        parts.append(chunk['convention'])
+    if chunk.get('annex'):
+        parts.append(f"Annex {chunk['annex']}")
+    if chunk.get('chapter'):
+        parts.append(chunk['chapter'])
+    if chunk.get('regulation'):
+        parts.append(chunk['regulation'])
+    if chunk.get('paragraph'):
+        parts.append(f"Para. {chunk['paragraph']}")
+
+    return ' > '.join(parts) if parts else chunk.get('section', 'Unknown')</code></pre>
+                </section>
+
+                <!-- CATEGORY FILTERING SECTION -->
+                <section id="category-filtering">
+                    <h2>Category Filtering</h2>
+
+                    <h3>Three-Tab Architecture</h3>
+                    <p>Documents are organized into three categories for focused searching:</p>
+
+                    <h4>1. Conventions Tab</h4>
+                    <ul>
+                        <li><strong>Document Types:</strong> SOLAS, MARPOL, MLC, STCW</li>
+                        <li><strong>Use Case:</strong> International maritime safety and environmental regulations</li>
+                        <li><strong>Example Queries:</strong> "Fire drill requirements", "Lifeboat capacity calculation"</li>
+                    </ul>
+
+                    <h4>2. SMS Tab</h4>
+                    <ul>
+                        <li><strong>Document Type:</strong> SMS</li>
+                        <li><strong>Use Case:</strong> Company-specific Safety Management System procedures</li>
+                        <li><strong>Example Queries:</strong> "Permit to work procedure", "Risk assessment form"</li>
+                    </ul>
+
+                    <h4>3. Emergency Tab</h4>
+                    <ul>
+                        <li><strong>Document Type:</strong> Emergency</li>
+                        <li><strong>Use Case:</strong> Emergency response plans and checklists</li>
+                        <li><strong>Example Queries:</strong> "Oil spill response procedure", "Fire emergency plan"</li>
+                    </ul>
+
+                    <h3>Implementation</h3>
+
+                    <h4>Frontend (React)</h4>
+                    <pre><code>const [activePage, setActivePage] = useState&lt;PageType&gt;('conventions');
+
+// Separate message history per tab
+const [messagesByTab, setMessagesByTab] = useState&lt;Record&lt;PageType, ChatMessage[]&gt;&gt;({
+  conventions: [],
+  sms: [],
+  emergency: []
+});
+
+// Filter documents by active tab
+const filteredDocuments = documents.filter(doc => {
+  if (activePage === 'conventions') {
+    return ['SOLAS', 'MARPOL', 'MLC', 'STCW'].includes(doc.document_type);
+  } else if (activePage === 'sms') {
+    return doc.document_type === 'SMS';
+  } else {
+    return doc.document_type === 'Emergency';
+  }
+});</code></pre>
+
+                    <h4>Backend (FastAPI)</h4>
+                    <pre><code>class QueryRequest(BaseModel):
+    query: str
+    top_k: Optional[int] = None
+    category: Optional[str] = None  # 'conventions', 'sms', 'emergency'
+
+@app.post("/api/query")
+def query_documents(request: QueryRequest):
+    # Map category to document_types
+    if request.category == 'conventions':
+        doc_types = ['SOLAS', 'MARPOL', 'MLC', 'STCW']
+    elif request.category == 'sms':
+        doc_types = ['SMS']
+    elif request.category == 'emergency':
+        doc_types = ['Emergency']
+    else:
+        doc_types = None  # No filtering
+
+    # Apply filtering in Qdrant and BM25
+    chunks = rag_engine.retrieve_relevant_chunks(
+        request.query,
+        request.top_k,
+        doc_types
+    )</code></pre>
+
+                    <div class="info-box info-box-warning">
+                        <div class="info-box-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Important: Tab Selection
+                        </div>
+                        <p>Always ensure you're querying in the correct tab. SOLAS content won't appear in Emergency tab searches, even if the question is emergency-related.</p>
+                    </div>
+                </section>
+
+                <!-- API DOCUMENTATION -->
+                <section id="api-overview">
+                    <h2>API Reference</h2>
+                    <p>RESTful API endpoints for document management and querying.</p>
+
+                    <h3>Base URL</h3>
+                    <pre><code>http://localhost:8001</code></pre>
+                </section>
+
+                <section id="api-documents">
+                    <h2>Documents API</h2>
+
+                    <h3>Upload Document</h3>
+                    <pre><code>POST /api/documents/upload
+
+Content-Type: multipart/form-data
+
+Body:
+- file: PDF file (max 100MB)
+- document_type: "SOLAS" | "MARPOL" | "MLC" | "STCW" | "SMS" | "Emergency"
+
+Response:
+{
+  "id": 1,
+  "filename": "20251020_120000_SOLAS_2020.pdf",
+  "original_filename": "SOLAS_2020.pdf",
+  "file_size": 5242880,
+  "document_type": "SOLAS",
+  "upload_date": "2025-10-20T12:00:00",
+  "indexed_date": null,
+  "status": "uploaded",
+  "total_chunks": 0,
+  "error_message": null
+}</code></pre>
+
+                    <h3>Index Document</h3>
+                    <pre><code>POST /api/documents/{document_id}/index
+
+Response:
+{
+  "message": "Indexing started",
+  "document_id": 1
+}</code></pre>
+
+                    <h3>List Documents</h3>
+                    <pre><code>GET /api/documents
+
+Response:
+[
+  {
+    "id": 1,
+    "filename": "20251020_120000_SOLAS_2020.pdf",
+    "original_filename": "SOLAS_2020.pdf",
+    "file_size": 5242880,
+    "document_type": "SOLAS",
+    "upload_date": "2025-10-20T12:00:00",
+    "indexed_date": "2025-10-20T12:05:30",
+    "status": "indexed",
+    "total_chunks": 854,
+    "error_message": null
+  }
+]</code></pre>
+
+                    <h3>Get Document</h3>
+                    <pre><code>GET /api/documents/{document_id}
+
+Response: Same as List Documents (single object)</code></pre>
+
+                    <h3>Delete Document</h3>
+                    <pre><code>DELETE /api/documents/{document_id}
+
+Response:
+{
+  "message": "Document deleted",
+  "document_id": 1
+}</code></pre>
+
+                    <h3>Preview PDF</h3>
+                    <pre><code>GET /api/documents/{document_id}/preview
+
+Response: PDF file (application/pdf)</code></pre>
+
+                    <h3>Get PDF Page</h3>
+                    <pre><code>GET /api/documents/{document_id}/page/{page_num}?search_text={optional}
+
+Response:
+{
+  "image": "data:image/png;base64,...",
+  "width": 2480,
+  "height": 3508,
+  "page_num": 257,
+  "total_pages": 854,
+  "text_positions": [...]
+}</code></pre>
+                </section>
+
+                <section id="api-query">
+                    <h2>Query API</h2>
+
+                    <h3>Query Documents</h3>
+                    <pre><code>POST /api/query
+
+Content-Type: application/json
+
+Body:
+{
+  "query": "What are the fire drill requirements?",
+  "top_k": 10,
+  "category": "conventions"
+}
+
+Response:
+{
+  "answer": "According to SOLAS Chapter II-2, Regulation 15...",
+  "query": "What are the fire drill requirements?",
+  "retrieved_chunks": [
+    {
+      "text": "Fire drill procedures...",
+      "page": 257,
+      "convention": "SOLAS",
+      "annex": null,
+      "chapter": "Chapter II-2",
+      "regulation": "Regulation 15",
+      "paragraph": "2.1",
+      "hierarchy_path": "SOLAS > Chapter II-2 > Regulation 15 > Para. 2.1",
+      "section": "Fire Safety",
+      "source": "SOLAS_2020.pdf",
+      "score": 0.87,
+      "rerank_score": 3.32,
+      "original_score": 0.87
+    }
+  ],
+  "total_chunks_retrieved": 10,
+  "response_time_ms": 2340
+}</code></pre>
+
+                    <h3>List Queries</h3>
+                    <pre><code>GET /api/queries?limit=50
+
+Response:
+[
+  {
+    "id": 1,
+    "query_text": "What are the fire drill requirements?",
+    "answer_text": "According to SOLAS...",
+    "retrieved_chunks": 10,
+    "response_time_ms": 2340,
+    "created_at": "2025-10-20T12:10:00"
+  }
+]</code></pre>
+                </section>
+
+                <section id="api-health">
+                    <h2>Health API</h2>
+
+                    <h3>Health Check</h3>
+                    <pre><code>GET /health
+
+Response:
+{
+  "status": "healthy",
+  "qdrant_connected": true,
+  "openai_configured": true
+}</code></pre>
+
+                    <h3>Root Endpoint</h3>
+                    <pre><code>GET /
+
+Response:
+{
+  "message": "Maritime RAG API",
+  "version": "1.0.0"
+}</code></pre>
+                </section>
+
+                <!-- ADVANCED TOPICS -->
+                <section id="rag-pipeline">
+                    <h2>RAG Pipeline Deep Dive</h2>
+
+                    <h3>Complete Query Flow</h3>
+                    <ol>
+                        <li><strong>User Input:</strong> "What are the fire drill requirements?"</li>
+                        <li><strong>Category Detection:</strong> Check active tab (conventions/sms/emergency)</li>
+                        <li><strong>Semantic Search:</strong>
+                            <ul>
+                                <li>Embed query with OpenAI text-embedding-3-small</li>
+                                <li>Query Qdrant with category filter</li>
+                                <li>Retrieve 30 candidates by cosine similarity</li>
+                            </ul>
+                        </li>
+                        <li><strong>BM25 Search:</strong>
+                            <ul>
+                                <li>Tokenize query</li>
+                                <li>Filter BM25 corpus by category</li>
+                                <li>Retrieve 30 candidates by BM25 score</li>
+                            </ul>
+                        </li>
+                        <li><strong>RRF Fusion:</strong>
+                            <ul>
+                                <li>Merge both result sets</li>
+                                <li>Deduplicate chunks</li>
+                                <li>Score with RRF formula</li>
+                                <li>Return top 20 candidates</li>
+                            </ul>
+                        </li>
+                        <li><strong>Cross-Encoder Reranking:</strong>
+                            <ul>
+                                <li>Score each (query, chunk) pair</li>
+                                <li>Filter by MIN_RERANK_SCORE = -2.0</li>
+                                <li>Sort by rerank score</li>
+                                <li>Return top 10 chunks</li>
+                            </ul>
+                        </li>
+                        <li><strong>LLM Synthesis:</strong>
+                            <ul>
+                                <li>Build context from top 10 chunks (~21,600 chars)</li>
+                                <li>Send to GPT-4o with system prompt</li>
+                                <li>Generate answer (max 3000 tokens)</li>
+                                <li>Extract citations from context</li>
+                            </ul>
+                        </li>
+                        <li><strong>Response Formatting:</strong>
+                            <ul>
+                                <li>Markdown formatting for answer</li>
+                                <li>Attach chunk metadata (page, hierarchy, scores)</li>
+                                <li>Log query to database</li>
+                                <li>Return JSON response</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <h3>System Prompt</h3>
+                    <pre><code>You are a maritime regulations expert assistant.
+Your role is to provide accurate, well-structured answers
+based on the provided document chunks.
+
+Guidelines:
+1. Answer the question using ONLY information from the context
+2. Include specific regulation references (Chapter, Regulation, Paragraph)
+3. Use markdown formatting for clarity
+4. If information is not in the context, say so clearly
+5. Structure answers with headings and bullet points when appropriate
+6. Be concise but complete
+
+Context:
+{chunk1_text}
+Source: {chunk1_source} (Page {chunk1_page})
+
+{chunk2_text}
+Source: {chunk2_source} (Page {chunk2_page})
+
+...
+
+Question: {user_query}
+
+Answer:</code></pre>
+                </section>
+
+                <section id="hierarchy-detection">
+                    <h2>Hierarchy Detection Implementation</h2>
+
+                    <h3>Detection Logic</h3>
+                    <pre><code>def detect_hierarchy(text: str, current_page: int) -> dict:
+    """
+    Extract hierarchical metadata from maritime document text
+
+    Returns:
+        dict with keys: convention, annex, chapter, regulation, paragraph
+    """
+    hierarchy = {
+        'convention': None,
+        'annex': None,
+        'chapter': None,
+        'regulation': None,
+        'paragraph': None,
+        'page': current_page
+    }
+
+    # Convention detection
+    for convention in ['SOLAS', 'MARPOL', 'STCW', 'MLC']:
+        if convention in text:
+            hierarchy['convention'] = convention
+            break
+
+    # Annex detection
+    annex_match = re.search(r'Annex\s+([IVX]+)', text)
+    if annex_match:
+        hierarchy['annex'] = annex_match.group(1)
+
+    # Chapter detection
+    chapter_match = re.search(r'Chapter\s+([IVX]+-?\d*)', text, re.IGNORECASE)
+    if chapter_match:
+        hierarchy['chapter'] = f"Chapter {chapter_match.group(1)}"
+
+    # Regulation detection
+    reg_match = re.search(r'Regulation\s+(\d+\.?\d*)', text, re.IGNORECASE)
+    if reg_match:
+        hierarchy['regulation'] = f"Regulation {reg_match.group(1)}"
+
+    # Paragraph detection
+    para_match = re.search(r'(?:^|\n)(\d+\.\d+(?:\.\d+)?)\s', text)
+    if para_match:
+        hierarchy['paragraph'] = para_match.group(1)
+
+    return hierarchy</code></pre>
+
+                    <h3>Edge Cases Handled</h3>
+                    <ul>
+                        <li><strong>Multiple conventions in one chunk:</strong> First match wins</li>
+                        <li><strong>Missing hierarchy levels:</strong> Null values for missing parts</li>
+                        <li><strong>Case variations:</strong> Regex patterns with re.IGNORECASE</li>
+                        <li><strong>Formatting variations:</strong> Multiple patterns per hierarchy level</li>
+                    </ul>
+                </section>
+
+                <section id="database">
+                    <h2>Database Schema</h2>
+
+                    <h3>SQLite Tables</h3>
+
+                    <h4>documents</h4>
+                    <pre><code>CREATE TABLE documents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    filename VARCHAR NOT NULL,
+    original_filename VARCHAR NOT NULL,
+    file_path VARCHAR NOT NULL,
+    file_size INTEGER NOT NULL,
+    document_type VARCHAR,
+    upload_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    indexed_date DATETIME,
+    status VARCHAR DEFAULT 'uploaded',
+    total_chunks INTEGER DEFAULT 0,
+    error_message TEXT
+);</code></pre>
+
+                    <h4>queries</h4>
+                    <pre><code>CREATE TABLE queries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    query_text TEXT NOT NULL,
+    answer_text TEXT,
+    retrieved_chunks INTEGER,
+    response_time_ms INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+                    <h3>Qdrant Collection</h3>
+                    <pre><code>Collection: maritime_rag
+
+Vectors:
+- Size: 1536 (OpenAI text-embedding-3-small)
+- Distance: Cosine
+
+Payload Schema:
+{
+  "text": str,              # Chunk text
+  "page": int,             # Original page number
+  "source": str,           # Filename
+  "document_id": int,      # Foreign key to documents table
+  "document_type": str,    # Category for filtering
+  "convention": str,       # SOLAS, MARPOL, etc.
+  "annex": str,           # Annex identifier
+  "chapter": str,         # Chapter number
+  "regulation": str,      # Regulation number
+  "paragraph": str,       # Paragraph number
+  "hierarchy_path": str,  # Full path for citations
+  "section": str          # Fallback section name
+}</code></pre>
+                </section>
+
+                <section id="configuration">
+                    <h2>Configuration</h2>
+
+                    <h3>Environment Variables</h3>
+                    <pre><code># OpenAI API
+OPENAI_API_KEY=your_api_key_here
+
+# Qdrant Vector DB
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+QDRANT_COLLECTION=maritime_rag
+
+# Application
+APP_HOST=0.0.0.0
+APP_PORT=8001
+
+# File Upload
+UPLOAD_DIR=uploads
+MAX_UPLOAD_SIZE_MB=100
+
+# RAG Configuration (optional, defaults in code)
+RETRIEVAL_TOP_K=10
+EMBEDDING_MODEL=text-embedding-3-small
+CHAT_MODEL=gpt-4o
+LLM_MAX_TOKENS=3000
+LLM_TEMPERATURE=0.3
+MIN_RERANK_SCORE=-2.0</code></pre>
+
+                    <h3>Tunable Parameters</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Default</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>RETRIEVAL_TOP_K</td>
+                                <td>10</td>
+                                <td>Final number of chunks sent to LLM</td>
+                            </tr>
+                            <tr>
+                                <td>SEMANTIC_CANDIDATES</td>
+                                <td>30</td>
+                                <td>Chunks from Qdrant semantic search</td>
+                            </tr>
+                            <tr>
+                                <td>BM25_CANDIDATES</td>
+                                <td>30</td>
+                                <td>Chunks from BM25 keyword search</td>
+                            </tr>
+                            <tr>
+                                <td>RRF_CANDIDATES</td>
+                                <td>20</td>
+                                <td>Chunks after RRF fusion (before reranking)</td>
+                            </tr>
+                            <tr>
+                                <td>MIN_RERANK_SCORE</td>
+                                <td>-2.0</td>
+                                <td>Minimum cross-encoder score to include chunk</td>
+                            </tr>
+                            <tr>
+                                <td>CHUNK_SIZE</td>
+                                <td>2400</td>
+                                <td>Characters per chunk</td>
+                            </tr>
+                            <tr>
+                                <td>CHUNK_OVERLAP</td>
+                                <td>100</td>
+                                <td>Words overlap between chunks</td>
+                            </tr>
+                            <tr>
+                                <td>LLM_MAX_TOKENS</td>
+                                <td>3000</td>
+                                <td>Maximum tokens for LLM answer</td>
+                            </tr>
+                            <tr>
+                                <td>LLM_TEMPERATURE</td>
+                                <td>0.3</td>
+                                <td>LLM creativity (0=factual, 1=creative)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- RESOURCES -->
+                <section id="github">
+                    <h2>GitHub Repository</h2>
+                    <p><strong>Repository:</strong> <a href="https://github.com/SL-Mar/Chat_with_SOLAS" target="_blank">https://github.com/SL-Mar/Chat_with_SOLAS</a></p>
+
+                    <h3>Repository Structure</h3>
+                    <pre><code>Chat_with_SOLAS/
+├── backend/
+│   ├── app/
+│   │   ├── main.py              # FastAPI application
+│   │   ├── rag_engine.py        # RAG logic (retrieval + reranking)
+│   │   ├── bm25_search.py       # BM25 implementation
+│   │   ├── database.py          # SQLAlchemy models
+│   │   ├── config.py            # Settings and env vars
+│   │   └── utils.py             # Telegram notifications
+│   ├── requirements.txt         # Python dependencies
+│   └── .env.example             # Environment variables template
+│
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx              # Main React component
+│   │   ├── components/
+│   │   │   └── PDFViewer.tsx    # PDF rendering component
+│   │   ├── api/
+│   │   │   └── client.ts        # API client
+│   │   └── index.css            # Global styles
+│   ├── package.json             # Node dependencies
+│   └── .env.example             # Frontend env vars
+│
+├── uploads/                     # Uploaded PDFs (gitignored)
+├── qdrant_storage/              # Qdrant data (gitignored)
+└── README.md                    # Project overview</code></pre>
+
+                    <div class="info-box info-box-note">
+                        <div class="info-box-title">
+                            <i class="fas fa-info-circle"></i>
+                            Contributions Welcome
+                        </div>
+                        <p>This is an open-source project. Contributions, bug reports, and feature requests are welcome via GitHub Issues and Pull Requests.</p>
+                    </div>
+                </section>
+
+                <section id="use-cases">
+                    <h2>Use Cases</h2>
+
+                    <h3>1. Safety Officers</h3>
+                    <ul>
+                        <li><strong>Challenge:</strong> Quick answers during inspections and audits</li>
+                        <li><strong>Solution:</strong> Search SOLAS/MARPOL regulations in seconds with exact citations</li>
+                        <li><strong>Example:</strong> "What are the requirements for lifeboat drills?"</li>
+                    </ul>
+
+                    <h3>2. Training Departments</h3>
+                    <ul>
+                        <li><strong>Challenge:</strong> Creating accurate training materials from multiple sources</li>
+                        <li><strong>Solution:</strong> Query regulations, get synthesized answers with source references</li>
+                        <li><strong>Example:</strong> "Compare fire drill requirements across different vessel types"</li>
+                    </ul>
+
+                    <h3>3. Ship Operators</h3>
+                    <ul>
+                        <li><strong>Challenge:</strong> Verifying regulatory requirements for equipment and procedures</li>
+                        <li><strong>Solution:</strong> Instant access to regulation text with PDF preview</li>
+                        <li><strong>Example:</strong> "What is the minimum capacity for inflatable liferafts?"</li>
+                    </ul>
+
+                    <h3>4. Compliance Teams</h3>
+                    <ul>
+                        <li><strong>Challenge:</strong> Researching regulatory changes and fleet-wide compliance</li>
+                        <li><strong>Solution:</strong> Compare multiple conventions and track regulatory updates</li>
+                        <li><strong>Example:</strong> "Has MARPOL Annex VI changed since 2020?"</li>
+                    </ul>
+
+                    <h3>5. Emergency Response</h3>
+                    <ul>
+                        <li><strong>Challenge:</strong> Finding critical information quickly during emergencies</li>
+                        <li><strong>Solution:</strong> Emergency tab with quick access to SMPEP and fire plans</li>
+                        <li><strong>Example:</strong> "Oil spill response procedure for machinery space"</li>
+                    </ul>
+                </section>
+
+                <section id="roadmap">
+                    <h2>Development Roadmap</h2>
+
+                    <h3>Completed ✅</h3>
+                    <ul>
+                        <li>Hybrid search with semantic + BM25</li>
+                        <li>Cross-encoder reranking</li>
+                        <li>Interactive PDF viewer with citation navigation</li>
+                        <li>Category filtering (Conventions/SMS/Emergency)</li>
+                        <li>Smart chunking with hierarchy detection</li>
+                        <li>Tab-specific message histories</li>
+                        <li>Markdown formatting for answers</li>
+                        <li>Document upload with FormData handling</li>
+                    </ul>
+
+                    <h3>In Progress 🔄</h3>
+                    <ul>
+                        <li>Multi-convention support (expand beyond SOLAS)</li>
+                        <li>PDF page number correction (re-indexing pipeline)</li>
+                        <li>Advanced query expansion</li>
+                    </ul>
+
+                    <h3>Planned 📅</h3>
+                    <ul>
+                        <li><strong>Visual Content Support:</strong> Docling integration for plans and diagrams</li>
+                        <li><strong>Multi-language:</strong> French, Spanish maritime regulations</li>
+                        <li><strong>Comparative Analysis:</strong> Compare requirements across conventions</li>
+                        <li><strong>Export Features:</strong> PDF reports with citations</li>
+                        <li><strong>User Management:</strong> Multi-user support with role-based access</li>
+                        <li><strong>Audit Trail:</strong> Track all queries and answers for compliance</li>
+                        <li><strong>Custom Collections:</strong> Company-specific document collections</li>
+                        <li><strong>AI Visual Layer:</strong> Integration of agentic SMS workflows (future)</li>
+                    </ul>
+
+                    <div class="info-box info-box-tip">
+                        <div class="info-box-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Feature Requests
+                        </div>
+                        <p>Have a feature idea? Submit it via GitHub Issues or contact us directly.</p>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <div class="docs-footer-content">
+            <p>&copy; 2025 SL Mar - AI for Maritime & Quant Finance</p>
+            <p><a href="../contact.html">Contact</a> | <a href="https://github.com/SL-Mar/Chat_with_SOLAS" target="_blank">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>
