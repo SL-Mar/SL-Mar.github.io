@@ -33,7 +33,7 @@
         }
 
         .feature-card h3 {
-            color: #EA4B71;
+            color: #4CAF50;
             margin-top: 0;
             font-size: 1.1rem;
         }
@@ -52,17 +52,17 @@
         }
 
         .tech-badge {
-            background: rgba(234, 75, 113, 0.2);
-            color: #EA4B71;
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
             padding: 0.5rem 1rem;
             border-radius: 4px;
             font-size: 0.9rem;
-            border: 1px solid rgba(234, 75, 113, 0.3);
+            border: 1px solid rgba(33, 150, 243, 0.3);
         }
 
         .workflow-section {
             background: rgba(255, 255, 255, 0.03);
-            border-left: 3px solid #EA4B71;
+            border-left: 3px solid #4CAF50;
             padding: 1.5rem;
             margin: 2rem 0;
             border-radius: 4px;
@@ -70,7 +70,7 @@
 
         .workflow-section h3 {
             margin-top: 0;
-            color: #EA4B71;
+            color: #4CAF50;
         }
     </style>
 </head>
@@ -85,6 +85,7 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="publications.html">Publications</a></li>
                 <li><a href="development.html">Development</a></li>
+                <li><a href="n8n-automation.html" class="active">n8n Automation</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </div>
@@ -107,12 +108,11 @@
 
             <h2>Overview</h2>
             <p>
-                <strong>n8n</strong> is an open-source workflow automation platform that powers complex AI pipelines for data processing,
-                market intelligence, and operational automation. Running self-hosted with Docker, it connects APIs, databases, AI models,
-                and notification systems into sophisticated automation workflows.
+                Self-hosted workflow automation platform powering AI pipelines for market intelligence, research automation,
+                and operational workflows. Connects APIs, databases, AI models, and notification systems with visual workflow design.
             </p>
 
-            <h2>Key Capabilities</h2>
+            <h2>Capabilities</h2>
             <div class="feature-grid">
                 <div class="feature-card">
                     <h3>🤖 AI-Powered Research</h3>
@@ -228,36 +228,6 @@
                 <span class="tech-badge">JavaScript (Code nodes)</span>
             </div>
 
-            <h2>Integration Capabilities</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>Financial Data Sources</h3>
-                    <p>EODHD, Interactive Brokers, TradingView, Yahoo Finance, Alpha Vantage, Binance, QuantConnect</p>
-                </div>
-                <div class="feature-card">
-                    <h3>AI Providers</h3>
-                    <p>OpenAI (GPT-4, GPT-4o), Anthropic (Claude Sonnet), Ollama (Llama, Mistral), Perplexity</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Databases & Storage</h3>
-                    <p>PostgreSQL, Qdrant, SQLite, Notion, Google Sheets, Airtable</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Communication</h3>
-                    <p>Telegram, Email (SMTP), Slack, Discord, Webhooks, SMS</p>
-                </div>
-            </div>
-
-            <h2>Workflow Design Principles</h2>
-            <ul style="color: #ccc; line-height: 1.8;">
-                <li><strong>Error Handling:</strong> IF nodes for graceful error recovery and retry logic</li>
-                <li><strong>Modular Design:</strong> Reusable sub-workflows and function nodes</li>
-                <li><strong>Rate Limiting:</strong> Controlled API calls to avoid throttling</li>
-                <li><strong>Data Transformation:</strong> JavaScript/Python code nodes for complex processing</li>
-                <li><strong>Logging:</strong> Comprehensive logging to Notion and file storage</li>
-                <li><strong>Monitoring:</strong> Telegram alerts for workflow failures and completions</li>
-            </ul>
-
             <h2>Use Cases</h2>
             <div class="cards">
                 <div class="card">
@@ -278,86 +248,10 @@
                 </div>
             </div>
 
-            <h2>Deployment Architecture</h2>
-            <div class="workflow-section">
-                <h3>Self-Hosted Infrastructure</h3>
-                <ul style="color: #ccc; line-height: 1.8;">
-                    <li><strong>Container:</strong> Docker Compose with persistent volumes</li>
-                    <li><strong>Networking:</strong> Reverse proxy with SSL (Nginx/Caddy)</li>
-                    <li><strong>Database:</strong> PostgreSQL for workflow metadata and execution history</li>
-                    <li><strong>Storage:</strong> Volume mounts for file processing and logs</li>
-                    <li><strong>Monitoring:</strong> Uptime checks, execution logs, Telegram alerts</li>
-                    <li><strong>Backup:</strong> Automated workflow export and database backups</li>
-                </ul>
-            </div>
-
-            <h2>Example Workflow: Daily Research Digest</h2>
-            <div class="workflow-section">
-                <h3>Pipeline Overview</h3>
-                <p><strong>Schedule:</strong> Daily at 8:00 AM UTC</p>
-                <p><strong>Steps:</strong></p>
-                <ol style="color: #ccc; line-height: 1.8;">
-                    <li>Fetch latest ArXiv papers in quantitative finance category</li>
-                    <li>Filter papers by keywords (machine learning, algorithmic trading, portfolio optimization)</li>
-                    <li>Download PDFs and extract abstracts</li>
-                    <li>Summarize each paper using GPT-4 (200-word summaries)</li>
-                    <li>Generate trading strategy suggestions based on paper findings</li>
-                    <li>Create Notion database entries with metadata and summaries</li>
-                    <li>Send formatted digest to Telegram with paper links</li>
-                    <li>Store PDFs in designated folder for future RAG indexing</li>
-                </ol>
-                <p><strong>Average Execution Time:</strong> 3-5 minutes for 10-15 papers</p>
-            </div>
-
-            <h2>Advanced Features</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>Webhook Triggers</h3>
-                    <p>RESTful endpoints for external integrations, mobile apps, and cross-platform automation</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Sub-Workflows</h3>
-                    <p>Reusable workflow components for DRY principle and modular architecture</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Conditional Logic</h3>
-                    <p>Complex branching with IF/Switch nodes for intelligent routing and decision-making</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Loop Processing</h3>
-                    <p>Batch operations with Loop nodes for processing arrays and paginated API results</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Custom Code</h3>
-                    <p>JavaScript and Python nodes for advanced data transformation and API interactions</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Credential Management</h3>
-                    <p>Encrypted credential storage for API keys, tokens, and database passwords</p>
-                </div>
-            </div>
-
-            <h2>Benefits of Self-Hosting</h2>
-            <ul style="color: #ccc; line-height: 1.8;">
-                <li><strong>Data Privacy:</strong> All data processing happens on local infrastructure</li>
-                <li><strong>Cost Control:</strong> No per-execution fees, only infrastructure costs</li>
-                <li><strong>Unlimited Workflows:</strong> No artificial limits on workflow count or complexity</li>
-                <li><strong>Custom Integrations:</strong> Full control over node development and API access</li>
-                <li><strong>Performance:</strong> Dedicated resources for workflow execution</li>
-                <li><strong>Compliance:</strong> Meet data residency and security requirements</li>
-            </ul>
-
-            <h2>Getting Started</h2>
-            <p>
-                n8n can be deployed using Docker Compose with minimal configuration. The platform includes 400+ pre-built nodes
-                for popular services, plus the ability to create custom nodes for proprietary APIs. Workflows are designed
-                visually with a drag-and-drop interface, making complex automation accessible without extensive coding.
-            </p>
-
             <p style="margin-top: 2rem;">
                 For detailed setup instructions and workflow examples, refer to the
-                <a href="https://docs.n8n.io" target="_blank" style="color: #EA4B71;">official n8n documentation</a>
-                or the Local AI articles in the <a href="publications.html" style="color: #EA4B71;">Publications</a> section.
+                <a href="https://docs.n8n.io" target="_blank" style="color: #2196F3;">official n8n documentation</a>
+                or the Local AI articles in the <a href="publications.html" style="color: #2196F3;">Publications</a> section.
             </p>
         </div>
     </section>
