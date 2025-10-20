@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="n8n Workflow Automation - Self-hosted AI automation pipelines for finance and maritime operations">
+    <title>n8n Automation | SL Mar - AI for Maritime and Quant Finance</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .project-image {
+            width: 100%;
+            max-width: 1200px;
+            height: auto;
+            border-radius: 8px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .feature-card h3 {
+            color: #EA4B71;
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .feature-card p {
+            margin-bottom: 0;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-badge {
+            background: rgba(234, 75, 113, 0.2);
+            color: #EA4B71;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(234, 75, 113, 0.3);
+        }
+
+        .workflow-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid #EA4B71;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .workflow-section h3 {
+            margin-top: 0;
+            color: #EA4B71;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="nav-left">
+                <img src="logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="index.html" class="logo">SL Mar - AI for Maritime and Quant Finance</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="publications.html">Publications</a></li>
+                <li><a href="development.html">Development</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>n8n Workflow Automation</h1>
+            <p>
+                Self-hosted AI automation pipelines for quantitative finance research, market intelligence, and maritime operations
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <img src="Assets/n8n1.png" alt="n8n workflow - AI news summarization and market data processing" class="project-image">
+            <img src="Assets/n8n2.png" alt="n8n workflow - RAG system with vector retrieval and AI chat models" class="project-image">
+            <img src="Assets/n8n3.png" alt="n8n workflow - Automated document processing and summarization" class="project-image">
+
+            <h2>Overview</h2>
+            <p>
+                <strong>n8n</strong> is an open-source workflow automation platform that powers complex AI pipelines for data processing,
+                market intelligence, and operational automation. Running self-hosted with Docker, it connects APIs, databases, AI models,
+                and notification systems into sophisticated automation workflows.
+            </p>
+
+            <h2>Key Capabilities</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🤖 AI-Powered Research</h3>
+                    <p>
+                        Automated news summarization, market intelligence gathering, and research paper processing using
+                        OpenAI GPT-4, Claude, and local Ollama models.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📊 Market Data Processing</h3>
+                    <p>
+                        Real-time forex data retrieval, technical analysis, chart generation, and automated trading signal
+                        detection with EODHD and TradingView integration.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔍 RAG Systems</h3>
+                    <p>
+                        Retrieval-Augmented Generation workflows with Qdrant vector database, semantic search,
+                        and hybrid retrieval for accurate question-answering.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📱 Telegram Integration</h3>
+                    <p>
+                        Real-time notifications, interactive commands, and mobile-first interfaces for monitoring
+                        workflows, trading signals, and system alerts.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🗄️ Notion Automation</h3>
+                    <p>
+                        Automated database population, research note creation, and knowledge management with
+                        Notion API integration for structured data storage.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📄 Document Intelligence</h3>
+                    <p>
+                        PDF parsing, XML processing, web scraping, and automated summarization for
+                        extracting insights from maritime regulations and financial reports.
+                    </p>
+                </div>
+            </div>
+
+            <h2>Featured Workflows</h2>
+
+            <div class="workflow-section">
+                <h3>1. AI Market Intelligence Pipeline</h3>
+                <p><strong>Trigger:</strong> Scheduled (every 4 hours)</p>
+                <p><strong>Components:</strong></p>
+                <ul style="color: #ccc; line-height: 1.8;">
+                    <li>EODHD News API for real-time financial news</li>
+                    <li>Dual-stage filtering (recent news + deduplication)</li>
+                    <li>OpenAI GPT-4 for news summarization</li>
+                    <li>Forex data retrieval (XAUUSD, EURUSD)</li>
+                    <li>Chart generation and technical analysis</li>
+                    <li>Notion database integration for research tracking</li>
+                    <li>Telegram notifications with formatted summaries</li>
+                </ul>
+                <p><strong>Output:</strong> Curated market intelligence reports with charts, summaries, and database entries</p>
+            </div>
+
+            <div class="workflow-section">
+                <h3>2. RAG Question-Answering System</h3>
+                <p><strong>Trigger:</strong> Webhook (POST request)</p>
+                <p><strong>Components:</strong></p>
+                <ul style="color: #ccc; line-height: 1.8;">
+                    <li>Webhook receiver for query extraction</li>
+                    <li>Qdrant vector store retrieval (semantic search)</li>
+                    <li>OpenAI embeddings (text-embedding-3-small)</li>
+                    <li>Question-Answer Chain with context injection</li>
+                    <li>OpenAI Chat Model (GPT-4) or Ollama (local LLMs)</li>
+                    <li>Webhook response with AI-generated answers</li>
+                </ul>
+                <p><strong>Output:</strong> Accurate answers with source citations from indexed documents</p>
+            </div>
+
+            <div class="workflow-section">
+                <h3>3. Automated Document Processing</h3>
+                <p><strong>Trigger:</strong> Scheduled (daily at configured time)</p>
+                <p><strong>Components:</strong></p>
+                <ul style="color: #ccc; line-height: 1.8;">
+                    <li>URL extraction from RSS/API feeds</li>
+                    <li>ArXiv research paper downloads</li>
+                    <li>XML parsing for metadata extraction</li>
+                    <li>PDF download and text extraction</li>
+                    <li>AI-powered summarization (GPT-4)</li>
+                    <li>Notion page creation with structured summaries</li>
+                    <li>Loop processing for batch operations</li>
+                </ul>
+                <p><strong>Output:</strong> Research library with automated summaries in Notion database</p>
+            </div>
+
+            <h2>Technology Stack</h2>
+            <div class="tech-stack">
+                <span class="tech-badge">n8n (self-hosted)</span>
+                <span class="tech-badge">Docker Compose</span>
+                <span class="tech-badge">OpenAI GPT-4</span>
+                <span class="tech-badge">Anthropic Claude</span>
+                <span class="tech-badge">Ollama (Local LLMs)</span>
+                <span class="tech-badge">Qdrant Vector DB</span>
+                <span class="tech-badge">Notion API</span>
+                <span class="tech-badge">Telegram Bot API</span>
+                <span class="tech-badge">EODHD Data</span>
+                <span class="tech-badge">PostgreSQL</span>
+                <span class="tech-badge">Python (Code nodes)</span>
+                <span class="tech-badge">JavaScript (Code nodes)</span>
+            </div>
+
+            <h2>Integration Capabilities</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Financial Data Sources</h3>
+                    <p>EODHD, Interactive Brokers, TradingView, Yahoo Finance, Alpha Vantage, Binance, QuantConnect</p>
+                </div>
+                <div class="feature-card">
+                    <h3>AI Providers</h3>
+                    <p>OpenAI (GPT-4, GPT-4o), Anthropic (Claude Sonnet), Ollama (Llama, Mistral), Perplexity</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Databases & Storage</h3>
+                    <p>PostgreSQL, Qdrant, SQLite, Notion, Google Sheets, Airtable</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Communication</h3>
+                    <p>Telegram, Email (SMTP), Slack, Discord, Webhooks, SMS</p>
+                </div>
+            </div>
+
+            <h2>Workflow Design Principles</h2>
+            <ul style="color: #ccc; line-height: 1.8;">
+                <li><strong>Error Handling:</strong> IF nodes for graceful error recovery and retry logic</li>
+                <li><strong>Modular Design:</strong> Reusable sub-workflows and function nodes</li>
+                <li><strong>Rate Limiting:</strong> Controlled API calls to avoid throttling</li>
+                <li><strong>Data Transformation:</strong> JavaScript/Python code nodes for complex processing</li>
+                <li><strong>Logging:</strong> Comprehensive logging to Notion and file storage</li>
+                <li><strong>Monitoring:</strong> Telegram alerts for workflow failures and completions</li>
+            </ul>
+
+            <h2>Use Cases</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Quantitative Research</h3>
+                    <p>Automated paper downloads, summarization, and strategy extraction for QuantConnect algorithm development.</p>
+                </div>
+                <div class="card">
+                    <h3>Market Surveillance</h3>
+                    <p>Real-time news monitoring, sentiment analysis, and market-moving event detection with instant alerts.</p>
+                </div>
+                <div class="card">
+                    <h3>Maritime Operations</h3>
+                    <p>Automated processing of SOLAS/MARPOL regulations, safety bulletin distribution, and compliance tracking.</p>
+                </div>
+                <div class="card">
+                    <h3>Knowledge Management</h3>
+                    <p>Automated indexing of PDFs, research papers, and documentation into searchable vector databases.</p>
+                </div>
+            </div>
+
+            <h2>Deployment Architecture</h2>
+            <div class="workflow-section">
+                <h3>Self-Hosted Infrastructure</h3>
+                <ul style="color: #ccc; line-height: 1.8;">
+                    <li><strong>Container:</strong> Docker Compose with persistent volumes</li>
+                    <li><strong>Networking:</strong> Reverse proxy with SSL (Nginx/Caddy)</li>
+                    <li><strong>Database:</strong> PostgreSQL for workflow metadata and execution history</li>
+                    <li><strong>Storage:</strong> Volume mounts for file processing and logs</li>
+                    <li><strong>Monitoring:</strong> Uptime checks, execution logs, Telegram alerts</li>
+                    <li><strong>Backup:</strong> Automated workflow export and database backups</li>
+                </ul>
+            </div>
+
+            <h2>Example Workflow: Daily Research Digest</h2>
+            <div class="workflow-section">
+                <h3>Pipeline Overview</h3>
+                <p><strong>Schedule:</strong> Daily at 8:00 AM UTC</p>
+                <p><strong>Steps:</strong></p>
+                <ol style="color: #ccc; line-height: 1.8;">
+                    <li>Fetch latest ArXiv papers in quantitative finance category</li>
+                    <li>Filter papers by keywords (machine learning, algorithmic trading, portfolio optimization)</li>
+                    <li>Download PDFs and extract abstracts</li>
+                    <li>Summarize each paper using GPT-4 (200-word summaries)</li>
+                    <li>Generate trading strategy suggestions based on paper findings</li>
+                    <li>Create Notion database entries with metadata and summaries</li>
+                    <li>Send formatted digest to Telegram with paper links</li>
+                    <li>Store PDFs in designated folder for future RAG indexing</li>
+                </ol>
+                <p><strong>Average Execution Time:</strong> 3-5 minutes for 10-15 papers</p>
+            </div>
+
+            <h2>Advanced Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Webhook Triggers</h3>
+                    <p>RESTful endpoints for external integrations, mobile apps, and cross-platform automation</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Sub-Workflows</h3>
+                    <p>Reusable workflow components for DRY principle and modular architecture</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Conditional Logic</h3>
+                    <p>Complex branching with IF/Switch nodes for intelligent routing and decision-making</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Loop Processing</h3>
+                    <p>Batch operations with Loop nodes for processing arrays and paginated API results</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Custom Code</h3>
+                    <p>JavaScript and Python nodes for advanced data transformation and API interactions</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Credential Management</h3>
+                    <p>Encrypted credential storage for API keys, tokens, and database passwords</p>
+                </div>
+            </div>
+
+            <h2>Benefits of Self-Hosting</h2>
+            <ul style="color: #ccc; line-height: 1.8;">
+                <li><strong>Data Privacy:</strong> All data processing happens on local infrastructure</li>
+                <li><strong>Cost Control:</strong> No per-execution fees, only infrastructure costs</li>
+                <li><strong>Unlimited Workflows:</strong> No artificial limits on workflow count or complexity</li>
+                <li><strong>Custom Integrations:</strong> Full control over node development and API access</li>
+                <li><strong>Performance:</strong> Dedicated resources for workflow execution</li>
+                <li><strong>Compliance:</strong> Meet data residency and security requirements</li>
+            </ul>
+
+            <h2>Getting Started</h2>
+            <p>
+                n8n can be deployed using Docker Compose with minimal configuration. The platform includes 400+ pre-built nodes
+                for popular services, plus the ability to create custom nodes for proprietary APIs. Workflows are designed
+                visually with a drag-and-drop interface, making complex automation accessible without extensive coding.
+            </p>
+
+            <p style="margin-top: 2rem;">
+                For detailed setup instructions and workflow examples, refer to the
+                <a href="https://docs.n8n.io" target="_blank" style="color: #EA4B71;">official n8n documentation</a>
+                or the Local AI articles in the <a href="publications.html" style="color: #EA4B71;">Publications</a> section.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SL Mar</p>
+            <p>AI for Maritime & Quant Finance</p>
+            <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions légales</a></p>
+        </div>
+    </footer>
+</body>
+</html>
