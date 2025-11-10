@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katja v1.0.0 Documentation - Multi-Mode AI Chat Platform</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Documentation Header -->
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="docs.html" class="docs-logo">
+                <i class="fas fa-comments"></i>
+                <span>Katja</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="docs.html" class="active">Documentation</a></li>
+                    <li><a href="https://quantcoder-fs.com" target="_blank"><i class="fas fa-globe"></i> Website</a></li>
+                    <li><a href="https://github.com/SL-Mar/Katja" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+
+    <!-- Documentation Container -->
+    <div class="docs-container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="#features"><i class="fas fa-star"></i> Features</a></li>
+                    <li><a href="#installation"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                    <li><a href="#tech-stack"><i class="fas fa-layer-group"></i> Tech Stack</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Chat Modes</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#language-learning"><i class="fas fa-graduation-cap"></i> Language Learning</a></li>
+                    <li><a href="#general-chat"><i class="fas fa-comment-dots"></i> General Chat</a></li>
+                    <li><a href="#legal-chat"><i class="fas fa-balance-scale"></i> Legal Chat</a></li>
+                    <li><a href="#medical-chat"><i class="fas fa-heartbeat"></i> Medical Chat</a></li>
+                    <li><a href="#console"><i class="fas fa-terminal"></i> Console</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core Systems</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#llm-routing"><i class="fas fa-route"></i> LLM Routing</a></li>
+                    <li><a href="#grammar-correction"><i class="fas fa-spell-check"></i> Grammar Correction</a></li>
+                    <li><a href="#spaced-repetition"><i class="fas fa-redo"></i> Spaced Repetition</a></li>
+                    <li><a href="#session-management"><i class="fas fa-users-cog"></i> Session Management</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#api-overview"><i class="fas fa-book"></i> API Overview</a></li>
+                    <li><a href="#api-chat"><i class="fas fa-message"></i> Chat API</a></li>
+                    <li><a href="#api-models"><i class="fas fa-robot"></i> Models API</a></li>
+                    <li><a href="#api-console"><i class="fas fa-desktop"></i> Console API</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Advanced Topics</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#database-schema"><i class="fas fa-database"></i> Database Schema</a></li>
+                    <li><a href="#model-selection"><i class="fas fa-list"></i> Model Selection</a></li>
+                    <li><a href="#customization"><i class="fas fa-cog"></i> Customization</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <ul class="sidebar-menu">
+                    <li><a href="https://github.com/SL-Mar/Katja" target="_blank"><i class="fab fa-github"></i> GitHub Repo</a></li>
+                    <li><a href="../contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-main">
+            <div class="docs-content">
+
+                <!-- OVERVIEW SECTION -->
+                <section id="overview">
+                    <h1>Katja v1.0.0 Documentation</h1>
+                    <p class="docs-subtitle">Multi-Mode AI Chat Platform with Specialized LLMs</p>
+
+                    <div class="alert info">
+                        <strong>🔒 Privacy-First:</strong> Katja is a local-first AI chat platform using Ollama for privacy-preserving inference. All data stays on your machine by default, with optional cloud fallback.
+                    </div>
+
+                    <img src="assets/images/katja1_language.png" alt="Katja Language Learning Mode" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
+
+                    <h3>What is Katja?</h3>
+                    <p>Katja is a comprehensive AI chat platform featuring 5 specialized modes designed for different use cases. Built with a local-first philosophy, it uses Ollama for privacy-preserving AI inference, ensuring all data remains on your machine unless you opt for cloud fallback.</p>
+
+                    <h3>Why Katja?</h3>
+                    <ul>
+                        <li><strong>Privacy-First:</strong> Local inference via Ollama means your conversations never leave your machine</li>
+                        <li><strong>Specialized Models:</strong> Purpose-built LLMs for legal reasoning, medical queries, and language learning</li>
+                        <li><strong>Multi-Modal:</strong> 5 distinct chat modes optimized for different tasks</li>
+                        <li><strong>Offline-Capable:</strong> Works without internet after initial model download</li>
+                        <li><strong>Open Source:</strong> Fully transparent codebase with no telemetry</li>
+                        <li><strong>Flexible:</strong> Choose between local privacy or cloud performance</li>
+                    </ul>
+
+                    <h3>Core Capabilities</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-graduation-cap"></i> Language Learning</h4>
+                            <ul>
+                                <li>7 European languages</li>
+                                <li>Real-time grammar correction</li>
+                                <li>Spaced repetition (SM-2)</li>
+                                <li>Export corrections</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-comment-dots"></i> General Chat</h4>
+                            <ul>
+                                <li>14+ LLM models</li>
+                                <li>LaTeX rendering</li>
+                                <li>Model switching</li>
+                                <li>Structured responses</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-balance-scale"></i> Legal Chat</h4>
+                            <ul>
+                                <li>Saul-7B specialized model</li>
+                                <li>English law focus</li>
+                                <li>Legal citations</li>
+                                <li>Case law analysis</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-heartbeat"></i> Medical Chat</h4>
+                            <ul>
+                                <li>Meditron & BioMistral</li>
+                                <li>Maritime medical focus</li>
+                                <li>Examination guidance</li>
+                                <li>IMGS protocol support</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-terminal"></i> Console</h4>
+                            <ul>
+                                <li>Multi-session monitoring</li>
+                                <li>Real-time updates (3s)</li>
+                                <li>Session filtering</li>
+                                <li>Model tracking</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-cog"></i> Customization</h4>
+                            <ul>
+                                <li>Editable system prompts</li>
+                                <li>Model selection</li>
+                                <li>Settings persistence</li>
+                                <li>CORS configuration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FEATURES SECTION -->
+                <section id="features">
+                    <h2>Features Overview</h2>
+
+                    <h3>5 Specialized Chat Modes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mode</th>
+                                <th>Models</th>
+                                <th>Use Case</th>
+                                <th>Key Features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Language Learning</strong></td>
+                                <td>Llama3, Qwen2, GLM4</td>
+                                <td>Practice 7 European languages</td>
+                                <td>Grammar correction, spaced repetition, export corrections</td>
+                            </tr>
+                            <tr>
+                                <td><strong>General Chat</strong></td>
+                                <td>14+ models, GPT-4o-mini</td>
+                                <td>Technical discussions, research</td>
+                                <td>LaTeX rendering, model switching, structured responses</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Legal Chat</strong></td>
+                                <td>Saul-7B</td>
+                                <td>English law queries</td>
+                                <td>Legal citations, case law, doctrine explanations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Medical Chat</strong></td>
+                                <td>Meditron, BioMistral</td>
+                                <td>Maritime medical guidance</td>
+                                <td>Examination protocols, IMGS compliance, telemedicine prep</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Console</strong></td>
+                                <td>All</td>
+                                <td>Monitoring & debugging</td>
+                                <td>Multi-session view, auto-refresh, session filtering</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Supported Languages</h3>
+                    <p>Language Learning mode supports 7 European languages:</p>
+                    <ul style="display: flex; flex-wrap: wrap; gap: 1rem; list-style: none;">
+                        <li>🇸🇮 <strong>Slovene</strong></li>
+                        <li>🇩🇪 <strong>German</strong></li>
+                        <li>🇮🇹 <strong>Italian</strong></li>
+                        <li>🇭🇷 <strong>Croatian</strong></li>
+                        <li>🇫🇷 <strong>French</strong></li>
+                        <li>🇬🇧 <strong>English</strong></li>
+                        <li>🇵🇹 <strong>Portuguese</strong></li>
+                    </ul>
+
+                    <h3>Privacy & Security</h3>
+                    <ul>
+                        <li><strong>Local-First Inference:</strong> All LLM processing via Ollama by default</li>
+                        <li><strong>No Cloud Required:</strong> Works offline after model download</li>
+                        <li><strong>No Telemetry:</strong> Zero data collection or tracking</li>
+                        <li><strong>Session Isolation:</strong> Each browser tab gets unique session ID</li>
+                        <li><strong>CORS Security:</strong> Configurable allowed origins</li>
+                        <li><strong>Optional Cloud:</strong> Explicit opt-in for OpenAI fallback</li>
+                    </ul>
+
+                    <img src="assets/images/katja2_genchat.png" alt="General Chat Mode" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
+                </section>
+
+                <!-- INSTALLATION SECTION -->
+                <section id="installation">
+                    <h2>Installation & Setup</h2>
+
+                    <h3>Prerequisites</h3>
+                    <ol>
+                        <li><strong>Ollama:</strong> Install from <a href="https://ollama.ai" target="_blank">ollama.ai</a></li>
+                        <li><strong>Node.js 18+:</strong> For frontend</li>
+                        <li><strong>Python 3.10+:</strong> For backend</li>
+                        <li><strong>Git:</strong> To clone repository</li>
+                        <li><strong>OpenAI API Key (Optional):</strong> For cloud fallback</li>
+                    </ol>
+
+                    <h3>Pull Recommended Models</h3>
+                    <pre><code># General-purpose chat
+ollama pull llama3:8b-instruct-q4_K_M
+
+# English law (Saul 7B)
+ollama pull adrienbrault/saul-instruct-v1:Q4_K_M
+
+# Medical (Meditron)
+ollama pull meditron-7b
+
+# Biomedical (BioMistral)
+ollama pull biomistral-7b
+
+# Multi-lingual options
+ollama pull qwen2:7b
+ollama pull glm4</code></pre>
+
+                    <h3>Quick Start (Linux)</h3>
+                    <pre><code>git clone https://github.com/SL-Mar/Katja.git
+cd Katja
+chmod +x launch-katja.sh
+./launch-katja.sh</code></pre>
+
+                    <p>This launches all services:</p>
+                    <ul>
+                        <li><strong>Language Learning:</strong> <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+                        <li><strong>General Chat:</strong> <a href="http://localhost:3000/chat" target="_blank">http://localhost:3000/chat</a></li>
+                        <li><strong>Legal Chat:</strong> <a href="http://localhost:3000/legal-chat" target="_blank">http://localhost:3000/legal-chat</a></li>
+                        <li><strong>Medical Chat:</strong> <a href="http://localhost:3000/medical-chat" target="_blank">http://localhost:3000/medical-chat</a></li>
+                        <li><strong>Console:</strong> <a href="http://localhost:3000/console" target="_blank">http://localhost:3000/console</a></li>
+                        <li><strong>Settings:</strong> <a href="http://localhost:3000/settings" target="_blank">http://localhost:3000/settings</a></li>
+                        <li><strong>API Docs:</strong> <a href="http://localhost:8000/docs" target="_blank">http://localhost:8000/docs</a></li>
+                    </ul>
+
+                    <h3>Manual Setup</h3>
+
+                    <h4>Backend Setup</h4>
+                    <pre><code>cd backend
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your settings
+
+# Start backend
+uvicorn main:app --reload --host 0.0.0.0 --port 8000</code></pre>
+
+                    <h4>Frontend Setup</h4>
+                    <pre><code>cd frontend
+npm install
+npm run dev</code></pre>
+
+                    <h3>Environment Configuration</h3>
+                    <p>Edit <code>backend/.env</code> file:</p>
+                    <pre><code># LLM Provider (local = Ollama, openai = fallback)
+LLM_PROVIDER=local
+
+# Ollama settings
+OLLAMA_MODEL=llama3:8b-instruct-q4_K_M
+OLLAMA_BASE_URL=http://localhost:11434
+
+# Optional: OpenAI fallback
+# OPENAI_API_KEY=your_api_key_here
+
+# CORS origins (comma-separated)
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:5173</code></pre>
+
+                    <div class="alert warning">
+                        <strong>⚠️ First Run:</strong> Allow 30-60 seconds for the SQLite database to initialize on first startup. Subsequent starts are instant.
+                    </div>
+                </section>
+
+                <!-- ARCHITECTURE SECTION -->
+                <section id="architecture">
+                    <h2>System Architecture</h2>
+
+                    <h3>High-Level Overview</h3>
+                    <pre><code>┌─────────────┐      ┌──────────────┐      ┌─────────────┐
+│  Next.js    │─────▶│  FastAPI     │─────▶│   Ollama    │
+│  Frontend   │◀─────│  Backend     │◀─────│   (Local)   │
+│ (Port 3000) │      │ (Port 8000)  │      │ (Port 11434)│
+└─────────────┘      └──────────────┘      └─────────────┘
+                            │
+                            ▼
+                     ┌──────────────┐
+                     │   SQLite     │
+                     │   Database   │
+                     └──────────────┘</code></pre>
+
+                    <h3>LLM Inference Flow</h3>
+                    <ol>
+                        <li><strong>User Message:</strong> Frontend sends message to <code>/katja/chat</code></li>
+                        <li><strong>Backend Receives:</strong> Loads conversation history from SQLite</li>
+                        <li><strong>Prompt Construction:</strong> Builds system prompt + context</li>
+                        <li><strong>Ollama Inference:</strong> Sends to local Ollama instance</li>
+                        <li><strong>JSON Parsing:</strong> Extracts structured response (reply + grammar correction)</li>
+                        <li><strong>Database Storage:</strong> Saves conversation to SQLite</li>
+                        <li><strong>Response:</strong> Returns to frontend</li>
+                    </ol>
+
+                    <h3>JSON Response Format</h3>
+                    <p>Enforced via Ollama's <code>format: json</code> parameter:</p>
+                    <pre><code>{
+  "reply": "Conversational response in target language",
+  "correction": {
+    "corrected": "Corrected version of user's text",
+    "explanation": "Grammar explanation",
+    "pattern": "Grammar pattern ID (if applicable)",
+    "severity": "minor|major|critical"
+  }
+}</code></pre>
+
+                    <h3>Architecture Components</h3>
+
+                    <h4>Frontend Layer (Next.js)</h4>
+                    <ul>
+                        <li><strong>React 18:</strong> Component-based UI</li>
+                        <li><strong>TypeScript:</strong> Type-safe development</li>
+                        <li><strong>Tailwind CSS:</strong> Utility-first styling</li>
+                        <li><strong>react-markdown + KaTeX:</strong> LaTeX rendering</li>
+                        <li><strong>FontAwesome:</strong> Icon library</li>
+                    </ul>
+
+                    <h4>Backend Layer (FastAPI)</h4>
+                    <ul>
+                        <li><strong>FastAPI:</strong> Async Python web framework</li>
+                        <li><strong>Pydantic v2:</strong> Data validation</li>
+                        <li><strong>SQLite + WAL:</strong> Database with Write-Ahead Logging</li>
+                        <li><strong>SlowAPI:</strong> Rate limiting</li>
+                    </ul>
+
+                    <h4>LLM Layer (Ollama)</h4>
+                    <ul>
+                        <li><strong>Local Inference:</strong> Privacy-preserving AI</li>
+                        <li><strong>14+ Models:</strong> Llama3, Qwen2, GLM4, Gemma2, etc.</li>
+                        <li><strong>Specialized Models:</strong> Saul-7B (legal), Meditron (medical), BioMistral (biomedical)</li>
+                        <li><strong>Cloud Fallback:</strong> Optional OpenAI GPT-4o-mini</li>
+                    </ul>
+
+                    <h4>Data Layer</h4>
+                    <ul>
+                        <li><strong>SQLite Database:</strong> Persistent storage</li>
+                        <li><strong>WAL Mode:</strong> Write-Ahead Logging for concurrency</li>
+                        <li><strong>Session Isolation:</strong> Unique session IDs per browser tab</li>
+                        <li><strong>Auto-Initialization:</strong> Tables created on first run</li>
+                    </ul>
+                </section>
+
+                <!-- TECH STACK SECTION -->
+                <section id="tech-stack">
+                    <h2>Technology Stack</h2>
+
+                    <h3>Frontend Technologies</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Next.js</td>
+                                <td>13+</td>
+                                <td>React framework with routing</td>
+                            </tr>
+                            <tr>
+                                <td>React</td>
+                                <td>18</td>
+                                <td>UI component library</td>
+                            </tr>
+                            <tr>
+                                <td>TypeScript</td>
+                                <td>5</td>
+                                <td>Type-safe JavaScript</td>
+                            </tr>
+                            <tr>
+                                <td>Tailwind CSS</td>
+                                <td>3</td>
+                                <td>Utility-first CSS framework</td>
+                            </tr>
+                            <tr>
+                                <td>react-markdown</td>
+                                <td>Latest</td>
+                                <td>Markdown rendering</td>
+                            </tr>
+                            <tr>
+                                <td>KaTeX</td>
+                                <td>Latest</td>
+                                <td>LaTeX math rendering</td>
+                            </tr>
+                            <tr>
+                                <td>FontAwesome</td>
+                                <td>6</td>
+                                <td>Icon library</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Backend Technologies</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>FastAPI</td>
+                                <td>0.104+</td>
+                                <td>High-performance async API</td>
+                            </tr>
+                            <tr>
+                                <td>Python</td>
+                                <td>3.10+</td>
+                                <td>Backend programming language</td>
+                            </tr>
+                            <tr>
+                                <td>SQLite</td>
+                                <td>3</td>
+                                <td>Embedded database</td>
+                            </tr>
+                            <tr>
+                                <td>Pydantic</td>
+                                <td>2.0</td>
+                                <td>Data validation</td>
+                            </tr>
+                            <tr>
+                                <td>SlowAPI</td>
+                                <td>Latest</td>
+                                <td>Rate limiting</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>LLM Models</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Size</th>
+                                <th>Specialty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>llama3:8b-instruct-q4_K_M</td>
+                                <td>4.9GB</td>
+                                <td>General-purpose</td>
+                            </tr>
+                            <tr>
+                                <td>adrienbrault/saul-instruct-v1:Q4_K_M</td>
+                                <td>4.1GB</td>
+                                <td>English law</td>
+                            </tr>
+                            <tr>
+                                <td>meditron-7b</td>
+                                <td>4.1GB</td>
+                                <td>Maritime medical</td>
+                            </tr>
+                            <tr>
+                                <td>biomistral-7b</td>
+                                <td>4.1GB</td>
+                                <td>Biomedical</td>
+                            </tr>
+                            <tr>
+                                <td>qwen2:7b</td>
+                                <td>4.4GB</td>
+                                <td>Multi-lingual</td>
+                            </tr>
+                            <tr>
+                                <td>glm4</td>
+                                <td>9.4GB</td>
+                                <td>Multi-lingual</td>
+                            </tr>
+                            <tr>
+                                <td>gemma2:9b</td>
+                                <td>5.4GB</td>
+                                <td>General-purpose</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Configuration Parameters</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Response Length</td>
+                                <td>4096 tokens</td>
+                                <td>Maximum response size</td>
+                            </tr>
+                            <tr>
+                                <td>Temperature</td>
+                                <td>0.0</td>
+                                <td>Deterministic (medical/legal accuracy)</td>
+                            </tr>
+                            <tr>
+                                <td>JSON Format</td>
+                                <td>Enforced</td>
+                                <td>Structured responses</td>
+                            </tr>
+                            <tr>
+                                <td>WAL Mode</td>
+                                <td>Enabled</td>
+                                <td>Better database concurrency</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- LANGUAGE LEARNING SECTION -->
+                <section id="language-learning">
+                    <h2>Language Learning Mode</h2>
+
+                    <img src="assets/images/katja1_language.png" alt="Language Learning Mode" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
+
+                    <h3>Overview</h3>
+                    <p>Language Learning mode provides real-time grammar correction and conversational practice in 7 European languages. Designed as an immersive learning tool with instant feedback.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><strong>7 Languages:</strong> Slovene, German, Italian, Croatian, French, English, Portuguese</li>
+                        <li><strong>Real-Time Grammar Correction:</strong> Instant feedback with explanations in target language</li>
+                        <li><strong>Spaced Repetition:</strong> SM-2 algorithm for reviewing grammar patterns</li>
+                        <li><strong>Export Corrections:</strong> Save corrections as JSON for external tools</li>
+                        <li><strong>Auto-Clear on Switch:</strong> Fresh conversation when changing languages</li>
+                        <li><strong>Severity Levels:</strong> Minor, Major, Critical grammar issues</li>
+                    </ul>
+
+                    <h3>How It Works</h3>
+                    <ol>
+                        <li>Select target language via flag buttons</li>
+                        <li>Type message in target language</li>
+                        <li>Receive conversational response</li>
+                        <li>Get grammar correction with explanation (if applicable)</li>
+                        <li>Review corrections using spaced repetition</li>
+                    </ol>
+
+                    <h3>Grammar Correction Format</h3>
+                    <pre><code>{
+  "corrected": "Corrected version of text",
+  "explanation": "Why the correction was needed",
+  "pattern": "grammar_pattern_123",
+  "severity": "major"
+}</code></pre>
+
+                    <h3>Spaced Repetition (SM-2 Algorithm)</h3>
+                    <p>Grammar corrections are automatically added to a spaced repetition queue using the SuperMemo-2 algorithm:</p>
+                    <ul>
+                        <li><strong>Initial Interval:</strong> 1 day</li>
+                        <li><strong>Easy Factor:</strong> 2.5 (adjusts based on performance)</li>
+                        <li><strong>Review Outcomes:</strong> Easy, Good, Hard, Again</li>
+                        <li><strong>Adaptive Scheduling:</strong> Intervals increase with successful reviews</li>
+                    </ul>
+
+                    <h3>Supported Languages Details</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Language</th>
+                                <th>Code</th>
+                                <th>Grammar Patterns</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>🇸🇮 Slovene</td>
+                                <td>slovene</td>
+                                <td>Dual form, case system, verbal aspects</td>
+                            </tr>
+                            <tr>
+                                <td>🇩🇪 German</td>
+                                <td>german</td>
+                                <td>Cases, verb positions, gender articles</td>
+                            </tr>
+                            <tr>
+                                <td>🇮🇹 Italian</td>
+                                <td>italian</td>
+                                <td>Verb conjugations, articles, prepositions</td>
+                            </tr>
+                            <tr>
+                                <td>🇭🇷 Croatian</td>
+                                <td>croatian</td>
+                                <td>Case system, verb aspects, Ijekavian/Ekavian</td>
+                            </tr>
+                            <tr>
+                                <td>🇫🇷 French</td>
+                                <td>french</td>
+                                <td>Articles, liaisons, subjunctive mood</td>
+                            </tr>
+                            <tr>
+                                <td>🇬🇧 English</td>
+                                <td>english</td>
+                                <td>Tenses, prepositions, articles</td>
+                            </tr>
+                            <tr>
+                                <td>🇵🇹 Portuguese</td>
+                                <td>portuguese</td>
+                                <td>Verb conjugations, gender agreement</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert info">
+                        <strong>💡 Learning Tip:</strong> Use the spaced repetition feature regularly to reinforce grammar patterns. The system optimally schedules reviews based on your performance.
+                    </div>
+                </section>
+
+                <!-- GENERAL CHAT SECTION -->
+                <section id="general-chat">
+                    <h2>General Chat Mode</h2>
+
+                    <img src="assets/images/katja2_genchat.png" alt="General Chat Mode" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
+
+                    <h3>Overview</h3>
+                    <p>General Chat mode provides flexible AI conversations with 14+ LLM models and support for technical discussions, including LaTeX math rendering.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><strong>14+ Models:</strong> Choose from Llama, Qwen, GLM4, Gemma, and more</li>
+                        <li><strong>LaTeX Rendering:</strong> Inline <code>$...$</code> or display <code>$$...$$</code> math formulas</li>
+                        <li><strong>Model Switching:</strong> Live dropdown selector</li>
+                        <li><strong>Structured Responses:</strong> Optimized system prompts for technical queries</li>
+                        <li><strong>GPT-4o-mini Support:</strong> Optional OpenAI cloud fallback</li>
+                        <li><strong>Session Memory:</strong> Conversation context maintained</li>
+                    </ul>
+
+                    <h3>LaTeX Math Support</h3>
+                    <p>Rendered using KaTeX for beautiful mathematical typesetting:</p>
+
+                    <h4>Inline Math</h4>
+                    <pre><code>The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$</code></pre>
+
+                    <h4>Display Math</h4>
+                    <pre><code>$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$</code></pre>
+
+                    <h3>Example Queries</h3>
+                    <ul>
+                        <li><em>"What is Bayes' theorem and how is it used in statistics?"</em></li>
+                        <li><em>"Explain quantum entanglement in simple terms"</em></li>
+                        <li><em>"Write a Python function to calculate Fibonacci numbers"</em></li>
+                        <li><em>"Derive the Navier-Stokes equations"</em></li>
+                    </ul>
+
+                    <h3>Available Models</h3>
+                    <p>All Ollama models installed on your system are automatically detected and available in the dropdown:</p>
+                    <ul>
+                        <li>llama3:8b-instruct-q4_K_M</li>
+                        <li>qwen2:7b</li>
+                        <li>glm4</li>
+                        <li>gemma2:9b</li>
+                        <li>mistral:7b</li>
+                        <li>And any other models you pull</li>
+                    </ul>
+
+                    <div class="alert info">
+                        <strong>🔬 Technical Discussions:</strong> General Chat mode is optimized for technical and academic queries with proper formatting, code blocks, and LaTeX rendering.
+                    </div>
+                </section>
+
+                <!-- LEGAL CHAT SECTION -->
+                <section id="legal-chat">
+                    <h2>Legal Chat Mode</h2>
+
+                    <img src="assets/images/Katja4_Legalchat.png" alt="Legal Chat Mode" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
+
+                    <h3>Overview</h3>
+                    <p>Legal Chat mode uses the specialized Saul-7B model fine-tuned for English law, contracts, torts, and legal reasoning.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><strong>Saul-7B Model:</strong> Fine-tuned for English common law</li>
+                        <li><strong>Legal Citations:</strong> Properly formatted case references</li>
+                        <li><strong>Precedent Explanations:</strong> Detailed case law analysis</li>
+                        <li><strong>Legal Doctrine:</strong> Equity, trusts, negligence, contract law</li>
+                        <li><strong>LaTeX Support:</strong> Formatted legal citations and principles</li>
+                    </ul>
+
+                    <h3>Legal Domains Covered</h3>
+                    <ul>
+                        <li><strong>Contract Law:</strong> Formation, consideration, breach, remedies</li>
+                        <li><strong>Tort Law:</strong> Negligence, duty of care, causation</li>
+                        <li><strong>Equity:</strong> Trusts, equitable remedies, fiduciary duties</li>
+                        <li><strong>Insurance Law:</strong> Good faith, utmost good faith doctrine</li>
+                        <li><strong>Case Law:</strong> Precedent analysis and legal reasoning</li>
+                    </ul>
+
+                    <h3>Example Queries</h3>
+                    <ul>
+                        <li><em>"What is the leading case in negligence?"</em> → Donoghue v Stevenson [1932]</li>
+                        <li><em>"Explain the doctrine of consideration in contract law"</em></li>
+                        <li><em>"Is there an obligation of good faith in insurance law?"</em></li>
+                        <li><em>"What are the elements of a valid trust?"</em></li>
+                    </ul>
+
+                    <div class="alert warning">
+                        <strong>⚠️ Disclaimer:</strong> Legal Chat mode is for educational and research purposes only. It is NOT a substitute for professional legal advice. Always consult a qualified attorney for legal matters.
+                    </div>
+
+                    <h3>Saul-7B Model Details</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Model Name</td>
+                                <td>adrienbrault/saul-instruct-v1:Q4_K_M</td>
+                            </tr>
+                            <tr>
+                                <td>Size</td>
+                                <td>4.1GB (quantized)</td>
+                            </tr>
+                            <tr>
+                                <td>Specialty</td>
+                                <td>English common law</td>
+                            </tr>
+                            <tr>
+                                <td>Fine-Tuned On</td>
+                                <td>Legal texts, case law, doctrines</td>
+                            </tr>
+                            <tr>
+                                <td>Temperature</td>
+                                <td>0.0 (deterministic for accuracy)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- MEDICAL CHAT SECTION -->
+                <section id="medical-chat">
+                    <h2>Maritime Medical Chat Mode</h2>
+
+                    <img src="assets/images/katja3_medchat.png" alt="Medical Chat Mode" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
+
+                    <h3>Overview</h3>
+                    <p>Maritime Medical Chat mode is designed for ship's officers managing medical care on vessels without doctors, using Meditron and BioMistral models.</p>
+
+                    <div class="alert warning">
+                        <strong>⚠️ CRITICAL LIMITATIONS:</strong>
+                        <ul>
+                            <li><strong>NO DIAGNOSIS OR TREATMENT:</strong> Ship's medical officers are NOT authorized to diagnose or treat (except immediate life-saving measures)</li>
+                            <li><strong>PHYSICIAN AUTHORIZATION REQUIRED:</strong> All interventions beyond basic first aid must be authorized by shore-based physician</li>
+                            <li><strong>EXAMINATION ONLY:</strong> This tool focuses on gathering accurate information for remote physicians</li>
+                        </ul>
+                    </div>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><strong>Meditron & BioMistral:</strong> Medical-domain fine-tuned models</li>
+                        <li><strong>Maritime Focus:</strong> Ship's officer medical care guidance</li>
+                        <li><strong>Examination Protocols:</strong> Systematic patient assessment</li>
+                        <li><strong>Telemedicine Prep:</strong> Organize observations for physician consultations</li>
+                        <li><strong>IMGS Protocol:</strong> International Medical Guide for Ships compliance</li>
+                        <li><strong>No Diagnosis/Treatment:</strong> Emphasizes observation and communication</li>
+                    </ul>
+
+                    <h3>Examination Guidance</h3>
+                    <p>The system guides ship's officers through systematic patient examination:</p>
+
+                    <h4>1. Vital Signs</h4>
+                    <ul>
+                        <li>Blood pressure</li>
+                        <li>Heart rate</li>
+                        <li>Respiratory rate</li>
+                        <li>Temperature</li>
+                        <li>Oxygen saturation (if available)</li>
+                    </ul>
+
+                    <h4>2. SAMPLE History</h4>
+                    <ul>
+                        <li><strong>S</strong>igns and symptoms</li>
+                        <li><strong>A</strong>llergies</li>
+                        <li><strong>M</strong>edications</li>
+                        <li><strong>P</strong>ast medical history</li>
+                        <li><strong>L</strong>ast oral intake</li>
+                        <li><strong>E</strong>vents leading to illness/injury</li>
+                    </ul>
+
+                    <h4>3. Physical Examination</h4>
+                    <ul>
+                        <li>General appearance</li>
+                        <li>Head-to-toe examination</li>
+                        <li>Neurological status</li>
+                        <li>Specific area of concern</li>
+                    </ul>
+
+                    <h3>Example Queries</h3>
+                    <ul>
+                        <li><em>"How should I perform a complete physical examination on a crew member with chest pain?"</em></li>
+                        <li><em>"What vital signs should I collect for the ship's doctor consultation?"</em></li>
+                        <li><em>"Guide me through assessing a patient's neurological status"</em></li>
+                        <li><em>"What observations should I document for a suspected appendicitis case?"</em></li>
+                    </ul>
+
+                    <h3>IMGS Compliance</h3>
+                    <p>Follows protocols from the International Medical Guide for Ships (WHO publication):</p>
+                    <ul>
+                        <li>Standardized examination procedures</li>
+                        <li>Telemedicine consultation preparation</li>
+                        <li>Medical record documentation</li>
+                        <li>Shore-based physician communication</li>
+                    </ul>
+
+                    <h3>Model Details</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Size</th>
+                                <th>Specialty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>meditron-7b</td>
+                                <td>4.1GB</td>
+                                <td>Maritime medical guidance</td>
+                            </tr>
+                            <tr>
+                                <td>biomistral-7b</td>
+                                <td>4.1GB</td>
+                                <td>Biomedical terminology</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert warning">
+                        <strong>⚠️ NOT A SUBSTITUTE:</strong> This is NOT a substitute for professional medical advice. Always contact a shore-based physician via TMAS (Telemedical Assistance Service) for medical guidance.
+                    </div>
+                </section>
+
+                <!-- CONSOLE SECTION -->
+                <section id="console">
+                    <h2>Console Mode</h2>
+
+                    <img src="assets/images/katja5_console.png" alt="Console Mode" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
+
+                    <h3>Overview</h3>
+                    <p>Console mode provides a terminal-style monitoring interface for all LLM interactions across all chat modes.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><strong>Terminal Aesthetic:</strong> Hacker-style green monospace text</li>
+                        <li><strong>Multi-Session Monitoring:</strong> View all conversations in one place</li>
+                        <li><strong>Real-Time Updates:</strong> Auto-refresh every 3 seconds</li>
+                        <li><strong>Session Filtering:</strong> Filter by language, general, legal, medical</li>
+                        <li><strong>Model Tracking:</strong> See which model was used for each response</li>
+                        <li><strong>Timestamp Tracking:</strong> Full conversation history with precise timestamps</li>
+                    </ul>
+
+                    <h3>Console Display Format</h3>
+                    <pre><code>[2025-11-10 17:30:15] [language] [llama3:8b-instruct-q4_K_M]
+USER: Zdravo, kako si?
+ASSISTANT: Jaz sem dobro, hvala! Kako si ti?
+CORRECTION: None
+
+[2025-11-10 17:31:22] [general] [qwen2:7b]
+USER: Explain quantum entanglement
+ASSISTANT: Quantum entanglement is a phenomenon where...
+
+[2025-11-10 17:32:45] [legal] [saul-instruct-v1]
+USER: What is the leading case in negligence?
+ASSISTANT: The leading case is Donoghue v Stevenson [1932] AC 562...</code></pre>
+
+                    <h3>Filtering Options</h3>
+                    <ul>
+                        <li><strong>All:</strong> Show all conversations</li>
+                        <li><strong>Language Learning:</strong> Only language practice sessions</li>
+                        <li><strong>General Chat:</strong> General-purpose conversations</li>
+                        <li><strong>Legal Chat:</strong> Legal queries</li>
+                        <li><strong>Medical Chat:</strong> Medical consultations</li>
+                    </ul>
+
+                    <h3>Use Cases</h3>
+                    <ul>
+                        <li><strong>Debugging:</strong> Track which models are being used</li>
+                        <li><strong>Analysis:</strong> Review conversation patterns</li>
+                        <li><strong>Export:</strong> Copy logs for external analysis</li>
+                        <li><strong>Monitoring:</strong> Watch real-time LLM responses</li>
+                    </ul>
+
+                    <div class="alert info">
+                        <strong>💻 Power User Feature:</strong> Console mode is essential for debugging model selection, prompt engineering, and understanding how different models respond to queries.
+                    </div>
+                </section>
+
+                <!-- LLM ROUTING SECTION -->
+                <section id="llm-routing">
+                    <h2>LLM Routing</h2>
+
+                    <h3>Overview</h3>
+                    <p>Katja's LLM routing system intelligently selects between local Ollama models and cloud OpenAI fallback based on availability and configuration.</p>
+
+                    <h3>Routing Logic</h3>
+                    <pre><code>1. Check LLM_PROVIDER in .env
+   ├─ "local" → Use Ollama
+   └─ "openai" → Use OpenAI API
+
+2. If Ollama selected:
+   ├─ Check if Ollama is running (http://localhost:11434)
+   ├─ If available → Use selected Ollama model
+   └─ If unavailable AND OPENAI_API_KEY set → Fallback to GPT-4o-mini
+
+3. If OpenAI selected:
+   └─ Use GPT-4o-mini directly</code></pre>
+
+                    <h3>Model Selection Priority</h3>
+                    <ol>
+                        <li><strong>User Selection:</strong> Model selected in UI dropdown (highest priority)</li>
+                        <li><strong>Environment Variable:</strong> <code>OLLAMA_MODEL</code> in <code>.env</code></li>
+                        <li><strong>Default Model:</strong> <code>llama3:8b-instruct-q4_K_M</code></li>
+                        <li><strong>Cloud Fallback:</strong> <code>gpt-4o-mini</code> (if configured)</li>
+                    </ol>
+
+                    <h3>Automatic Fallback</h3>
+                    <p>If local Ollama is unavailable and OpenAI API key is configured:</p>
+                    <pre><code>try:
+    response = ollama_client.chat(model=selected_model, ...)
+except Exception as e:
+    if OPENAI_API_KEY:
+        logger.warning("Ollama unavailable, falling back to GPT-4o-mini")
+        response = openai_client.chat(model="gpt-4o-mini", ...)
+    else:
+        raise Exception("Ollama unavailable and no OpenAI fallback configured")</code></pre>
+
+                    <h3>Model Discovery</h3>
+                    <p>Available models are automatically discovered from Ollama:</p>
+                    <pre><code>GET http://localhost:11434/api/tags
+
+Response:
+{
+  "models": [
+    {"name": "llama3:8b-instruct-q4_K_M"},
+    {"name": "qwen2:7b"},
+    {"name": "saul-instruct-v1:Q4_K_M"},
+    ...
+  ]
+}</code></pre>
+
+                    <div class="alert info">
+                        <strong>🔄 Dynamic Model List:</strong> The model dropdown automatically refreshes when new models are pulled via <code>ollama pull</code>.
+                    </div>
+                </section>
+
+                <!-- GRAMMAR CORRECTION SECTION -->
+                <section id="grammar-correction">
+                    <h2>Grammar Correction System</h2>
+
+                    <h3>Overview</h3>
+                    <p>The grammar correction system analyzes user input in the target language and provides detailed feedback with explanations.</p>
+
+                    <h3>Correction Process</h3>
+                    <ol>
+                        <li><strong>Input Analysis:</strong> User message parsed by LLM</li>
+                        <li><strong>Error Detection:</strong> Grammar, syntax, spelling issues identified</li>
+                        <li><strong>Severity Assignment:</strong> Minor, Major, or Critical</li>
+                        <li><strong>Correction Generation:</strong> Corrected version created</li>
+                        <li><strong>Explanation:</strong> Why the correction was needed (in target language)</li>
+                        <li><strong>Pattern Matching:</strong> Link to grammar pattern database (if applicable)</li>
+                    </ol>
+
+                    <h3>Severity Levels</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Severity</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Minor</strong></td>
+                                <td>Small typo or informal usage</td>
+                                <td>Missing accent mark, capitalization</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Major</strong></td>
+                                <td>Grammar mistake affecting clarity</td>
+                                <td>Wrong verb tense, incorrect case</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Critical</strong></td>
+                                <td>Fundamental error changing meaning</td>
+                                <td>Wrong gender, completely incorrect structure</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Grammar Pattern Database</h3>
+                    <p>Pre-seeded with common grammar patterns for each language:</p>
+                    <pre><code># German example
+{
+  "pattern_id": "de_case_accusative",
+  "language": "german",
+  "category": "cases",
+  "rule": "Accusative case after verbs of motion with direction",
+  "example": "Ich gehe in den Park (not in der Park)",
+  "difficulty": "intermediate"
+}</code></pre>
+
+                    <h3>Correction JSON Schema</h3>
+                    <pre><code>{
+  "corrected": "Corrected version of the text",
+  "explanation": "Detailed explanation in target language",
+  "pattern": "grammar_pattern_id or null",
+  "severity": "minor | major | critical"
+}</code></pre>
+
+                    <div class="alert info">
+                        <strong>📚 Learning Database:</strong> All corrections are stored in SQLite for spaced repetition review, helping you systematically improve grammar patterns over time.
+                    </div>
+                </section>
+
+                <!-- SPACED REPETITION SECTION -->
+                <section id="spaced-repetition">
+                    <h2>Spaced Repetition System</h2>
+
+                    <h3>Overview</h3>
+                    <p>Katja implements the SuperMemo-2 (SM-2) algorithm for optimally scheduling grammar correction reviews.</p>
+
+                    <h3>SM-2 Algorithm</h3>
+                    <p>The algorithm adjusts review intervals based on your performance:</p>
+
+                    <h4>Parameters</h4>
+                    <ul>
+                        <li><strong>EF (Easiness Factor):</strong> Starts at 2.5</li>
+                        <li><strong>Interval:</strong> Days until next review</li>
+                        <li><strong>Repetitions:</strong> Number of successful reviews</li>
+                    </ul>
+
+                    <h4>Review Outcomes</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Outcome</th>
+                                <th>Quality</th>
+                                <th>Effect</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Again</strong></td>
+                                <td>0</td>
+                                <td>Reset interval to 1 day</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hard</strong></td>
+                                <td>3</td>
+                                <td>Slightly increase interval, reduce EF</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Good</strong></td>
+                                <td>4</td>
+                                <td>Normal interval increase</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Easy</strong></td>
+                                <td>5</td>
+                                <td>Large interval increase, increase EF</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Interval Calculation</h3>
+                    <pre><code>if quality < 3:
+    # Failed - reset
+    interval = 1
+    repetitions = 0
+else:
+    if repetitions == 0:
+        interval = 1
+    elif repetitions == 1:
+        interval = 6
+    else:
+        interval = previous_interval * EF
+
+    # Update EF
+    EF = EF + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+    if EF < 1.3:
+        EF = 1.3
+
+    repetitions += 1</code></pre>
+
+                    <h3>Review Workflow</h3>
+                    <ol>
+                        <li>Navigate to Reviews page (<code>/reviews</code>)</li>
+                        <li>View corrections due for review</li>
+                        <li>For each correction:
+                            <ul>
+                                <li>See original text</li>
+                                <li>Recall correct version</li>
+                                <li>Rate difficulty: Again, Hard, Good, Easy</li>
+                            </ul>
+                        </li>
+                        <li>Next review scheduled automatically</li>
+                    </ol>
+
+                    <div class="alert info">
+                        <strong>🧠 Optimal Learning:</strong> The SM-2 algorithm is scientifically proven to maximize long-term retention while minimizing study time.
+                    </div>
+                </section>
+
+                <!-- SESSION MANAGEMENT SECTION -->
+                <section id="session-management">
+                    <h2>Session Management</h2>
+
+                    <h3>Overview</h3>
+                    <p>Katja uses unique session IDs to isolate conversations across different browser tabs and chat modes.</p>
+
+                    <h3>Session ID Generation</h3>
+                    <pre><code>// Frontend (localStorage)
+const sessionId = localStorage.getItem('sessionId') || generateUUID();
+localStorage.setItem('sessionId', sessionId);</code></pre>
+
+                    <h3>Session Isolation</h3>
+                    <ul>
+                        <li><strong>Per Browser Tab:</strong> Each tab gets unique session ID</li>
+                        <li><strong>Persistent:</strong> Survives page refreshes</li>
+                        <li><strong>Mode-Specific:</strong> Language learning vs general chat have separate histories</li>
+                        <li><strong>Database Storage:</strong> All sessions stored in SQLite</li>
+                    </ul>
+
+                    <h3>Conversation Context</h3>
+                    <p>Each API call includes session history for context-aware responses:</p>
+                    <pre><code>POST /katja/chat
+{
+  "session_id": "550e8400-e29b-41d4-a716-446655440000",
+  "language": "german",
+  "text": "Wie geht es dir?"
+}
+
+Backend loads history:
+SELECT * FROM conversation_history
+WHERE session_id = ?
+ORDER BY timestamp DESC
+LIMIT 10</code></pre>
+
+                    <h3>Clearing Sessions</h3>
+                    <p>Each mode has a clear button to reset conversation:</p>
+                    <pre><code>DELETE /katja/clear?session_id={sessionId}
+
+# Deletes all conversation history for this session</code></pre>
+
+                    <div class="alert info">
+                        <strong>🔒 Privacy:</strong> Session IDs are generated client-side and stored in browser localStorage. No cross-session data leakage.
+                    </div>
+                </section>
+
+                <!-- API OVERVIEW SECTION -->
+                <section id="api-overview">
+                    <h2>API Reference Overview</h2>
+
+                    <h3>Base URL</h3>
+                    <pre><code>http://localhost:8000</code></pre>
+
+                    <h3>Authentication</h3>
+                    <p>No authentication required for local development. CORS origins configured in <code>.env</code> file.</p>
+
+                    <h3>Response Format</h3>
+                    <p>All responses are JSON:</p>
+                    <pre><code>{
+  "reply": "Assistant response",
+  "correction": {
+    "corrected": "Corrected text",
+    "explanation": "Explanation",
+    "pattern": "pattern_id",
+    "severity": "major"
+  }
+}</code></pre>
+
+                    <h3>Error Handling</h3>
+                    <pre><code>{
+  "detail": "Error message",
+  "type": "error_type"
+}</code></pre>
+
+                    <h3>Common HTTP Status Codes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>200</td>
+                                <td>OK - Request successful</td>
+                            </tr>
+                            <tr>
+                                <td>400</td>
+                                <td>Bad Request - Invalid input</td>
+                            </tr>
+                            <tr>
+                                <td>500</td>
+                                <td>Internal Server Error - LLM or database error</td>
+                            </tr>
+                            <tr>
+                                <td>503</td>
+                                <td>Service Unavailable - Ollama not running</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Rate Limiting</h3>
+                    <p>Implemented via SlowAPI:</p>
+                    <ul>
+                        <li><strong>Default:</strong> 60 requests per minute per IP</li>
+                        <li><strong>Configurable:</strong> Adjust in backend code</li>
+                    </ul>
+                </section>
+
+                <!-- API CHAT SECTION -->
+                <section id="api-chat">
+                    <h2>Chat API</h2>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/katja/chat</span>
+                        <p class="endpoint-description">Language learning chat with grammar correction</p>
+                        <p><strong>Source:</strong> <code>backend/routers/teacher.py</code></p>
+                        <pre><code># Request
+{
+  "session_id": "550e8400-e29b-41d4-a716-446655440000",
+  "language": "german",
+  "text": "Ich gehe in der Park"
+}
+
+# Response
+{
+  "reply": "In den Park! Du meinst 'Ich gehe in den Park'.",
+  "correction": {
+    "corrected": "Ich gehe in den Park",
+    "explanation": "Nach 'in' mit Bewegungsrichtung steht der Akkusativ",
+    "pattern": "de_case_accusative",
+    "severity": "major"
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/katja/generic-chat</span>
+                        <p class="endpoint-description">General/Legal/Medical chat</p>
+                        <p><strong>Source:</strong> <code>backend/routers/teacher.py</code></p>
+                        <pre><code># Request
+{
+  "session_id": "550e8400-e29b-41d4-a716-446655440000",
+  "text": "What is the quadratic formula?",
+  "model": "llama3:8b-instruct-q4_K_M"
+}
+
+# Response
+{
+  "reply": "The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/katja/clear</span>
+                        <p class="endpoint-description">Clear language learning conversation history</p>
+                        <pre><code>DELETE /katja/clear?session_id=550e8400-e29b-41d4-a716-446655440000
+
+Response: { "status": "cleared" }</code></pre>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/katja/generic-chat/clear</span>
+                        <p class="endpoint-description">Clear generic chat history</p>
+                        <pre><code>DELETE /katja/generic-chat/clear?session_id=550e8400-e29b-41d4-a716-446655440000
+
+Response: { "status": "cleared" }</code></pre>
+                    </div>
+                </section>
+
+                <!-- API MODELS SECTION -->
+                <section id="api-models">
+                    <h2>Models API</h2>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/katja/models</span>
+                        <p class="endpoint-description">List all available Ollama models</p>
+                        <p><strong>Source:</strong> <code>backend/routers/system.py</code></p>
+                        <pre><code># Response
+{
+  "models": [
+    "llama3:8b-instruct-q4_K_M",
+    "qwen2:7b",
+    "glm4",
+    "saul-instruct-v1:Q4_K_M",
+    "meditron-7b",
+    "biomistral-7b"
+  ]
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/katja/system/models</span>
+                        <p class="endpoint-description">List models with metadata</p>
+                        <pre><code># Response
+{
+  "models": [
+    {
+      "name": "llama3:8b-instruct-q4_K_M",
+      "size": "4.9GB",
+      "modified": "2025-10-15T10:30:00Z"
+    }
+  ]
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/katja/system/models/select</span>
+                        <p class="endpoint-description">Switch active model</p>
+                        <pre><code># Request
+{
+  "model": "qwen2:7b"
+}
+
+# Response
+{
+  "status": "model_selected",
+  "model": "qwen2:7b"
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- API CONSOLE SECTION -->
+                <section id="api-console">
+                    <h2>Console API</h2>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/katja/console/history</span>
+                        <p class="endpoint-description">Get conversation history for console</p>
+                        <p><strong>Source:</strong> <code>backend/routers/system.py</code></p>
+                        <pre><code># Query Parameters
+?type=language  # language | general | all
+?limit=100
+
+# Response
+{
+  "history": [
+    {
+      "timestamp": "2025-11-10T17:30:15Z",
+      "type": "language",
+      "model": "llama3:8b-instruct-q4_K_M",
+      "user_message": "Zdravo",
+      "assistant_reply": "Živjo! Kako si?",
+      "correction": null
+    }
+  ]
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/katja/system/logs</span>
+                        <p class="endpoint-description">Stream backend logs (real-time)</p>
+                        <pre><code>GET /katja/system/logs
+
+# Streaming response (Server-Sent Events)
+data: [2025-11-10 17:30:15] INFO: Chat request received
+data: [2025-11-10 17:30:16] INFO: Using model llama3:8b-instruct-q4_K_M
+data: [2025-11-10 17:30:18] INFO: Response generated successfully</code></pre>
+                    </div>
+                </section>
+
+                <!-- DATABASE SCHEMA SECTION -->
+                <section id="database-schema">
+                    <h2>Database Schema</h2>
+
+                    <h3>Overview</h3>
+                    <p>Katja uses SQLite with WAL (Write-Ahead Logging) mode for better concurrency. Database auto-initializes on first startup.</p>
+
+                    <h3>Tables</h3>
+
+                    <h4>user_profile</h4>
+                    <pre><code>CREATE TABLE user_profile (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT UNIQUE NOT NULL,
+  current_language TEXT DEFAULT 'english',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  total_corrections INTEGER DEFAULT 0,
+  total_conversations INTEGER DEFAULT 0
+);</code></pre>
+
+                    <h4>conversation_history</h4>
+                    <pre><code>CREATE TABLE conversation_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT NOT NULL,
+  language TEXT NOT NULL,
+  user_message TEXT NOT NULL,
+  assistant_reply TEXT NOT NULL,
+  original_text TEXT,
+  corrected_text TEXT,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (session_id) REFERENCES user_profile(session_id)
+);</code></pre>
+
+                    <h4>grammar_corrections</h4>
+                    <pre><code>CREATE TABLE grammar_corrections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT NOT NULL,
+  language TEXT NOT NULL,
+  original TEXT NOT NULL,
+  corrected TEXT NOT NULL,
+  explanation TEXT,
+  pattern_id TEXT,
+  severity TEXT,
+  next_review_date DATE,
+  easiness_factor REAL DEFAULT 2.5,
+  interval INTEGER DEFAULT 0,
+  repetitions INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (session_id) REFERENCES user_profile(session_id),
+  FOREIGN KEY (pattern_id) REFERENCES grammar_patterns(pattern_id)
+);</code></pre>
+
+                    <h4>grammar_patterns</h4>
+                    <pre><code>CREATE TABLE grammar_patterns (
+  pattern_id TEXT PRIMARY KEY,
+  language TEXT NOT NULL,
+  category TEXT,
+  rule TEXT NOT NULL,
+  example TEXT,
+  difficulty TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+                    <h4>generic_conversations</h4>
+                    <pre><code>CREATE TABLE generic_conversations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT NOT NULL,
+  role TEXT NOT NULL,  -- 'user' or 'assistant'
+  content TEXT NOT NULL,
+  model_used TEXT,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+                    <h3>Indexes</h3>
+                    <pre><code>CREATE INDEX idx_corrections_session ON grammar_corrections(session_id);
+CREATE INDEX idx_corrections_review ON grammar_corrections(next_review_date);
+CREATE INDEX idx_conversations_session ON conversation_history(session_id);
+CREATE INDEX idx_generic_session ON generic_conversations(session_id);</code></pre>
+
+                    <h3>WAL Mode</h3>
+                    <p>Enabled for better concurrency (multiple reads during writes):</p>
+                    <pre><code>PRAGMA journal_mode = WAL;</code></pre>
+
+                    <div class="alert info">
+                        <strong>📊 Database Location:</strong> <code>backend/data/katja.db</code> (auto-created, not tracked in git)
+                    </div>
+                </section>
+
+                <!-- MODEL SELECTION SECTION -->
+                <section id="model-selection">
+                    <h2>Model Selection Guide</h2>
+
+                    <h3>Recommended Models by Use Case</h3>
+
+                    <h4>Language Learning</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Size</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>llama3:8b-instruct-q4_K_M</td>
+                                <td>4.9GB</td>
+                                <td>European languages, grammar accuracy</td>
+                            </tr>
+                            <tr>
+                                <td>qwen2:7b</td>
+                                <td>4.4GB</td>
+                                <td>Multi-lingual, Asian languages</td>
+                            </tr>
+                            <tr>
+                                <td>glm4</td>
+                                <td>9.4GB</td>
+                                <td>Best multi-lingual support</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>General Chat</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Size</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>llama3:8b-instruct-q4_K_M</td>
+                                <td>4.9GB</td>
+                                <td>General knowledge, coding</td>
+                            </tr>
+                            <tr>
+                                <td>gemma2:9b</td>
+                                <td>5.4GB</td>
+                                <td>Technical discussions</td>
+                            </tr>
+                            <tr>
+                                <td>qwen2:7b</td>
+                                <td>4.4GB</td>
+                                <td>Math, science</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Legal Chat</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Size</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>adrienbrault/saul-instruct-v1:Q4_K_M</td>
+                                <td>4.1GB</td>
+                                <td><strong>REQUIRED</strong> - English law specialist</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Medical Chat</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Size</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>meditron-7b</td>
+                                <td>4.1GB</td>
+                                <td>Maritime medical guidance</td>
+                            </tr>
+                            <tr>
+                                <td>biomistral-7b</td>
+                                <td>4.1GB</td>
+                                <td>Biomedical terminology</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Model Installation</h3>
+                    <pre><code># Pull specific model
+ollama pull llama3:8b-instruct-q4_K_M
+
+# List installed models
+ollama list
+
+# Remove model
+ollama rm model-name</code></pre>
+
+                    <h3>Model Performance</h3>
+                    <p>Approximate inference speed on typical hardware (16GB RAM, CPU only):</p>
+                    <ul>
+                        <li><strong>4GB models:</strong> ~20-30 tokens/sec</li>
+                        <li><strong>7GB models:</strong> ~15-25 tokens/sec</li>
+                        <li><strong>9GB models:</strong> ~10-20 tokens/sec</li>
+                    </ul>
+
+                    <div class="alert warning">
+                        <strong>⚠️ GPU Acceleration:</strong> For faster inference, install Ollama with GPU support (CUDA for NVIDIA, ROCm for AMD).
+                    </div>
+                </section>
+
+                <!-- CUSTOMIZATION SECTION -->
+                <section id="customization">
+                    <h2>Customization & Configuration</h2>
+
+                    <h3>System Prompt Customization</h3>
+                    <p>Navigate to Settings page (<code>/settings</code>) to customize system prompts for each mode:</p>
+
+                    <h4>Features</h4>
+                    <ul>
+                        <li><strong>Live Editor:</strong> Monaco-style textarea for editing</li>
+                        <li><strong>Browser Storage:</strong> Changes saved to localStorage</li>
+                        <li><strong>Reset to Defaults:</strong> Restore original prompts</li>
+                        <li><strong>Preview:</strong> See formatted prompt before saving</li>
+                        <li><strong>Instant Effect:</strong> Changes apply on next message</li>
+                    </ul>
+
+                    <h4>Customization Tips</h4>
+                    <ul>
+                        <li>Adjust tone (formal/casual)</li>
+                        <li>Add domain-specific knowledge</li>
+                        <li>Change output format preferences</li>
+                        <li>Include LaTeX notation guidance</li>
+                    </ul>
+
+                    <h3>Environment Variables</h3>
+                    <p>Configurable in <code>backend/.env</code>:</p>
+                    <pre><code># LLM Provider
+LLM_PROVIDER=local  # local | openai
+
+# Ollama Configuration
+OLLAMA_MODEL=llama3:8b-instruct-q4_K_M
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_TIMEOUT=300  # seconds
+
+# OpenAI Fallback (optional)
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+
+# CORS
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+
+# Database
+DATABASE_PATH=./data/katja.db
+
+# Logging
+LOG_LEVEL=INFO  # DEBUG | INFO | WARNING | ERROR</code></pre>
+
+                    <h3>Frontend Configuration</h3>
+                    <p>Edit <code>frontend/config/systemPrompts.ts</code> for default prompts:</p>
+                    <pre><code>export const DEFAULT_PROMPTS = {
+  languageLearning: "You are a friendly language teacher...",
+  general: "You are a helpful AI assistant...",
+  legal: "You are a legal expert specializing in English common law...",
+  medical: "You are a maritime medical advisor..."
+};</code></pre>
+
+                    <h3>Port Configuration</h3>
+                    <pre><code># Frontend (package.json)
+"scripts": {
+  "dev": "next dev -p 3000"
+}
+
+# Backend (uvicorn command)
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload</code></pre>
+
+                    <div class="alert info">
+                        <strong>🔧 Advanced Customization:</strong> All prompts, models, and configurations are fully customizable for your specific use case.
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <div class="docs-footer-content">
+            <p>&copy; 2025 Katja. All rights reserved.</p>
+            <p>
+                <a href="https://quantcoder-fs.com">Website</a> •
+                <a href="https://github.com/SL-Mar/Katja" target="_blank">GitHub</a> •
+                <a href="../contact.html">Contact</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
