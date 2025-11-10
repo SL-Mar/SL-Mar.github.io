@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Fundamentals - Technical Documentation</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h1 {
+            font-size: 1.5rem;
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #60a5fa;
+        }
+
+        .sidebar .version {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav > ul > li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .sidebar nav a:hover {
+            background: #334155;
+            color: #60a5fa;
+        }
+
+        .sidebar nav .subsection {
+            padding-left: 1rem;
+        }
+
+        .sidebar nav .subsection a {
+            font-size: 0.875rem;
+            padding: 0.375rem 1.5rem;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 3rem;
+            max-width: 900px;
+        }
+
+        .content section {
+            margin-bottom: 4rem;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        .content h3 {
+            font-size: 1.5rem;
+            color: #334155;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .content h4 {
+            font-size: 1.25rem;
+            color: #475569;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code Blocks */
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #dc2626;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+            color: #1e293b;
+        }
+
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .badge.new {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge.beta {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge.experimental {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+        }
+
+        .alert.info {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .alert.warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .alert.success {
+            background: #dcfce7;
+            border-color: #10b981;
+            color: #166534;
+        }
+
+        /* Screenshots Placeholder */
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            color: white;
+            margin: 1.5rem 0;
+            border: 2px dashed rgba(255,255,255,0.3);
+        }
+
+        .screenshot-placeholder p {
+            font-size: 1.125rem;
+            margin: 0;
+        }
+
+        /* API Endpoint Cards */
+        .endpoint {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+        }
+
+        .method-get {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .method-post {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .method-put {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .method-delete {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .endpoint-path {
+            font-family: monospace;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .endpoint-description {
+            margin-top: 0.75rem;
+            color: #475569;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feature-card h4 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+
+        .feature-card ul {
+            padding-left: 1.25rem;
+            margin-bottom: 0;
+        }
+
+        /* Scrollbar Styling */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h1>Chat with Fundamentals</h1>
+            <div class="version">Version 2.0.0 | November 2024</div>
+            <nav>
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#philosophy">Project Philosophy</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
+                    <li>
+                        <a href="#installation">Installation & Setup</a>
+                        <ul class="subsection">
+                            <li><a href="#prerequisites">Prerequisites</a></li>
+                            <li><a href="#deployment">Deployment</a></li>
+                            <li><a href="#configuration">Configuration</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#features">Core Features</a>
+                        <ul class="subsection">
+                            <li><a href="#stock-analysis">Stock Analysis</a></li>
+                            <li><a href="#portfolio-management">Portfolio Management</a></li>
+                            <li><a href="#database-management">Database Management</a></li>
+                            <li><a href="#ai-analysis">AI-Powered Analysis</a></li>
+                            <li><a href="#research-rag">Research RAG Systems</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#api-reference">API Reference</a>
+                        <ul class="subsection">
+                            <li><a href="#api-portfolios">Portfolio APIs</a></li>
+                            <li><a href="#api-analysis">Analysis APIs</a></li>
+                            <li><a href="#api-data">Data APIs</a></li>
+                            <li><a href="#api-database">Database APIs</a></li>
+                            <li><a href="#api-rag">RAG APIs</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#tech-stack">Technology Stack</a></li>
+                    <li><a href="#data-sources">Data Sources</a></li>
+                    <li><a href="#security">Security & Authentication</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Overview Section -->
+            <section id="overview">
+                <h2>Overview</h2>
+                <p><strong>Chat with Fundamentals</strong> is a full-stack financial research and portfolio management platform that combines AI-powered fundamental analysis with advanced quantitative portfolio optimization.</p>
+
+                <p>Built with <strong>CrewAI</strong>, <strong>LangChain</strong>, <strong>FastAPI</strong>, <strong>Next.js</strong>, <strong>PostgreSQL</strong>, <strong>Redis</strong>, and <strong>EODHD APIs</strong> for comprehensive market data.</p>
+
+                <div class="screenshot-placeholder">
+                    <p>📊 Application Overview Screenshot</p>
+                </div>
+
+                <div class="alert info">
+                    <strong>Note:</strong> This is a research engine, not a SaaS platform. It is designed to be local-first and tailored to user needs through continuous refinement of AI and quantitative workflows.
+                </div>
+            </section>
+
+            <!-- Philosophy Section -->
+            <section id="philosophy">
+                <h2>Project Philosophy</h2>
+                <p>Chat with Fundamentals is designed as a <strong>research engine</strong> to explore how autonomous agents and AI can automate and enhance financial analysis and portfolio management.</p>
+
+                <h3>Core Principles</h3>
+                <ul>
+                    <li><strong>Modularity:</strong> Workflows, agents, and portfolio tools are designed independently for maximum flexibility</li>
+                    <li><strong>Reproducibility:</strong> All steps (query, fetch, summarize, optimize) are transparent, logged, and testable</li>
+                    <li><strong>Minimal Overhead:</strong> Lightweight backend with PostgreSQL + Redis for high performance</li>
+                    <li><strong>User Ownership:</strong> Users bring their own API keys (OpenAI, EODHD) - no vendor lock-in</li>
+                    <li><strong>Shares-Based Management:</strong> Real-world portfolio tracking with integer share quantities</li>
+                    <li><strong>Local-First:</strong> All LLM interactions and data are logged locally for reproducibility</li>
+                </ul>
+
+                <div class="screenshot-placeholder">
+                    <p>🎯 Philosophy Diagram: Research Engine Architecture</p>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture">
+                <h2>Architecture</h2>
+                <p>Chat with Fundamentals follows a modern, microservices-inspired architecture with clear separation of concerns.</p>
+
+                <h3>System Components</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Frontend Layer</h4>
+                        <ul>
+                            <li>Next.js 13+ (React)</li>
+                            <li>TypeScript</li>
+                            <li>Tailwind CSS</li>
+                            <li>Recharts visualization</li>
+                            <li>WebSocket real-time updates</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Backend Layer</h4>
+                        <ul>
+                            <li>FastAPI (Python 3.10+)</li>
+                            <li>SQLAlchemy ORM</li>
+                            <li>Async/await patterns</li>
+                            <li>Rate limiting (SlowAPI)</li>
+                            <li>API key authentication</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Data Layer</h4>
+                        <ul>
+                            <li>PostgreSQL (main database)</li>
+                            <li>TimescaleDB (time-series)</li>
+                            <li>Redis (caching)</li>
+                            <li>SQLite (portfolios)</li>
+                            <li>ChromaDB (vector search)</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>AI Layer</h4>
+                        <ul>
+                            <li>CrewAI (agent orchestration)</li>
+                            <li>LangChain (LLM integration)</li>
+                            <li>OpenAI GPT-4</li>
+                            <li>gpt-researcher</li>
+                            <li>RAG pipelines</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Backend Architecture</h3>
+                <p>The backend is organized into modular routers, each handling specific domains:</p>
+
+                <pre><code>backend/
+├── routers/               # API route handlers
+│   ├── portfolios.py      # Portfolio CRUD & optimization
+│   ├── ai_analysis.py     # MarketSense AI analysis
+│   ├── database_stats.py  # Database monitoring
+│   ├── quant_research.py  # Quant research RAG
+│   ├── sec_filings.py     # SEC filings RAG
+│   ├── pair_trading.py    # Pair trading analysis
+│   ├── analyzer.py        # Fundamental analysis
+│   ├── quantanalyzer.py   # Quantitative analytics
+│   ├── simulater.py       # Monte Carlo simulation
+│   ├── technical.py       # Technical indicators
+│   ├── historical.py      # Price data
+│   ├── intraday.py        # Intraday data
+│   ├── news.py            # News & sentiment
+│   ├── calendar.py        # Earnings/events
+│   ├── macro.py           # Macroeconomic data
+│   └── ...
+├── services/              # Business logic
+│   ├── data_service.py    # Data fetching
+│   ├── redis_cache.py     # Cache management
+│   ├── marketsense.py     # AI analysis engine
+│   ├── quant_research_rag_service.py
+│   └── sec_rag_service.py
+├── agents/                # CrewAI agents
+├── database/              # Database models & schemas
+├── tools/                 # External API clients
+│   └── eodhd_client/      # EODHD comprehensive client
+└── workflows/             # Agent workflows</code></pre>
+
+                <div class="screenshot-placeholder">
+                    <p>🏗️ Architecture Diagram: System Components Flow</p>
+                </div>
+            </section>
+
+            <!-- Installation Section -->
+            <section id="installation">
+                <h2>Installation & Setup</h2>
+
+                <h3 id="prerequisites">Prerequisites</h3>
+                <ul>
+                    <li><strong>Python 3.10+</strong> - Backend runtime</li>
+                    <li><strong>Node.js 18+</strong> - Frontend development</li>
+                    <li><strong>Docker & Docker Compose</strong> - For PostgreSQL and Redis</li>
+                    <li><strong>EODHD API Key</strong> - Free tier available at <a href="https://eodhd.com">eodhd.com</a></li>
+                    <li><strong>OpenAI API Key</strong> - For AI-powered features</li>
+                </ul>
+
+                <h3 id="deployment">Deployment</h3>
+
+                <h4>Linux/macOS</h4>
+                <pre><code># 1. Deploy dependencies
+bash deploy.sh
+
+# 2. Start database services
+docker-compose up -d
+
+# 3. Configure environment
+cp .env.model .env
+# Edit .env with your API keys</code></pre>
+
+                <h4>Windows</h4>
+                <pre><code>REM 1. Deploy dependencies
+deploy.bat
+
+REM 2. Start database services
+docker-compose up -d
+
+REM 3. Configure environment
+copy .env.model .env
+REM Edit .env with your API keys</code></pre>
+
+                <h3 id="configuration">Configuration</h3>
+                <p>Edit the <code>.env</code> file with your credentials:</p>
+
+                <pre><code># API Keys
+OPENAI_API_KEY=your-openai-key-here
+EODHD_API_KEY=your-eodhd-key-here
+
+# LLM Configuration
+MODEL_NAME=gpt-4o
+
+# Database
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/chatfundamentals
+
+# Redis
+REDIS_URL=redis://localhost:6379/0
+
+# Application Security (optional for dev)
+APP_API_KEY=your-secure-api-key-here</code></pre>
+
+                <div class="alert warning">
+                    <strong>Security Note:</strong> Set <code>APP_API_KEY</code> for production deployment. Without it, the application runs in development mode with no authentication.
+                </div>
+
+                <h3>Launch Application</h3>
+                <pre><code># Linux/macOS
+bash launch.sh
+
+# Windows
+launch.bat</code></pre>
+
+                <p>These scripts will:</p>
+                <ul>
+                    <li>Open the project in VS Code</li>
+                    <li>Start the frontend at <code>http://localhost:3000</code></li>
+                    <li>Start the backend at <code>http://localhost:8000</code></li>
+                    <li>Open both interfaces in your browser</li>
+                </ul>
+
+                <h3>Access Points</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>URL</th>
+                            <th>Credentials</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Frontend</td>
+                            <td><code>http://localhost:3000</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Backend API Docs</td>
+                            <td><code>http://localhost:8000/docs</code></td>
+                            <td>API Key (if set)</td>
+                        </tr>
+                        <tr>
+                            <td>pgAdmin</td>
+                            <td><code>http://localhost:5050</code></td>
+                            <td>admin@admin.com / admin</td>
+                        </tr>
+                        <tr>
+                            <td>Redis Commander</td>
+                            <td><code>http://localhost:8081</code></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features">
+                <h2>Core Features</h2>
+
+                <h3 id="stock-analysis">Stock Analysis & Research</h3>
+                <p>Comprehensive fundamental and quantitative analysis powered by AI agents and extensive market data.</p>
+
+                <h4>Single-Ticker Analysis</h4>
+                <p>Example query: <em>"Is TSLA a good buy?"</em></p>
+
+                <div class="screenshot-placeholder">
+                    <p>📈 Single Ticker Analysis Screenshot</p>
+                </div>
+
+                <p><strong>Analysis includes:</strong></p>
+                <ul>
+                    <li>AI-generated executive summary</li>
+                    <li>Latest fundamental metrics (P/E, EPS, Revenue, etc.)</li>
+                    <li>Recent news with sentiment analysis</li>
+                    <li>TradingView-style financial charts</li>
+                    <li>Monte Carlo simulation of future price paths</li>
+                    <li>Value at Risk (VaR) estimation</li>
+                    <li>Daily returns distribution analysis</li>
+                    <li>Beta correlation vs. benchmark</li>
+                    <li>3-year cumulative returns comparison</li>
+                </ul>
+
+                <h4>Comparative Analysis</h4>
+                <p>Example query: <em>"Compare TSLA and AMZN"</em></p>
+
+                <div class="screenshot-placeholder">
+                    <p>📊 Comparative Analysis Screenshot</p>
+                </div>
+
+                <p><strong>Comparison features:</strong></p>
+                <ul>
+                    <li>Side-by-side fundamental metrics</li>
+                    <li>Relative performance charts</li>
+                    <li>News sentiment comparison</li>
+                    <li>Valuation multiples comparison</li>
+                    <li>Risk-adjusted returns analysis</li>
+                </ul>
+
+                <h3 id="portfolio-management">Portfolio Management</h3>
+                <span class="badge new">New Feature</span>
+                <p>Advanced portfolio management with share-based tracking and multiple optimization strategies.</p>
+
+                <div class="screenshot-placeholder">
+                    <p>💼 Portfolio Management Dashboard Screenshot</p>
+                </div>
+
+                <h4>Portfolio Operations</h4>
+                <ul>
+                    <li><strong>Create portfolios</strong> with custom names and descriptions</li>
+                    <li><strong>Add stocks</strong> by ticker with integer share quantities</li>
+                    <li><strong>Update shares</strong> dynamically as positions change</li>
+                    <li><strong>Remove holdings</strong> from portfolio</li>
+                    <li><strong>View all portfolios</strong> with summary statistics</li>
+                </ul>
+
+                <h4>Optimization Strategies</h4>
+                <p>File reference: <code>backend/routers/portfolios.py</code></p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Strategy</th>
+                            <th>Description</th>
+                            <th>Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Actual Portfolio</strong></td>
+                            <td>Track performance based on your real share quantities</td>
+                            <td>Current holdings tracking</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Equal Weight</strong></td>
+                            <td>Equal dollar allocation across all holdings</td>
+                            <td>Baseline comparison</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mean-Variance (MVO)</strong></td>
+                            <td>Maximize Sharpe ratio using historical returns</td>
+                            <td>Risk-adjusted optimization</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Minimum Variance</strong></td>
+                            <td>Minimize portfolio volatility</td>
+                            <td>Conservative risk management</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Black-Litterman</strong></td>
+                            <td>Bayesian approach combining market equilibrium with investor views</td>
+                            <td>Sophisticated institutional approach</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Performance Metrics</h4>
+                <ul>
+                    <li><strong>Total Return</strong> - Percentage gain/loss over period</li>
+                    <li><strong>Annualized Return</strong> - Expected yearly return (252 trading days)</li>
+                    <li><strong>Volatility</strong> - Annualized standard deviation</li>
+                    <li><strong>Sharpe Ratio</strong> - Risk-adjusted return (0% risk-free rate)</li>
+                    <li><strong>Max Drawdown</strong> - Largest peak-to-trough decline</li>
+                    <li><strong>Rolling Sharpe (20d, 60d)</strong> - Time-varying risk-adjusted performance</li>
+                </ul>
+
+                <div class="screenshot-placeholder">
+                    <p>📉 Portfolio Performance Metrics Screenshot</p>
+                </div>
+
+                <h4>Risk Analysis</h4>
+                <p><strong>Monte Carlo Simulation</strong></p>
+                <ul>
+                    <li>1000+ simulated price paths</li>
+                    <li>User-defined time horizon (default: 252 days)</li>
+                    <li>5th and 95th percentile confidence bounds</li>
+                    <li>Visual confidence intervals</li>
+                </ul>
+
+                <p><strong>Value at Risk (VaR)</strong></p>
+                <ul>
+                    <li>95% confidence level</li>
+                    <li>Historical VaR (empirical distribution)</li>
+                    <li>Parametric VaR (normal distribution assumption)</li>
+                    <li>Conditional VaR / Expected Shortfall (CVaR)</li>
+                </ul>
+
+                <div class="screenshot-placeholder">
+                    <p>⚠️ Risk Analysis Dashboard Screenshot</p>
+                </div>
+
+                <h3 id="database-management">Database Management</h3>
+                <span class="badge new">New Feature</span>
+                <p>Comprehensive database management interface for viewing, monitoring, and populating market data.</p>
+
+                <div class="screenshot-placeholder">
+                    <p>💾 Database Manager Screenshot</p>
+                </div>
+
+                <h4>Database Overview</h4>
+                <p>File reference: <code>backend/routers/database_stats.py</code></p>
+
+                <p>The system manages three databases:</p>
+                <ul>
+                    <li><strong>Main Database (TimescaleDB):</strong> Fundamentals, daily prices, news, dividends, analyst ratings</li>
+                    <li><strong>Intraday Database (TimescaleDB):</strong> Minute-level OHLCV data (1m, 5m, 1h granularities)</li>
+                    <li><strong>Portfolios Database (SQLite):</strong> User portfolios and holdings</li>
+                </ul>
+
+                <h4>Database Statistics</h4>
+                <p>Real-time statistics for each database:</p>
+                <ul>
+                    <li>Total assets (tickers) tracked</li>
+                    <li>Total records stored</li>
+                    <li>Date range coverage (from/to)</li>
+                    <li>Database size on disk</li>
+                    <li>Record counts by category (fundamentals, prices, news, etc.)</li>
+                </ul>
+
+                <h4>Dataset Population</h4>
+                <p>File reference: <code>backend/routers/dataset_populate.py</code></p>
+
+                <p>Populate databases with:</p>
+                <ul>
+                    <li><strong>ETF Constituents:</strong> Automatically populate from SPY, QQQ, DIA, IWM, etc.</li>
+                    <li><strong>Index Constituents:</strong> S&P 500, NASDAQ 100, Dow Jones, Russell 2000</li>
+                    <li><strong>Manual Tickers:</strong> Add individual tickers or comma-separated lists</li>
+                    <li><strong>Asset Types:</strong> Stocks, ETFs, Forex pairs</li>
+                </ul>
+
+                <p><strong>Data Types Populated:</strong></p>
+                <ul>
+                    <li>Company metadata (name, sector, industry, market cap)</li>
+                    <li>Daily OHLCV data (historical prices)</li>
+                    <li>Fundamentals (financial metrics) - stocks only</li>
+                    <li>News articles with sentiment analysis</li>
+                </ul>
+
+                <div class="alert info">
+                    <strong>Note:</strong> Fundamentals are only available for stocks, not ETFs or Forex pairs due to EODHD API limitations.
+                </div>
+
+                <h3 id="ai-analysis">AI-Powered Analysis (MarketSense)</h3>
+                <span class="badge new">New Feature</span>
+                <p>Multi-agent AI system for comprehensive market analysis across all asset types.</p>
+
+                <p>File reference: <code>backend/routers/ai_analysis.py</code>, <code>backend/services/marketsense.py</code></p>
+
+                <div class="screenshot-placeholder">
+                    <p>🤖 AI Analysis Console Screenshot</p>
+                </div>
+
+                <h4>MarketSense AI Capabilities</h4>
+                <ul>
+                    <li><strong>Stock Analysis:</strong> Fundamental analysis with multi-agent collaboration</li>
+                    <li><strong>ETF Analysis:</strong> Holdings analysis, sector allocation, expense ratios</li>
+                    <li><strong>Forex Analysis:</strong> Currency pair analysis with macroeconomic context</li>
+                    <li><strong>Macro Indicators:</strong> Economic indicator interpretation and forecasting</li>
+                </ul>
+
+                <h4>Agent Architecture</h4>
+                <p>MarketSense uses specialized AI agents:</p>
+                <ul>
+                    <li><strong>Data Agent:</strong> Fetches and validates market data</li>
+                    <li><strong>Fundamental Agent:</strong> Analyzes financial metrics and ratios</li>
+                    <li><strong>News Agent:</strong> Analyzes sentiment and recent developments</li>
+                    <li><strong>Technical Agent:</strong> Chart patterns and technical indicators</li>
+                    <li><strong>Synthesis Agent:</strong> Combines insights into final recommendation</li>
+                </ul>
+
+                <p><strong>Real-Time Agent Console:</strong> WebSocket-based live logging of agent execution and reasoning.</p>
+
+                <div class="screenshot-placeholder">
+                    <p>🔍 Agent Console - Live Execution Screenshot</p>
+                </div>
+
+                <h3 id="research-rag">Research RAG Systems</h3>
+                <span class="badge new">New Feature</span>
+                <p>Retrieval-Augmented Generation (RAG) systems for querying research papers and SEC filings.</p>
+
+                <h4>Quantitative Research RAG</h4>
+                <p>File reference: <code>backend/routers/quant_research.py</code>, <code>backend/services/quant_research_rag_service.py</code></p>
+
+                <div class="screenshot-placeholder">
+                    <p>📚 Quant Research RAG Screenshot</p>
+                </div>
+
+                <p><strong>Features:</strong></p>
+                <ul>
+                    <li>Upload and index PDF research papers</li>
+                    <li>Semantic search across indexed documents</li>
+                    <li>Question-answering with source citations</li>
+                    <li>Metadata filtering (category, year, tags)</li>
+                    <li>Document statistics and inventory</li>
+                </ul>
+
+                <p><strong>Categories:</strong> Strategy, Risk Management, Portfolio Optimization, General</p>
+
+                <h4>SEC Filings RAG</h4>
+                <p>File reference: <code>backend/routers/sec_filings.py</code>, <code>backend/services/sec_rag_service.py</code></p>
+
+                <div class="screenshot-placeholder">
+                    <p>📄 SEC Filings RAG Screenshot</p>
+                </div>
+
+                <p><strong>Features:</strong></p>
+                <ul>
+                    <li>Automatic download from SEC EDGAR</li>
+                    <li>Parsing and chunking of 10-K, 10-Q, 8-K filings</li>
+                    <li>Vector embedding and semantic search</li>
+                    <li>Question-answering over company filings</li>
+                    <li>Item-specific search (MD&A, Risk Factors, etc.)</li>
+                </ul>
+
+                <p><strong>Supported Filing Types:</strong> 10-K, 10-Q, 8-K, DEF 14A, S-1</p>
+            </section>
+
+            <!-- API Reference Section -->
+            <section id="api-reference">
+                <h2>API Reference</h2>
+                <p>Complete reference for all backend API endpoints. All endpoints require API key authentication (except health checks) when <code>APP_API_KEY</code> is set.</p>
+
+                <div class="alert info">
+                    <strong>Authentication:</strong> Include <code>X-API-Key</code> header with your API key for all requests.
+                </div>
+
+                <h3 id="api-portfolios">Portfolio APIs</h3>
+                <p>File reference: <code>backend/routers/portfolios.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/portfolios</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Create a new portfolio
+                        <pre><code>{
+  "name": "Tech Growth",
+  "description": "High-growth tech stocks"
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/portfolios</span>
+                    </div>
+                    <div class="endpoint-description">List all portfolios with summary statistics</div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/portfolios/{id}</span>
+                    </div>
+                    <div class="endpoint-description">Get portfolio details including all holdings</div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-put">PUT</span>
+                        <span class="endpoint-path">/api/portfolios/{id}</span>
+                    </div>
+                    <div class="endpoint-description">Update portfolio name or description</div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/api/portfolios/{id}</span>
+                    </div>
+                    <div class="endpoint-description">Delete a portfolio</div>
+                </div>
+
+                <h4>Portfolio Stock Operations</h4>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/portfolios/{id}/stocks</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Add stock to portfolio
+                        <pre><code>{
+  "ticker": "AAPL",
+  "shares": 10
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/api/portfolios/{id}/stocks/{stock_id}</span>
+                    </div>
+                    <div class="endpoint-description">Remove stock from portfolio</div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-put">PUT</span>
+                        <span class="endpoint-path">/api/portfolios/{id}/shares</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Update share quantities for multiple stocks
+                        <pre><code>{
+  "shares": {
+    "AAPL": 15,
+    "MSFT": 20,
+    "GOOGL": 5
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h4>Portfolio Analysis</h4>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/portfolios/{id}/analysis/actual</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Analyze actual portfolio performance based on current share quantities
+                        <br><strong>Query params:</strong> <code>lookback_days</code> (default: 252)
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/portfolios/{id}/analysis/equal-weight</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Analyze equal-weight allocation strategy
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/portfolios/{id}/analysis/optimized</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Optimize portfolio allocation
+                        <br><strong>Query params:</strong> <code>method</code> (mvo | min_variance | black_litterman)
+                    </div>
+                </div>
+
+                <h4>Portfolio Risk Analysis</h4>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/portfolios/{id}/monte-carlo</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Run Monte Carlo simulation
+                        <br><strong>Query params:</strong> <code>num_simulations</code> (default: 1000), <code>time_horizon</code> (default: 252)
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/portfolios/{id}/var</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Calculate Value at Risk (VaR) and Conditional VaR
+                        <br><strong>Query params:</strong> <code>confidence_level</code> (default: 0.95)
+                    </div>
+                </div>
+
+                <h4>Portfolio Utilities</h4>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/portfolios/weights-to-shares</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Convert portfolio weights to share quantities
+                        <pre><code>{
+  "weights": {"AAPL": 0.4, "MSFT": 0.3, "GOOGL": 0.3},
+  "portfolio_value": 10000
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3 id="api-analysis">Analysis APIs</h3>
+
+                <h4>AI Analysis (MarketSense)</h4>
+                <p>File reference: <code>backend/routers/ai_analysis.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/v2/stocks/{ticker}/ai-analysis</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Run comprehensive AI analysis on a stock
+                        <br><strong>Response:</strong> Multi-agent analysis with recommendation
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/v2/etfs/{ticker}/ai-analysis</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Run AI analysis on an ETF (holdings, allocations, expense ratios)
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/v2/forex/{pair}/ai-analysis</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Run AI analysis on a forex pair (e.g., EURUSD.FOREX)
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/v2/macro/{indicator}/ai-analysis</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Analyze macroeconomic indicator (e.g., GDP, inflation)
+                    </div>
+                </div>
+
+                <h4>Quantitative Analysis</h4>
+                <p>File reference: <code>backend/routers/quantanalyzer.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/equity/simulate</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Monte Carlo simulation for single stock
+                        <br><strong>Query params:</strong> <code>ticker</code>, <code>horizon</code> (default: 20)
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/equity/returns</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Daily returns and beta analysis vs benchmark
+                        <br><strong>Query params:</strong> <code>ticker</code>, <code>years</code> (default: 3), <code>benchmark</code> (default: SPY)
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/equity/cumret</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Cumulative returns comparison
+                        <br><strong>Query params:</strong> <code>ticker</code>, <code>years</code> (default: 5), <code>benchmark</code> (default: SPY)
+                    </div>
+                </div>
+
+                <h4>Pair Trading Analysis</h4>
+                <p>File reference: <code>backend/routers/pair_trading.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/pair-trading/analyze</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Analyze pair trading opportunity between two stocks
+                        <pre><code>{
+  "ticker1": "AAPL",
+  "ticker2": "MSFT",
+  "lookback_days": 252
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3 id="api-data">Data APIs</h3>
+
+                <h4>Historical Data</h4>
+                <p>File reference: <code>backend/routers/historical.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/historical/eod/{ticker}</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Get end-of-day historical prices
+                        <br><strong>Query params:</strong> <code>from_date</code>, <code>to_date</code>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/historical/live/{ticker}</span>
+                    </div>
+                    <div class="endpoint-description">Get live/real-time price quote</div>
+                </div>
+
+                <h4>Intraday Data</h4>
+                <p>File reference: <code>backend/routers/intraday.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/intraday/{ticker}</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Get intraday OHLCV data
+                        <br><strong>Query params:</strong> <code>interval</code> (1m | 5m | 1h), <code>from_date</code>, <code>to_date</code>
+                    </div>
+                </div>
+
+                <h4>News & Sentiment</h4>
+                <p>File reference: <code>backend/routers/news.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/news/{ticker}</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Get news articles for ticker with sentiment
+                        <br><strong>Query params:</strong> <code>limit</code> (default: 10)
+                    </div>
+                </div>
+
+                <h4>Calendar Events</h4>
+                <p>File reference: <code>backend/routers/calendar.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/calendar/earnings</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Get earnings calendar
+                        <br><strong>Query params:</strong> <code>from_date</code>, <code>to_date</code>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/calendar/ipos</span>
+                    </div>
+                    <div class="endpoint-description">Get upcoming IPOs calendar</div>
+                </div>
+
+                <h4>Macroeconomic Data</h4>
+                <p>File reference: <code>backend/routers/macro.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/macro/{indicator}</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Get macroeconomic indicator data
+                        <br><strong>Examples:</strong> GDP, inflation, unemployment, interest rates
+                    </div>
+                </div>
+
+                <h4>Technical Indicators</h4>
+                <p>File reference: <code>backend/routers/technical.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/technical/{ticker}/{indicator}</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Calculate technical indicator
+                        <br><strong>Indicators:</strong> RSI, MACD, SMA, EMA, Bollinger Bands, etc.
+                        <br><strong>Query params:</strong> <code>period</code>, <code>from_date</code>, <code>to_date</code>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/technical/screener</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Stock screener with filters
+                        <pre><code>{
+  "filters": [
+    "market_capitalization > 10000000000",
+    "pe_ratio < 30"
+  ],
+  "limit": 20
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3 id="api-database">Database APIs</h3>
+                <p>File reference: <code>backend/routers/database_stats.py</code>, <code>backend/routers/database_inventory.py</code>, <code>backend/routers/dataset_populate.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/v2/database/stats</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Get comprehensive database statistics (all databases)
+                        <br><strong>Returns:</strong> Record counts, date ranges, size metrics
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/v2/database/inventory</span>
+                    </div>
+                    <div class="endpoint-description">
+                        List all tickers in database with metadata
+                        <br><strong>Query params:</strong> <code>asset_type</code> (stock | etf | forex)
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/v2/database/populate</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Populate database with tickers
+                        <pre><code>{
+  "source": "etf_constituents" | "manual_tickers",
+  "etf_ticker": "SPY",  // for ETF constituents
+  "tickers": ["AAPL", "MSFT"],  // for manual
+  "include_fundamentals": true,
+  "include_prices": true,
+  "include_news": true
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3 id="api-rag">RAG APIs</h3>
+
+                <h4>Quant Research RAG</h4>
+                <p>File reference: <code>backend/routers/quant_research.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/quant-research/upload</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Upload and index a research PDF
+                        <br><strong>Form data:</strong> file, title, authors, year, category, tags
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/quant-research/search</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Search indexed research documents
+                        <pre><code>{
+  "query": "momentum strategies",
+  "k": 5,
+  "category": "strategy",
+  "year_min": 2020
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/quant-research/qa</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Question-answering over research documents (RAG)
+                        <br><strong>Returns:</strong> AI-generated answer with source citations
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/quant-research/documents</span>
+                    </div>
+                    <div class="endpoint-description">List all indexed research documents</div>
+                </div>
+
+                <h4>SEC Filings RAG</h4>
+                <p>File reference: <code>backend/routers/sec_filings.py</code></p>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/sec-filings/index</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Download and index SEC filings for a company
+                        <pre><code>{
+  "ticker": "AAPL",
+  "filing_types": ["10-K", "10-Q"],
+  "limit_per_type": 3
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/sec-filings/search</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Search indexed filings
+                        <pre><code>{
+  "ticker": "AAPL",
+  "query": "revenue growth",
+  "k": 5,
+  "filing_type": "10-K"
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div>
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/sec-filings/qa</span>
+                    </div>
+                    <div class="endpoint-description">
+                        Question-answering over SEC filings (RAG)
+                        <br><strong>Returns:</strong> AI-generated answer with filing citations
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tech Stack Section -->
+            <section id="tech-stack">
+                <h2>Technology Stack</h2>
+
+                <h3>Backend Technologies</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Technology</th>
+                            <th>Version</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Python</td>
+                            <td>3.10+</td>
+                            <td>Core runtime</td>
+                        </tr>
+                        <tr>
+                            <td>FastAPI</td>
+                            <td>Latest</td>
+                            <td>Web framework</td>
+                        </tr>
+                        <tr>
+                            <td>SQLAlchemy</td>
+                            <td>2.0+</td>
+                            <td>ORM for PostgreSQL</td>
+                        </tr>
+                        <tr>
+                            <td>Redis</td>
+                            <td>Latest</td>
+                            <td>Caching layer</td>
+                        </tr>
+                        <tr>
+                            <td>CrewAI</td>
+                            <td>1.3.0</td>
+                            <td>Agent orchestration</td>
+                        </tr>
+                        <tr>
+                            <td>LangChain</td>
+                            <td>0.2.x</td>
+                            <td>LLM integration</td>
+                        </tr>
+                        <tr>
+                            <td>PyPortfolioOpt</td>
+                            <td>Latest</td>
+                            <td>Portfolio optimization</td>
+                        </tr>
+                        <tr>
+                            <td>NumPy/Pandas</td>
+                            <td>Latest</td>
+                            <td>Numerical computing</td>
+                        </tr>
+                        <tr>
+                            <td>Pydantic</td>
+                            <td>2.0+</td>
+                            <td>Data validation</td>
+                        </tr>
+                        <tr>
+                            <td>gpt-researcher</td>
+                            <td>0.10.11</td>
+                            <td>Deep research</td>
+                        </tr>
+                        <tr>
+                            <td>ChromaDB</td>
+                            <td>Latest</td>
+                            <td>Vector database</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Frontend Technologies</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Technology</th>
+                            <th>Version</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Next.js</td>
+                            <td>13+</td>
+                            <td>React framework</td>
+                        </tr>
+                        <tr>
+                            <td>TypeScript</td>
+                            <td>5.x</td>
+                            <td>Type-safe JavaScript</td>
+                        </tr>
+                        <tr>
+                            <td>Tailwind CSS</td>
+                            <td>3.x</td>
+                            <td>Utility-first styling</td>
+                        </tr>
+                        <tr>
+                            <td>Recharts</td>
+                            <td>Latest</td>
+                            <td>Data visualization</td>
+                        </tr>
+                        <tr>
+                            <td>Font Awesome</td>
+                            <td>Latest</td>
+                            <td>Icons</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Data & Infrastructure</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Technology</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PostgreSQL</td>
+                            <td>Main relational database</td>
+                        </tr>
+                        <tr>
+                            <td>TimescaleDB</td>
+                            <td>Time-series data (prices, intraday)</td>
+                        </tr>
+                        <tr>
+                            <td>SQLite</td>
+                            <td>Portfolios database</td>
+                        </tr>
+                        <tr>
+                            <td>Redis</td>
+                            <td>In-memory cache</td>
+                        </tr>
+                        <tr>
+                            <td>ChromaDB</td>
+                            <td>Vector embeddings (RAG)</td>
+                        </tr>
+                        <tr>
+                            <td>Docker Compose</td>
+                            <td>Container orchestration</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Data Sources Section -->
+            <section id="data-sources">
+                <h2>Data Sources</h2>
+
+                <h3>EODHD Financial APIs</h3>
+                <p>Chat with Fundamentals integrates with <strong>EODHD.com</strong> - a comprehensive financial data provider covering 60+ global exchanges.</p>
+
+                <div class="alert info">
+                    <strong>Free Tier Available:</strong> EODHD offers a generous free tier for personal use. Sign up at <a href="https://eodhd.com">eodhd.com</a>
+                </div>
+
+                <h4>EODHD API Coverage (50+ Endpoints)</h4>
+                <p>File reference: <code>backend/tools/eodhd_client/</code></p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Endpoints</th>
+                            <th>Data Available</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Historical Data</strong></td>
+                            <td>8 endpoints</td>
+                            <td>EOD prices, intraday (1m/5m/1h), live quotes, tick data, options</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fundamental Data</strong></td>
+                            <td>6 endpoints</td>
+                            <td>Company fundamentals, earnings calendars, insider transactions, bonds, crypto</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Exchange Data</strong></td>
+                            <td>4 endpoints</td>
+                            <td>60+ exchanges, symbol search, trading hours, holidays</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Corporate Actions</strong></td>
+                            <td>3 endpoints</td>
+                            <td>Dividends, splits, bulk downloads</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Technical Analysis</strong></td>
+                            <td>2 endpoints</td>
+                            <td>30+ indicators (RSI, MACD, Bollinger Bands), stock screener</td>
+                        </tr>
+                        <tr>
+                            <td><strong>News & Sentiment</strong></td>
+                            <td>3 endpoints</td>
+                            <td>Financial news, sentiment analysis, social media mentions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Special Data</strong></td>
+                            <td>5 endpoints</td>
+                            <td>ETF holdings, ESG scores, analyst ratings, company logos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Macro Data</strong></td>
+                            <td>2 endpoints</td>
+                            <td>Economic indicators (GDP, inflation), economic calendar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Account API</strong></td>
+                            <td>1 endpoint</td>
+                            <td>Usage tracking, API limits</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Quick Start - EODHD Client</h4>
+                <pre><code>from backend.tools.eodhd_client import EODHDClient
+
+client = EODHDClient()  # Uses EODHD_API_KEY env var
+
+# Get historical data
+eod = client.historical.get_eod("AAPL.US", from_date="2024-01-01")
+
+# Get live price
+live = client.historical.get_live_price("TSLA.US")
+
+# Get fundamentals
+fundamentals = client.fundamental.get_fundamentals("AAPL.US")
+
+# Get news
+news = client.news.get_news("AAPL", limit=10)
+
+# Technical indicators
+rsi = client.technical.get_technical_indicator("AAPL.US", "rsi", period=14)
+
+# Screen stocks
+stocks = client.technical.screen_stocks(
+    filters=["market_capitalization>10000000000", "pe_ratio<30"],
+    limit=20
+)</code></pre>
+
+                <h3>OpenAI GPT-4</h3>
+                <p>AI-powered features use OpenAI's GPT-4 for:</p>
+                <ul>
+                    <li>Multi-agent analysis (MarketSense)</li>
+                    <li>Research paper question-answering (RAG)</li>
+                    <li>SEC filings interpretation</li>
+                    <li>Portfolio recommendations</li>
+                </ul>
+            </section>
+
+            <!-- Security Section -->
+            <section id="security">
+                <h2>Security & Authentication</h2>
+
+                <h3>API Key Authentication</h3>
+                <p>File reference: <code>backend/core/auth.py</code></p>
+
+                <p>All API endpoints (except health checks) require authentication when <code>APP_API_KEY</code> is set in environment variables.</p>
+
+                <div class="alert warning">
+                    <strong>Development Mode:</strong> If <code>APP_API_KEY</code> is not set, the application runs without authentication. This is suitable for local development only.
+                </div>
+
+                <h4>Authentication Flow</h4>
+                <ol>
+                    <li>Set <code>APP_API_KEY</code> environment variable</li>
+                    <li>Include <code>X-API-Key</code> header in all requests</li>
+                    <li>Backend validates key before processing request</li>
+                    <li>Invalid/missing keys return 401 Unauthorized</li>
+                </ol>
+
+                <pre><code>// Frontend API call example
+fetch('http://localhost:8000/api/portfolios', {
+  headers: {
+    'X-API-Key': 'your-api-key-here',
+    'Content-Type': 'application/json'
+  }
+})</code></pre>
+
+                <h3>Rate Limiting</h3>
+                <p>API endpoints implement rate limiting to prevent abuse:</p>
+                <ul>
+                    <li><strong>Default limit:</strong> Configured per-endpoint</li>
+                    <li><strong>Implementation:</strong> SlowAPI library</li>
+                    <li><strong>Scope:</strong> Per IP address</li>
+                </ul>
+
+                <h3>Input Validation</h3>
+                <p>File reference: <code>backend/core/validation.py</code></p>
+                <ul>
+                    <li><strong>Ticker validation:</strong> Format and exchange checks</li>
+                    <li><strong>Request size limits:</strong> 10MB maximum payload</li>
+                    <li><strong>SQL injection prevention:</strong> Parameterized queries via SQLAlchemy</li>
+                    <li><strong>Path traversal protection:</strong> File access sanitization</li>
+                </ul>
+
+                <h3>CORS Configuration</h3>
+                <p>CORS is configured for local development and production:</p>
+                <pre><code>ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001</code></pre>
+
+                <h3>WebSocket Authentication</h3>
+                <p>WebSocket endpoints (Agent Console) require token-based authentication passed as query parameter:</p>
+                <pre><code>ws://localhost:8000/api/v2/ws/agent-console?token=your-api-key</code></pre>
+            </section>
+
+            <!-- Roadmap Section -->
+            <section id="roadmap">
+                <h2>Roadmap</h2>
+
+                <h3>Short-term (Q1 2025)</h3>
+                <ul>
+                    <li>✅ Portfolio Management System (shares-based tracking)</li>
+                    <li>✅ MarketSense AI multi-agent analysis</li>
+                    <li>✅ Database management interface</li>
+                    <li>✅ SEC Filings RAG system</li>
+                    <li>✅ Quant Research RAG system</li>
+                    <li>🔄 Harmonize ticker formats (AAPL → AAPL.US)</li>
+                    <li>🔄 SmolaGents integration for autonomous alpha extraction</li>
+                    <li>📋 Efficient frontier visualization</li>
+                    <li>📋 Factor analysis (Fama-French)</li>
+                    <li>📋 Tax-loss harvesting optimization</li>
+                </ul>
+
+                <h3>Medium-term (Q2-Q3 2025)</h3>
+                <ul>
+                    <li>Multi-asset class support (bonds, commodities, crypto)</li>
+                    <li>Options portfolio management</li>
+                    <li>Backtesting framework</li>
+                    <li>Strategy templates and presets</li>
+                    <li>Export to CSV/Excel</li>
+                    <li>Volatility cones and regime detection</li>
+                    <li>Calendar heatmaps of returns</li>
+                    <li>Macro indicators country comparisons</li>
+                </ul>
+
+                <h3>Long-term (Q4 2025+)</h3>
+                <ul>
+                    <li>Mobile app (React Native)</li>
+                    <li>Real-time portfolio tracking</li>
+                    <li>Social features (share portfolios, strategies)</li>
+                    <li>Machine learning price predictions</li>
+                    <li>Enhanced sentiment analysis</li>
+                    <li>Multi-user support with authentication</li>
+                    <li>Cloud deployment options</li>
+                </ul>
+
+                <div class="screenshot-placeholder">
+                    <p>🗺️ Roadmap Visualization</p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <section style="border-top: 2px solid #e2e8f0; padding-top: 2rem; margin-top: 4rem;">
+                <h2>Author & Support</h2>
+                <p><strong>S.M. Laignel</strong><br>
+                Founder of <strong>SL MAR</strong> consultancy<br>
+                Quant Developer — modular automation for research workflows in quantitative finance.</p>
+
+                <p>
+                🌐 <a href="https://quantcoderfs.substack.com">Substack — QuantCoderFS R&D</a><br>
+                💻 <a href="https://github.com/sl-mar/chat-with-fundamentals">GitHub Repository</a><br>
+                📧 Email: contact@quantcoderfs.com
+                </p>
+
+                <div class="alert info">
+                    <strong>Disclaimer:</strong> This application is provided solely for informational and educational purposes. Nothing contained within should be construed as financial advice. Users are solely responsible for their own investment decisions. Past performance is not indicative of future results. All investments carry risk, including the potential loss of principal.
+                </div>
+
+                <p style="text-align: center; margin-top: 2rem; color: #64748b;">
+                    <strong>Chat with Fundamentals</strong> — Version 2.0.0 | November 2024<br>
+                    Licensed under Apache License 2.0
+                </p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
