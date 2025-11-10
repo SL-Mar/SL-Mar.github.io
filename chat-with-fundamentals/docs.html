@@ -43,7 +43,7 @@
                 <div class="sidebar-title">Core Features</div>
                 <ul class="sidebar-menu">
                     <li><a href="#portfolio-management"><i class="fas fa-briefcase"></i> Portfolio Management</a></li>
-                    <li><a href="#marketsense-ai"><i class="fas fa-robot"></i> MarketSense AI</a></li>
+                    <li><a href="#ai-analysis"><i class="fas fa-robot"></i> AI Analysis</a></li>
                     <li><a href="#rag-systems"><i class="fas fa-brain"></i> RAG Systems</a></li>
                     <li><a href="#database-management"><i class="fas fa-database"></i> Database Management</a></li>
                     <li><a href="#data-api"><i class="fas fa-cloud-download-alt"></i> EODHD Data API</a></li>
@@ -55,7 +55,7 @@
                 <ul class="sidebar-menu">
                     <li><a href="#api-overview"><i class="fas fa-book"></i> API Overview</a></li>
                     <li><a href="#api-portfolio"><i class="fas fa-wallet"></i> Portfolio API</a></li>
-                    <li><a href="#api-marketsense"><i class="fas fa-chart-line"></i> MarketSense API</a></li>
+                    <li><a href="#api-ai-analysis"><i class="fas fa-chart-line"></i> AI Analysis API</a></li>
                     <li><a href="#api-rag"><i class="fas fa-file-alt"></i> RAG API</a></li>
                     <li><a href="#api-database"><i class="fas fa-table"></i> Database API</a></li>
                     <li><a href="#api-eodhd"><i class="fas fa-exchange-alt"></i> EODHD API</a></li>
@@ -75,7 +75,6 @@
             <div class="sidebar-section">
                 <div class="sidebar-title">Resources</div>
                 <ul class="sidebar-menu">
-                    <li><a href="https://arxiv.org/abs/2401.03737" target="_blank"><i class="fas fa-file-pdf"></i> MarketSense AI Paper</a></li>
                     <li><a href="../contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
                 </ul>
             </div>
@@ -100,7 +99,7 @@
                     <p>Chat with Fundamentals is a full-stack financial research and portfolio management platform designed to automate and enhance financial analysis through AI-powered tools. The platform features:</p>
 
                     <ul>
-                        <li><strong>Multi-Agent MarketSense AI:</strong> Autonomous agents for analyzing stocks, ETFs, forex, and macro indicators</li>
+                        <li><strong>Multi-Agent AI Analysis:</strong> Autonomous agents for analyzing stocks, ETFs, forex, and macro indicators</li>
                         <li><strong>Portfolio Management:</strong> Shares-based tracking with 5 optimization strategies (Actual, Equal Weight, MVO, Min Variance, Black-Litterman)</li>
                         <li><strong>RAG Systems:</strong> Retrieval-Augmented Generation for quant research papers and SEC filings</li>
                         <li><strong>Comprehensive Data Integration:</strong> 50+ EODHD API endpoints across 9 categories</li>
@@ -122,7 +121,7 @@
                         </div>
 
                         <div class="feature-card">
-                            <h4><i class="fas fa-robot"></i> MarketSense AI</h4>
+                            <h4><i class="fas fa-robot"></i> AI Analysis</h4>
                             <ul>
                                 <li>4 specialized agents (fundamentals, news, price, macro)</li>
                                 <li>BUY/HOLD/SELL recommendations</li>
@@ -611,14 +610,14 @@ where:
                     <img src="assets/images/cwf_sharpe.png" alt="Sharpe Ratio Analysis" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
                 </section>
 
-                <!-- MARKETSENSE AI SECTION -->
-                <section id="marketsense-ai">
-                    <h2>MarketSense AI</h2>
+                <!-- AI ANALYSIS SECTION -->
+                <section id="ai-analysis">
+                    <h2>AI Analysis</h2>
 
-                    <img src="assets/images/cwf_ai_analysis.png" alt="MarketSense AI Analysis" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
+                    <img src="assets/images/cwf_ai_analysis.png" alt="AI Analysis" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
 
                     <h3>Overview</h3>
-                    <p>MarketSense AI is a multi-agent system built with CrewAI that provides comprehensive stock analysis through four specialized agents. Based on the research paper "MarketSense AI: A Multi-Agent Framework for Stock Analysis" (arXiv:2401.03737).</p>
+                    <p>The AI Analysis module is a multi-agent system built with CrewAI that provides comprehensive stock analysis through four specialized agents. Inspired by multi-agent frameworks for financial analysis.</p>
 
                     <h3>Agent Architecture</h3>
 
@@ -684,8 +683,8 @@ where:
 
                     <div class="endpoint">
                         <span class="endpoint-method method-post">POST</span>
-                        <span class="endpoint-path">/api/marketsense/analyze</span>
-                        <p class="endpoint-description">Run MarketSense AI analysis on a symbol</p>
+                        <span class="endpoint-path">/api/ai-analysis/analyze</span>
+                        <p class="endpoint-description">Run AI analysis on a symbol</p>
                         <p><strong>Source:</strong> <code>backend/app/api/marketsense.py:34-112</code></p>
                         <pre><code># Request
 {
@@ -714,7 +713,7 @@ where:
 
                     <div class="endpoint">
                         <span class="endpoint-method method-get">GET</span>
-                        <span class="endpoint-path">/api/marketsense/ws</span>
+                        <span class="endpoint-path">/api/ai-analysis/ws</span>
                         <p class="endpoint-description">WebSocket endpoint for real-time agent console</p>
                         <p><strong>Source:</strong> <code>backend/app/api/websocket.py:23-67</code></p>
                         <pre><code># WebSocket Messages
@@ -1336,27 +1335,27 @@ where:
                     <img src="assets/images/cwf_pair_trading.png" alt="Pair Trading Analysis" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 2rem 0;">
                 </section>
 
-                <!-- MARKETSENSE API SECTION -->
-                <section id="api-marketsense">
-                    <h2>MarketSense API</h2>
+                <!-- AI ANALYSIS API SECTION -->
+                <section id="api-ai-analysis">
+                    <h2>AI Analysis API</h2>
 
                     <div class="endpoint">
                         <span class="endpoint-method method-post">POST</span>
-                        <span class="endpoint-path">/api/marketsense/analyze</span>
-                        <p class="endpoint-description">Run MarketSense AI analysis</p>
+                        <span class="endpoint-path">/api/ai-analysis/analyze</span>
+                        <p class="endpoint-description">Run AI analysis</p>
                         <p><strong>Source:</strong> <code>backend/app/api/marketsense.py:34-112</code></p>
                     </div>
 
                     <div class="endpoint">
                         <span class="endpoint-method method-get">GET</span>
-                        <span class="endpoint-path">/api/marketsense/history/{symbol}</span>
+                        <span class="endpoint-path">/api/ai-analysis/history/{symbol}</span>
                         <p class="endpoint-description">Get historical analyses for a symbol</p>
                         <p><strong>Source:</strong> <code>backend/app/api/marketsense.py:114-156</code></p>
                     </div>
 
                     <div class="endpoint">
                         <span class="endpoint-method method-get">GET</span>
-                        <span class="endpoint-path">/api/marketsense/ws</span>
+                        <span class="endpoint-path">/api/ai-analysis/ws</span>
                         <p class="endpoint-description">WebSocket endpoint for agent console</p>
                         <p><strong>Source:</strong> <code>backend/app/api/websocket.py:23-67</code></p>
                     </div>
@@ -1526,7 +1525,7 @@ where:
                     <h2>CrewAI Agent Framework</h2>
 
                     <h3>Overview</h3>
-                    <p>Chat with Fundamentals uses CrewAI for multi-agent orchestration in the MarketSense AI system. CrewAI provides role-based agent collaboration with task delegation and tool sharing.</p>
+                    <p>Chat with Fundamentals uses CrewAI for multi-agent orchestration in the AI Analysis system. CrewAI provides role-based agent collaboration with task delegation and tool sharing.</p>
 
                     <h3>Agent Configuration</h3>
 
@@ -1718,8 +1717,8 @@ SELECT create_hypertable('price_history', 'time');</code></pre>
   INDEX idx_news_symbol_date (symbol, published_at)
 )</code></pre>
 
-                    <h4>MarketSense Analyses</h4>
-                    <pre><code>marketsense_analyses (
+                    <h4>AI Analyses</h4>
+                    <pre><code>ai_analyses (
   id SERIAL PRIMARY KEY,
   symbol VARCHAR(20) NOT NULL,
   analysis_type VARCHAR(50),  -- stock | etf | forex | macro
@@ -1960,8 +1959,7 @@ def find_diversification_opportunities(corr_matrix, threshold=0.3):
             <p>&copy; 2025 Chat with Fundamentals. All rights reserved.</p>
             <p>
                 <a href="https://quantcoder-fs.com">Website</a> •
-                <a href="../contact.html">Contact</a> •
-                <a href="https://arxiv.org/abs/2401.03737" target="_blank">MarketSense AI Paper</a>
+                <a href="../contact.html">Contact</a>
             </p>
         </div>
     </footer>
