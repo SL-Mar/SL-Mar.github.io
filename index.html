@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <meta name="description" content="Sebastien M. Laignel - AI for Quantitative Finance and Maritime Applications">
+    <meta name="description" content="Sebastien M. Laignel - Maritime and Market Consultancy">
     <title>Sebastien M. Laignel</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,13 +13,12 @@
         <div class="container nav-container">
             <div class="nav-left">
                 <img src="logo.png" alt="SL Mar Logo" class="nav-logo" />
-                <a href="index.html" class="logo">SL Mar - AI for Maritime and Quant Finance</a>
+                <a href="index.html" class="logo">SL Mar - Maritime and Market Consultancy</a>
             </div>
             <ul class="nav-center">
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="publications.html">Publications</a></li>
                 <li><a href="development.html">Development</a></li>
-                <li><a href="n8n-automation.html">n8n Automation</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </div>
@@ -27,7 +26,7 @@
 
     <section class="hero">
         <div class="container">
-            <h1>Maritime and AI Consultancy</h1>
+            <h1>Maritime and Market Consultancy</h1>
             <p>
                 Building AI-powered tools for algorithmic trading, quantitative research automation,
                 and maritime applications. Shipmaster and software developer focused on practical
@@ -50,19 +49,32 @@
         <div class="container">
             <h2>Projects</h2>
             <div class="cards">
-                <a href="development.html" style="text-decoration: none; color: inherit; display: flex;">
+                <a href="https://github.com/SL-Mar/windmar" target="_blank" style="text-decoration: none; color: inherit; display: flex;">
                     <div class="card" style="display: flex; flex-direction: column; width: 100%;">
-                        <h3>QuantCoderFS</h3>
+                        <h3>Windmar</h3>
                         <p style="flex-grow: 1;">
-                            Unified quantitative research platform combining AI-powered equity research and algorithmic strategy generation.
-                            Features multi-agent stock analysis with BUY/HOLD/SELL signals, and automated conversion of academic papers
-                            into QuantConnect trading algorithms.
+                            Maritime route optimization for MR product tankers. Weather-aware A* routing,
+                            physics-based vessel modeling, and fuel consumption minimization across real ocean conditions.
                         </p>
                         <div class="tech">
-                            <span>Next.js</span>
+                            <span>Python</span>
                             <span>FastAPI</span>
-                            <span>OpenAI</span>
-                            <span>QuantConnect</span>
+                            <span>Next.js</span>
+                            <span>Docker</span>
+                        </div>
+                    </div>
+                </a>
+                <a href="https://github.com/SL-Mar/quantcoder" target="_blank" style="text-decoration: none; color: inherit; display: flex;">
+                    <div class="card" style="display: flex; flex-direction: column; width: 100%;">
+                        <h3>QuantCoder</h3>
+                        <p style="flex-grow: 1;">
+                            AI-powered CLI for generating QuantConnect trading algorithms from research articles.
+                            Multi-agent architecture with interactive chat for strategy development and backtesting.
+                        </p>
+                        <div class="tech">
+                            <span>Python</span>
+                            <span>Click</span>
+                            <span>QuantConnect API</span>
                         </div>
                     </div>
                 </a>
@@ -70,9 +82,8 @@
                     <div class="card" style="display: flex; flex-direction: column; width: 100%;">
                         <h3>Chat with Fundamentals</h3>
                         <p style="flex-grow: 1;">
-                            Full-stack financial research and portfolio management platform combining AI-powered fundamental analysis
-                            with advanced quantitative portfolio optimization. Features multi-agent AI analysis, shares-based portfolio
-                            tracking, RAG systems for quant research and SEC filings, and 50+ EODHD API endpoints for comprehensive market data.
+                            Full-stack financial research platform with multi-agent AI analysis, portfolio optimization,
+                            and SEC filings RAG. Combines autonomous agents with 50+ EODHD API endpoints for comprehensive market data.
                         </p>
                         <div class="tech">
                             <span>Next.js</span>
@@ -83,35 +94,18 @@
                         </div>
                     </div>
                 </a>
-                <a href="chat-with-solas.html" style="text-decoration: none; color: inherit; display: flex;">
+                <a href="https://github.com/SL-Mar/MarChat" target="_blank" style="text-decoration: none; color: inherit; display: flex;">
                     <div class="card" style="display: flex; flex-direction: column; width: 100%;">
-                        <h3>Chat with SOLAS</h3>
+                        <h3>MarChat</h3>
                         <p style="flex-grow: 1;">
-                            RAG-powered knowledge management system for maritime regulations and conventions including
-                            SOLAS, MARPOL, STCW, and other IMO regulations. Features PDF document indexing, semantic
-                            search, inline PDF viewer, and citation-backed answers to regulatory questions.
-                        </p>
-                        <div class="tech">
-                            <span>TypeScript</span>
-                            <span>FastAPI</span>
-                            <span>Qdrant</span>
-                            <span>OpenAI</span>
-                        </div>
-                    </div>
-                </a>
-                <a href="katja/docs.html" style="text-decoration: none; color: inherit; display: flex;">
-                    <div class="card" style="display: flex; flex-direction: column; width: 100%;">
-                        <h3>Katja</h3>
-                        <p style="flex-grow: 1;">
-                            Multi-mode AI chat platform with 5 specialized modes: language learning (7 European languages with grammar correction),
-                            general chat, legal reasoning (Saul-7B), medical queries (Meditron/BioMistral), and console monitoring.
-                            Built with local-first privacy using Ollama for offline-capable AI inference.
+                            Maritime shipboard AI assistant with RAG over regulations, multi-mode chat,
+                            and pre-arrival form auto-fill. Local-first inference via Ollama with hybrid search over maritime conventions.
                         </p>
                         <div class="tech">
                             <span>Next.js</span>
                             <span>FastAPI</span>
+                            <span>Qdrant</span>
                             <span>Ollama</span>
-                            <span>SQLite</span>
                         </div>
                     </div>
                 </a>
@@ -122,9 +116,9 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 SL Mar</p>
-            <p>AI for Maritime & Quant Finance</p>
-            <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions légales</a></p>
+            <p>&copy; 2026 SL Mar</p>
+            <p>Maritime and Market Consultancy</p>
+            <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions l&eacute;gales</a></p>
         </div>
     </footer>
 </body>
