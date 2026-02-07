@@ -35,205 +35,75 @@
 
     <section>
         <div class="container">
-            <article class="project">
-                <div class="project-header">
-                    <div>
-                        <h3>QuantCoder</h3>
-                        <p>AI-powered CLI for generating QuantConnect trading algorithms</p>
+            <div class="cards">
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h3>QuantCoder</h3>
+                    <p style="flex-grow: 1;">
+                        AI-powered CLI that converts research articles into QuantConnect trading algorithms.
+                        Multi-agent architecture with interactive chat for strategy development.
+                    </p>
+                    <div class="tech">
+                        <span>Python</span>
+                        <span>Click</span>
+                        <span>QuantConnect API</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <a href="quantcoder/docs.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Docs</a>
+                        <a href="https://github.com/SL-Mar/quantcoder" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">GitHub</a>
                     </div>
                 </div>
-                <div class="project-meta">
-                    <span>Python</span>
-                    <span>Click</span>
-                    <span>QuantConnect API</span>
-                    <span>Last updated: February 2026</span>
-                </div>
-                <p>
-                    QuantCoder is a command-line tool that converts academic research articles into executable
-                    QuantConnect trading algorithms. It uses a multi-agent AI architecture to extract strategy logic
-                    from papers, generate Python code, compile against the QuantConnect API, and iterate on errors
-                    automatically. Includes an interactive chat mode for strategy refinement.
-                </p>
-                <p><strong>Key Features:</strong></p>
-                <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                    <li>Research paper to trading algorithm conversion</li>
-                    <li>Multi-agent architecture (extractor, coder, compiler, fixer)</li>
-                    <li>Interactive chat for strategy development and backtesting</li>
-                    <li>QuantConnect API integration (compile, backtest, deploy)</li>
-                    <li>Support for multiple LLM providers (OpenAI, Anthropic, Ollama)</li>
-                </ul>
-                <div class="tech">
-                    <span>Python</span>
-                    <span>Click</span>
-                    <span>QuantConnect API</span>
-                    <span>LangChain</span>
-                    <span>Rich</span>
-                </div>
-                <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-                    <a href="quantcoder/docs.html" class="btn btn-primary">
-                        <i class="fa-solid fa-book" style="width: 18px; height: 18px;"></i>
-                        View Documentation
-                    </a>
-                    <a href="https://github.com/SL-Mar/quantcoder" target="_blank" class="btn btn-primary">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        View on GitHub
-                    </a>
-                </div>
-            </article>
-
-            <article class="project">
-                <div class="project-header">
-                    <div>
-                        <h3>Chat with Fundamentals</h3>
-                        <p>Full-stack financial research and portfolio management platform</p>
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h3>Chat with Fundamentals</h3>
+                    <p style="flex-grow: 1;">
+                        Financial research platform with multi-agent AI analysis, portfolio optimization,
+                        and RAG over SEC filings and quant research papers.
+                    </p>
+                    <div class="tech">
+                        <span>Next.js</span>
+                        <span>FastAPI</span>
+                        <span>PostgreSQL</span>
+                        <span>CrewAI</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <a href="chat-with-fundamentals/docs.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Docs</a>
+                        <a href="https://github.com/SL-Mar/chat-with-fundamentals" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">GitHub</a>
                     </div>
                 </div>
-                <div class="project-meta">
-                    <span>Next.js</span>
-                    <span>FastAPI</span>
-                    <span>PostgreSQL</span>
-                    <span>Last updated: February 2026</span>
-                </div>
-                <p>
-                    Chat with Fundamentals is a comprehensive financial research and portfolio management platform that combines
-                    AI-powered fundamental analysis with advanced quantitative portfolio optimization. Built as a research engine
-                    to explore how autonomous agents and AI can automate and enhance financial analysis, it features multi-agent
-                    AI analysis, shares-based portfolio tracking, and RAG systems for quantitative research and SEC filings.
-                </p>
-                <p><strong>Key Features:</strong></p>
-                <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                    <li>Multi-agent AI analysis (stocks, ETFs, forex, macro indicators)</li>
-                    <li>Shares-based portfolio management with 5 optimization strategies</li>
-                    <li>Comprehensive EODHD API integration (50+ endpoints across 9 categories)</li>
-                    <li>RAG systems for quant research papers and SEC filings (10-K, 10-Q, 8-K)</li>
-                    <li>Advanced risk analytics (Monte Carlo, VaR, CVaR, rolling Sharpe ratios)</li>
-                    <li>Real-time agent console with WebSocket logging</li>
-                </ul>
-                <div class="tech">
-                    <span>Next.js</span>
-                    <span>FastAPI</span>
-                    <span>PostgreSQL</span>
-                    <span>TimescaleDB</span>
-                    <span>Redis</span>
-                    <span>CrewAI</span>
-                    <span>LangChain</span>
-                    <span>ChromaDB</span>
-                </div>
-                <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-                    <a href="chat-with-fundamentals/docs.html" class="btn btn-primary">
-                        <i class="fa-solid fa-book" style="width: 18px; height: 18px;"></i>
-                        View Documentation
-                    </a>
-                    <a href="https://github.com/SL-Mar/chat-with-fundamentals" target="_blank" class="btn btn-primary">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        View on GitHub
-                    </a>
-                </div>
-            </article>
-
-            <article class="project">
-                <div class="project-header">
-                    <div>
-                        <h3>Windmar</h3>
-                        <p>Maritime route optimization for MR product tankers</p>
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h3>Windmar</h3>
+                    <p style="flex-grow: 1;">
+                        Weather-aware maritime route optimization for MR product tankers.
+                        A* pathfinding with physics-based vessel modeling and fuel minimization.
+                    </p>
+                    <div class="tech">
+                        <span>Python</span>
+                        <span>FastAPI</span>
+                        <span>Next.js</span>
+                        <span>xarray</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <a href="windmar/docs.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Docs</a>
+                        <a href="https://github.com/SL-Mar/windmar" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">GitHub</a>
                     </div>
                 </div>
-                <div class="project-meta">
-                    <span>Python</span>
-                    <span>FastAPI</span>
-                    <span>Next.js</span>
-                    <span>Last updated: February 2026</span>
-                </div>
-                <p>
-                    Windmar is a weather-aware maritime route optimization system designed for MR product tankers.
-                    It uses A* pathfinding over ocean grids with real meteorological data to find fuel-optimal routes
-                    that account for wind, waves, currents, and vessel physics. The system models hull resistance,
-                    propulsion efficiency, and cargo loading to produce realistic fuel consumption estimates.
-                </p>
-                <p><strong>Key Features:</strong></p>
-                <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                    <li>Weather-aware A* routing with ECMWF/GFS meteorological data</li>
-                    <li>Physics-based vessel modeling (hull resistance, propulsion, cargo effects)</li>
-                    <li>Fuel consumption minimization across real ocean conditions</li>
-                    <li>Interactive map visualization with route comparison</li>
-                    <li>Docker Compose deployment (backend + frontend + worker)</li>
-                </ul>
-                <div class="tech">
-                    <span>Python</span>
-                    <span>FastAPI</span>
-                    <span>Next.js</span>
-                    <span>NumPy</span>
-                    <span>xarray</span>
-                    <span>Docker</span>
-                </div>
-                <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-                    <a href="windmar/docs.html" class="btn btn-primary">
-                        <i class="fa-solid fa-book" style="width: 18px; height: 18px;"></i>
-                        View Documentation
-                    </a>
-                    <a href="https://github.com/SL-Mar/windmar" target="_blank" class="btn btn-primary">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        View on GitHub
-                    </a>
-                </div>
-            </article>
-
-            <article class="project">
-                <div class="project-header">
-                    <div>
-                        <h3>MarChat</h3>
-                        <p>Maritime shipboard AI assistant with RAG and pre-arrival form engine</p>
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h3>MarChat</h3>
+                    <p style="flex-grow: 1;">
+                        Maritime shipboard AI assistant with RAG over regulations,
+                        multi-mode chat, and automated pre-arrival form engine.
+                    </p>
+                    <div class="tech">
+                        <span>Next.js</span>
+                        <span>FastAPI</span>
+                        <span>Qdrant</span>
+                        <span>Ollama</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <a href="marchat/docs.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Docs</a>
+                        <a href="https://github.com/SL-Mar/MarChat" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">GitHub</a>
                     </div>
                 </div>
-                <div class="project-meta">
-                    <span>Next.js</span>
-                    <span>FastAPI</span>
-                    <span>Qdrant</span>
-                    <span>Last updated: February 2026</span>
-                </div>
-                <p>
-                    MarChat is a maritime shipboard AI assistant that provides RAG-powered search over maritime regulations
-                    (SOLAS, MARPOL, STCW), multi-mode chat for different operational contexts, and an automated pre-arrival
-                    document engine. Uses local-first LLM inference via Ollama with hybrid search combining semantic embeddings,
-                    BM25, reciprocal rank fusion, and cross-encoder reranking.
-                </p>
-                <p><strong>Key Features:</strong></p>
-                <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                    <li>Hybrid RAG search (semantic + BM25 + RRF + cross-encoder reranking)</li>
-                    <li>Multi-mode chat: regulatory, medical, general, forms</li>
-                    <li>Pre-arrival form auto-fill from natural language context</li>
-                    <li>Excel template processing with field detection</li>
-                    <li>Multi-collection document management</li>
-                    <li>Local-first inference via Ollama (offline-capable)</li>
-                </ul>
-                <div class="tech">
-                    <span>Next.js</span>
-                    <span>FastAPI</span>
-                    <span>Qdrant</span>
-                    <span>Ollama</span>
-                    <span>SQLite</span>
-                    <span>openpyxl</span>
-                </div>
-                <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-                    <a href="marchat/docs.html" class="btn btn-primary">
-                        <i class="fa-solid fa-book" style="width: 18px; height: 18px;"></i>
-                        View Documentation
-                    </a>
-                    <a href="https://github.com/SL-Mar/MarChat" target="_blank" class="btn btn-primary">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        View on GitHub
-                    </a>
-                </div>
-            </article>
-
+            </div>
         </div>
     </section>
 
