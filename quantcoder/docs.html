@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantCoder Documentation - Technical Reference</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Documentation Header -->
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="docs.html" class="docs-logo">
+                <i class="fas fa-code"></i>
+                <span>QuantCoder</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="docs.html" class="active">Documentation</a></li>
+                    <li><a href="https://github.com/SL-Mar/quantcoder" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+
+    <!-- Documentation Container -->
+    <div class="docs-container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="docs-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                    <li><a href="#installation"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="#tech-stack"><i class="fas fa-layer-group"></i> Tech Stack</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core Features</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#cli-commands"><i class="fas fa-terminal"></i> CLI Commands</a></li>
+                    <li><a href="#code-generation"><i class="fas fa-code"></i> Code Generation</a></li>
+                    <li><a href="#interactive-chat"><i class="fas fa-comments"></i> Interactive Chat</a></li>
+                    <li><a href="#article-processing"><i class="fas fa-file-alt"></i> Article Processing</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Multi-Agent System</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#agent-architecture"><i class="fas fa-users"></i> Agent Architecture</a></li>
+                    <li><a href="#coordinator-agent"><i class="fas fa-project-diagram"></i> Coordinator Agent</a></li>
+                    <li><a href="#specialized-agents"><i class="fas fa-cogs"></i> Specialized Agents</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Advanced Features</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#autonomous-mode"><i class="fas fa-robot"></i> Autonomous Mode</a></li>
+                    <li><a href="#library-builder"><i class="fas fa-book"></i> Library Builder</a></li>
+                    <li><a href="#evolution-engine"><i class="fas fa-dna"></i> Evolution Engine</a></li>
+                    <li><a href="#scheduled-automation"><i class="fas fa-clock"></i> Scheduled Automation</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Configuration</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#llm-providers"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                    <li><a href="#configuration"><i class="fas fa-sliders-h"></i> Configuration</a></li>
+                    <li><a href="#validation-testing"><i class="fas fa-check-circle"></i> Validation &amp; Testing</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <ul class="sidebar-menu">
+                    <li><a href="https://github.com/SL-Mar/quantcoder" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-main">
+            <div class="docs-content">
+
+                <!-- ============================================================ -->
+                <!-- OVERVIEW SECTION -->
+                <!-- ============================================================ -->
+                <section id="overview">
+                    <h1>QuantCoder Technical Documentation</h1>
+                    <p class="docs-subtitle">AI-powered CLI for generating QuantConnect trading algorithms from research articles</p>
+
+                    <div class="alert info">
+                        <strong>Research Tool:</strong> QuantCoder is a command-line research platform that transforms academic trading papers into backtestable QuantConnect algorithms. It uses a multi-agent AI architecture to decompose strategy logic from published research, generate production-ready LEAN Python code, validate it against local and cloud compilers, and iterate autonomously until the algorithm meets performance thresholds.
+                    </div>
+
+                    <h3>What is QuantCoder?</h3>
+                    <p>QuantCoder is a Python CLI tool that bridges the gap between academic finance research and live algorithmic trading. It automates the full pipeline from discovering research articles on CrossRef and arXiv, extracting strategy logic via NLP, generating QuantConnect-compatible Python code through specialized AI agents, and validating the output through compilation and backtesting. The tool supports multiple LLM providers, autonomous self-improvement loops, and an evolution engine inspired by AlphaEvolve for iterating on strategy variants.</p>
+
+                    <h3>Key Features</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-terminal"></i> CLI Commands</h4>
+                            <ul>
+                                <li>7 command categories</li>
+                                <li>Interactive chat mode</li>
+                                <li>Direct CLI commands</li>
+                                <li>Programmatic --prompt flag</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-users"></i> Multi-Agent System</h4>
+                            <ul>
+                                <li>5 specialized agents</li>
+                                <li>Coordinator, Universe, Alpha, Risk, Strategy</li>
+                                <li>Parallel async execution</li>
+                                <li>Structured result aggregation</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-code"></i> Code Generation</h4>
+                            <ul>
+                                <li>QuantConnect LEAN Python output</li>
+                                <li>Local AST + cloud validation</li>
+                                <li>Auto-refinement on errors</li>
+                                <li>Multi-file algorithm support</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-brain"></i> LLM Providers</h4>
+                            <ul>
+                                <li>Anthropic Claude</li>
+                                <li>Mistral (Devstral)</li>
+                                <li>DeepSeek</li>
+                                <li>OpenAI &amp; Ollama (local)</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-robot"></i> Autonomous Mode</h4>
+                            <ul>
+                                <li>Self-improving generation loop</li>
+                                <li>Error pattern learning</li>
+                                <li>Prompt refinement</li>
+                                <li>Performance tracking</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4><i class="fas fa-dna"></i> Evolution Engine</h4>
+                            <ul>
+                                <li>AlphaEvolve-inspired variation</li>
+                                <li>Structural mutation operators</li>
+                                <li>Fitness-based selection</li>
+                                <li>Elite pool tracking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- ARCHITECTURE SECTION -->
+                <!-- ============================================================ -->
+                <section id="architecture">
+                    <h2>Architecture</h2>
+
+                    <h3>System Overview</h3>
+                    <p>QuantCoder is organized around three execution paths that all feed into a shared generation and validation pipeline. The system is designed for modularity: each component (article processing, code generation, validation, backtesting) operates independently and communicates through well-defined interfaces.</p>
+
+                    <h3>Execution Paths</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Path</th>
+                                <th>Entry Point</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Interactive Chat</strong></td>
+                                <td><code>quantcoder</code> (default)</td>
+                                <td>Rich terminal UI with command history, tab completion, auto-suggest, and full tool access. The default mode when no subcommand is provided.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>--prompt Flag</strong></td>
+                                <td><code>quantcoder --prompt "..."</code></td>
+                                <td>Programmatic single-shot execution. Ideal for scripting, cron jobs, and CI/CD pipelines. Returns structured output to stdout.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Direct CLI</strong></td>
+                                <td><code>quantcoder &lt;command&gt;</code></td>
+                                <td>Direct command invocation (search, download, generate, validate, backtest, etc.) for targeted operations.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Core Pipeline</h3>
+                    <p>Regardless of the execution path, all code generation flows through the same pipeline:</p>
+
+                    <div class="formula-block">
+                        <div class="formula-title">Generation Pipeline</div>
+                        Article PDF
+                        &rarr; ArticleProcessor (pdfplumber + spaCy)
+                        &rarr; LLMHandler (Claude / Mistral / DeepSeek / OpenAI / Ollama)
+                        &rarr; ValidateCodeTool (local AST + QuantConnect cloud compile)
+                        &rarr; BacktestTool (QuantConnect cloud backtest + Sharpe extraction)
+                        &rarr; Validated Strategy (.py files)
+                    </div>
+
+                    <h3>Design Patterns</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pattern</th>
+                                <th>Where Used</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Factory</strong></td>
+                                <td>LLM Providers</td>
+                                <td>Instantiates the correct LLM client (Anthropic, Mistral, DeepSeek, OpenAI, Ollama) based on configuration. Allows runtime provider switching.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Strategy</strong></td>
+                                <td>Tools</td>
+                                <td>Each tool (SearchTool, DownloadTool, GenerateTool, ValidateCodeTool, BacktestTool, SummarizeTool) implements a common interface and is selected at runtime.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Coordinator</strong></td>
+                                <td>Multi-Agent System</td>
+                                <td>A coordinator agent plans execution order, spawns specialized agents (Universe, Alpha, Risk, Strategy), and integrates their results into a final algorithm.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Async/Await</strong></td>
+                                <td>Parallel Execution</td>
+                                <td>Agents run concurrently via <code>asyncio.gather()</code> where dependencies allow, reducing total generation time.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Directory Structure</h3>
+<pre><code>quantcoder/
+├── cli/                  # Click CLI commands and chat interface
+│   ├── main.py           # Entry point, command groups
+│   ├── chat.py           # Interactive chat with prompt-toolkit
+│   ├── auto_commands.py  # Autonomous mode commands
+│   ├── evolve_commands.py# Evolution engine commands
+│   ├── library_commands.py# Library builder commands
+│   └── schedule_commands.py# Scheduled automation commands
+├── core/                 # Core business logic
+│   ├── llm.py            # LLMHandler - multi-provider abstraction
+│   ├── article_processor.py # PDF extraction + NLP
+│   └── config.py         # Configuration management (TOML + .env)
+├── tools/                # Tool implementations
+│   ├── search_tool.py    # CrossRef/arXiv search
+│   ├── download_tool.py  # PDF download via Unpaywall
+│   ├── summarize_tool.py # LLM-based article summarization
+│   ├── generate_tool.py  # Code generation with agents
+│   ├── code_tools.py     # ValidateCodeTool + BacktestTool
+│   └── deep_search.py    # Tavily web search integration
+├── agents/               # Multi-agent system
+│   ├── base_agent.py     # BaseAgent abstract class
+│   ├── coordinator.py    # CoordinatorAgent orchestration
+│   ├── universe_agent.py # Universe selection logic
+│   ├── alpha_agent.py    # Signal generation logic
+│   ├── risk_agent.py     # Risk management logic
+│   └── strategy_agent.py # Final integration agent
+├── autonomous/           # Autonomous mode
+│   ├── runner.py         # Self-improving generation loop
+│   ├── learning_db.py    # SQLite pattern storage
+│   ├── error_learner.py  # Error pattern analysis
+│   ├── prompt_refiner.py # Dynamic prompt improvement
+│   └── performance_learner.py # Indicator tracking
+├── evolution/            # Evolution engine
+│   ├── engine.py         # Core evolution loop
+│   ├── operators.py      # Mutation/crossover operators
+│   └── fitness.py        # Fitness evaluation
+├── library/              # Library builder
+│   ├── builder.py        # Strategy library construction
+│   └── categories.py     # Predefined strategy categories
+├── scheduler/            # Scheduled automation
+│   └── scheduler.py      # APScheduler-based automation
+├── mcp/                  # QuantConnect MCP integration
+│   └── quantconnect_mcp.py # MCP client for QC cloud
+└── tests/                # 18 test files
+    ├── test_cli.py
+    ├── test_llm.py
+    ├── test_agents.py
+    └── ...</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- INSTALLATION SECTION -->
+                <!-- ============================================================ -->
+                <section id="installation">
+                    <h2>Installation</h2>
+
+                    <h3>Prerequisites</h3>
+                    <ul>
+                        <li><strong>Python 3.10+</strong> (tested on 3.10, 3.11, 3.12)</li>
+                        <li><strong>pip</strong> or <strong>pipx</strong> for package installation</li>
+                        <li><strong>Git</strong> for cloning the repository</li>
+                    </ul>
+
+                    <h3>Clone and Install</h3>
+<pre><code># Clone the repository
+git clone https://github.com/SL-Mar/quantcoder.git
+cd quantcoder-cli
+
+# Install in editable mode (recommended for development)
+pip install -e .
+
+# Or install directly
+pip install .</code></pre>
+
+                    <h3>Configure Environment</h3>
+                    <p>Create the configuration directory and environment file at <code>~/.quantcoder/.env</code>:</p>
+<pre><code># Required - at minimum one LLM provider
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Optional - additional LLM providers
+OPENAI_API_KEY=sk-...
+MISTRAL_API_KEY=...
+
+# Optional - QuantConnect cloud compilation and backtesting
+QUANTCONNECT_API_KEY=...
+QUANTCONNECT_USER_ID=...
+
+# Optional - Notion integration for publishing results
+NOTION_API_KEY=secret_...
+
+# Optional - Tavily deep search for article discovery
+TAVILY_API_KEY=tvly-...</code></pre>
+
+                    <div class="alert warning">
+                        <strong>API Keys Required:</strong> At minimum, you need an Anthropic API key for code generation. QuantConnect credentials are required for cloud compilation and backtesting. Without QuantConnect keys, only local AST validation is available. For fully local operation, configure Ollama as your LLM provider (no API key needed).
+                    </div>
+
+                    <h3>Verify Installation</h3>
+<pre><code># Check that QuantCoder is installed and accessible
+quantcoder version
+
+# Launch interactive chat mode
+quantcoder
+
+# Run a test search
+quantcoder search "momentum trading strategies"</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- TECH STACK SECTION -->
+                <!-- ============================================================ -->
+                <section id="tech-stack">
+                    <h2>Tech Stack</h2>
+
+                    <h3>Core</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Python</td>
+                                <td>3.10+</td>
+                                <td>Primary language, async support, type hints</td>
+                            </tr>
+                            <tr>
+                                <td>Click</td>
+                                <td>8.x</td>
+                                <td>CLI framework, command groups, option parsing</td>
+                            </tr>
+                            <tr>
+                                <td>Rich</td>
+                                <td>13.x</td>
+                                <td>Terminal UI, progress bars, tables, syntax highlighting</td>
+                            </tr>
+                            <tr>
+                                <td>prompt-toolkit</td>
+                                <td>3.x</td>
+                                <td>Interactive chat, command history, tab completion, auto-suggest</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>AI / ML</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Anthropic SDK</td>
+                                <td>0.30+</td>
+                                <td>Claude API client for primary code generation</td>
+                            </tr>
+                            <tr>
+                                <td>Mistral SDK</td>
+                                <td>1.x</td>
+                                <td>Mistral/Devstral API client for code alternative</td>
+                            </tr>
+                            <tr>
+                                <td>OpenAI SDK</td>
+                                <td>1.x</td>
+                                <td>OpenAI and DeepSeek API client (shared SDK)</td>
+                            </tr>
+                            <tr>
+                                <td>Ollama</td>
+                                <td>-</td>
+                                <td>Local LLM inference (llama3.2, codellama, qwen2.5-coder)</td>
+                            </tr>
+                            <tr>
+                                <td>pdfplumber</td>
+                                <td>0.10+</td>
+                                <td>PDF text extraction from research articles</td>
+                            </tr>
+                            <tr>
+                                <td>spaCy</td>
+                                <td>3.x</td>
+                                <td>NLP analysis of extracted article text</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Infrastructure</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>aiohttp</td>
+                                <td>3.x</td>
+                                <td>Async HTTP client for API calls (CrossRef, arXiv, Unpaywall)</td>
+                            </tr>
+                            <tr>
+                                <td>APScheduler</td>
+                                <td>3.x</td>
+                                <td>Scheduled automation (daily/weekly strategy generation)</td>
+                            </tr>
+                            <tr>
+                                <td>toml</td>
+                                <td>0.10+</td>
+                                <td>Configuration file parsing (config.toml)</td>
+                            </tr>
+                            <tr>
+                                <td>python-dotenv</td>
+                                <td>1.x</td>
+                                <td>Environment variable management (.env files)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Testing</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>pytest</td>
+                                <td>8.x</td>
+                                <td>Test framework, fixtures, parametrized tests</td>
+                            </tr>
+                            <tr>
+                                <td>pytest-cov</td>
+                                <td>5.x</td>
+                                <td>Code coverage reporting</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- CLI COMMANDS SECTION -->
+                <!-- ============================================================ -->
+                <section id="cli-commands">
+                    <h2>CLI Commands</h2>
+
+                    <p>QuantCoder provides 7 command categories accessible from the terminal. All commands follow the pattern <code>quantcoder &lt;category&gt; &lt;action&gt; [options]</code>.</p>
+
+                    <h3>Core Commands</h3>
+                    <p>The primary workflow commands for searching, downloading, summarizing, generating, validating, and backtesting trading algorithms.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">SEARCH</span>
+                        <span class="endpoint-path">quantcoder search "&lt;query&gt;"</span>
+                        <p class="endpoint-description">Search CrossRef and arXiv for academic trading papers matching the query. Results are cached locally and assigned numeric IDs for subsequent commands.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">DOWNLOAD</span>
+                        <span class="endpoint-path">quantcoder download &lt;article_id&gt;</span>
+                        <p class="endpoint-description">Download the PDF for a previously searched article using Unpaywall open-access links. Falls back to alternative sources if the primary link is unavailable.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">SUMMARIZE</span>
+                        <span class="endpoint-path">quantcoder summarize &lt;article_id&gt;</span>
+                        <p class="endpoint-description">Extract text from the downloaded PDF and generate a structured summary using the configured LLM. Output includes strategy logic, indicators, entry/exit conditions, and risk parameters.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">GENERATE</span>
+                        <span class="endpoint-path">quantcoder generate &lt;article_id&gt;</span>
+                        <p class="endpoint-description">Generate a complete QuantConnect algorithm from the article summary using the multi-agent system. Output is written to <code>generated_code/algorithm_&lt;id&gt;.py</code>.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">VALIDATE</span>
+                        <span class="endpoint-path">quantcoder validate &lt;path_to_algorithm&gt;</span>
+                        <p class="endpoint-description">Validate a generated algorithm through local AST parsing and (optionally) QuantConnect cloud compilation. Reports syntax errors, import issues, and compilation warnings.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">BACKTEST</span>
+                        <span class="endpoint-path">quantcoder backtest --start &lt;date&gt; --end &lt;date&gt;</span>
+                        <p class="endpoint-description">Submit the validated algorithm to QuantConnect for backtesting over the specified date range. Extracts Sharpe ratio, total return, drawdown, and trade statistics from results.</p>
+                    </div>
+
+                    <h4>Example Workflow</h4>
+<pre><code># Step 1: Search for research papers
+quantcoder search "momentum trading strategies"
+
+# Step 2: Download the first result
+quantcoder download 1
+
+# Step 3: Summarize the article
+quantcoder summarize 1
+
+# Step 4: Generate QuantConnect algorithm
+quantcoder generate 1
+
+# Step 5: Validate the generated code
+quantcoder validate generated_code/algorithm_1.py
+
+# Step 6: Backtest over 6 months
+quantcoder backtest --start 2024-01-01 --end 2024-06-30</code></pre>
+
+                    <h3>Autonomous Mode</h3>
+                    <p>Autonomous mode runs a self-improving generation loop that learns from errors and iterates until a performance threshold is met.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">START</span>
+                        <span class="endpoint-path">quantcoder auto start --query "&lt;query&gt;" --max-iterations &lt;n&gt; --min-sharpe &lt;value&gt;</span>
+                        <p class="endpoint-description">Start an autonomous generation run. Searches for articles, generates algorithms, validates, backtests, and learns from failures. Continues until <code>--min-sharpe</code> is achieved or <code>--max-iterations</code> is reached.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">STATUS</span>
+                        <span class="endpoint-path">quantcoder auto status</span>
+                        <p class="endpoint-description">Check the status of the current autonomous run, including iteration count, best Sharpe ratio achieved, and error patterns learned.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">REPORT</span>
+                        <span class="endpoint-path">quantcoder auto report</span>
+                        <p class="endpoint-description">Generate a detailed report of the autonomous run including all iterations, learned patterns, prompt refinements, and the best-performing algorithm.</p>
+                    </div>
+
+                    <h4>Example</h4>
+<pre><code># Start autonomous generation targeting Sharpe > 1.0
+quantcoder auto start --query "momentum trading" --max-iterations 50 --min-sharpe 1.0
+
+# Check progress
+quantcoder auto status
+
+# View final report
+quantcoder auto report</code></pre>
+
+                    <h3>Library Builder</h3>
+                    <p>The library builder generates a comprehensive collection of trading strategies across multiple categories, with checkpoint/resume support for long-running builds.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">BUILD</span>
+                        <span class="endpoint-path">quantcoder library build [--comprehensive] [--max-hours &lt;n&gt;] [--categories &lt;list&gt;]</span>
+                        <p class="endpoint-description">Build a strategy library. Use <code>--comprehensive</code> for all 13+ categories, or <code>--categories</code> to specify a comma-separated subset. Checkpoints progress automatically.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">RESUME</span>
+                        <span class="endpoint-path">quantcoder library resume</span>
+                        <p class="endpoint-description">Resume a previously interrupted library build from the last checkpoint.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">EXPORT</span>
+                        <span class="endpoint-path">quantcoder library export --format &lt;zip|json&gt; --output &lt;path&gt;</span>
+                        <p class="endpoint-description">Export the completed strategy library as a ZIP archive or JSON manifest file.</p>
+                    </div>
+
+                    <h4>Example</h4>
+<pre><code># Build a comprehensive library (all categories, up to 24 hours)
+quantcoder library build --comprehensive --max-hours 24
+
+# Build specific categories only
+quantcoder library build --categories momentum,mean_reversion
+
+# Resume an interrupted build
+quantcoder library resume
+
+# Export the library
+quantcoder library export --format zip --output strategies.zip</code></pre>
+
+                    <h3>Evolution Mode</h3>
+                    <p>The evolution engine creates structural variants of an existing algorithm and selects the fittest through backtesting, inspired by AlphaEvolve.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">START</span>
+                        <span class="endpoint-path">quantcoder evolve start &lt;article_id&gt; --gens &lt;n&gt; --variants &lt;n&gt;</span>
+                        <p class="endpoint-description">Start an evolution run for the specified article. Creates <code>--variants</code> structural mutations per generation for <code>--gens</code> generations, selecting the best-performing variants to seed the next generation.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">LIST</span>
+                        <span class="endpoint-path">quantcoder evolve list</span>
+                        <p class="endpoint-description">List all evolution runs with their status, generation count, and best fitness score.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">SHOW</span>
+                        <span class="endpoint-path">quantcoder evolve show &lt;run_id&gt;</span>
+                        <p class="endpoint-description">Show detailed results for a specific evolution run, including fitness progression across generations and the elite pool.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">EXPORT</span>
+                        <span class="endpoint-path">quantcoder evolve export &lt;run_id&gt; --output &lt;path&gt;</span>
+                        <p class="endpoint-description">Export the best-performing algorithm from an evolution run to a Python file.</p>
+                    </div>
+
+                    <h4>Example</h4>
+<pre><code># Evolve article 1 over 10 generations with 5 variants each
+quantcoder evolve start 1 --gens 10 --variants 5
+
+# List all evolution runs
+quantcoder evolve list
+
+# Show details of a specific run
+quantcoder evolve show abc123
+
+# Export the best algorithm
+quantcoder evolve export abc123 --output best_algo.py</code></pre>
+
+                    <h3>Scheduled Automation</h3>
+                    <p>Schedule recurring strategy generation and backtesting runs using APScheduler.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">START</span>
+                        <span class="endpoint-path">quantcoder schedule start --interval &lt;daily|weekly&gt; --hour &lt;n&gt; --queries "&lt;list&gt;"</span>
+                        <p class="endpoint-description">Start a scheduled automation pipeline. Runs the full search-generate-backtest cycle at the specified interval for each comma-separated query.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">RUN</span>
+                        <span class="endpoint-path">quantcoder schedule run --min-sharpe &lt;value&gt;</span>
+                        <p class="endpoint-description">Trigger an immediate one-off scheduled run with the specified minimum Sharpe ratio threshold.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">STATUS</span>
+                        <span class="endpoint-path">quantcoder schedule status</span>
+                        <p class="endpoint-description">View the status of all scheduled jobs, including next run time, last result, and cumulative statistics.</p>
+                    </div>
+
+                    <h4>Example</h4>
+<pre><code># Schedule daily runs at 6 AM for two strategy types
+quantcoder schedule start --interval daily --hour 6 --queries "momentum,mean reversion"
+
+# Run immediately with Sharpe filter
+quantcoder schedule run --min-sharpe 1.0
+
+# Check scheduler status
+quantcoder schedule status</code></pre>
+
+                    <h3>Logging</h3>
+                    <p>View and manage application logs for debugging and auditing.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">SHOW</span>
+                        <span class="endpoint-path">quantcoder logs show [--lines &lt;n&gt;] [--json]</span>
+                        <p class="endpoint-description">Display recent log entries. Use <code>--lines</code> to control output length and <code>--json</code> for machine-readable format.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">LIST</span>
+                        <span class="endpoint-path">quantcoder logs list</span>
+                        <p class="endpoint-description">List all available log files with sizes and timestamps.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-delete">CLEAR</span>
+                        <span class="endpoint-path">quantcoder logs clear [--keep &lt;n&gt;]</span>
+                        <p class="endpoint-description">Clear old log files, keeping the most recent <code>--keep</code> files.</p>
+                    </div>
+
+                    <h4>Example</h4>
+<pre><code># Show last 100 log lines
+quantcoder logs show --lines 100
+
+# Show logs in JSON format
+quantcoder logs show --json
+
+# List all log files
+quantcoder logs list
+
+# Clear old logs, keep 1
+quantcoder logs clear --keep 1</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- CODE GENERATION SECTION -->
+                <!-- ============================================================ -->
+                <section id="code-generation">
+                    <h2>Code Generation</h2>
+
+                    <h3>Pipeline Flow</h3>
+                    <p>The code generation pipeline transforms a research article PDF into a validated QuantConnect algorithm through a series of stages:</p>
+
+                    <ol>
+                        <li><strong>PDF Text Extraction</strong> - pdfplumber extracts raw text from each page of the research article</li>
+                        <li><strong>NLP Analysis</strong> - spaCy processes the extracted text to identify key entities, indicators, and strategy parameters</li>
+                        <li><strong>Summary Generation</strong> - The configured LLM creates a structured summary with entry/exit logic, indicators, and risk parameters</li>
+                        <li><strong>Code Generation</strong> - The multi-agent system (or single-agent mode) generates QuantConnect LEAN Python code from the summary</li>
+                        <li><strong>Validation</strong> - Local AST syntax validation followed by optional QuantConnect cloud compilation</li>
+                        <li><strong>Refinement</strong> - If validation fails, errors are fed back to the LLM for automatic correction (up to 3 iterations)</li>
+                    </ol>
+
+                    <h3>Code Generation Rules</h3>
+                    <p>All generated algorithms must comply with the following QuantConnect LEAN engine constraints. These rules are enforced in the generation prompt and validated during the AST check:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rule</th>
+                                <th>Requirement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Import Statement</td>
+                                <td>Must use <code>from AlgorithmImports import *</code> as the only import</td>
+                            </tr>
+                            <tr>
+                                <td>Method Naming</td>
+                                <td>All methods must use <code>snake_case</code> (QuantConnect Python convention)</td>
+                            </tr>
+                            <tr>
+                                <td>Indicator Registration</td>
+                                <td>Indicators must be registered via <code>self.register_indicator()</code> or helper methods (e.g., <code>self.sma()</code>)</td>
+                            </tr>
+                            <tr>
+                                <td>Indicator Readiness</td>
+                                <td>All indicator values must be gated by <code>.is_ready</code> checks before use</td>
+                            </tr>
+                            <tr>
+                                <td>Indicator Naming</td>
+                                <td>Must use underscore-prefixed names (e.g., <code>self._rsi</code>) to avoid conflicts with built-in QCAlgorithm methods</td>
+                            </tr>
+                            <tr>
+                                <td>Base Class</td>
+                                <td>Algorithm class must extend <code>QCAlgorithm</code></td>
+                            </tr>
+                            <tr>
+                                <td>Initialize Method</td>
+                                <td>Must implement <code>initialize()</code> with start/end dates and cash</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert info">
+                        <strong>QuantConnect LEAN Engine:</strong> Generated algorithms target the QuantConnect LEAN engine, an open-source algorithmic trading platform. All code must be compatible with LEAN's Python API, which uses snake_case method names and provides a specific set of built-in methods on the QCAlgorithm base class. The generation pipeline enforces these constraints to ensure cloud compilability.
+                    </div>
+
+                    <h3>Generated Algorithm Template</h3>
+<pre><code># region imports
+from AlgorithmImports import *
+# endregion
+
+class MomentumStrategy(QCAlgorithm):
+    """
+    Momentum-based trading strategy derived from research article.
+
+    Strategy Logic:
+    - Entry: RSI crosses above 30 with positive momentum
+    - Exit: RSI crosses below 70 or stop loss triggered
+
+    Risk Management:
+    - Position size: 5% of portfolio per position
+    - Stop loss: 2% per position
+    - Max positions: 10
+    - Time stop: 3:55 PM ET daily liquidation
+    """
+
+    def initialize(self):
+        self.set_start_date(2024, 1, 1)
+        self.set_end_date(2024, 6, 30)
+        self.set_cash(100000)
+
+        # Add securities
+        self.symbol = self.add_equity("SPY", Resolution.MINUTE).symbol
+
+        # Register indicators (underscore prefix to avoid conflicts)
+        self._rsi = self.rsi(self.symbol, 14, Resolution.MINUTE)
+        self._sma = self.sma(self.symbol, 20, Resolution.MINUTE)
+
+        # Risk parameters
+        self._position_pct = 0.05
+        self._stop_loss_pct = 0.02
+        self._max_positions = 10
+
+        # Schedule end-of-day liquidation
+        self.schedule.on(
+            self.date_rules.every_day(),
+            self.time_rules.before_market_close("SPY", 5),
+            self._liquidate_all
+        )
+
+    def on_data(self, data):
+        if not self._rsi.is_ready or not self._sma.is_ready:
+            return
+
+        if not self.portfolio[self.symbol].invested:
+            if self._rsi.current.value &gt; 30 and data[self.symbol].close &gt; self._sma.current.value:
+                self.set_holdings(self.symbol, self._position_pct)
+
+        elif self._rsi.current.value &gt; 70:
+            self.liquidate(self.symbol)
+
+    def _liquidate_all(self):
+        self.liquidate()
+</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- INTERACTIVE CHAT SECTION -->
+                <!-- ============================================================ -->
+                <section id="interactive-chat">
+                    <h2>Interactive Chat</h2>
+
+                    <p>The default mode when running <code>quantcoder</code> without arguments. Provides a rich terminal interface powered by prompt-toolkit with full access to all tools and commands.</p>
+
+                    <h3>Features</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Command History</td>
+                                <td>Persistent history across sessions, navigable with up/down arrows</td>
+                            </tr>
+                            <tr>
+                                <td>Tab Completion</td>
+                                <td>Auto-complete for tool names, commands, and file paths</td>
+                            </tr>
+                            <tr>
+                                <td>Auto-Suggest</td>
+                                <td>Ghost text suggestions based on history (accept with right arrow)</td>
+                            </tr>
+                            <tr>
+                                <td>Context Management</td>
+                                <td>Maintains conversation context across turns, including article state and generated code</td>
+                            </tr>
+                            <tr>
+                                <td>Rich Output</td>
+                                <td>Syntax-highlighted code, formatted tables, progress bars via Rich library</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Tool Integration</h3>
+                    <p>All 6 core tools are available within the interactive chat. The LLM can invoke them automatically based on your natural language requests:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Chat Invocation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SearchTool</td>
+                                <td>"Search for momentum trading papers"</td>
+                            </tr>
+                            <tr>
+                                <td>DownloadTool</td>
+                                <td>"Download article 3"</td>
+                            </tr>
+                            <tr>
+                                <td>SummarizeTool</td>
+                                <td>"Summarize the downloaded article"</td>
+                            </tr>
+                            <tr>
+                                <td>GenerateTool</td>
+                                <td>"Generate a QuantConnect algorithm from article 1"</td>
+                            </tr>
+                            <tr>
+                                <td>ValidateCodeTool</td>
+                                <td>"Validate the generated code"</td>
+                            </tr>
+                            <tr>
+                                <td>BacktestTool</td>
+                                <td>"Backtest from January to June 2024"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Usage Example</h3>
+<pre><code>$ quantcoder
+
+QuantCoder Interactive Chat v1.0
+Type 'help' for available commands, 'quit' to exit.
+
+&gt; Search for mean reversion strategies in equity markets
+
+Searching CrossRef and arXiv for: "mean reversion strategies in equity markets"
+Found 12 results. Showing top 5:
+
+  1. "Mean Reversion in Stock Prices: Evidence and Implications" (2023)
+  2. "Pairs Trading and Mean Reversion" (2022)
+  ...
+
+&gt; Download article 1 and generate an algorithm
+
+Downloading PDF... Done.
+Extracting text... Done.
+Generating algorithm with multi-agent system...
+
+  [Coordinator] Planning execution order...
+  [UniverseAgent] Selecting universe criteria...
+  [AlphaAgent] Generating signal logic...
+  [RiskAgent] Defining risk parameters...
+  [StrategyAgent] Assembling final algorithm...
+
+Algorithm written to: generated_code/algorithm_1.py
+Validating... AST check passed. Cloud compilation passed.
+
+&gt; Backtest from 2024-01-01 to 2024-06-30
+
+Submitting backtest to QuantConnect...
+Results:
+  Sharpe Ratio: 1.24
+  Total Return: 8.3%
+  Max Drawdown: -3.1%
+  Total Trades: 47</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- ARTICLE PROCESSING SECTION -->
+                <!-- ============================================================ -->
+                <section id="article-processing">
+                    <h2>Article Processing</h2>
+
+                    <p>The article processing module handles the full lifecycle of research paper discovery, retrieval, and analysis.</p>
+
+                    <h3>Search</h3>
+                    <p>QuantCoder searches two academic databases in parallel:</p>
+                    <ul>
+                        <li><strong>CrossRef</strong> - Comprehensive metadata for published journal articles and conference papers. Returns DOIs, titles, authors, abstracts, and publication dates.</li>
+                        <li><strong>arXiv</strong> - Preprint server for quantitative finance, computer science, and related fields. Returns full abstracts and PDF links.</li>
+                    </ul>
+                    <p>Results are deduplicated by DOI, ranked by relevance, and cached locally with assigned numeric IDs for subsequent commands.</p>
+
+                    <h3>PDF Download</h3>
+                    <p>PDF retrieval uses a multi-source fallback chain:</p>
+                    <ol>
+                        <li><strong>Unpaywall</strong> - Open-access link resolution via the Unpaywall API (primary source)</li>
+                        <li><strong>arXiv Direct</strong> - Direct PDF links for arXiv preprints</li>
+                        <li><strong>Publisher Open Access</strong> - Publisher-provided open access links when available</li>
+                    </ol>
+                    <p>Downloaded PDFs are stored in <code>~/.quantcoder/articles/</code> with filenames derived from the DOI.</p>
+
+                    <h3>Text Extraction and NLP</h3>
+                    <p>The <code>ArticleProcessor</code> class handles text extraction and analysis:</p>
+                    <ul>
+                        <li><strong>pdfplumber</strong> extracts raw text page-by-page, preserving tables and figures where possible</li>
+                        <li><strong>spaCy</strong> performs named entity recognition, keyword extraction, and section detection</li>
+                        <li>The processor identifies key strategy components: indicators, entry conditions, exit conditions, risk parameters, universe criteria</li>
+                    </ul>
+
+                    <h3>LLM Summarization</h3>
+                    <p>The extracted text is passed to the configured LLM (via the summary provider) with a structured prompt that requests:</p>
+                    <ul>
+                        <li>Strategy description (one paragraph)</li>
+                        <li>Trading universe and selection criteria</li>
+                        <li>Entry and exit signals with specific indicator parameters</li>
+                        <li>Risk management rules (position sizing, stop losses, profit targets)</li>
+                        <li>Backtesting methodology from the paper (if described)</li>
+                        <li>Key parameters and their optimal values</li>
+                    </ul>
+
+                    <h3>Deep Search (Optional)</h3>
+                    <p>When a Tavily API key is configured, QuantCoder can perform deep web searches to supplement article discovery:</p>
+<pre><code># Deep search is invoked automatically when standard search returns few results
+# Or manually via the interactive chat:
+
+&gt; Deep search for "pairs trading cointegration statistical arbitrage"
+
+Searching Tavily for supplementary sources...
+Found 8 additional references:
+  - "A Modern Approach to Pairs Trading" (blog, 2024)
+  - "Cointegration-Based Pairs Trading in Python" (tutorial, 2024)
+  ...</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- AGENT ARCHITECTURE SECTION -->
+                <!-- ============================================================ -->
+                <section id="agent-architecture">
+                    <h2>Agent Architecture</h2>
+
+                    <p>QuantCoder's multi-agent system decomposes algorithm generation into specialized subtasks, each handled by a dedicated agent. All agents extend a common <code>BaseAgent</code> abstract class.</p>
+
+                    <h3>BaseAgent</h3>
+                    <p>The abstract base class that all agents inherit from. Provides the LLM communication interface and result formatting.</p>
+
+<pre><code>class BaseAgent(ABC):
+    """Abstract base class for all agents."""
+
+    def __init__(self, llm_handler: LLMHandler, config: dict):
+        self.llm = llm_handler
+        self.config = config
+
+    @abstractmethod
+    async def execute(self, context: dict) -&gt; AgentResult:
+        """Execute the agent's task given the context."""
+        pass
+
+    async def _generate_with_llm(self, prompt: str, system: str = None) -&gt; str:
+        """Send a prompt to the LLM and return the response text."""
+        return await self.llm.generate(prompt, system=system)</code></pre>
+
+                    <h3>AgentResult</h3>
+                    <p>A structured dataclass returned by every agent after execution:</p>
+
+<pre><code>@dataclass
+class AgentResult:
+    agent_name: str       # Name of the agent (e.g., "UniverseAgent")
+    success: bool         # Whether the agent completed successfully
+    code: str             # Generated code fragment
+    metadata: dict        # Additional context (indicators used, parameters, etc.)
+    errors: list[str]     # Any errors encountered during execution
+    duration: float       # Execution time in seconds</code></pre>
+
+                    <h3>Parallel Execution</h3>
+                    <p>The coordinator determines which agents can run in parallel based on their dependencies. Independent agents (Universe, Alpha, Risk) execute concurrently, while the Strategy agent waits for all results:</p>
+
+<pre><code># Simplified execution flow in the coordinator
+async def orchestrate(self, context: dict) -&gt; dict:
+    # Phase 1: Run independent agents in parallel
+    universe_result, alpha_result, risk_result = await asyncio.gather(
+        self.universe_agent.execute(context),
+        self.alpha_agent.execute(context),
+        self.risk_agent.execute(context),
+    )
+
+    # Phase 2: Run strategy agent with all results
+    context["universe"] = universe_result
+    context["alpha"] = alpha_result
+    context["risk"] = risk_result
+    strategy_result = await self.strategy_agent.execute(context)
+
+    return strategy_result</code></pre>
+
+                    <div class="alert info">
+                        <strong>Performance:</strong> Parallel execution of the Universe, Alpha, and Risk agents typically reduces total generation time by 40-60% compared to sequential execution, as each agent independently queries the LLM.
+                    </div>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- COORDINATOR AGENT SECTION -->
+                <!-- ============================================================ -->
+                <section id="coordinator-agent">
+                    <h2>Coordinator Agent</h2>
+
+                    <p>The <code>CoordinatorAgent</code> is the orchestration layer that plans execution order, spawns specialized agents, and integrates their outputs into a final algorithm.</p>
+
+                    <h3>Responsibilities</h3>
+                    <ul>
+                        <li><strong>Execution Planning:</strong> Analyzes the article summary to determine which agents are needed and their execution order</li>
+                        <li><strong>Context Distribution:</strong> Prepares and distributes the appropriate context (summary, parameters, constraints) to each agent</li>
+                        <li><strong>Result Integration:</strong> Collects <code>AgentResult</code> objects from all agents and passes them to the StrategyAgent for final assembly</li>
+                        <li><strong>Error Recovery:</strong> If an agent fails, the coordinator can retry with modified parameters or fall back to a simpler generation strategy</li>
+                        <li><strong>Progress Reporting:</strong> Emits status updates during multi-agent execution for display in the interactive chat</li>
+                    </ul>
+
+                    <h3>Workflow</h3>
+                    <div class="formula-block">
+                        <div class="formula-title">Coordinator Workflow</div>
+                        1. Receive article summary + generation parameters
+                        2. Plan execution: identify required agents and dependencies
+                        3. Spawn Phase 1 agents (Universe, Alpha, Risk) in parallel
+                        4. Collect and validate Phase 1 results
+                        5. If any Phase 1 agent failed: retry or adapt
+                        6. Pass all results to Phase 2 agent (Strategy)
+                        7. Receive final assembled algorithm
+                        8. Return complete algorithm + metadata
+                    </div>
+
+                    <h3>Fallback Behavior</h3>
+                    <p>When the multi-agent system encounters errors, the coordinator employs a graceful degradation strategy:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Scenario</th>
+                                <th>Coordinator Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Single agent failure</td>
+                                <td>Retry the failed agent up to 2 times with rephrased prompts</td>
+                            </tr>
+                            <tr>
+                                <td>Multiple agent failures</td>
+                                <td>Fall back to single-agent generation mode (one LLM call for entire algorithm)</td>
+                            </tr>
+                            <tr>
+                                <td>LLM timeout</td>
+                                <td>Switch to a faster LLM provider if configured (e.g., DeepSeek as fallback)</td>
+                            </tr>
+                            <tr>
+                                <td>Context too large</td>
+                                <td>Truncate article summary to fit within the LLM context window</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- SPECIALIZED AGENTS SECTION -->
+                <!-- ============================================================ -->
+                <section id="specialized-agents">
+                    <h2>Specialized Agents</h2>
+
+                    <p>Each specialized agent generates a specific component of the final QuantConnect algorithm. The agents operate independently and produce code fragments that the StrategyAgent integrates.</p>
+
+                    <h3>UniverseAgent</h3>
+                    <p>Generates the stock universe selection logic - the criteria for which securities the algorithm trades.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Input</td>
+                                <td>Article summary with universe criteria (market cap, sector, liquidity, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td>Output</td>
+                                <td><code>Universe.py</code> component - coarse/fine universe selection filters</td>
+                            </tr>
+                            <tr>
+                                <td>Key Methods</td>
+                                <td><code>coarse_selection_function()</code>, <code>fine_selection_function()</code></td>
+                            </tr>
+                            <tr>
+                                <td>Dependencies</td>
+                                <td>None (runs in parallel)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+<pre><code># Example UniverseAgent output
+def coarse_selection_function(self, coarse):
+    """Select liquid, mid-cap US equities."""
+    filtered = [x for x in coarse
+                if x.has_fundamental_data
+                and x.price &gt; 5
+                and x.dollar_volume &gt; 1e6]
+    sorted_by_volume = sorted(filtered, key=lambda x: x.dollar_volume, reverse=True)
+    return [x.symbol for x in sorted_by_volume[:100]]</code></pre>
+
+                    <h3>AlphaAgent</h3>
+                    <p>Generates the trading signal logic - the indicators and conditions that trigger entry and exit decisions.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Input</td>
+                                <td>Article summary with indicator definitions, entry/exit conditions, parameter values</td>
+                            </tr>
+                            <tr>
+                                <td>Output</td>
+                                <td><code>Alpha.py</code> component - indicator registration, signal generation methods</td>
+                            </tr>
+                            <tr>
+                                <td>Key Methods</td>
+                                <td><code>register_indicators()</code>, <code>generate_signals()</code>, <code>on_data()</code></td>
+                            </tr>
+                            <tr>
+                                <td>Dependencies</td>
+                                <td>None (runs in parallel)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+<pre><code># Example AlphaAgent output
+def register_indicators(self):
+    """Register technical indicators for signal generation."""
+    self._rsi = self.rsi(self.symbol, 14, Resolution.DAILY)
+    self._macd = self.macd(self.symbol, 12, 26, 9, Resolution.DAILY)
+    self._bb = self.bb(self.symbol, 20, 2, Resolution.DAILY)
+
+def generate_signals(self, data):
+    """Generate BUY/SELL signals based on indicator convergence."""
+    if not all([self._rsi.is_ready, self._macd.is_ready, self._bb.is_ready]):
+        return None
+
+    if (self._rsi.current.value &lt; 30
+            and self._macd.current.value &gt; self._macd.signal.current.value
+            and data[self.symbol].close &lt; self._bb.lower_band.current.value):
+        return "BUY"
+
+    if self._rsi.current.value &gt; 70:
+        return "SELL"
+
+    return None</code></pre>
+
+                    <h3>RiskAgent</h3>
+                    <p>Generates risk management logic - position sizing, stop losses, profit targets, and portfolio-level constraints.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Input</td>
+                                <td>Article summary with risk parameters, drawdown limits, position sizing rules</td>
+                            </tr>
+                            <tr>
+                                <td>Output</td>
+                                <td><code>Risk.py</code> component - position sizing, stop loss/take profit, portfolio limits</td>
+                            </tr>
+                            <tr>
+                                <td>Key Methods</td>
+                                <td><code>calculate_position_size()</code>, <code>check_stop_loss()</code>, <code>check_profit_target()</code></td>
+                            </tr>
+                            <tr>
+                                <td>Dependencies</td>
+                                <td>None (runs in parallel)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+<pre><code># Example RiskAgent output
+def calculate_position_size(self, symbol):
+    """Calculate position size based on portfolio risk budget."""
+    portfolio_value = self.portfolio.total_portfolio_value
+    max_risk_per_trade = portfolio_value * self._risk_per_trade  # 1% risk
+    current_price = self.securities[symbol].price
+    stop_distance = current_price * self._stop_loss_pct  # 2% stop
+
+    shares = int(max_risk_per_trade / stop_distance)
+    max_position = portfolio_value * self._max_position_pct / current_price
+    return min(shares, int(max_position))
+
+def check_stop_loss(self, symbol):
+    """Check if stop loss has been triggered."""
+    if symbol not in self._entry_prices:
+        return False
+    entry = self._entry_prices[symbol]
+    current = self.securities[symbol].price
+    return (entry - current) / entry &gt; self._stop_loss_pct</code></pre>
+
+                    <h3>StrategyAgent</h3>
+                    <p>The integration agent that assembles outputs from all other agents into a complete, runnable QuantConnect algorithm.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Input</td>
+                                <td>AgentResults from Universe, Alpha, and Risk agents</td>
+                            </tr>
+                            <tr>
+                                <td>Output</td>
+                                <td><code>Main.py</code> - complete algorithm file combining all components</td>
+                            </tr>
+                            <tr>
+                                <td>Key Tasks</td>
+                                <td>Merge code fragments, resolve naming conflicts, ensure proper initialization order, add scheduling</td>
+                            </tr>
+                            <tr>
+                                <td>Dependencies</td>
+                                <td>Requires all Phase 1 agent results</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>The StrategyAgent performs the following integration steps:</p>
+                    <ol>
+                        <li>Merges import statements (deduplicating)</li>
+                        <li>Combines class-level attributes from all agents</li>
+                        <li>Integrates <code>initialize()</code> method with universe, indicator, and risk setup</li>
+                        <li>Wires signal generation into <code>on_data()</code> with risk checks</li>
+                        <li>Adds scheduling (intraday checks, end-of-day liquidation)</li>
+                        <li>Validates the assembled code passes AST parsing</li>
+                    </ol>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- AUTONOMOUS MODE SECTION -->
+                <!-- ============================================================ -->
+                <section id="autonomous-mode">
+                    <h2>Autonomous Mode</h2>
+
+                    <p>Autonomous mode implements a self-improving generation loop that learns from compilation errors, backtest failures, and successful patterns to progressively generate better algorithms.</p>
+
+                    <h3>How It Works</h3>
+                    <p>Each iteration of the autonomous loop follows this cycle:</p>
+                    <ol>
+                        <li><strong>Search</strong> - Find research articles matching the query</li>
+                        <li><strong>Generate</strong> - Create an algorithm using the multi-agent system with refined prompts</li>
+                        <li><strong>Validate</strong> - Check syntax and compile on QuantConnect</li>
+                        <li><strong>Backtest</strong> - Run the algorithm and extract performance metrics</li>
+                        <li><strong>Learn</strong> - Analyze errors and successes, update the learning database</li>
+                        <li><strong>Refine</strong> - Adjust prompts based on learned patterns</li>
+                        <li><strong>Repeat</strong> - Continue until min_sharpe is achieved or max_iterations is reached</li>
+                    </ol>
+
+                    <h3>Learning Components</h3>
+
+                    <h4>LearningDatabase</h4>
+                    <p>SQLite-backed storage for all patterns learned across autonomous runs. Persists between sessions.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Table</th>
+                                <th>Contents</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>error_patterns</code></td>
+                                <td>Compilation/runtime errors mapped to their fixes</td>
+                            </tr>
+                            <tr>
+                                <td><code>successful_patterns</code></td>
+                                <td>Code structures that compiled and backtested successfully</td>
+                            </tr>
+                            <tr>
+                                <td><code>prompt_history</code></td>
+                                <td>Prompt variants and their corresponding algorithm quality scores</td>
+                            </tr>
+                            <tr>
+                                <td><code>indicator_performance</code></td>
+                                <td>Which indicators correlated with higher Sharpe ratios</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>ErrorLearner</h4>
+                    <p>Analyzes compilation and runtime errors to build a knowledge base of common mistakes and their solutions:</p>
+                    <ul>
+                        <li>Categorizes errors by type (syntax, import, indicator, API misuse)</li>
+                        <li>Maps error patterns to specific code fixes</li>
+                        <li>Injects avoidance rules into generation prompts after repeated occurrences</li>
+                    </ul>
+
+                    <h4>PromptRefiner</h4>
+                    <p>Dynamically adjusts generation prompts based on iteration results:</p>
+                    <ul>
+                        <li>Adds specific constraints when errors recur (e.g., "always check .is_ready before using indicators")</li>
+                        <li>Emphasizes successful patterns (e.g., "use RSI + SMA combination which produced Sharpe &gt; 1.5")</li>
+                        <li>Adjusts risk parameters based on backtest drawdown analysis</li>
+                    </ul>
+
+                    <h4>PerformanceLearner</h4>
+                    <p>Tracks which indicators, timeframes, and strategy types produce the best backtest results:</p>
+                    <ul>
+                        <li>Correlates indicator combinations with Sharpe ratio outcomes</li>
+                        <li>Identifies optimal parameter ranges (RSI period, SMA window, etc.)</li>
+                        <li>Feeds high-performing patterns into subsequent generation prompts</li>
+                    </ul>
+
+                    <div class="alert info">
+                        <strong>Persistence:</strong> The learning database persists at <code>~/.quantcoder/learning.db</code> and accumulates knowledge across all autonomous runs. This means each new run benefits from patterns learned in previous sessions.
+                    </div>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- LIBRARY BUILDER SECTION -->
+                <!-- ============================================================ -->
+                <section id="library-builder">
+                    <h2>Library Builder</h2>
+
+                    <p>The library builder generates a comprehensive collection of validated trading strategies spanning 13+ predefined categories. It is designed for long-running batch operations with checkpoint/resume support.</p>
+
+                    <h3>Strategy Categories</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Momentum</td>
+                                <td>Trend-following strategies based on price momentum and relative strength</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Mean Reversion</td>
+                                <td>Strategies that profit from price returning to a historical mean</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Statistical Arbitrage</td>
+                                <td>Pairs trading, cointegration-based strategies</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Volatility</td>
+                                <td>VIX-based, volatility surface, and variance premium strategies</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Factor Investing</td>
+                                <td>Value, growth, quality, size, and multi-factor models</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Machine Learning</td>
+                                <td>ML-enhanced signal generation and portfolio construction</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Event-Driven</td>
+                                <td>Earnings, M&amp;A, dividend, and news-based strategies</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Market Microstructure</td>
+                                <td>Order flow, bid-ask spread, and tick data strategies</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>Seasonal / Calendar</td>
+                                <td>Day-of-week, month-of-year, and holiday effects</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Options</td>
+                                <td>Options-based strategies (covered calls, straddles, iron condors)</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>Sector Rotation</td>
+                                <td>Business cycle-based sector allocation strategies</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>Risk Parity</td>
+                                <td>Risk-budget allocation and equal risk contribution strategies</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>Multi-Asset</td>
+                                <td>Cross-asset class strategies (equities, bonds, commodities, FX)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Features</h3>
+                    <ul>
+                        <li><strong>Coverage Tracking:</strong> Monitors how many strategies have been generated per category and overall completion percentage</li>
+                        <li><strong>Checkpoint/Resume:</strong> Saves progress to disk after each successful generation, allowing interrupted builds to resume from the last checkpoint</li>
+                        <li><strong>Time Budget:</strong> The <code>--max-hours</code> flag sets a time limit; the builder prioritizes under-represented categories</li>
+                        <li><strong>Export:</strong> Completed libraries can be exported as a ZIP archive (containing all .py files) or a JSON manifest (with metadata and backtest results)</li>
+                    </ul>
+
+<pre><code># Build progress is displayed in real-time
+$ quantcoder library build --comprehensive --max-hours 24
+
+Library Builder - Comprehensive Mode
+=====================================
+Categories: 13 | Time Budget: 24h | Checkpoint: enabled
+
+[1/13] Momentum ............... 3/3 strategies generated
+[2/13] Mean Reversion ......... 3/3 strategies generated
+[3/13] Statistical Arbitrage .. 2/3 strategies generated (1 failed validation)
+[4/13] Volatility ............. generating...
+
+Progress: 11/39 strategies | 28% complete | Elapsed: 2h 15m</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- EVOLUTION ENGINE SECTION -->
+                <!-- ============================================================ -->
+                <section id="evolution-engine">
+                    <h2>Evolution Engine</h2>
+
+                    <p>The evolution engine applies structural variation to existing algorithms, inspired by DeepMind's AlphaEvolve approach. It mutates algorithm components, evaluates fitness through backtesting, and selects the best-performing variants across multiple generations.</p>
+
+                    <h3>How It Works</h3>
+                    <ol>
+                        <li><strong>Seed:</strong> Start with a base algorithm (from article generation or user-provided)</li>
+                        <li><strong>Mutate:</strong> Create N structural variants per generation by modifying specific components</li>
+                        <li><strong>Evaluate:</strong> Backtest each variant and compute fitness (Sharpe ratio, return, drawdown)</li>
+                        <li><strong>Select:</strong> Keep the top-performing variants in an elite pool</li>
+                        <li><strong>Iterate:</strong> Use elite pool members as seeds for the next generation</li>
+                    </ol>
+
+                    <h3>Mutation Operators</h3>
+                    <p>The engine applies targeted mutations to specific algorithm components:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operator</th>
+                                <th>Target</th>
+                                <th>Example Mutation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Indicator Swap</td>
+                                <td>Alpha signals</td>
+                                <td>Replace RSI(14) with Stochastic(14,3) or change RSI period to 21</td>
+                            </tr>
+                            <tr>
+                                <td>Risk Adjustment</td>
+                                <td>Risk management</td>
+                                <td>Tighten stop loss from 2% to 1.5%, increase position count from 5 to 8</td>
+                            </tr>
+                            <tr>
+                                <td>Entry/Exit Modification</td>
+                                <td>Signal logic</td>
+                                <td>Add a confirmation indicator, change threshold values, add time filters</td>
+                            </tr>
+                            <tr>
+                                <td>Universe Variation</td>
+                                <td>Stock selection</td>
+                                <td>Change market cap filter, add volume requirements, modify sector focus</td>
+                            </tr>
+                            <tr>
+                                <td>Timeframe Shift</td>
+                                <td>Resolution</td>
+                                <td>Switch from daily to hourly, or add multi-timeframe confirmation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Fitness Evaluation</h3>
+                    <p>Each variant is scored using a composite fitness function:</p>
+
+                    <div class="formula-block">
+                        <div class="formula-title">Fitness Function</div>
+                        Fitness = w1 * SharpeRatio + w2 * TotalReturn - w3 * MaxDrawdown - w4 * ErrorPenalty
+
+                        Where:
+                          w1 = 0.40  (Sharpe ratio weight)
+                          w2 = 0.25  (Total return weight)
+                          w3 = 0.25  (Drawdown penalty weight)
+                          w4 = 0.10  (Compilation/runtime error penalty)
+                          ErrorPenalty = 1.0 if variant failed validation, 0.0 otherwise
+                    </div>
+
+                    <h3>Elite Pool</h3>
+                    <p>The elite pool maintains the top-K variants across all generations. Key properties:</p>
+                    <ul>
+                        <li>Fixed size (default: 5 members)</li>
+                        <li>New variants replace the worst member if they score higher</li>
+                        <li>Elite members are used as seeds for mutations in subsequent generations</li>
+                        <li>The pool is persisted to disk, allowing evolution runs to be resumed</li>
+                    </ul>
+
+<pre><code># Example evolution progress output
+$ quantcoder evolve start 1 --gens 10 --variants 5
+
+Evolution Engine - Article 1
+============================
+Base algorithm: momentum_rsi_sma.py (Sharpe: 0.85)
+
+Generation 1: 5 variants | Best fitness: 1.02 (+20.0%)
+Generation 2: 5 variants | Best fitness: 1.15 (+35.3%)
+Generation 3: 5 variants | Best fitness: 1.15 (no improvement)
+Generation 4: 5 variants | Best fitness: 1.28 (+50.6%)
+...
+Generation 10: 5 variants | Best fitness: 1.41 (+65.9%)
+
+Elite Pool:
+  1. variant_g4_v2.py  Sharpe: 1.41  Return: 12.3%  Drawdown: -2.8%
+  2. variant_g7_v1.py  Sharpe: 1.35  Return: 11.1%  Drawdown: -3.1%
+  3. variant_g4_v4.py  Sharpe: 1.28  Return: 10.5%  Drawdown: -2.5%
+  4. variant_g10_v3.py Sharpe: 1.22  Return: 9.8%   Drawdown: -3.4%
+  5. variant_g2_v1.py  Sharpe: 1.15  Return: 8.7%   Drawdown: -2.9%</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- SCHEDULED AUTOMATION SECTION -->
+                <!-- ============================================================ -->
+                <section id="scheduled-automation">
+                    <h2>Scheduled Automation</h2>
+
+                    <p>The scheduled automation module runs the full QuantCoder pipeline on a recurring basis using APScheduler. It automates the complete cycle from article search through backtesting and optionally publishes results to Notion.</p>
+
+                    <h3>Pipeline</h3>
+                    <p>Each scheduled run executes the following steps automatically:</p>
+                    <ol>
+                        <li><strong>Search</strong> - Query CrossRef/arXiv for each configured search term</li>
+                        <li><strong>Download</strong> - Retrieve PDFs for top results (skipping previously processed articles)</li>
+                        <li><strong>Summarize</strong> - Extract strategy logic from new articles</li>
+                        <li><strong>Generate</strong> - Create QuantConnect algorithms via the multi-agent system</li>
+                        <li><strong>Validate</strong> - Compile on QuantConnect cloud</li>
+                        <li><strong>Backtest</strong> - Run backtests and extract performance metrics</li>
+                        <li><strong>Filter</strong> - Keep only algorithms meeting the minimum Sharpe threshold</li>
+                        <li><strong>Publish</strong> - (Optional) Send results to Notion database for review</li>
+                    </ol>
+
+                    <h3>Configuration</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>--interval</code></td>
+                                <td>daily</td>
+                                <td>Run frequency: <code>daily</code>, <code>weekly</code>, or <code>hourly</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>--hour</code></td>
+                                <td>6</td>
+                                <td>Hour of day to run (0-23, in local time)</td>
+                            </tr>
+                            <tr>
+                                <td><code>--queries</code></td>
+                                <td>-</td>
+                                <td>Comma-separated list of search queries</td>
+                            </tr>
+                            <tr>
+                                <td><code>--min-sharpe</code></td>
+                                <td>0.5</td>
+                                <td>Minimum Sharpe ratio to keep a generated algorithm</td>
+                            </tr>
+                            <tr>
+                                <td><code>--max-articles</code></td>
+                                <td>5</td>
+                                <td>Maximum articles to process per query per run</td>
+                            </tr>
+                            <tr>
+                                <td><code>--publish</code></td>
+                                <td>false</td>
+                                <td>Publish results to Notion (requires NOTION_API_KEY)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Notion Integration</h3>
+                    <p>When the <code>--publish</code> flag is set and a Notion API key is configured, the scheduler automatically creates entries in a Notion database with:</p>
+                    <ul>
+                        <li>Article title and DOI</li>
+                        <li>Strategy summary</li>
+                        <li>Backtest results (Sharpe, return, drawdown, trade count)</li>
+                        <li>Generated algorithm code</li>
+                        <li>Timestamp and run metadata</li>
+                    </ul>
+
+<pre><code># Example: daily scheduled pipeline
+quantcoder schedule start \
+  --interval daily \
+  --hour 6 \
+  --queries "momentum,mean reversion,volatility" \
+  --min-sharpe 1.0 \
+  --publish
+
+# Output:
+Scheduler started. Jobs:
+  [daily-6am] "momentum" - next run: 2024-07-15 06:00:00
+  [daily-6am] "mean reversion" - next run: 2024-07-15 06:00:00
+  [daily-6am] "volatility" - next run: 2024-07-15 06:00:00
+
+Press Ctrl+C to stop the scheduler.</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- LLM PROVIDERS SECTION -->
+                <!-- ============================================================ -->
+                <section id="llm-providers">
+                    <h2>LLM Providers</h2>
+
+                    <p>QuantCoder supports 5 LLM providers through a unified <code>LLMHandler</code> abstraction. Each provider can be configured for code generation, article summarization, or both.</p>
+
+                    <h3>Supported Providers</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Provider</th>
+                                <th>Default Model</th>
+                                <th>API Key Env Var</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Anthropic</td>
+                                <td><code>claude-sonnet-4-5-20250929</code></td>
+                                <td><code>ANTHROPIC_API_KEY</code></td>
+                                <td>Primary code generation - best accuracy for QuantConnect LEAN code</td>
+                            </tr>
+                            <tr>
+                                <td>Mistral</td>
+                                <td><code>devstral-2-123b</code></td>
+                                <td><code>MISTRAL_API_KEY</code></td>
+                                <td>Code alternative - strong performance on structured code generation</td>
+                            </tr>
+                            <tr>
+                                <td>DeepSeek</td>
+                                <td><code>deepseek-chat</code></td>
+                                <td><code>OPENAI_API_KEY</code> *</td>
+                                <td>Cost-effective option - good balance of quality and API cost</td>
+                            </tr>
+                            <tr>
+                                <td>OpenAI</td>
+                                <td><code>gpt-4o</code></td>
+                                <td><code>OPENAI_API_KEY</code></td>
+                                <td>Fallback provider - broad capability, widely available</td>
+                            </tr>
+                            <tr>
+                                <td>Ollama</td>
+                                <td><code>llama3.2</code> / <code>codellama</code> / <code>qwen2.5-coder</code></td>
+                                <td>None (local)</td>
+                                <td>Fully local inference - no API key required, runs on your machine</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>* DeepSeek uses the OpenAI SDK with a custom base URL (<code>https://api.deepseek.com</code>).</p>
+
+                    <h3>Dual-Provider Strategy</h3>
+                    <p>QuantCoder supports configuring separate providers for code generation and article summarization. This allows you to use a high-quality (and potentially more expensive) model for code generation while using a faster or cheaper model for summarization.</p>
+
+<pre><code># In ~/.quantcoder/config.toml
+
+[model]
+# Provider for code generation (algorithms)
+code_provider = "anthropic"
+code_model = "claude-sonnet-4-5-20250929"
+
+# Provider for article summarization
+summary_provider = "deepseek"
+summary_model = "deepseek-chat"</code></pre>
+
+                    <div class="alert info">
+                        <strong>Provider Selection:</strong> For best results with QuantConnect code generation, Anthropic Claude is recommended as the code provider. The model's instruction-following capability produces code that adheres most consistently to LEAN API conventions. DeepSeek or Ollama models work well for the less-constrained summarization task.
+                    </div>
+
+                    <h3>Ollama (Local) Setup</h3>
+                    <p>For fully local operation without any API keys:</p>
+<pre><code># Install Ollama (https://ollama.ai)
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Pull a code-optimized model
+ollama pull qwen2.5-coder:7b
+
+# Configure QuantCoder to use Ollama
+# In ~/.quantcoder/config.toml:
+[model]
+code_provider = "ollama"
+code_model = "qwen2.5-coder:7b"
+summary_provider = "ollama"
+summary_model = "llama3.2"</code></pre>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- CONFIGURATION SECTION -->
+                <!-- ============================================================ -->
+                <section id="configuration">
+                    <h2>Configuration</h2>
+
+                    <p>QuantCoder uses a TOML configuration file at <code>~/.quantcoder/config.toml</code> for persistent settings, supplemented by environment variables in <code>~/.quantcoder/.env</code> for secrets.</p>
+
+                    <h3>Configuration File</h3>
+                    <p>Full example <code>config.toml</code> with all available options:</p>
+
+<pre><code># ~/.quantcoder/config.toml
+
+# ============================================================
+# Model Configuration
+# ============================================================
+[model]
+# Code generation provider: anthropic, mistral, deepseek, openai, ollama
+code_provider = "anthropic"
+code_model = "claude-sonnet-4-5-20250929"
+
+# Summarization provider (can differ from code provider)
+summary_provider = "deepseek"
+summary_model = "deepseek-chat"
+
+# Generation parameters
+temperature = 0.2          # Lower = more deterministic code
+max_tokens = 8192          # Max output tokens per generation
+retry_attempts = 3         # Retries on LLM API errors
+
+# Ollama-specific settings (only when using ollama provider)
+ollama_base_url = "http://localhost:11434"
+
+# ============================================================
+# UI Configuration
+# ============================================================
+[ui]
+# Interactive chat settings
+theme = "dark"             # dark or light
+show_progress = true       # Show progress bars during generation
+show_agent_logs = true     # Show per-agent status in multi-agent mode
+syntax_highlight = true    # Highlight generated code in terminal
+
+# ============================================================
+# Tools Configuration
+# ============================================================
+[tools]
+# Article search
+max_search_results = 20    # Max results from CrossRef + arXiv
+cache_articles = true      # Cache downloaded articles locally
+articles_dir = "~/.quantcoder/articles"
+
+# Code generation
+output_dir = "generated_code"  # Where generated algorithms are saved
+validate_locally = true        # Run AST validation before cloud compile
+validate_cloud = true          # Compile on QuantConnect cloud
+
+# Backtesting defaults
+default_start_date = "2024-01-01"
+default_end_date = "2024-06-30"
+default_cash = 100000
+
+# QuantConnect project ID (optional - auto-created if not set)
+quantconnect_project_id = ""
+
+# Deep search
+enable_deep_search = false  # Auto-enable Tavily deep search
+tavily_max_results = 10
+
+# ============================================================
+# Logging Configuration
+# ============================================================
+[logging]
+level = "INFO"             # DEBUG, INFO, WARNING, ERROR
+log_dir = "~/.quantcoder/logs"
+max_log_files = 10         # Rotate after this many files
+log_format = "text"        # text or json
+
+# ============================================================
+# Autonomous Mode
+# ============================================================
+[autonomous]
+default_max_iterations = 50
+default_min_sharpe = 1.0
+learning_db_path = "~/.quantcoder/learning.db"
+enable_prompt_refinement = true
+enable_error_learning = true
+
+# ============================================================
+# Evolution Engine
+# ============================================================
+[evolution]
+default_generations = 10
+default_variants = 5
+elite_pool_size = 5
+fitness_weights = [0.40, 0.25, 0.25, 0.10]  # sharpe, return, drawdown, error
+
+# ============================================================
+# Library Builder
+# ============================================================
+[library]
+strategies_per_category = 3
+checkpoint_interval = 1    # Checkpoint after each strategy
+export_dir = "~/.quantcoder/library"
+
+# ============================================================
+# Scheduler
+# ============================================================
+[scheduler]
+default_interval = "daily"
+default_hour = 6
+default_min_sharpe = 0.5
+max_articles_per_query = 5
+publish_to_notion = false</code></pre>
+
+                    <h3>Environment Variables</h3>
+                    <p>Sensitive credentials are stored in <code>~/.quantcoder/.env</code> (never committed to version control):</p>
+
+<pre><code># Required - at least one LLM provider
+ANTHROPIC_API_KEY=sk-ant-api03-...
+
+# Optional - additional providers
+OPENAI_API_KEY=sk-...
+MISTRAL_API_KEY=...
+
+# Optional - QuantConnect cloud
+QUANTCONNECT_API_KEY=...
+QUANTCONNECT_USER_ID=...
+
+# Optional - Notion publishing
+NOTION_API_KEY=secret_...
+
+# Optional - Deep search
+TAVILY_API_KEY=tvly-...</code></pre>
+
+                    <div class="alert warning">
+                        <strong>Security:</strong> Never commit your <code>.env</code> file to version control. The <code>~/.quantcoder/</code> directory should contain a <code>.gitignore</code> file that excludes <code>.env</code> and <code>learning.db</code>. API keys grant access to paid services and should be treated as passwords.
+                    </div>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- VALIDATION & TESTING SECTION -->
+                <!-- ============================================================ -->
+                <section id="validation-testing">
+                    <h2>Validation &amp; Testing</h2>
+
+                    <h3>Test Suite</h3>
+                    <p>QuantCoder includes 18 test files covering all major modules. Tests use pytest with fixtures for mocking LLM responses and QuantConnect API calls.</p>
+
+<pre><code># Run all tests
+pytest tests/
+
+# Run with coverage report
+pytest tests/ --cov=quantcoder --cov-report=html
+
+# Run a specific test file
+pytest tests/test_agents.py -v
+
+# Run tests matching a pattern
+pytest tests/ -k "test_generate" -v</code></pre>
+
+                    <h3>Test Coverage</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Module</th>
+                                <th>Test File</th>
+                                <th>Key Tests</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CLI</td>
+                                <td><code>test_cli.py</code></td>
+                                <td>Command parsing, option validation, output formatting</td>
+                            </tr>
+                            <tr>
+                                <td>LLM Handler</td>
+                                <td><code>test_llm.py</code></td>
+                                <td>Provider factory, API calls, error handling, retry logic</td>
+                            </tr>
+                            <tr>
+                                <td>Article Processor</td>
+                                <td><code>test_article_processor.py</code></td>
+                                <td>PDF extraction, NLP analysis, summary generation</td>
+                            </tr>
+                            <tr>
+                                <td>Agents</td>
+                                <td><code>test_agents.py</code></td>
+                                <td>BaseAgent, Coordinator, Universe, Alpha, Risk, Strategy agents</td>
+                            </tr>
+                            <tr>
+                                <td>Tools</td>
+                                <td><code>test_tools.py</code></td>
+                                <td>Search, Download, Summarize, Generate, Validate, Backtest tools</td>
+                            </tr>
+                            <tr>
+                                <td>Autonomous</td>
+                                <td><code>test_autonomous.py</code></td>
+                                <td>Learning database, error learner, prompt refiner, runner loop</td>
+                            </tr>
+                            <tr>
+                                <td>Evolution</td>
+                                <td><code>test_evolution.py</code></td>
+                                <td>Mutation operators, fitness evaluation, elite pool management</td>
+                            </tr>
+                            <tr>
+                                <td>Library</td>
+                                <td><code>test_library.py</code></td>
+                                <td>Category management, checkpoint/resume, export</td>
+                            </tr>
+                            <tr>
+                                <td>Scheduler</td>
+                                <td><code>test_scheduler.py</code></td>
+                                <td>Job scheduling, pipeline execution, Notion publishing</td>
+                            </tr>
+                            <tr>
+                                <td>Config</td>
+                                <td><code>test_config.py</code></td>
+                                <td>TOML parsing, .env loading, default values</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Validation Pipeline</h3>
+                    <p>Generated algorithms pass through a multi-stage validation pipeline before being accepted:</p>
+
+                    <h4>Stage 1: Local AST Syntax Validation</h4>
+                    <p>Parses the generated Python code using the <code>ast</code> module to check for syntax errors without executing the code. This catches:</p>
+                    <ul>
+                        <li>Invalid Python syntax</li>
+                        <li>Unclosed brackets, parentheses, or strings</li>
+                        <li>Indentation errors</li>
+                        <li>Invalid escape sequences</li>
+                    </ul>
+
+                    <h4>Stage 2: QuantConnect Cloud Compilation</h4>
+                    <p>Submits the algorithm to QuantConnect via MCP for cloud compilation. This catches:</p>
+                    <ul>
+                        <li>Missing or incorrect imports</li>
+                        <li>Incorrect LEAN API usage (wrong method names, argument types)</li>
+                        <li>Indicator registration errors</li>
+                        <li>Missing <code>initialize()</code> or <code>on_data()</code> methods</li>
+                    </ul>
+
+                    <h4>Stage 3: Backtest Execution</h4>
+                    <p>Runs the compiled algorithm on QuantConnect's backtesting engine. Extracts:</p>
+                    <ul>
+                        <li>Sharpe ratio</li>
+                        <li>Total return and annualized return</li>
+                        <li>Maximum drawdown</li>
+                        <li>Total number of trades</li>
+                        <li>Win rate and profit factor</li>
+                    </ul>
+
+                    <h4>Stage 4: Autonomous Error Learning Validation</h4>
+                    <p>If autonomous mode is active, the learning system validates that known error patterns have been avoided:</p>
+                    <ul>
+                        <li>Checks for previously seen compilation errors</li>
+                        <li>Validates indicator <code>.is_ready</code> guards are present</li>
+                        <li>Ensures underscore-prefixed indicator names</li>
+                        <li>Confirms risk management parameters are set</li>
+                    </ul>
+
+                    <div class="alert success">
+                        <strong>Validation Guarantee:</strong> Algorithms that pass all four validation stages are syntactically correct Python, compilable on the QuantConnect LEAN engine, executable in backtesting, and conform to all learned best practices from previous generation runs. This multi-stage approach minimizes the likelihood of runtime errors during live deployment.
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="docs-footer">
+        <div class="docs-footer-content">
+            <p>&copy; 2026 QuantCoder. Apache License 2.0.</p>
+            <p>
+                <a href="https://github.com/SL-Mar/quantcoder">GitHub</a> &bull;
+                <a href="https://quantcoder-fs.com">Website</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

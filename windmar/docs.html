@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmar Documentation - Technical Reference</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="docs-header">
+    <div class="docs-header-content">
+        <a href="docs.html" class="docs-logo">
+            <i class="fas fa-ship"></i>
+            <span>Windmar</span>
+        </a>
+        <nav>
+            <ul class="docs-nav">
+                <li><a href="docs.html" class="active">Documentation</a></li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </nav>
+        <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+    </div>
+</header>
+
+<!-- Main Layout -->
+<div class="docs-container">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Getting Started</div>
+            <ul class="sidebar-menu">
+                <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
+                <li><a href="#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                <li><a href="#installation"><i class="fas fa-download"></i> Installation</a></li>
+                <li><a href="#tech-stack"><i class="fas fa-layer-group"></i> Tech Stack</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Physical Models</div>
+            <ul class="sidebar-menu">
+                <li><a href="#calm-water"><i class="fas fa-water"></i> Calm Water Resistance</a></li>
+                <li><a href="#wind-resistance"><i class="fas fa-wind"></i> Wind Resistance</a></li>
+                <li><a href="#wave-resistance"><i class="fas fa-wave-square"></i> Wave Resistance</a></li>
+                <li><a href="#sfoc-curve"><i class="fas fa-gas-pump"></i> SFOC Curve</a></li>
+                <li><a href="#propulsion-chain"><i class="fas fa-cog"></i> Propulsion Chain</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Seakeeping</div>
+            <ul class="sidebar-menu">
+                <li><a href="#ship-motions"><i class="fas fa-arrows-alt"></i> Ship Motions</a></li>
+                <li><a href="#safety-criteria"><i class="fas fa-shield-alt"></i> Safety Criteria</a></li>
+                <li><a href="#slamming-roll"><i class="fas fa-exclamation-triangle"></i> Slamming &amp; Roll</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Route Optimization</div>
+            <ul class="sidebar-menu">
+                <li><a href="#astar-algorithm"><i class="fas fa-route"></i> A* Algorithm</a></li>
+                <li><a href="#variable-speed"><i class="fas fa-tachometer-alt"></i> Variable Speed</a></li>
+                <li><a href="#safety-constraints"><i class="fas fa-ban"></i> Safety Constraints</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Compliance</div>
+            <ul class="sidebar-menu">
+                <li><a href="#cii-rating"><i class="fas fa-certificate"></i> IMO CII Rating</a></li>
+                <li><a href="#regulatory-zones"><i class="fas fa-map-marked-alt"></i> Regulatory Zones</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">API Reference</div>
+            <ul class="sidebar-menu">
+                <li><a href="#weather-api"><i class="fas fa-cloud-sun"></i> Weather API</a></li>
+                <li><a href="#route-api"><i class="fas fa-directions"></i> Route API</a></li>
+                <li><a href="#vessel-api"><i class="fas fa-anchor"></i> Vessel API</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Validation</div>
+            <ul class="sidebar-menu">
+                <li><a href="#model-validation"><i class="fas fa-check-circle"></i> Model Validation</a></li>
+                <li><a href="#calibration"><i class="fas fa-sliders-h"></i> Calibration</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Resources</div>
+            <ul class="sidebar-menu">
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <div class="docs-content">
+
+            <!-- ============================================================ -->
+            <!-- OVERVIEW -->
+            <!-- ============================================================ -->
+            <section id="overview">
+                <h1>Windmar Technical Documentation</h1>
+                <p class="docs-subtitle">Weather-aware maritime route optimization for MR product tankers</p>
+
+                <div class="alert info">
+                    <strong><i class="fas fa-info-circle"></i> Maritime Operations Tool</strong><br>
+                    Windmar is a physics-based vessel performance modeling system with weather-aware A* route optimization,
+                    fuel consumption minimization, and IMO CII compliance tracking. It combines hydrodynamic resistance
+                    calculations, seakeeping analysis, and real-time weather data to find the safest and most fuel-efficient
+                    routes for MR product tankers.
+                </div>
+
+                <h3>What is Windmar?</h3>
+                <p>
+                    Windmar is an end-to-end maritime route optimization platform designed for Medium Range (MR) product
+                    tankers. It models the complete chain of vessel performance physics &mdash; from calm water resistance
+                    through wind and wave added resistance, engine SFOC curves, and propulsion efficiency &mdash; to
+                    predict fuel consumption under real weather conditions. The A* pathfinding algorithm then searches
+                    for the route that minimizes total fuel consumption while respecting safety constraints and regulatory
+                    zones. All calculations are grounded in established naval architecture methods: Holtrop-Mennen for
+                    hull resistance, Blendermann for wind loads, Kwon for wave added resistance, and simplified strip
+                    theory for seakeeping motions.
+                </p>
+                <p>
+                    The system ingests weather forecasts from Copernicus Marine Service (CMEMS) for waves and ocean
+                    currents, and ERA5 reanalysis for wind fields. It evaluates vessel motions (roll, pitch,
+                    vertical acceleration) and enforces safety criteria that block or penalize dangerous sea states.
+                    Finally, it calculates the IMO Carbon Intensity Indicator (CII) rating for the completed voyage,
+                    enabling operators to assess regulatory compliance before departure.
+                </p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-water"></i> Vessel Performance</h4>
+                        <ul>
+                            <li>Holtrop-Mennen calm water resistance</li>
+                            <li>Blendermann wind resistance model</li>
+                            <li>Kwon wave added resistance formula</li>
+                            <li>Engine SFOC curves with load-dependent correction</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-route"></i> Route Optimization</h4>
+                        <ul>
+                            <li>Weather-aware A* pathfinding</li>
+                            <li>Variable speed optimization per leg</li>
+                            <li>Land avoidance with global-land-mask</li>
+                            <li>Path smoothing with fuel impact verification</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-shield-alt"></i> Seakeeping Safety</h4>
+                        <ul>
+                            <li>Roll, pitch, and acceleration prediction</li>
+                            <li>Slamming probability assessment</li>
+                            <li>Parametric roll risk detection</li>
+                            <li>Safety constraints in route optimization</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-cloud-sun"></i> Weather Integration</h4>
+                        <ul>
+                            <li>Copernicus CMEMS wave data</li>
+                            <li>ERA5 wind reanalysis fields</li>
+                            <li>Ocean current vectors</li>
+                            <li>3-hourly forecast resolution</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-certificate"></i> IMO Compliance</h4>
+                        <ul>
+                            <li>CII rating calculator (A through E)</li>
+                            <li>MEPC.339(76) reference values</li>
+                            <li>Multi-year reduction factor projections</li>
+                            <li>CO2 emission factors for multiple fuel types</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-sliders-h"></i> Vessel Calibration</h4>
+                        <ul>
+                            <li>Noon report processing from Excel</li>
+                            <li>scipy.optimize parameter fitting</li>
+                            <li>Per-component calibration factors</li>
+                            <li>RMSE-based objective minimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- ARCHITECTURE -->
+            <!-- ============================================================ -->
+            <section id="architecture">
+                <h2>Architecture</h2>
+
+                <h3>Component Overview</h3>
+                <p>
+                    Windmar follows a layered architecture with a clear separation between the user-facing frontend,
+                    the API backend, the physics-based optimization engine, and external data providers. Each component
+                    runs as an independent service orchestrated via Docker Compose.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Technology</th>
+                            <th>Responsibility</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>Next.js 15</td>
+                            <td>Map visualization, route input, results display, CII dashboard</td>
+                        </tr>
+                        <tr>
+                            <td>Backend</td>
+                            <td>FastAPI (Python)</td>
+                            <td>REST API, request validation, orchestration of optimization engine</td>
+                        </tr>
+                        <tr>
+                            <td>Optimization Engine</td>
+                            <td>Python (NumPy, SciPy)</td>
+                            <td>Physics models, A* pathfinding, speed optimization, seakeeping</td>
+                        </tr>
+                        <tr>
+                            <td>Weather Provider</td>
+                            <td>Copernicus CMEMS / ERA5</td>
+                            <td>Wave height, wind fields, ocean currents, 3-hourly forecasts</td>
+                        </tr>
+                        <tr>
+                            <td>Database</td>
+                            <td>PostgreSQL 16</td>
+                            <td>Vessel specs, route history, calibration data, regulatory zones</td>
+                        </tr>
+                        <tr>
+                            <td>Cache</td>
+                            <td>Redis 7</td>
+                            <td>Weather field caching, session state, computation results</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Data Flow</h3>
+                <ol>
+                    <li><strong>Route Definition</strong> &mdash; User defines departure, arrival, and waypoints on the map interface. Vessel condition (laden/ballast) and speed preferences are selected.</li>
+                    <li><strong>Weather Fetch</strong> &mdash; Backend requests weather data from Copernicus for the route corridor. Wind, wave, and current fields are interpolated to the optimization grid.</li>
+                    <li><strong>Performance Calculation</strong> &mdash; For each grid cell, the optimization engine computes total resistance (calm water + wind + waves), brake power, SFOC, and fuel consumption at candidate speeds.</li>
+                    <li><strong>A* Pathfinding</strong> &mdash; The A* algorithm searches the grid using fuel consumption as the edge cost. Safety constraints block or penalize dangerous cells. Regulatory zones modify costs.</li>
+                    <li><strong>Speed Optimization</strong> &mdash; Each leg of the optimal path is individually speed-optimized to minimize fuel per nautical mile given local weather conditions.</li>
+                    <li><strong>Results</strong> &mdash; The optimized route, fuel estimate, ETA, leg-by-leg breakdown, seakeeping assessment, and CII rating are returned to the frontend for display.</li>
+                </ol>
+
+                <h3>Docker Services</h3>
+                <pre><code>services:
+  db:
+    image: postgres:16
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_DB: windmar
+      POSTGRES_USER: windmar
+      POSTGRES_PASSWORD: windmar
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  backend:
+    build: ./backend
+    ports: ["8003:8000"]
+    depends_on: [db, redis]
+
+  frontend:
+    build: ./frontend
+    ports: ["3003:3000"]
+    depends_on: [backend]</code></pre>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- INSTALLATION -->
+            <!-- ============================================================ -->
+            <section id="installation">
+                <h2>Installation</h2>
+
+                <h3>Prerequisites</h3>
+                <ul>
+                    <li>Python 3.10 or later</li>
+                    <li>Node.js 18 or later</li>
+                    <li>Docker &amp; Docker Compose</li>
+                </ul>
+
+                <h3>Docker Compose (Recommended)</h3>
+                <pre><code>git clone https://github.com/SL-Mar/windmar.git
+cd windmar
+docker compose up -d</code></pre>
+                <p>
+                    This starts all four services (PostgreSQL, Redis, backend, frontend). The frontend is accessible
+                    at <code>http://localhost:3003</code> and the backend API at <code>http://localhost:8003</code>.
+                </p>
+
+                <h3>Manual Setup</h3>
+                <h4>Backend</h4>
+                <pre><code>cd backend
+pip install poetry
+poetry install
+poetry run uvicorn app.main:app --host 0.0.0.0 --port 8003</code></pre>
+
+                <h4>Frontend</h4>
+                <pre><code>cd frontend
+npm install
+npm run dev -- --port 3003</code></pre>
+
+                <h3>Environment Variables</h3>
+                <p>Create a <code>.env</code> file in the project root with the following variables:</p>
+                <pre><code>COPERNICUS_USERNAME=your_username
+COPERNICUS_PASSWORD=your_password
+DATABASE_URL=postgresql://windmar:windmar@localhost:5432/windmar
+REDIS_URL=redis://localhost:6379</code></pre>
+
+                <div class="alert warning">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Weather Data Credentials</strong><br>
+                    Copernicus Marine Service credentials are required for real weather data (wave heights, wind fields,
+                    ocean currents). Register at <a href="https://marine.copernicus.eu/">marine.copernicus.eu</a> to
+                    obtain free credentials. A synthetic weather provider is available for testing and development
+                    without credentials.
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TECH STACK -->
+            <!-- ============================================================ -->
+            <section id="tech-stack">
+                <h2>Tech Stack</h2>
+
+                <h3>Backend</h3>
+                <table>
+                    <thead>
+                        <tr><th>Library</th><th>Version</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>FastAPI</td><td>0.104+</td><td>REST API framework</td></tr>
+                        <tr><td>Uvicorn</td><td>0.24+</td><td>ASGI server</td></tr>
+                        <tr><td>SQLAlchemy</td><td>2.0+</td><td>ORM and database access</td></tr>
+                        <tr><td>Pydantic</td><td>2.0+</td><td>Request/response validation</td></tr>
+                        <tr><td>Alembic</td><td>1.13+</td><td>Database migrations</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Frontend</h3>
+                <table>
+                    <thead>
+                        <tr><th>Library</th><th>Version</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Next.js</td><td>15</td><td>React framework with SSR</td></tr>
+                        <tr><td>React</td><td>19</td><td>UI component library</td></tr>
+                        <tr><td>Leaflet</td><td>1.9+</td><td>Map rendering and route display</td></tr>
+                        <tr><td>Recharts</td><td>2.10+</td><td>Charts for fuel, CII, seakeeping data</td></tr>
+                        <tr><td>Tailwind CSS</td><td>3.4+</td><td>Utility-first styling</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Scientific Computing</h3>
+                <table>
+                    <thead>
+                        <tr><th>Library</th><th>Version</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>NumPy</td><td>1.26+</td><td>Array operations, vector math</td></tr>
+                        <tr><td>SciPy</td><td>1.11+</td><td>Optimization (Nelder-Mead), interpolation</td></tr>
+                        <tr><td>global-land-mask</td><td>1.0+</td><td>Land/ocean grid classification</td></tr>
+                        <tr><td>xarray</td><td>2024.1+</td><td>NetCDF weather data handling</td></tr>
+                        <tr><td>copernicusmarine</td><td>1.0+</td><td>Copernicus CMEMS API client</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Database &amp; Cache</h3>
+                <table>
+                    <thead>
+                        <tr><th>Service</th><th>Version</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>PostgreSQL</td><td>16</td><td>Persistent storage for vessel specs, routes, zones</td></tr>
+                        <tr><td>Redis</td><td>7</td><td>Weather field caching, session state</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>External APIs</h3>
+                <table>
+                    <thead>
+                        <tr><th>Service</th><th>Data</th><th>Resolution</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Copernicus CMEMS</td><td>Significant wave height, wave period, wave direction</td><td>0.25 deg, 3-hourly</td></tr>
+                        <tr><td>ERA5 Reanalysis</td><td>10m wind speed, wind direction</td><td>0.25 deg, hourly</td></tr>
+                        <tr><td>Copernicus CMEMS</td><td>Ocean current speed and direction</td><td>0.083 deg, daily</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- CALM WATER RESISTANCE -->
+            <!-- ============================================================ -->
+            <section id="calm-water">
+                <h2>Calm Water Resistance</h2>
+
+                <p>
+                    Calm water resistance is the foundation of all fuel consumption predictions. Windmar implements the
+                    Holtrop-Mennen method, the industry-standard empirical approach for estimating hull resistance of
+                    displacement vessels. The method decomposes total resistance into frictional, wave-making, and
+                    appendage components, each derived from the vessel's principal dimensions and hull form coefficients.
+                </p>
+
+                <h3>Holtrop-Mennen Method</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">Total Calm Water Resistance</div>
+R_total = R_f + R_w + R_app
+
+Where:
+  R_f   = Frictional resistance (dominant at low Froude numbers)
+  R_w   = Wave-making resistance (grows exponentially with speed)
+  R_app = Appendage resistance (rudder, shaft brackets, etc.)
+                </div>
+
+                <h3>A) Frictional Resistance (R_f)</h3>
+                <p>
+                    Frictional resistance arises from the viscous shear stress between the hull surface and the surrounding
+                    water. It dominates at service speeds typical of MR tankers (Froude number 0.12-0.18). The ITTC 1957
+                    model-ship correlation line provides the friction coefficient, and the Holtrop form factor accounts
+                    for the three-dimensional shape of the hull.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Frictional Resistance</div>
+R_f = 0.5 &times; &rho;_sw &times; V&sup2; &times; S &times; C_f &times; (1 + k_1)
+
+Where:
+  &rho;_sw = 1025 kg/m&sup3;                      (seawater density)
+  V     = ship speed (m/s)
+  S     = wetted surface area (m&sup2;)
+  C_f   = 0.075 / (log10(Rn) - 2)&sup2;        (ITTC 1957 friction line)
+  Rn    = V &times; L_pp / &nu;_sw                  (Reynolds number)
+  &nu;_sw  = 1.19 &times; 10&sup_6 m&sup2;/s              (kinematic viscosity at 15&deg;C)
+                </div>
+
+                <p>
+                    At service speed of 14.5 knots (7.46 m/s) with L_pp = 176 m, the Reynolds number is approximately
+                    1.1 &times; 10<sup>9</sup>, placing the flow firmly in the turbulent regime. The friction coefficient
+                    C_f is then approximately 0.00145.
+                </p>
+
+                <h3>Form Factor (1 + k_1)</h3>
+                <p>
+                    The form factor corrects the flat-plate friction coefficient for the three-dimensional hull shape.
+                    Holtrop-Mennen provides a regression formula for tanker hull forms based on the principal dimension
+                    ratios and block coefficient.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Holtrop-Mennen Form Factor for Tankers</div>
+k_1 = 0.93 + 0.4871 &times; (B / L_pp) - 0.2156 &times; (B / T) + 0.1027 &times; C_b
+
+Default MR tanker values:
+  B / L_pp          = 32 / 176 = 0.182
+  B / T_laden       = 32 / 11.8 = 2.71
+  B / T_ballast     = 32 / 6.5 = 4.92
+  C_b_laden         = 0.82
+  C_b_ballast       = 0.75
+
+Resulting form factors:
+  (1 + k_1)_laden   = 1 + 0.93 + 0.4871 &times; 0.182 - 0.2156 &times; 2.71 + 0.1027 &times; 0.82
+                     &asymp; 1.52
+  (1 + k_1)_ballast &asymp; 1.35
+                </div>
+
+                <h3>B) Wave-Making Resistance (R_w)</h3>
+                <p>
+                    Wave-making resistance is generated by the pressure field around the hull that creates surface waves.
+                    For MR tankers operating at low Froude numbers (Fr &lt; 0.2), wave-making resistance is a small
+                    fraction of total resistance. However, it increases exponentially with speed, making it the dominant
+                    factor limiting maximum speed.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Wave-Making Resistance</div>
+R_w = c_1 &times; c_7 &times; &Delta; &times; &rho;_sw &times; g &times; exp(-0.4 &times; Fr^(-2))     for Fr &lt; 0.4
+R_w = 0                                                            for Fr &ge; 0.4
+
+Where:
+  Fr  = V / sqrt(g &times; L_pp)                 (Froude number)
+  c_1 = 2223105 &times; C_b^3.78613 &times; (T/B)^1.07961
+  c_7 = 0.229577 &times; (B/L_pp)^(1/3)
+  &Delta;   = displacement (tonnes)
+  g   = 9.81 m/s&sup2;
+                </div>
+
+                <p>
+                    At the design speed of 14.5 knots, the Froude number for an MR tanker is approximately
+                    Fr = 7.46 / sqrt(9.81 &times; 176) &asymp; 0.179. The exponential term exp(-0.4 &times; 0.179<sup>-2</sup>)
+                    is very small, confirming that wave-making resistance contributes less than 5% of total resistance
+                    at service speed.
+                </p>
+
+                <h3>C) Appendage Resistance (R_app)</h3>
+                <p>
+                    Appendage resistance accounts for the drag of the rudder, propeller shaft brackets, bilge keels,
+                    and other hull appendages. For MR tankers with standard appendage configurations, this is estimated
+                    as a fixed percentage of frictional resistance.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Appendage Resistance</div>
+R_app = 0.05 &times; R_f     (5% of frictional resistance)
+                </div>
+
+                <h3>Default MR Tanker Specifications</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Laden</th>
+                            <th>Ballast</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>LOA</td><td>183.0 m</td><td>183.0 m</td></tr>
+                        <tr><td>L_pp</td><td>176.0 m</td><td>176.0 m</td></tr>
+                        <tr><td>Beam</td><td>32.0 m</td><td>32.0 m</td></tr>
+                        <tr><td>Draft</td><td>11.8 m</td><td>6.5 m</td></tr>
+                        <tr><td>Displacement</td><td>65,000 MT</td><td>20,000 MT</td></tr>
+                        <tr><td>Block Coefficient (C_b)</td><td>0.82</td><td>0.75</td></tr>
+                        <tr><td>Wetted Surface</td><td>7,500 m&sup2;</td><td>5,200 m&sup2;</td></tr>
+                        <tr><td>Service Speed</td><td>14.5 kts</td><td>15.0 kts</td></tr>
+                        <tr><td>DWT</td><td>49,000 MT</td><td>&mdash;</td></tr>
+                        <tr><td>MCR</td><td>8,840 kW</td><td>8,840 kW</td></tr>
+                        <tr><td>SFOC at MCR</td><td>171 g/kWh</td><td>171 g/kWh</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- WIND RESISTANCE -->
+            <!-- ============================================================ -->
+            <section id="wind-resistance">
+                <h2>Wind Resistance</h2>
+
+                <p>
+                    Wind resistance is computed using the Blendermann method, which models the aerodynamic forces on the
+                    vessel's above-water structure as a function of relative wind speed, direction, and the vessel's
+                    projected areas. The method accounts for both longitudinal (drag) and transverse (side force)
+                    components, with the longitudinal component directly opposing forward motion and the transverse
+                    component contributing indirectly through induced drift.
+                </p>
+
+                <h3>Blendermann Method</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">Relative Wind Angle</div>
+&theta;_rel = |((wind_dir - heading) + 180) % 360 - 180|
+
+Range: 0&deg; (head wind) to 180&deg; (following wind)
+                </div>
+
+                <div class="formula-block">
+                    <div class="formula-title">Wind Force Coefficients</div>
+Longitudinal coefficient:
+  C_x = -0.6 &times; cos(&theta;_rel) + 0.8 &times; cos&sup2;(&theta;_rel)
+
+Transverse coefficient:
+  C_y = 0.9 &times; sin(&theta;_rel)
+                </div>
+
+                <div class="formula-block">
+                    <div class="formula-title">Wind Forces and Total Resistance</div>
+Longitudinal force:
+  F_x = 0.5 &times; &rho;_air &times; V_wind&sup2; &times; A_frontal &times; |C_x|
+
+Transverse force:
+  F_y = 0.5 &times; &rho;_air &times; V_wind&sup2; &times; A_lateral &times; |C_y|
+
+Total wind resistance:
+  R_wind = F_x + 0.1 &times; F_y
+
+Where:
+  &rho;_air = 1.225 kg/m&sup3; (air density at 15&deg;C, sea level)
+  V_wind = true wind speed (m/s)
+  A_frontal = projected frontal area (m&sup2;)
+  A_lateral = projected lateral area (m&sup2;)
+                </div>
+
+                <h3>Wind Projection Areas</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Area</th>
+                            <th>Laden</th>
+                            <th>Ballast</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Frontal (A_frontal)</td><td>450 m&sup2;</td><td>850 m&sup2;</td></tr>
+                        <tr><td>Lateral (A_lateral)</td><td>2,100 m&sup2;</td><td>2,800 m&sup2;</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="alert info">
+                    <strong><i class="fas fa-info-circle"></i> Ballast Wind Exposure</strong><br>
+                    In ballast condition the vessel rides higher, exposing 89% more frontal area (850 vs 450 m&sup2;) and
+                    33% more lateral area (2,800 vs 2,100 m&sup2;) to the wind. This results in significantly higher
+                    windage forces, particularly in head wind conditions where ballast wind resistance can exceed
+                    laden resistance by a factor of two or more.
+                </div>
+
+                <h3>Physical Interpretation by Wind Angle</h3>
+                <ul>
+                    <li><strong>Head wind (0&deg;)</strong> &mdash; Maximum longitudinal resistance. C_x reaches its peak value. This is the worst-case scenario for fuel consumption.</li>
+                    <li><strong>Beam wind (90&deg;)</strong> &mdash; Minimal longitudinal component but maximum transverse force. The 10% coupling factor from F_y captures the drift-induced resistance.</li>
+                    <li><strong>Following wind (180&deg;)</strong> &mdash; Minimal resistance. The wind partially assists forward motion. C_x is near zero or slightly negative (assisting).</li>
+                </ul>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- WAVE RESISTANCE -->
+            <!-- ============================================================ -->
+            <section id="wave-resistance">
+                <h2>Wave Resistance</h2>
+
+                <p>
+                    Wave added resistance is the increase in hull resistance caused by the vessel's interaction with
+                    ocean waves. Windmar uses the Kwon empirical formula, which estimates added resistance as a function
+                    of significant wave height, beam, Froude number, and the encounter angle between the vessel heading
+                    and the dominant wave direction.
+                </p>
+
+                <h3>Kwon Empirical Formula</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">Wave Added Resistance</div>
+R_wave = directional_factor &times; 4.5 &times; &rho;_sw &times; g &times; B &times; H_s&sup2; &times; (1 + Fr)
+
+Directional factor:
+  directional_factor = (1 + cos(&theta;_encounter)) / 2
+
+Values by encounter angle:
+  Head seas   (&theta; = 0&deg;):   directional_factor = 1.0
+  Bow quarter (&theta; = 45&deg;):  directional_factor = 0.85
+  Beam seas   (&theta; = 90&deg;):  directional_factor = 0.5
+  Stern quarter (&theta; = 135&deg;): directional_factor = 0.15
+  Following seas (&theta; = 180&deg;): directional_factor = 0.0
+
+Where:
+  H_s  = significant wave height (m)
+  B    = beam (m)
+  Fr   = V / sqrt(g &times; L_pp)    (Froude number)
+  &rho;_sw = 1025 kg/m&sup3;
+  g    = 9.81 m/s&sup2;
+                </div>
+
+                <p>
+                    The Kwon formula produces a quadratic dependence on wave height: doubling H_s from 2 m to 4 m
+                    increases wave added resistance by a factor of four. The directional factor ensures that head seas
+                    produce maximum added resistance while following seas produce none, which matches the physical
+                    expectation that waves opposing the vessel's motion cause the greatest speed loss.
+                </p>
+
+                <p>
+                    For a laden MR tanker in head seas with H_s = 3 m at service speed (Fr &asymp; 0.179), the wave
+                    added resistance is approximately:
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Example Calculation</div>
+R_wave = 1.0 &times; 4.5 &times; 1025 &times; 9.81 &times; 32 &times; 3&sup2; &times; (1 + 0.179)
+       = 1.0 &times; 4.5 &times; 1025 &times; 9.81 &times; 32 &times; 9 &times; 1.179
+       &asymp; 15,400 N  &asymp; 15.4 kN
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- SFOC CURVE -->
+            <!-- ============================================================ -->
+            <section id="sfoc-curve">
+                <h2>SFOC Curve</h2>
+
+                <p>
+                    Specific Fuel Oil Consumption (SFOC) describes the mass of fuel consumed per unit of energy delivered
+                    by the engine. It varies with engine load: marine diesel engines have an optimal efficiency zone
+                    around 75% of Maximum Continuous Rating (MCR), with increasing specific consumption at both lower
+                    and higher loads. Windmar models this behavior with a piecewise linear correction applied to the
+                    MCR reference SFOC.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">SFOC Load Correction</div>
+Below optimal load (load_fraction &lt; 0.75):
+  SFOC = SFOC_MCR &times; (1.0 + 0.15 &times; (0.75 - load_fraction))
+
+At or above optimal load (load_fraction &ge; 0.75):
+  SFOC = SFOC_MCR &times; (1.0 + 0.05 &times; (load_fraction - 0.75))
+
+Constraints:
+  load_fraction = max(0.15, min(1.0, P_brake / P_MCR))
+  SFOC_MCR = 171 g/kWh    (manufacturer specification)
+                </div>
+
+                <p>
+                    The asymmetric correction reflects the physical reality of diesel engine combustion: at low loads,
+                    incomplete combustion and thermal losses increase specific consumption more steeply (15% penalty
+                    per 0.1 load fraction below 75%) than the mild increase at high loads (5% penalty per 0.1 above 75%)
+                    caused by increased cylinder pressures and thermal stress.
+                </p>
+
+                <h3>SFOC Behavior by Engine Load</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Engine Load</th>
+                            <th>SFOC (g/kWh)</th>
+                            <th>Efficiency Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>15% (minimum)</td><td>~186</td><td>Minimum load limit; high specific consumption</td></tr>
+                        <tr><td>50%</td><td>~177</td><td>Part-load penalty; below optimal range</td></tr>
+                        <tr><td>75%</td><td>~171</td><td>Optimal operating point; minimum SFOC</td></tr>
+                        <tr><td>85%</td><td>~172</td><td>Near optimal; slight overload penalty</td></tr>
+                        <tr><td>100% (MCR)</td><td>~173</td><td>Full load; mild thermal penalty</td></tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    The engine load is clamped to the range [0.15, 1.0]. Below 15% load, the engine is considered
+                    non-operational. Above 100% MCR, the engine cannot deliver more power, so the brake power is
+                    capped at P_MCR = 8,840 kW.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- PROPULSION CHAIN -->
+            <!-- ============================================================ -->
+            <section id="propulsion-chain">
+                <h2>Propulsion Chain</h2>
+
+                <p>
+                    The propulsion chain converts total hull resistance into brake power demand and then into fuel
+                    consumption. It accounts for the efficiencies of the propeller, the hull-propeller interaction,
+                    and the relative rotative efficiency of the propulsion system.
+                </p>
+
+                <h3>Brake Power Calculation</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">Tow Power to Brake Power</div>
+Tow power (power to overcome resistance):
+  P_tow = R_total &times; V / 1000     [kW]
+
+Where:
+  R_total = R_calm + R_wind + R_wave   [N]
+  V = ship speed [m/s]
+
+Brake power (engine output):
+  P_brake = P_tow / (&eta;_prop &times; &eta;_hull &times; &eta;_rre)
+
+Where:
+  &eta;_prop = 0.65     (propeller open-water efficiency)
+  &eta;_hull = 1.05     (hull efficiency; &gt; 1 due to wake gain)
+  &eta;_rre  = 1.00     (relative rotative efficiency)
+
+Combined propulsive efficiency:
+  &eta;_total = &eta;_prop &times; &eta;_hull &times; &eta;_rre = 0.65 &times; 1.05 &times; 1.00 = 0.6825
+
+Power capped at MCR:
+  P_brake = min(P_brake, P_MCR)
+  P_MCR = 8,840 kW
+                </div>
+
+                <p>
+                    Hull efficiency exceeds 1.0 because the wake behind the hull reduces the effective inflow velocity
+                    to the propeller relative to the ship speed. The propeller operates in a flow field that is
+                    slower than the free-stream velocity, requiring less thrust to overcome the same resistance.
+                </p>
+
+                <h3>Fuel Consumption</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">Fuel Consumption per Time Step</div>
+Fuel [MT] = (P_brake &times; SFOC &times; time_hours) / 1,000,000
+
+Where:
+  P_brake    = brake power [kW]
+  SFOC       = specific fuel oil consumption [g/kWh] (load-dependent)
+  time_hours = duration of the leg [hours]
+  1,000,000  = conversion from grams to metric tonnes
+                </div>
+
+                <p>
+                    For example, at service speed in calm water with P_brake = 5,500 kW and SFOC = 172 g/kWh,
+                    a 24-hour transit consumes approximately:
+                </p>
+                <pre><code>Fuel = (5500 &times; 172 &times; 24) / 1,000,000 = 22.7 MT/day</code></pre>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- SHIP MOTIONS -->
+            <!-- ============================================================ -->
+            <section id="ship-motions">
+                <h2>Ship Motions</h2>
+
+                <p>
+                    Ship motion prediction is essential for seakeeping assessment and safety enforcement during route
+                    optimization. Windmar implements simplified strip-theory models for roll, pitch, and vertical
+                    acceleration. These models provide physically meaningful motion estimates that capture the dominant
+                    effects of wave height, encounter frequency, and vessel loading condition.
+                </p>
+
+                <h3>Roll Motion &mdash; Single DOF Oscillator</h3>
+                <p>
+                    Roll is modeled as a single degree-of-freedom oscillator driven by the transverse wave slope.
+                    The response amplitude operator (RAO) captures the frequency-dependent magnification, with
+                    resonance occurring when the encounter frequency matches the vessel's natural roll frequency.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Roll Amplitude</div>
+Roll amplitude [rad]:
+  &phi; = (wave_slope / GM) &times; (H_s / 2) &times; RAO &times; sin(&theta;_beam)
+
+Response Amplitude Operator:
+  RAO = 1 / sqrt((1 - (&omega;_e / &omega;_roll)&sup2;)&sup2; + (2 &times; &zeta; &times; (&omega;_e / &omega;_roll))&sup2;)
+
+Where:
+  &omega;_roll = 2&pi; / T_roll           (natural roll frequency)
+  T_roll:  14 s (laden), 10 s (ballast)
+  &zeta;      = 0.05                    (5% critical damping)
+  GM:      2.5 m (laden), 4.0 m (ballast)
+  &theta;_beam = angle from beam          (90&deg; = pure beam seas)
+  &omega;_e   = encounter frequency      (depends on ship speed &amp; heading)
+                </div>
+
+                <p>
+                    The natural roll period is longer in laden condition (14 s) due to the higher metacentric height
+                    combined with greater mass moment of inertia. Ballast condition has a shorter period (10 s)
+                    because the higher GM (4.0 m) produces a stiffer restoring moment relative to the reduced inertia.
+                    The 5% critical damping ratio is conservative and accounts for hull friction, bilge keel effects,
+                    and cargo damping.
+                </p>
+
+                <h3>Pitch Motion</h3>
+                <p>
+                    Pitch is driven primarily by head seas and bow-quarter seas. The amplitude depends on the wave
+                    slope, the encounter angle (maximum in head seas), and a pitch factor that captures the
+                    wavelength-to-ship-length tuning effect.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Pitch Amplitude</div>
+Pitch amplitude [deg]:
+  &theta;_pitch = 10 &times; wave_slope &times; |cos(&theta;_enc)| &times; pitch_factor
+
+Pitch factor depends on L/&lambda; ratio:
+
+  L/&lambda; &lt; 0.5:
+    pitch_factor = 2 &times; (L / &lambda;)
+
+  0.5 &le; L/&lambda; &lt; 1.5:
+    pitch_factor = 1 - 0.3 &times; |L/&lambda; - 1|
+
+  L/&lambda; &ge; 1.5:
+    pitch_factor = 0.5 / (L / &lambda;)
+
+Where:
+  &lambda; = g &times; T_wave&sup2; / (2&pi;)     (deep water wavelength)
+  L = L_pp = 176 m
+  T_wave = peak wave period (s)
+                </div>
+
+                <p>
+                    The pitch factor peaks near L/&lambda; = 1 (ship length equals wavelength), where the vessel
+                    "straddles" consecutive wave crests and troughs, producing maximum pitching motion. When the
+                    wavelength is much shorter or longer than the ship, the pitch factor decreases because the
+                    vessel either averages out multiple short waves or rides on a single long wave slope.
+                </p>
+
+                <h3>Vertical Acceleration</h3>
+                <p>
+                    Vertical acceleration at specific locations along the ship length combines the heave acceleration
+                    at the center of gravity with the pitch-induced acceleration component. Points far from midship
+                    (bridge, bow) experience amplified accelerations due to the pitch lever arm.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Vertical Acceleration</div>
+Heave acceleration (at center of gravity):
+  a_heave = (H_s / 2) &times; &omega;_e&sup2; &times; (0.3 + 0.7 &times; cos(&theta;_enc))
+
+Point acceleration (at distance x from midship):
+  a_point = sqrt(a_heave&sup2; + (x &times; &theta;_pitch_rad &times; &omega;_e&sup2;)&sup2;)
+
+Reference locations:
+  Bridge:  x = -70 m from midship (aft)
+  Bow:     x = +88 m from midship (forward)
+  Midship: x = 0 m (minimum acceleration)
+                </div>
+
+                <p>
+                    The bow experiences the highest vertical accelerations because it is the farthest point forward
+                    from the pitch axis. At the bridge (70 m aft of midship), accelerations are also amplified but
+                    less than at the bow. Vertical acceleration is the primary crew comfort criterion and drives
+                    speed reduction decisions in heavy weather.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- SAFETY CRITERIA -->
+            <!-- ============================================================ -->
+            <section id="safety-criteria">
+                <h2>Safety Criteria</h2>
+
+                <p>
+                    Windmar enforces a three-tier safety classification (Safe, Marginal, Dangerous) based on vessel
+                    motion amplitudes and derived seakeeping parameters. These criteria are applied during route
+                    optimization to block unsafe routes and penalize marginally safe routes.
+                </p>
+
+                <h3>Safety Limits</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Motion Parameter</th>
+                            <th>Safe</th>
+                            <th>Marginal</th>
+                            <th>Dangerous</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Roll amplitude</td>
+                            <td>&lt; 15&deg;</td>
+                            <td>15&deg; &ndash; 25&deg;</td>
+                            <td>&gt; 25&deg;</td>
+                        </tr>
+                        <tr>
+                            <td>Pitch amplitude</td>
+                            <td>&lt; 5&deg;</td>
+                            <td>5&deg; &ndash; 8&deg;</td>
+                            <td>&gt; 8&deg;</td>
+                        </tr>
+                        <tr>
+                            <td>Vertical acceleration</td>
+                            <td>&lt; 0.2g</td>
+                            <td>0.2g &ndash; 0.3g</td>
+                            <td>&gt; 0.3g</td>
+                        </tr>
+                        <tr>
+                            <td>Slamming probability</td>
+                            <td>&lt; 3%</td>
+                            <td>3% &ndash; 10%</td>
+                            <td>&gt; 10%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert warning">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Route Optimization Enforcement</strong><br>
+                    Safety criteria are enforced during A* route optimization. Grid cells classified as
+                    <strong>Dangerous</strong> are assigned infinite cost, effectively blocking the route through
+                    that cell. <strong>Marginal</strong> cells receive a 1.5&times; cost multiplier, encouraging
+                    the optimizer to find alternative paths when available. <strong>Safe</strong> cells use the
+                    nominal fuel-based cost.
+                </div>
+
+                <p>
+                    The overall safety classification for a cell is determined by the worst-case criterion: if any
+                    single parameter falls in the Dangerous range, the cell is classified as Dangerous regardless
+                    of the other parameters.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- SLAMMING & PARAMETRIC ROLL -->
+            <!-- ============================================================ -->
+            <section id="slamming-roll">
+                <h2>Slamming &amp; Parametric Roll</h2>
+
+                <h3>Slamming (Ochi Criteria)</h3>
+                <p>
+                    Slamming occurs when the bow emerges from the water and re-enters with high velocity, generating
+                    impulsive loads on the hull structure. The Ochi criteria estimate the probability of slamming
+                    based on bow emergence and re-entry velocity. Slamming risk is highest in ballast condition
+                    (lower forward draft) and head seas.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Bow Vertical Motion at Forward Perpendicular</div>
+Bow vertical motion:
+  y_bow = H_s / 2 + L_fp &times; sin(&theta;_pitch)
+
+Where:
+  H_s = significant wave height (m)
+  L_fp = distance from midship to forward perpendicular (m)
+  &theta;_pitch = pitch amplitude (rad)
+                </div>
+
+                <div class="formula-block">
+                    <div class="formula-title">Emergence Probability and Impact Velocity</div>
+Emergence probability:
+  P_emergence = f(y_bow, bow_freeboard)
+
+  When y_bow exceeds bow freeboard, the bow emerges from the water
+  and slamming becomes possible on re-entry.
+
+Re-entry velocity:
+  v_impact = sqrt(2 &times; g &times; max(0, y_bow - freeboard))
+
+Where:
+  g = 9.81 m/s&sup2;
+  freeboard = distance from waterline to deck at bow (m)
+    Laden:   freeboard &asymp; 5.2 m
+    Ballast: freeboard &asymp; 10.5 m (higher deck but lower draft = more emergence)
+                </div>
+
+                <p>
+                    Despite the higher freeboard in ballast, the reduced forward draft means the keel rises above
+                    the still water surface more frequently, particularly in head seas. The combination of high
+                    emergence amplitude and significant re-entry velocity produces the impulsive slamming loads
+                    that can cause structural damage to the forward hull plating.
+                </p>
+
+                <h3>Parametric Roll Risk</h3>
+                <p>
+                    Parametric rolling is a dangerous phenomenon where roll amplitudes build up rapidly due to
+                    periodic variation in the vessel's waterplane area (and thus stability) as waves pass along
+                    the hull. It occurs primarily in head or following seas when the wave encounter period is
+                    approximately twice the natural roll period.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Parametric Roll Conditions</div>
+Parametric roll risk is elevated when:
+
+  1. Encounter period ratio:  T_wave / T_roll &asymp; 2.0
+     (tolerance: 1.8 &lt; T_wave/T_roll &lt; 2.2)
+
+  2. Wave height exceeds critical threshold:
+     H_s &gt; H_critical
+
+  3. Head seas or following seas:
+     &theta;_encounter &lt; 30&deg; or &theta;_encounter &gt; 150&deg;
+
+When all three conditions are met, the route cell is flagged
+for elevated parametric roll risk.
+                </div>
+
+                <p>
+                    Parametric roll can develop in just a few wave cycles, reaching amplitudes of 30&ndash;40 degrees
+                    or more. It is particularly dangerous because it can occur in moderate sea states where other
+                    motion criteria appear safe. Detection and avoidance through route optimization is a key
+                    safety feature.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- A* ALGORITHM -->
+            <!-- ============================================================ -->
+            <section id="astar-algorithm">
+                <h2>A* Algorithm</h2>
+
+                <p>
+                    Route optimization uses the A* pathfinding algorithm to find the minimum-cost path through a
+                    weather-dependent grid. Each grid cell has a traversal cost determined by the fuel consumption
+                    required to cross it at the locally optimal speed, considering all resistance components and
+                    safety constraints.
+                </p>
+
+                <h3>Grid Construction</h3>
+                <ul>
+                    <li><strong>Resolution</strong>: Configurable, default 0.5 degrees (~30 nm at the equator)</li>
+                    <li><strong>Land masking</strong>: Land cells are removed using the <code>global-land-mask</code> library, which provides a 1-km resolution land/ocean classification</li>
+                    <li><strong>Corridor</strong>: The search grid extends &plusmn;5 degrees latitude and longitude around the direct great-circle route to limit search space while allowing sufficient deviation for weather routing</li>
+                    <li><strong>Connectivity</strong>: 8-connected grid (cardinal + diagonal neighbors)</li>
+                </ul>
+
+                <h3>A* Search</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">A* Cost Function</div>
+f(n) = g(n) + h(n)
+
+Where:
+  f(n) = total estimated cost of path through node n
+  g(n) = actual cost from start to node n (accumulated fuel consumption)
+  h(n) = heuristic estimate of cost from node n to goal
+
+Heuristic:
+  h(n) = distance_to_goal &times; minimum_fuel_rate
+  (admissible: never overestimates actual cost)
+
+Move cost (node m to neighbor n):
+  cost(m, n) = fuel_consumption(m, n, optimal_speed)
+
+  Where fuel_consumption accounts for:
+    - Calm water resistance (Holtrop-Mennen)
+    - Wind resistance (Blendermann) at local wind conditions
+    - Wave resistance (Kwon) at local wave conditions
+    - Engine SFOC at resulting load
+    - Safety penalty multiplier (1.0x safe, 1.5x marginal, &infin; dangerous)
+
+Diagonal cost:
+  cost_diagonal = sqrt(2) &times; cost_cardinal
+                </div>
+
+                <h3>Search Procedure</h3>
+                <ol>
+                    <li>Initialize priority queue (min-heap ordered by f-score) with start node</li>
+                    <li>Pop node with lowest f-score</li>
+                    <li>If goal reached, reconstruct path and return</li>
+                    <li>For each of 8 neighbors:
+                        <ul>
+                            <li>Skip if land cell or already visited with lower cost</li>
+                            <li>Compute weather at neighbor location (interpolated from grid)</li>
+                            <li>Compute fuel cost to traverse cell at optimal speed</li>
+                            <li>Apply safety and regulatory zone multipliers</li>
+                            <li>Update neighbor's g-score if new path is cheaper</li>
+                            <li>Add to priority queue</li>
+                        </ul>
+                    </li>
+                    <li>Terminate if cells explored exceeds 50,000 (safety limit)</li>
+                </ol>
+
+                <h3>Cost Calculation Code</h3>
+                <pre><code>def compute_cell_cost(self, from_cell, to_cell, weather):
+    """Compute fuel cost to traverse a grid cell."""
+    distance_nm = haversine(from_cell.lat, from_cell.lon,
+                            to_cell.lat, to_cell.lon)
+
+    # Find optimal speed for this cell
+    best_fuel = float('inf')
+    best_speed = self.vessel.service_speed
+
+    for speed_kts in np.linspace(6.0, 18.0, 7):
+        speed_ms = speed_kts * 0.5144
+
+        # Total resistance
+        r_calm = self.vessel.calm_water_resistance(speed_ms)
+        r_wind = self.vessel.wind_resistance(
+            speed_ms, weather.wind_speed, weather.wind_dir,
+            self.heading)
+        r_wave = self.vessel.wave_resistance(
+            speed_ms, weather.wave_height, weather.wave_dir,
+            self.heading)
+        r_total = r_calm + r_wind + r_wave
+
+        # Brake power and fuel
+        p_tow = r_total * speed_ms / 1000
+        p_brake = min(p_tow / self.vessel.eta_total,
+                      self.vessel.mcr)
+        sfoc = self.vessel.sfoc(p_brake / self.vessel.mcr)
+        time_h = distance_nm / speed_kts
+        fuel_mt = p_brake * sfoc * time_h / 1e6
+
+        if fuel_mt &lt; best_fuel:
+            best_fuel = fuel_mt
+            best_speed = speed_kts
+
+    # Apply safety multiplier
+    safety = self.assess_safety(weather, best_speed)
+    if safety == 'dangerous':
+        return float('inf')
+    elif safety == 'marginal':
+        best_fuel *= 1.5
+
+    return best_fuel</code></pre>
+
+                <h3>Path Smoothing</h3>
+                <p>
+                    After A* finds the optimal grid path, a smoothing pass removes unnecessary waypoints to produce
+                    a more natural route. The algorithm iteratively removes intermediate waypoints and checks:
+                </p>
+                <ul>
+                    <li>The straight-line segment does not cross land</li>
+                    <li>The fuel consumption difference is within 1% of the unsmoothed path</li>
+                    <li>All intermediate points maintain safe seakeeping conditions</li>
+                </ul>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- VARIABLE SPEED -->
+            <!-- ============================================================ -->
+            <section id="variable-speed">
+                <h2>Variable Speed Optimization</h2>
+
+                <p>
+                    Rather than maintaining a constant speed throughout the voyage, Windmar optimizes speed
+                    independently for each leg of the route. This allows the vessel to slow down in adverse
+                    weather (reducing resistance cubically) and speed up in calm conditions, minimizing total
+                    fuel consumption for the voyage.
+                </p>
+
+                <h3>Per-Leg Speed Optimization</h3>
+                <ul>
+                    <li><strong>Speed range</strong>: 6 to 18 knots, tested at 7 discrete values (6, 8, 10, 12, 14, 16, 18 kts)</li>
+                    <li><strong>Objective</strong>: Minimize fuel consumption per nautical mile for each leg</li>
+                    <li><strong>Weather-dependent</strong>: The optimal speed varies with local wind, wave, and current conditions</li>
+                    <li><strong>Power constraint</strong>: Speed is limited by MCR &mdash; if the required brake power exceeds MCR at a given speed, that speed is not achievable</li>
+                </ul>
+
+                <div class="formula-block">
+                    <div class="formula-title">Speed Optimization Objective</div>
+For each leg i with distance d_i and weather conditions w_i:
+
+  optimal_speed_i = argmin_{V} [ fuel(V, w_i) / d_i ]
+
+  Subject to:
+    6 kts &le; V &le; 18 kts
+    P_brake(V, w_i) &le; P_MCR
+
+fuel(V, w_i) = P_brake(V, w_i) &times; SFOC(load) &times; (d_i / V) / 10^6
+                </div>
+
+                <p>
+                    The cubic relationship between speed and resistance means that a small speed reduction produces
+                    a large fuel saving. For example, reducing speed from 14 to 12 knots (14% reduction) can reduce
+                    fuel consumption by approximately 35% per hour, although the voyage takes longer. The optimizer
+                    balances this trade-off based on the fuel-per-mile metric.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- SAFETY CONSTRAINTS -->
+            <!-- ============================================================ -->
+            <section id="safety-constraints">
+                <h2>Safety Constraints</h2>
+
+                <p>
+                    Safety constraints are integrated directly into the A* search, ensuring that the optimizer
+                    never produces a route that violates safety criteria or regulatory requirements. Constraints
+                    are applied at two levels: seakeeping safety and regulatory zone enforcement.
+                </p>
+
+                <h3>Seakeeping Constraints in A* Search</h3>
+                <ul>
+                    <li><strong>Dangerous conditions</strong>: Cell cost = infinity. The A* algorithm will not
+                        expand through this cell, forcing the route around the hazardous area. This applies when
+                        any motion parameter exceeds the Dangerous threshold.</li>
+                    <li><strong>Marginal conditions</strong>: Cell cost &times; 1.5. The optimizer can still route
+                        through the cell, but at a 50% cost penalty. This encourages deviation when alternative
+                        routes are available but permits marginal conditions when no safe alternative exists.</li>
+                    <li><strong>Safe conditions</strong>: Nominal fuel-based cost with no penalty.</li>
+                </ul>
+
+                <h3>Regulatory Zone Enforcement</h3>
+                <p>
+                    Regulatory zones modify the A* cost function based on the zone type. Three enforcement modes
+                    are supported:
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Type</th>
+                            <th>Effect on A* Cost</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>EXCLUSION</strong></td>
+                            <td>cost = infinity (blocks route)</td>
+                            <td>HRA (High Risk Areas), environmental exclusion zones</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PENALTY</strong></td>
+                            <td>cost &times; penalty_factor</td>
+                            <td>ECA (Emission Control Areas) requiring fuel switching</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MANDATORY</strong></td>
+                            <td>Ensures path includes zone</td>
+                            <td>TSS (Traffic Separation Schemes), mandatory reporting points</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    Exclusion zones and penalty zones are applied per-cell during the A* expansion. Mandatory
+                    zones are enforced as waypoint constraints: the route must pass through at least one cell
+                    in each mandatory zone.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- IMO CII RATING -->
+            <!-- ============================================================ -->
+            <section id="cii-rating">
+                <h2>IMO CII Rating</h2>
+
+                <p>
+                    The Carbon Intensity Indicator (CII) is a mandatory IMO measure under MEPC.339(76) that rates
+                    a ship's operational carbon efficiency on an A-to-E scale. Windmar calculates the attained CII
+                    for a voyage and compares it against the required CII to determine the rating. This enables
+                    operators to assess whether a planned voyage will contribute positively or negatively to their
+                    annual CII rating.
+                </p>
+
+                <h3>Attained CII</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">Attained Carbon Intensity Indicator</div>
+Attained CII = (Total CO2 [MT] &times; 10^6) / (Capacity [DWT] &times; Distance [nm])
+
+Unit: grams CO2 per deadweight-tonne per nautical mile [g CO2 / DWT.nm]
+
+Where:
+  Total CO2 = Total fuel consumed [MT] &times; CO2 emission factor [g CO2 / g fuel]
+  Capacity  = vessel DWT (49,000 MT for MR tanker)
+  Distance  = total voyage distance [nm]
+                </div>
+
+                <h3>Required CII</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">Required CII with Annual Reduction</div>
+Reference CII = a &times; Capacity^(-c)
+
+Required CII = Reference CII &times; (1 - Z / 100)
+
+Where:
+  a = 5247          (tanker reference parameter, MEPC.339(76))
+  c = 0.610         (tanker capacity exponent, MEPC.339(76))
+  Z = reduction factor (% per year, increasing annually)
+                </div>
+
+                <h3>Rating Boundaries</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rating</th>
+                            <th>Condition</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>A</strong> (Superior)</td><td>Attained &le; 0.86 &times; Required</td></tr>
+                        <tr><td><strong>B</strong> (Good)</td><td>0.86 &lt; Attained &le; 0.94 &times; Required</td></tr>
+                        <tr><td><strong>C</strong> (Moderate)</td><td>0.94 &lt; Attained &le; 1.06 &times; Required</td></tr>
+                        <tr><td><strong>D</strong> (Below average)</td><td>1.06 &lt; Attained &le; 1.18 &times; Required</td></tr>
+                        <tr><td><strong>E</strong> (Inferior)</td><td>Attained &gt; 1.18 &times; Required</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Annual Reduction Factors</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Reduction Factor (Z)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>2023</td><td>5%</td></tr>
+                        <tr><td>2024</td><td>7%</td></tr>
+                        <tr><td>2025</td><td>9%</td></tr>
+                        <tr><td>2026</td><td>11%</td></tr>
+                        <tr><td>2027</td><td>13%</td></tr>
+                        <tr><td>2028</td><td>15%</td></tr>
+                        <tr><td>2029</td><td>17%</td></tr>
+                        <tr><td>2030</td><td>19%</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>CO2 Emission Factors</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fuel Type</th>
+                            <th>g CO2 / g fuel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>HFO (Heavy Fuel Oil)</td><td>3.114</td></tr>
+                        <tr><td>VLSFO (Very Low Sulphur Fuel Oil)</td><td>3.114</td></tr>
+                        <tr><td>MDO (Marine Diesel Oil)</td><td>3.206</td></tr>
+                        <tr><td>LNG (Liquefied Natural Gas)</td><td>2.750</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- REGULATORY ZONES -->
+            <!-- ============================================================ -->
+            <section id="regulatory-zones">
+                <h2>Regulatory Zones</h2>
+
+                <p>
+                    Windmar supports the definition and enforcement of regulatory zones that constrain route
+                    optimization. Zones are defined as GeoJSON polygons and classified by type, each with a
+                    specific effect on the A* cost function.
+                </p>
+
+                <h3>Zone Types</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Type</th>
+                            <th>Description</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ECA</strong></td>
+                            <td>Emission Control Areas (SOx/NOx)</td>
+                            <td>Penalty cost (fuel switching overhead)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HRA</strong></td>
+                            <td>High Risk Areas (piracy, conflict)</td>
+                            <td>Exclusion (route blocked)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TSS</strong></td>
+                            <td>Traffic Separation Schemes</td>
+                            <td>Mandatory (route must include)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>GeoJSON Import/Export</h3>
+                <p>
+                    Zones are stored as GeoJSON Feature Collections. Each feature includes a <code>properties</code>
+                    object specifying the zone type, name, and any associated parameters (e.g., penalty factor).
+                </p>
+
+                <pre><code>{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "North Sea ECA",
+        "zone_type": "PENALTY",
+        "penalty_factor": 1.3
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[...], [...], ...]]
+      }
+    }
+  ]
+}</code></pre>
+
+                <h3>Point-in-Polygon Detection</h3>
+                <p>
+                    During A* expansion, each candidate cell is tested against all active regulatory zones using
+                    the ray casting algorithm. For a point (lat, lon), the algorithm casts a horizontal ray and
+                    counts the number of intersections with the polygon boundary. An odd count means the point
+                    is inside the polygon; an even count means outside.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- WEATHER API -->
+            <!-- ============================================================ -->
+            <section id="weather-api">
+                <h2>Weather API</h2>
+
+                <p>
+                    The Weather API provides access to interpolated weather fields for the route optimization
+                    grid. Data is sourced from Copernicus CMEMS (waves, currents) and ERA5 (wind) and cached
+                    in Redis for repeated queries.
+                </p>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/weather/wind</span>
+                    <p class="endpoint-description">Returns the wind field grid for a specified bounding box and time.</p>
+                    <p><strong>Query Parameters:</strong></p>
+                    <ul>
+                        <li><code>lat_min</code>, <code>lat_max</code> &mdash; Latitude bounds (degrees)</li>
+                        <li><code>lon_min</code>, <code>lon_max</code> &mdash; Longitude bounds (degrees)</li>
+                        <li><code>timestamp</code> &mdash; ISO 8601 datetime for the forecast time</li>
+                    </ul>
+                    <p><strong>Response:</strong> JSON array of grid points with <code>lat</code>, <code>lon</code>, <code>wind_speed</code> (m/s), <code>wind_dir</code> (degrees true).</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/weather/waves</span>
+                    <p class="endpoint-description">Returns the wave field grid for a specified bounding box and time.</p>
+                    <p><strong>Query Parameters:</strong></p>
+                    <ul>
+                        <li><code>lat_min</code>, <code>lat_max</code> &mdash; Latitude bounds (degrees)</li>
+                        <li><code>lon_min</code>, <code>lon_max</code> &mdash; Longitude bounds (degrees)</li>
+                        <li><code>timestamp</code> &mdash; ISO 8601 datetime</li>
+                    </ul>
+                    <p><strong>Response:</strong> JSON array of grid points with <code>lat</code>, <code>lon</code>, <code>wave_height</code> (m), <code>wave_period</code> (s), <code>wave_dir</code> (degrees true).</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/weather/currents</span>
+                    <p class="endpoint-description">Returns the ocean current field grid for a specified bounding box and time.</p>
+                    <p><strong>Query Parameters:</strong></p>
+                    <ul>
+                        <li><code>lat_min</code>, <code>lat_max</code> &mdash; Latitude bounds (degrees)</li>
+                        <li><code>lon_min</code>, <code>lon_max</code> &mdash; Longitude bounds (degrees)</li>
+                        <li><code>timestamp</code> &mdash; ISO 8601 datetime</li>
+                    </ul>
+                    <p><strong>Response:</strong> JSON array of grid points with <code>lat</code>, <code>lon</code>, <code>current_speed</code> (m/s), <code>current_dir</code> (degrees true).</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/weather/point</span>
+                    <p class="endpoint-description">Returns interpolated weather at a specific geographic point and time.</p>
+                    <p><strong>Query Parameters:</strong></p>
+                    <ul>
+                        <li><code>lat</code> &mdash; Latitude (degrees)</li>
+                        <li><code>lon</code> &mdash; Longitude (degrees)</li>
+                        <li><code>timestamp</code> &mdash; ISO 8601 datetime</li>
+                    </ul>
+                    <p><strong>Response:</strong> JSON object with all weather parameters (wind, waves, currents) interpolated to the exact point.</p>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- ROUTE API -->
+            <!-- ============================================================ -->
+            <section id="route-api">
+                <h2>Route API</h2>
+
+                <p>
+                    The Route API handles route optimization requests, waypoint-based route calculation,
+                    RTZ file parsing, and voyage planning with ETA computation.
+                </p>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/optimize/route</span>
+                    <p class="endpoint-description">Full weather-aware route optimization using A* pathfinding with variable speed optimization.</p>
+                    <p><strong>Request Body:</strong></p>
+                    <pre><code>{
+  "departure": {
+    "lat": 51.95,
+    "lon": 1.33,
+    "name": "Rotterdam"
+  },
+  "arrival": {
+    "lat": 29.75,
+    "lon": -93.85,
+    "name": "Houston"
+  },
+  "departure_time": "2026-02-10T08:00:00Z",
+  "vessel_condition": "laden",
+  "optimization_objective": "fuel",
+  "grid_resolution": 0.5,
+  "speed_range": [6.0, 18.0],
+  "enable_safety_constraints": true,
+  "regulatory_zones": ["eca_north_sea", "tss_dover"]
+}</code></pre>
+                    <p><strong>Response:</strong></p>
+                    <pre><code>{
+  "route": {
+    "waypoints": [
+      {"lat": 51.95, "lon": 1.33, "speed_kts": 14.0, "fuel_mt": 0.0},
+      {"lat": 50.50, "lon": -2.10, "speed_kts": 13.5, "fuel_mt": 12.4},
+      ...
+    ],
+    "total_distance_nm": 5120,
+    "total_fuel_mt": 285.3,
+    "total_time_hours": 372.5,
+    "eta": "2026-02-25T20:30:00Z"
+  },
+  "cii": {
+    "attained": 4.82,
+    "required": 5.31,
+    "rating": "B"
+  },
+  "safety_summary": {
+    "max_roll_deg": 12.3,
+    "max_pitch_deg": 4.1,
+    "max_acceleration_g": 0.18,
+    "dangerous_cells_avoided": 14,
+    "marginal_cells_traversed": 7
+  },
+  "legs": [
+    {
+      "from": {"lat": 51.95, "lon": 1.33},
+      "to": {"lat": 50.50, "lon": -2.10},
+      "distance_nm": 156,
+      "speed_kts": 13.5,
+      "fuel_mt": 12.4,
+      "time_hours": 11.6,
+      "weather": {
+        "wind_speed_ms": 8.2,
+        "wind_dir": 245,
+        "wave_height_m": 2.1,
+        "wave_dir": 260
+      }
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/routes/from-waypoints</span>
+                    <p class="endpoint-description">Calculate fuel consumption and ETA for a user-defined waypoint sequence (no optimization, fixed route).</p>
+                    <p><strong>Request Body:</strong></p>
+                    <pre><code>{
+  "waypoints": [
+    {"lat": 51.95, "lon": 1.33},
+    {"lat": 48.50, "lon": -5.10},
+    {"lat": 29.75, "lon": -93.85}
+  ],
+  "departure_time": "2026-02-10T08:00:00Z",
+  "vessel_condition": "laden",
+  "speed_kts": 14.5
+}</code></pre>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/routes/parse-rtz</span>
+                    <p class="endpoint-description">Parse an RTZ (Route Transfer Exchange) file per IEC 61174 standard and extract waypoints.</p>
+                    <p><strong>Request Body:</strong> Multipart form data with RTZ XML file.</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/voyage/calculate</span>
+                    <p class="endpoint-description">Full voyage calculation with intermediate port calls, bunkering stops, and ETAs for each leg.</p>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- VESSEL API -->
+            <!-- ============================================================ -->
+            <section id="vessel-api">
+                <h2>Vessel API</h2>
+
+                <p>
+                    The Vessel API manages vessel specifications, calibration, and compliance calculations.
+                </p>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/vessel/specs</span>
+                    <p class="endpoint-description">Returns the current vessel specifications including dimensions, areas, engine parameters, and loading condition.</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/vessel/specs</span>
+                    <p class="endpoint-description">Update vessel specifications. All physical model parameters (wetted surface, wind areas, block coefficient, etc.) are recalculated from the updated dimensions.</p>
+                    <p><strong>Request Body:</strong></p>
+                    <pre><code>{
+  "loa": 183.0,
+  "lpp": 176.0,
+  "beam": 32.0,
+  "draft_laden": 11.8,
+  "draft_ballast": 6.5,
+  "displacement_laden": 65000,
+  "displacement_ballast": 20000,
+  "dwt": 49000,
+  "mcr_kw": 8840,
+  "sfoc_mcr": 171,
+  "service_speed_laden": 14.5,
+  "service_speed_ballast": 15.0
+}</code></pre>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/vessel/calibrate</span>
+                    <p class="endpoint-description">Calibrate vessel performance model using noon report data. Accepts an Excel file with voyage data and returns optimized calibration factors.</p>
+                    <p><strong>Request Body:</strong> Multipart form data with Excel file (.xlsx).</p>
+                    <p><strong>Response:</strong></p>
+                    <pre><code>{
+  "calibration_factors": {
+    "calm_water": 1.12,
+    "wind": 0.95,
+    "waves": 1.08
+  },
+  "rmse_before": 3.45,
+  "rmse_after": 1.23,
+  "improvement_pct": 64.3,
+  "data_points": 42
+}</code></pre>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/compliance/cii</span>
+                    <p class="endpoint-description">Calculate the IMO CII rating for a completed or planned voyage.</p>
+                    <p><strong>Request Body:</strong></p>
+                    <pre><code>{
+  "total_fuel_mt": 285.3,
+  "fuel_type": "VLSFO",
+  "distance_nm": 5120,
+  "dwt": 49000,
+  "year": 2026
+}</code></pre>
+                    <p><strong>Response:</strong></p>
+                    <pre><code>{
+  "attained_cii": 4.82,
+  "reference_cii": 5.97,
+  "required_cii": 5.31,
+  "reduction_factor": 11,
+  "rating": "B",
+  "boundaries": {
+    "A_upper": 4.57,
+    "B_upper": 4.99,
+    "C_upper": 5.63,
+    "D_upper": 6.27
+  }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- MODEL VALIDATION -->
+            <!-- ============================================================ -->
+            <section id="model-validation">
+                <h2>Model Validation</h2>
+
+                <p>
+                    Windmar includes a comprehensive test suite that validates physical models against expected
+                    behaviors, empirical relationships, and boundary conditions. Tests are structured to verify
+                    both individual model components and the integrated optimization pipeline.
+                </p>
+
+                <h3>Unit Tests</h3>
+                <p>The following physical constraints are validated:</p>
+
+                <ul>
+                    <li><strong>Resistance increases with speed</strong> &mdash; Total calm water resistance at 16 kts exceeds resistance at 12 kts for both laden and ballast conditions</li>
+                    <li><strong>Laden uses more fuel than ballast</strong> &mdash; At the same speed, the laden condition produces higher calm water resistance due to greater displacement and wetted surface</li>
+                    <li><strong>Weather increases fuel consumption</strong> &mdash; Total fuel with wind and waves always exceeds calm water fuel for the same speed and distance</li>
+                    <li><strong>SFOC optimal at 75-85% load</strong> &mdash; SFOC at 80% load is lower than SFOC at 50% load and lower than SFOC at 100% load</li>
+                    <li><strong>Head wind worse than following wind</strong> &mdash; Wind resistance at 0 degrees (head wind) exceeds wind resistance at 180 degrees (following wind)</li>
+                    <li><strong>A* finds path avoiding land</strong> &mdash; No waypoint in the optimized path falls on a land cell as classified by global-land-mask</li>
+                    <li><strong>Safety constraints block dangerous routes</strong> &mdash; When dangerous conditions exist on the direct path, the optimizer produces a detour that avoids them</li>
+                    <li><strong>Zone exclusions force detours</strong> &mdash; An exclusion zone on the direct path forces the optimizer to route around it, increasing total distance</li>
+                </ul>
+
+                <h3>Integration Tests</h3>
+                <ul>
+                    <li><strong>Full optimization flow</strong> &mdash; End-to-end test from route request through weather fetch, A* search, speed optimization, and CII calculation</li>
+                    <li><strong>API endpoint validation</strong> &mdash; All REST endpoints return correct HTTP status codes, response schemas, and handle invalid input gracefully</li>
+                    <li><strong>Weather provider fallback</strong> &mdash; Synthetic weather provider produces consistent results when Copernicus credentials are not available</li>
+                </ul>
+
+                <h3>Physical Constants</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Constant</th>
+                            <th>Symbol</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Seawater density</td><td>&rho;_sw</td><td>1025</td><td>kg/m&sup3;</td></tr>
+                        <tr><td>Seawater kinematic viscosity</td><td>&nu;_sw</td><td>1.19 &times; 10<sup>-6</sup></td><td>m&sup2;/s</td></tr>
+                        <tr><td>Air density</td><td>&rho;_air</td><td>1.225</td><td>kg/m&sup3;</td></tr>
+                        <tr><td>Gravitational acceleration</td><td>g</td><td>9.81</td><td>m/s&sup2;</td></tr>
+                        <tr><td>Knot to m/s conversion</td><td>&mdash;</td><td>0.5144</td><td>m/s per knot</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="alert success">
+                    <strong><i class="fas fa-check-circle"></i> Validation Status</strong><br>
+                    All physical models produce results consistent with empirical data for MR product tankers.
+                    The Holtrop-Mennen calm water resistance has been validated against published resistance data
+                    for vessels of similar dimensions and hull form. SFOC curves match manufacturer specifications
+                    for two-stroke marine diesel engines in the 8,000-10,000 kW range. Seakeeping predictions
+                    show correct trends for roll, pitch, and acceleration as functions of wave height and encounter
+                    angle.
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- CALIBRATION -->
+            <!-- ============================================================ -->
+            <section id="calibration">
+                <h2>Calibration</h2>
+
+                <p>
+                    Calibration adjusts the physics model parameters to match observed vessel performance from
+                    noon report data. This accounts for hull fouling, propeller degradation, and other vessel-specific
+                    factors that cause the default model to deviate from actual fuel consumption.
+                </p>
+
+                <h3>Noon Report Data Format</h3>
+                <p>
+                    Calibration accepts an Excel file (.xlsx) with the following columns. Each row represents
+                    one noon-to-noon reporting period (approximately 24 hours).
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Unit</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Speed</td><td>knots</td><td>Average speed over ground</td></tr>
+                        <tr><td>Distance</td><td>nm</td><td>Distance traveled in reporting period</td></tr>
+                        <tr><td>Fuel</td><td>MT</td><td>Total fuel consumed in reporting period</td></tr>
+                        <tr><td>Wind</td><td>Beaufort</td><td>Average wind force (Beaufort scale 0-12)</td></tr>
+                        <tr><td>Waves</td><td>m</td><td>Average significant wave height</td></tr>
+                        <tr><td>Draft</td><td>m</td><td>Mean draft (used to determine laden/ballast)</td></tr>
+                        <tr><td>Temperature</td><td>&deg;C</td><td>Seawater temperature (for viscosity correction)</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Optimization Method</h3>
+                <p>
+                    Calibration uses <code>scipy.optimize.minimize</code> with the Nelder-Mead simplex algorithm
+                    to find the calibration factors that minimize the root mean square error (RMSE) between predicted
+                    and actual fuel consumption across all noon report entries.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Calibration Objective Function</div>
+Objective: minimize RMSE
+
+  RMSE = sqrt( (1/N) &times; &Sigma;(fuel_predicted_i - fuel_actual_i)&sup2; )
+
+Predicted fuel for each reporting period:
+  R_total = k_calm &times; R_calm + k_wind &times; R_wind + k_wave &times; R_wave
+  fuel_predicted = f(R_total, speed, distance, SFOC)
+
+Calibration factors (decision variables):
+  k_calm  &in; [0.5, 2.0]   (calm water resistance multiplier)
+  k_wind  &in; [0.5, 2.0]   (wind resistance multiplier)
+  k_wave  &in; [0.5, 2.0]   (wave resistance multiplier)
+
+Initial values: k_calm = k_wind = k_wave = 1.0
+Method: Nelder-Mead (derivative-free simplex)
+                </div>
+
+                <h3>Interpretation of Calibration Factors</h3>
+                <ul>
+                    <li><strong>k_calm &gt; 1.0</strong> &mdash; Hull roughness or fouling increasing skin friction beyond the clean-hull model prediction</li>
+                    <li><strong>k_calm &lt; 1.0</strong> &mdash; Hull is cleaner than the model assumes (e.g., recent dry-docking)</li>
+                    <li><strong>k_wind &gt; 1.0</strong> &mdash; Above-water structure presents more windage than the default areas suggest</li>
+                    <li><strong>k_wave &gt; 1.0</strong> &mdash; Vessel is more sensitive to waves than the Kwon formula predicts (e.g., bluff bow form)</li>
+                </ul>
+
+                <p>
+                    Factors are bounded to [0.5, 2.0] to prevent physically unreasonable corrections. A factor
+                    outside this range indicates either bad input data or a fundamental mismatch between the vessel
+                    and the default model parameters, requiring manual review of the vessel specifications.
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- Footer -->
+<footer class="docs-footer">
+    <div class="docs-footer-content">
+        <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+        <p>
+            <a href="https://github.com/SL-Mar/windmar">GitHub</a> &bull;
+            <a href="https://quantcoder-fs.com">Website</a>
+        </p>
+    </div>
+</footer>
+
+<!-- Sidebar active state script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar-menu a[href^="#"]');
+
+        function setActiveLink() {
+            let current = '';
+            sections.forEach(function(section) {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(function(link) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', setActiveLink);
+        setActiveLink();
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarChat Documentation - Technical Reference</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="docs-header">
+        <div class="docs-header-content">
+            <a href="docs.html" class="docs-logo">
+                <i class="fas fa-comments"></i>
+                <span>MarChat</span>
+            </a>
+            <nav>
+                <ul class="docs-nav">
+                    <li><a href="docs.html" class="active">Documentation</a></li>
+                    <li><a href="https://github.com/SL-Mar/MarChat" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </nav>
+            <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </header>
+
+    <!-- Documentation Layout -->
+    <div class="docs-container">
+
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                    <li><a href="#installation"><i class="fas fa-download"></i> Installation</a></li>
+                    <li><a href="#tech-stack"><i class="fas fa-layer-group"></i> Tech Stack</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">RAG Engine</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#hybrid-search"><i class="fas fa-search"></i> Hybrid Search</a></li>
+                    <li><a href="#bm25-engine"><i class="fas fa-font"></i> BM25 Engine</a></li>
+                    <li><a href="#smart-chunking"><i class="fas fa-puzzle-piece"></i> Smart Chunking</a></li>
+                    <li><a href="#cross-encoder"><i class="fas fa-sort-amount-up"></i> Cross-Encoder Reranking</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Chat System</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#multi-mode-chat"><i class="fas fa-comments"></i> Multi-Mode Chat</a></li>
+                    <li><a href="#system-prompts"><i class="fas fa-clipboard"></i> System Prompts</a></li>
+                    <li><a href="#llm-providers"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Pre-Arrival Forms</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#template-processing"><i class="fas fa-file-excel"></i> Template Processing</a></li>
+                    <li><a href="#auto-fill"><i class="fas fa-magic"></i> Auto-Fill Engine</a></li>
+                    <li><a href="#vessel-profiles"><i class="fas fa-ship"></i> Vessel Profiles</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#rag-api"><i class="fas fa-search-plus"></i> RAG API</a></li>
+                    <li><a href="#documents-api"><i class="fas fa-file-pdf"></i> Documents API</a></li>
+                    <li><a href="#collections-api"><i class="fas fa-folder"></i> Collections API</a></li>
+                    <li><a href="#chat-api"><i class="fas fa-comment-dots"></i> Chat API</a></li>
+                    <li><a href="#forms-api"><i class="fas fa-wpforms"></i> Forms API</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Data Model</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#database-schema"><i class="fas fa-database"></i> Database Schema</a></li>
+                    <li><a href="#collection-schemas"><i class="fas fa-project-diagram"></i> Collection Schemas</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Validation</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#validation-steps"><i class="fas fa-check-circle"></i> Validation Steps</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <ul class="sidebar-menu">
+                    <li><a href="https://github.com/SL-Mar/MarChat" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                </ul>
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-main">
+            <div class="docs-content">
+
+                <!-- ==================== OVERVIEW ==================== -->
+                <section id="overview">
+                    <h1>MarChat Technical Documentation</h1>
+                    <p class="docs-subtitle">Maritime shipboard AI assistant with RAG, multi-mode chat, and pre-arrival form automation</p>
+
+                    <div class="alert info">
+                        <strong><i class="fas fa-info-circle"></i> About MarChat</strong><br>
+                        MarChat is a shipboard AI assistant that combines semantic search over maritime regulations with intelligent form filling for port documentation. It is designed to run locally, with no cloud dependency, making it suitable for use in environments with limited or no internet connectivity.
+                    </div>
+
+                    <h3>What is MarChat?</h3>
+                    <p>
+                        MarChat is a maritime AI assistant purpose-built for shipboard use. It provides Retrieval-Augmented Generation (RAG) over maritime regulations including SOLAS, MARPOL, STCW, and other IMO conventions. The system supports multi-mode chat with context-aware system prompts tailored to different operational scenarios, and includes a pre-arrival form auto-fill engine that populates port documentation from natural language context and vessel profile data.
+                    </p>
+                    <p>
+                        All processing runs locally through Ollama, ensuring that sensitive vessel and operational data never leaves the shipboard network. The hybrid search pipeline combines semantic understanding with keyword matching, delivering precise results even for highly technical regulatory queries.
+                    </p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-search"></i> Hybrid RAG</h4>
+                            <ul>
+                                <li>Semantic search via Qdrant vector database</li>
+                                <li>BM25 keyword matching for exact terms</li>
+                                <li>Reciprocal Rank Fusion (RRF) merging</li>
+                                <li>Cross-encoder reranking for precision</li>
+                            </ul>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-comments"></i> Multi-Mode Chat</h4>
+                            <ul>
+                                <li>Regulatory mode: IMO convention expert</li>
+                                <li>Medical mode: IMGS maritime medical</li>
+                                <li>General mode: Operations assistant</li>
+                                <li>Forms mode: Document specialist</li>
+                                <li>Research mode: Academic paper assistant</li>
+                            </ul>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-puzzle-piece"></i> Smart Chunking</h4>
+                            <ul>
+                                <li>IMO convention hierarchy detection</li>
+                                <li>Convention > Annex > Chapter > Regulation > Paragraph</li>
+                                <li>Cascading metadata inheritance</li>
+                                <li>Precise citation generation</li>
+                            </ul>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-file-excel"></i> Pre-Arrival Forms</h4>
+                            <ul>
+                                <li>Excel and DOCX template processing</li>
+                                <li>{{placeholder}} pattern detection</li>
+                                <li>LLM-assisted auto-fill from context</li>
+                                <li>Vessel profile pre-population</li>
+                            </ul>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-folder"></i> Multi-Collection</h4>
+                            <ul>
+                                <li>Separate knowledge bases per domain</li>
+                                <li>Maritime, medical, legal, research, technical</li>
+                                <li>Schema-driven metadata validation</li>
+                                <li>Independent search configurations</li>
+                            </ul>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-microchip"></i> Local LLM</h4>
+                            <ul>
+                                <li>Ollama integration (gemma3:12b)</li>
+                                <li>mxbai-embed-large embeddings (1024-dim)</li>
+                                <li>No cloud dependency or API keys required</li>
+                                <li>Data stays on the local machine</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== ARCHITECTURE ==================== -->
+                <section id="architecture">
+                    <h2>Architecture</h2>
+
+                    <h3>Component Overview</h3>
+                    <p>
+                        MarChat follows a standard client-server architecture with a Next.js frontend communicating with a FastAPI backend. The backend orchestrates all AI operations including embedding generation, vector search, BM25 retrieval, cross-encoder reranking, and LLM inference. Persistent storage is split between Qdrant (vector embeddings and metadata) and SQLite (relational data such as documents, collections, queries, and form templates).
+                    </p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Technology</th>
+                                <th>Port</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Frontend</td>
+                                <td>Next.js 14.2</td>
+                                <td>3005</td>
+                                <td>User interface, chat, document management, form filling</td>
+                            </tr>
+                            <tr>
+                                <td>Backend</td>
+                                <td>FastAPI (Python 3.12)</td>
+                                <td>8005</td>
+                                <td>API server, RAG pipeline, LLM orchestration, form processing</td>
+                            </tr>
+                            <tr>
+                                <td>Vector DB</td>
+                                <td>Qdrant</td>
+                                <td>6333</td>
+                                <td>Vector storage, semantic search, metadata filtering</td>
+                            </tr>
+                            <tr>
+                                <td>LLM Runtime</td>
+                                <td>Ollama</td>
+                                <td>11434</td>
+                                <td>Local inference (gemma3:12b), embeddings (mxbai-embed-large)</td>
+                            </tr>
+                            <tr>
+                                <td>Relational DB</td>
+                                <td>SQLite</td>
+                                <td>N/A</td>
+                                <td>Documents, collections, queries, form templates, vessel profiles</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Data Flow: RAG Query</h3>
+                    <p>
+                        When a user submits a query, the system executes a multi-stage retrieval pipeline that combines semantic and keyword search, fuses the results, and reranks them before generating a response.
+                    </p>
+                    <div class="formula-block">
+                        <div class="formula-title">RAG Query Pipeline</div>
+1. User Query
+   |
+2. Embed query using mxbai-embed-large (1024-dim vector)
+   |
+3. Parallel Search:
+   |--- Semantic Search: query vector -> Qdrant cosine similarity (top_k x 3)
+   |--- BM25 Search: tokenized query -> BM25 ranking (top_k x 3)
+   |
+4. Reciprocal Rank Fusion (RRF): merge both result sets
+   |
+5. Cross-Encoder Reranking: score (query, candidate) pairs
+   |   Filter by MIN_RERANK_SCORE = -2.0
+   |
+6. Select top_k results as context
+   |
+7. Build prompt: system prompt (mode-specific) + context chunks + user query
+   |
+8. LLM Generation: Ollama gemma3:12b -> answer with citations
+   |
+9. Return answer + retrieved chunks + response time
+                    </div>
+
+                    <h3>Data Flow: Form Auto-Fill</h3>
+                    <p>
+                        The form auto-fill pipeline processes uploaded templates, extracts fields, and uses the LLM to generate values from user-provided context.
+                    </p>
+                    <div class="formula-block">
+                        <div class="formula-title">Form Auto-Fill Pipeline</div>
+1. Upload Template (Excel or DOCX)
+   |
+2. Extract Fields: scan for {{placeholder}} patterns
+   |   Detect highlighted cells (yellow) in Excel
+   |   Infer field types (date, number, boolean, text)
+   |
+3. User provides natural language context
+   |   (voyage details, port info, vessel data)
+   |
+4. Build LLM prompt: field list + context + vessel profile
+   |
+5. LLM generates JSON: { "field_name": "value", ... }
+   |
+6. Fill template: replace {{placeholders}} with values
+   |
+7. Save and return filled document for download
+                    </div>
+                </section>
+
+                <!-- ==================== INSTALLATION ==================== -->
+                <section id="installation">
+                    <h2>Installation</h2>
+
+                    <h3>Prerequisites</h3>
+                    <ul>
+                        <li><strong>Docker &amp; Docker Compose</strong> &mdash; for containerized deployment</li>
+                        <li><strong>Ollama</strong> &mdash; local LLM runtime with the following models:
+                            <ul>
+                                <li><code>gemma3:12b</code> &mdash; language model for chat and form filling</li>
+                                <li><code>mxbai-embed-large</code> &mdash; embedding model (1024 dimensions)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Node.js 18+</strong> &mdash; for frontend development mode</li>
+                        <li><strong>Python 3.12+</strong> &mdash; for backend development mode</li>
+                    </ul>
+
+                    <h3>Docker Compose (Recommended)</h3>
+                    <pre><code>git clone https://github.com/SL-Mar/MarChat.git
+cd marchat
+docker compose up -d</code></pre>
+
+                    <h3>Pre-Install Ollama Models</h3>
+                    <p>Before starting the application, ensure both required models are available in your Ollama instance:</p>
+                    <pre><code>ollama pull gemma3:12b
+ollama pull mxbai-embed-large</code></pre>
+
+                    <h3>Development Mode</h3>
+                    <p>For local development with hot-reload, use the launch script:</p>
+                    <pre><code>chmod +x launch.sh
+./launch.sh</code></pre>
+                    <p>This starts the backend (FastAPI on port 8005) and frontend (Next.js on port 3005) in development mode with automatic reloading on file changes.</p>
+
+                    <h3>Environment Variables</h3>
+                    <p>Create a <code>.env</code> file in the project root with the following configuration:</p>
+                    <pre><code># Core Services
+QDRANT_URL=http://localhost:6333
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=gemma3:12b
+EMBEDDING_MODEL=mxbai-embed-large
+
+# Database
+DATABASE_URL=sqlite:///./data/marchat.db
+
+# Optional: OpenAI fallback (leave empty for local-only)
+OPENAI_API_KEY=</code></pre>
+
+                    <div class="alert warning">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Important</strong><br>
+                        Ollama must be running with both models pulled before starting the application. The backend will fail to initialize embeddings if <code>mxbai-embed-large</code> is not available, and chat/RAG queries will fail without <code>gemma3:12b</code>.
+                    </div>
+
+                    <h3>Verifying Installation</h3>
+                    <p>After starting the application, verify that all services are healthy:</p>
+                    <pre><code># Check backend health endpoint
+curl http://localhost:8005/health
+
+# Expected response:
+{
+  "status": "healthy",
+  "services": {
+    "qdrant": "connected",
+    "ollama": "connected",
+    "database": "connected"
+  }
+}</code></pre>
+                </section>
+
+                <!-- ==================== TECH STACK ==================== -->
+                <section id="tech-stack">
+                    <h2>Tech Stack</h2>
+
+                    <h3>Backend</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>FastAPI</td>
+                                <td>0.110+</td>
+                                <td>Async API framework with automatic OpenAPI docs</td>
+                            </tr>
+                            <tr>
+                                <td>Python</td>
+                                <td>3.12</td>
+                                <td>Runtime environment</td>
+                            </tr>
+                            <tr>
+                                <td>SQLAlchemy</td>
+                                <td>2.0</td>
+                                <td>ORM for relational database operations</td>
+                            </tr>
+                            <tr>
+                                <td>Pydantic</td>
+                                <td>2.x</td>
+                                <td>Request/response validation and serialization</td>
+                            </tr>
+                            <tr>
+                                <td>openpyxl</td>
+                                <td>3.1+</td>
+                                <td>Excel file reading and writing</td>
+                            </tr>
+                            <tr>
+                                <td>python-docx</td>
+                                <td>1.1+</td>
+                                <td>DOCX file reading and writing</td>
+                            </tr>
+                            <tr>
+                                <td>sentence-transformers</td>
+                                <td>2.x</td>
+                                <td>Cross-encoder reranking model</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Frontend</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Next.js</td>
+                                <td>14.2</td>
+                                <td>React framework with server-side rendering</td>
+                            </tr>
+                            <tr>
+                                <td>React</td>
+                                <td>18.3</td>
+                                <td>UI component library</td>
+                            </tr>
+                            <tr>
+                                <td>Tailwind CSS</td>
+                                <td>3.x</td>
+                                <td>Utility-first CSS framework</td>
+                            </tr>
+                            <tr>
+                                <td>Axios</td>
+                                <td>1.x</td>
+                                <td>HTTP client for API requests</td>
+                            </tr>
+                            <tr>
+                                <td>react-markdown</td>
+                                <td>9.x</td>
+                                <td>Markdown rendering in chat responses</td>
+                            </tr>
+                            <tr>
+                                <td>react-pdf</td>
+                                <td>7.x</td>
+                                <td>PDF preview in document viewer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Storage</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Purpose</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Qdrant</td>
+                                <td>Vector database</td>
+                                <td>Stores embeddings and metadata, supports cosine similarity search</td>
+                            </tr>
+                            <tr>
+                                <td>SQLite</td>
+                                <td>Relational database</td>
+                                <td>Documents, collections, queries, forms, vessel profiles</td>
+                            </tr>
+                            <tr>
+                                <td>BM25 pickle index</td>
+                                <td>Keyword search index</td>
+                                <td>Persisted at <code>data/bm25_index.pkl</code>, rebuilt on indexing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>AI Models</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Provider</th>
+                                <th>Purpose</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>gemma3:12b</td>
+                                <td>Ollama</td>
+                                <td>Language model</td>
+                                <td>Chat, RAG answer generation, form auto-fill</td>
+                            </tr>
+                            <tr>
+                                <td>mxbai-embed-large</td>
+                                <td>Ollama</td>
+                                <td>Embeddings</td>
+                                <td>1024-dimensional vectors for semantic search</td>
+                            </tr>
+                            <tr>
+                                <td>cross-encoder/ms-marco-MiniLM-L-6-v2</td>
+                                <td>sentence-transformers</td>
+                                <td>Reranking</td>
+                                <td>Query-document relevance scoring for result reranking</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- ==================== HYBRID SEARCH ==================== -->
+                <section id="hybrid-search">
+                    <h2>Hybrid Search</h2>
+
+                    <p>
+                        The hybrid search pipeline is the core retrieval mechanism in MarChat. It combines two fundamentally different search strategies &mdash; semantic vector search and BM25 keyword matching &mdash; to achieve robust retrieval across the full spectrum of maritime regulation queries. This is critical because maritime queries often mix natural language questions ("What are the fire safety requirements?") with precise technical references ("Regulation 3-1, Chapter II-2").
+                    </p>
+
+                    <div class="formula-block">
+                        <div class="formula-title">Hybrid Search Pipeline</div>
+Step 1: Semantic Search
+  query -> embed(query) using mxbai-embed-large
+       -> Qdrant cosine similarity search
+       -> retrieve top_k x 3 candidates
+
+Step 2: BM25 Keyword Search
+  query -> lowercase tokenization
+       -> BM25 ranking against indexed chunks
+       -> retrieve top_k x 3 candidates
+
+Step 3: Reciprocal Rank Fusion (RRF)
+  For each document d appearing in any result list:
+    RRF_score(d) = SUM( 1 / (k + rank_i(d)) )
+  Where:
+    k = 60 (smoothing constant)
+    rank_i(d) = rank of document d in result list i
+  Select top_k x 2 candidates by RRF score
+
+Step 4: Cross-Encoder Reranking
+  For each candidate c in fused results:
+    relevance_score = cross_encoder.predict(query, c.text)
+  Filter: keep only candidates where score >= MIN_RERANK_SCORE (-2.0)
+  Sort by relevance_score descending
+  Return top_k results
+                    </div>
+
+                    <h3>Step 1: Semantic Search</h3>
+                    <p>
+                        The user's query is encoded into a 1024-dimensional vector using the <code>mxbai-embed-large</code> model via Ollama. This vector is then used to perform a cosine similarity search against the Qdrant vector database. Semantic search excels at understanding the meaning behind a query, finding relevant content even when the exact words differ. For example, "fire protection in engine rooms" will match chunks about "fire detection systems in machinery spaces" because the semantic meaning is similar.
+                    </p>
+                    <p>
+                        To ensure a broad candidate pool, the semantic search retrieves <code>top_k x 3</code> results, which are later narrowed down by fusion and reranking.
+                    </p>
+
+                    <h3>Step 2: BM25 Keyword Search</h3>
+                    <p>
+                        In parallel, the query is tokenized using simple lowercase word splitting and matched against the BM25 inverted index. BM25 is a probabilistic ranking function that scores documents based on term frequency, inverse document frequency, and document length normalization. This approach is critical for capturing exact regulation numbers, specific technical terms, and abbreviations that semantic search might miss. For example, "Reg. 14.1.2.3" or "SOLAS II-2" are best matched by keyword search.
+                    </p>
+                    <p>
+                        Like semantic search, BM25 retrieves <code>top_k x 3</code> results to provide ample candidates for fusion.
+                    </p>
+
+                    <h3>Step 3: Reciprocal Rank Fusion (RRF)</h3>
+                    <p>
+                        The results from both search methods are combined using Reciprocal Rank Fusion. RRF is a rank-based fusion method that does not require score normalization across different retrieval systems. Each document receives a score based on its rank position in each result list, with the constant <code>k = 60</code> dampening the influence of high-ranking positions. Documents appearing in both lists receive combined scores, naturally boosting results that are relevant by both criteria.
+                    </p>
+                    <p>
+                        After fusion, the top <code>top_k x 2</code> candidates are passed forward for reranking.
+                    </p>
+
+                    <h3>Step 4: Cross-Encoder Reranking</h3>
+                    <p>
+                        The fused candidates are reranked using a cross-encoder model (<code>cross-encoder/ms-marco-MiniLM-L-6-v2</code>). Unlike bi-encoder similarity (used in semantic search), the cross-encoder processes the query and each candidate document jointly, allowing it to capture fine-grained interactions between the query and document text. This produces much more accurate relevance scores at the cost of higher computational overhead &mdash; which is why it is applied only to the already-filtered candidate set.
+                    </p>
+                    <p>
+                        Documents scoring below <code>MIN_RERANK_SCORE = -2.0</code> are filtered out, and the remaining results are returned sorted by relevance score, limited to <code>top_k</code>.
+                    </p>
+
+                    <div class="alert info">
+                        <strong><i class="fas fa-info-circle"></i> Why Hybrid?</strong><br>
+                        The hybrid approach combines the strengths of semantic understanding (captures meaning) with exact keyword matching (captures specific regulation numbers and technical terms), resulting in significantly better retrieval than either method alone. In testing on maritime regulation queries, hybrid search with reranking consistently outperformed standalone semantic or keyword search.
+                    </div>
+                </section>
+
+                <!-- ==================== BM25 ENGINE ==================== -->
+                <section id="bm25-engine">
+                    <h2>BM25 Engine</h2>
+
+                    <p>
+                        The BM25 engine provides keyword-based retrieval as a complement to semantic vector search. It maintains a persistent inverted index that is incrementally updated as new documents are indexed.
+                    </p>
+
+                    <h3>Tokenization</h3>
+                    <p>
+                        The engine uses a simple tokenization strategy: text is converted to lowercase and split on whitespace and punctuation boundaries. This straightforward approach works well for maritime regulatory text, which contains many technical terms and abbreviations that benefit from exact matching.
+                    </p>
+
+                    <h3>Persistence</h3>
+                    <p>
+                        The BM25 index is serialized using Python's pickle module and stored at <code>data/bm25_index.pkl</code>. This allows the index to persist across application restarts without requiring re-indexing of all documents.
+                    </p>
+
+                    <h3>Incremental Indexing</h3>
+                    <p>
+                        When new documents are indexed, the BM25 index is updated incrementally rather than rebuilt from scratch. New chunk texts and their corresponding IDs are appended to the existing index, and the BM25 statistics (term frequencies, document lengths) are recalculated.
+                    </p>
+
+                    <h3>Key Methods</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>index_chunks(chunks, chunk_ids)</code></td>
+                                <td>Add new chunks to the BM25 index. Tokenizes each chunk and updates the inverted index and IDF statistics.</td>
+                            </tr>
+                            <tr>
+                                <td><code>search(query, top_k)</code></td>
+                                <td>Tokenize the query and rank all indexed chunks by BM25 score. Returns the top_k results with scores and chunk IDs.</td>
+                            </tr>
+                            <tr>
+                                <td><code>clear_index()</code></td>
+                                <td>Remove all entries from the index and delete the pickle file. Used when a collection is deleted or a full re-index is needed.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code># BM25 index location
+data/bm25_index.pkl
+
+# Index is loaded at startup if the file exists
+# Re-created automatically if missing or corrupted</code></pre>
+                </section>
+
+                <!-- ==================== SMART CHUNKING ==================== -->
+                <section id="smart-chunking">
+                    <h2>Smart Chunking</h2>
+
+                    <p>
+                        Maritime regulations follow a strict hierarchical structure defined by the International Maritime Organization (IMO). MarChat's smart chunking engine detects this hierarchy during document processing and preserves it as metadata on each chunk, enabling precise citations in RAG responses.
+                    </p>
+
+                    <h3>IMO Hierarchy Detection</h3>
+                    <p>
+                        The chunker uses regular expression patterns to detect hierarchy levels in the document text. As it processes each line, it maintains a cascading state machine that tracks the current position in the hierarchy.
+                    </p>
+
+                    <pre><code># Hierarchy detection regex patterns
+
+convention:  (SOLAS|MARPOL|STCW|COLREG|LOADLINE|TONNAGE|SFV|STP|SAR)
+annex:       ANNEX\s+[IVX]+|ANNEX\s+[0-9]+
+chapter:     CHAPTER\s+\w+
+regulation:  Regulation\s+\d+|Reg\.\s*\d+
+paragraph:   \d+\.\d+(\.\d+)*</code></pre>
+
+                    <h3>Processing Steps</h3>
+                    <ol>
+                        <li><strong>Split PDF by pages</strong> &mdash; Extract text from each page of the uploaded PDF document.</li>
+                        <li><strong>Process line-by-line</strong> &mdash; Scan each line for hierarchy markers using the regex patterns above.</li>
+                        <li><strong>Detect convention from filename</strong> &mdash; If the filename contains a convention name (e.g., <code>SOLAS_consolidated.pdf</code>), set the convention metadata automatically.</li>
+                        <li><strong>Maintain hierarchical state</strong> &mdash; Track the current position as: convention &rarr; annex &rarr; chapter &rarr; regulation &rarr; paragraph. Each new detection updates the corresponding level and all chunks inherit the full hierarchy path.</li>
+                        <li><strong>Build chunks at threshold</strong> &mdash; Accumulate text until the chunk reaches 2400 characters, then split with a 100-word overlap to preserve context across chunk boundaries.</li>
+                        <li><strong>Cascading reset</strong> &mdash; When a higher-level marker is detected (e.g., a new annex), all lower levels (chapter, regulation, paragraph) are reset. This prevents stale metadata from carrying over into a new section.</li>
+                    </ol>
+
+                    <h3>Metadata Output</h3>
+                    <p>Each chunk is stored with the following metadata fields:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Example Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>convention</code></td>
+                                <td>SOLAS</td>
+                                <td>IMO convention name</td>
+                            </tr>
+                            <tr>
+                                <td><code>annex</code></td>
+                                <td>ANNEX I</td>
+                                <td>Annex number (Roman or Arabic)</td>
+                            </tr>
+                            <tr>
+                                <td><code>chapter</code></td>
+                                <td>CHAPTER II-1</td>
+                                <td>Chapter identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>regulation</code></td>
+                                <td>Regulation 3-1</td>
+                                <td>Regulation number</td>
+                            </tr>
+                            <tr>
+                                <td><code>paragraph</code></td>
+                                <td>2.1</td>
+                                <td>Paragraph number (dotted notation)</td>
+                            </tr>
+                            <tr>
+                                <td><code>page</code></td>
+                                <td>145</td>
+                                <td>Source page number in PDF</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert info">
+                        <strong><i class="fas fa-info-circle"></i> Citation Format</strong><br>
+                        Hierarchical chunking preserves regulatory structure in metadata, enabling precise citations like "SOLAS &gt; Chapter II-1 &gt; Regulation 3-1 &gt; Para. 2.1, Page 145" in RAG responses. This level of precision is critical for maritime regulatory compliance.
+                    </div>
+                </section>
+
+                <!-- ==================== CROSS-ENCODER ==================== -->
+                <section id="cross-encoder">
+                    <h2>Cross-Encoder Reranking</h2>
+
+                    <p>
+                        After the Reciprocal Rank Fusion step produces a merged candidate set, the cross-encoder model provides a final precision pass by jointly scoring each (query, document) pair.
+                    </p>
+
+                    <h3>Model Details</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Model</td>
+                                <td><code>cross-encoder/ms-marco-MiniLM-L-6-v2</code></td>
+                            </tr>
+                            <tr>
+                                <td>Input</td>
+                                <td>(query, candidate_text) pairs</td>
+                            </tr>
+                            <tr>
+                                <td>Output</td>
+                                <td>Relevance score (range: approximately -10 to +10)</td>
+                            </tr>
+                            <tr>
+                                <td>Threshold</td>
+                                <td><code>MIN_RERANK_SCORE = -2.0</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>How It Works</h3>
+                    <p>
+                        Unlike bi-encoder models (which encode query and document independently and compare their vectors), a cross-encoder processes the query and document text together through the same transformer pass. This allows the model to attend across both inputs simultaneously, capturing word-level interactions between the query and the document. The result is significantly more accurate relevance judgments, at the cost of being computationally more expensive (which is why it is only applied to the already-narrowed candidate set, not the entire corpus).
+                    </p>
+
+                    <h3>Filtering</h3>
+                    <p>
+                        After scoring, any candidate with a relevance score below <code>-2.0</code> is removed from the results. This threshold was determined empirically to filter out genuinely irrelevant content while retaining borderline-relevant chunks that may contain useful context. The remaining candidates are sorted by score in descending order and truncated to <code>top_k</code>.
+                    </p>
+                </section>
+
+                <!-- ==================== MULTI-MODE CHAT ==================== -->
+                <section id="multi-mode-chat">
+                    <h2>Multi-Mode Chat</h2>
+
+                    <p>
+                        MarChat supports five specialized chat modes, each with a tailored system prompt that controls the LLM's behavior, citation format, and response structure. The mode is selected per-query, allowing users to switch between different operational contexts within the same session.
+                    </p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mode</th>
+                                <th>Description</th>
+                                <th>Citation Format</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>regulatory</code></td>
+                                <td>IMO convention expert. Provides precise regulatory answers with full hierarchy citations.</td>
+                                <td>Convention &gt; Chapter &gt; Regulation &gt; Paragraph, Page</td>
+                            </tr>
+                            <tr>
+                                <td><code>medical</code></td>
+                                <td>Maritime medical assistant based on International Medical Guide for Ships (IMGS).</td>
+                                <td>TMAS protocol references, IMGS section numbers</td>
+                            </tr>
+                            <tr>
+                                <td><code>general</code></td>
+                                <td>General operations assistant for practical maritime questions.</td>
+                                <td>Practical advice format with source references</td>
+                            </tr>
+                            <tr>
+                                <td><code>forms</code></td>
+                                <td>Pre-arrival document specialist that outputs structured JSON for form filling.</td>
+                                <td>JSON field mapping: { "field": "value" }</td>
+                            </tr>
+                            <tr>
+                                <td><code>research</code></td>
+                                <td>Academic paper assistant for scholarly analysis and literature review.</td>
+                                <td>Source, page, academic tone with proper attribution</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Example: Regulatory Mode Query</h3>
+                    <pre><code># Request
+POST /api/rag/query
+{
+  "query": "What are the requirements for fire detection in machinery spaces?",
+  "mode": "regulatory",
+  "collection_name": "maritime_v1",
+  "top_k": 5
+}
+
+# Response includes citations like:
+# "According to SOLAS > Chapter II-2 > Regulation 7 > Para. 2.1 (Page 203),
+#  fixed fire detection and fire alarm systems shall be provided
+#  in machinery spaces of category A..."</code></pre>
+                </section>
+
+                <!-- ==================== SYSTEM PROMPTS ==================== -->
+                <section id="system-prompts">
+                    <h2>System Prompts</h2>
+
+                    <p>
+                        Each chat mode uses a carefully crafted system prompt that defines the LLM's persona, response structure, citation requirements, and content guidelines. The system prompt is prepended to the user's query along with the retrieved context chunks.
+                    </p>
+
+                    <h3>Prompt Structure</h3>
+                    <p>Every system prompt follows a common structure:</p>
+                    <ol>
+                        <li><strong>Role definition</strong> &mdash; who the assistant is and its area of expertise</li>
+                        <li><strong>Citation requirements</strong> &mdash; how to reference source material</li>
+                        <li><strong>Response format</strong> &mdash; expected structure, tone, and length</li>
+                        <li><strong>Content guidelines</strong> &mdash; what to include, what to avoid</li>
+                        <li><strong>Fallback behavior</strong> &mdash; how to handle queries outside the knowledge base</li>
+                    </ol>
+
+                    <h3>Regulatory Mode Prompt (Example)</h3>
+                    <pre><code>You are a maritime regulatory expert specializing in IMO conventions.
+Answer questions using ONLY the provided context from maritime regulations.
+
+CITATION FORMAT (MANDATORY):
+- Always cite the specific regulation using the full hierarchy:
+  Convention > Chapter > Regulation > Paragraph, Page
+- Example: "SOLAS > Chapter II-1 > Regulation 3-1 > Para. 2.1, Page 145"
+
+RESPONSE STRUCTURE:
+1. Direct answer to the question
+2. Relevant regulatory text with citations
+3. Additional context or related regulations if applicable
+
+IMPORTANT:
+- If the context does not contain sufficient information, state this clearly
+- Do not fabricate or assume regulatory content
+- Use exact text from regulations when possible</code></pre>
+
+                    <h3>Forms Mode Prompt (Example)</h3>
+                    <pre><code>You are a pre-arrival documentation specialist.
+Given the form fields and context provided, generate a JSON object
+mapping each field name to its appropriate value.
+
+OUTPUT FORMAT:
+Return ONLY a valid JSON object with field names as keys:
+{
+  "vessel_name": "MV Pacific Star",
+  "imo_number": "9123456",
+  "eta": "2026-03-15T08:00:00",
+  "last_port": "Singapore"
+}
+
+IMPORTANT:
+- Use the vessel profile data when available
+- Infer values from the natural language context
+- Use ISO 8601 format for dates
+- Leave unknown fields as empty strings</code></pre>
+
+                    <h3>Mode-Specific Behaviors</h3>
+                    <ul>
+                        <li><strong>Regulatory mode</strong> enforces hierarchical citations and uses exact regulatory text whenever available in the context.</li>
+                        <li><strong>Medical mode</strong> includes safety disclaimers and references to TMAS (Telemedical Assistance Service) protocols for remote medical guidance.</li>
+                        <li><strong>General mode</strong> provides practical, actionable advice while still referencing source material.</li>
+                        <li><strong>Forms mode</strong> outputs strictly valid JSON, mapping field names to inferred values from the provided context.</li>
+                        <li><strong>Research mode</strong> adopts an academic tone, tracks sources carefully, and provides page-level citations.</li>
+                    </ul>
+                </section>
+
+                <!-- ==================== LLM PROVIDERS ==================== -->
+                <section id="llm-providers">
+                    <h2>LLM Providers</h2>
+
+                    <p>
+                        MarChat uses a factory pattern to abstract LLM provider details, allowing the system to switch between different backends without changing application logic.
+                    </p>
+
+                    <h3>Provider Factory</h3>
+                    <pre><code># Factory function
+def get_llm_provider(provider_type: str, **kwargs) -> LLMProvider:
+    """
+    Returns an LLM provider instance based on the specified type.
+
+    Args:
+        provider_type: "ollama" or "openai"
+        **kwargs: Provider-specific configuration
+
+    Returns:
+        LLMProvider instance with generate() and embed() methods
+    """
+    if provider_type == "ollama":
+        return OllamaProvider(**kwargs)
+    elif provider_type == "openai":
+        return OpenAIProvider(**kwargs)
+    else:
+        raise ValueError(f"Unknown provider: {provider_type}")</code></pre>
+
+                    <h3>Ollama Provider (Default)</h3>
+                    <p>
+                        The Ollama provider communicates with a locally running Ollama instance via its HTTP API. It is the default and recommended provider for MarChat, as it keeps all data on the local machine.
+                    </p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>model</code></td>
+                                <td>gemma3:12b</td>
+                                <td>Chat and generation model</td>
+                            </tr>
+                            <tr>
+                                <td><code>temperature</code></td>
+                                <td>0.3</td>
+                                <td>Controls randomness (lower = more deterministic)</td>
+                            </tr>
+                            <tr>
+                                <td><code>num_predict</code></td>
+                                <td>2048</td>
+                                <td>Maximum tokens in response</td>
+                            </tr>
+                            <tr>
+                                <td><code>repeat_penalty</code></td>
+                                <td>1.1</td>
+                                <td>Penalizes token repetition</td>
+                            </tr>
+                            <tr>
+                                <td><code>top_k</code></td>
+                                <td>40</td>
+                                <td>Top-K sampling parameter</td>
+                            </tr>
+                            <tr>
+                                <td><code>top_p</code></td>
+                                <td>0.9</td>
+                                <td>Nucleus sampling parameter</td>
+                            </tr>
+                            <tr>
+                                <td><code>stop</code></td>
+                                <td>[]</td>
+                                <td>Stop token sequences</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <pre><code># Ollama API call for chat generation
+POST http://localhost:11434/api/chat
+{
+  "model": "gemma3:12b",
+  "messages": [
+    {"role": "system", "content": "...system prompt..."},
+    {"role": "user", "content": "...context + query..."}
+  ],
+  "options": {
+    "temperature": 0.3,
+    "num_predict": 2048,
+    "repeat_penalty": 1.1,
+    "top_k": 40,
+    "top_p": 0.9
+  },
+  "stream": false
+}</code></pre>
+
+                    <h3>OpenAI Provider (Optional)</h3>
+                    <p>
+                        The OpenAI provider is available as a fallback for environments where Ollama is not available. It requires an <code>OPENAI_API_KEY</code> environment variable and uses the <code>openai.ChatCompletion</code> API. Note that using OpenAI sends data to external servers, which may not be appropriate for sensitive vessel information.
+                    </p>
+                </section>
+
+                <!-- ==================== TEMPLATE PROCESSING ==================== -->
+                <section id="template-processing">
+                    <h2>Template Processing</h2>
+
+                    <p>
+                        The template processing engine handles Excel (.xlsx) and DOCX files used for pre-arrival port documentation. It detects form fields using placeholder patterns and highlighted cells, then provides a structured representation of the template's fields for filling.
+                    </p>
+
+                    <h3>Field Detection</h3>
+                    <p>The engine searches for two types of field markers in uploaded templates:</p>
+                    <ul>
+                        <li><strong>Placeholder patterns</strong> &mdash; <code>{{field_name}}</code> markers in cell values or document text</li>
+                        <li><strong>Highlighted cells</strong> &mdash; Yellow-highlighted cells in Excel spreadsheets (common in port authority templates)</li>
+                    </ul>
+
+                    <h3>Field Type Inference</h3>
+                    <p>Field types are automatically inferred from the field name using keyword matching:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Inferred Type</th>
+                                <th>Keywords in Field Name</th>
+                                <th>Example Fields</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>date</code></td>
+                                <td>date, eta, etd, arrival, departure, dob</td>
+                                <td>{{eta}}, {{date_of_birth}}, {{departure_date}}</td>
+                            </tr>
+                            <tr>
+                                <td><code>number</code></td>
+                                <td>tonnage, draft, length, breadth, crew_count</td>
+                                <td>{{gross_tonnage}}, {{forward_draft}}</td>
+                            </tr>
+                            <tr>
+                                <td><code>boolean</code></td>
+                                <td>has_, is_, valid_</td>
+                                <td>{{has_dangerous_goods}}, {{is_chartered}}</td>
+                            </tr>
+                            <tr>
+                                <td><code>text</code></td>
+                                <td>(default for all others)</td>
+                                <td>{{vessel_name}}, {{last_port}}, {{agent_name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>FormField Data Model</h3>
+                    <pre><code>@dataclass
+class FormField:
+    name: str               # Field identifier (e.g., "vessel_name")
+    field_type: str         # text, date, number, boolean, list
+    location: str           # Cell reference (Excel) or placeholder position (DOCX)
+    required: bool          # Whether the field is mandatory
+    default_value: Optional[str]  # Pre-populated value if available
+    description: str        # Human-readable field description</code></pre>
+
+                    <h3>Fill Process</h3>
+                    <ol>
+                        <li><strong>Load template</strong> &mdash; Open the uploaded Excel or DOCX file using openpyxl or python-docx.</li>
+                        <li><strong>Find placeholders</strong> &mdash; Scan all cells (Excel) or paragraphs (DOCX) for <code>{{...}}</code> patterns.</li>
+                        <li><strong>Replace with values</strong> &mdash; Substitute each placeholder with the corresponding value from the fill data.</li>
+                        <li><strong>Save filled document</strong> &mdash; Write the filled template to disk and make it available for download.</li>
+                    </ol>
+
+                    <pre><code># Example: Excel placeholder detection
+for sheet in workbook.sheetnames:
+    ws = workbook[sheet]
+    for row in ws.iter_rows():
+        for cell in row:
+            if cell.value and "{{" in str(cell.value):
+                # Extract field name from {{field_name}}
+                match = re.findall(r'\{\{(\w+)\}\}', str(cell.value))
+                for field_name in match:
+                    fields.append(FormField(
+                        name=field_name,
+                        field_type=infer_type(field_name),
+                        location=f"{sheet}!{cell.coordinate}",
+                        required=True,
+                        default_value=None,
+                        description=field_name.replace("_", " ").title()
+                    ))</code></pre>
+                </section>
+
+                <!-- ==================== AUTO-FILL ENGINE ==================== -->
+                <section id="auto-fill">
+                    <h2>Auto-Fill Engine</h2>
+
+                    <p>
+                        The auto-fill engine uses the LLM to intelligently populate form fields from unstructured natural language context. Instead of manually filling each field, the user provides a free-text description of the voyage, vessel, and port information, and the LLM extracts the relevant values.
+                    </p>
+
+                    <h3>How It Works</h3>
+                    <ol>
+                        <li><strong>Extract field list</strong> &mdash; The system retrieves all detected fields from the uploaded template.</li>
+                        <li><strong>Build prompt</strong> &mdash; A structured prompt is constructed containing the field list, the user's natural language context, and optionally the vessel profile data.</li>
+                        <li><strong>LLM generation</strong> &mdash; The forms mode system prompt instructs the LLM to output a JSON object mapping each field name to its inferred value.</li>
+                        <li><strong>Parse response</strong> &mdash; The engine handles markdown code block wrapping (strips <code>```json</code> delimiters if present) and parses the JSON.</li>
+                        <li><strong>Fill template</strong> &mdash; The parsed values are applied to the template placeholders.</li>
+                    </ol>
+
+                    <h3>Example Context Input</h3>
+                    <pre><code>We are MV Pacific Star, IMO 9123456, Panama flag, arriving at
+Rotterdam on March 15th 2026 at approximately 0800 local time.
+Coming from Singapore via Suez Canal. Gross tonnage 45,230.
+We have 22 crew members on board, all healthy. No dangerous
+goods. Last port state control inspection was in Singapore on
+February 28th, no deficiencies found. Agent is MaritimePort BV.</code></pre>
+
+                    <h3>Example LLM Output</h3>
+                    <pre><code>{
+  "vessel_name": "MV Pacific Star",
+  "imo_number": "9123456",
+  "flag_state": "Panama",
+  "port_of_arrival": "Rotterdam",
+  "eta": "2026-03-15T08:00:00",
+  "last_port": "Singapore",
+  "gross_tonnage": "45230",
+  "crew_count": "22",
+  "has_dangerous_goods": "No",
+  "last_psc_inspection_port": "Singapore",
+  "last_psc_inspection_date": "2026-02-28",
+  "psc_deficiencies": "None",
+  "agent_name": "MaritimePort BV"
+}</code></pre>
+
+                    <h3>Vessel Profile Pre-Population</h3>
+                    <p>
+                        If a vessel profile is associated with the fill request, its static fields (vessel name, IMO number, flag state, call sign, MMSI, tonnage, etc.) are automatically included in the prompt context. This reduces the amount of information the user needs to provide and ensures consistency across multiple form fills.
+                    </p>
+
+                    <div class="alert info">
+                        <strong><i class="fas fa-info-circle"></i> JSON Output Handling</strong><br>
+                        The auto-fill engine uses the forms mode system prompt to ensure structured JSON output. It also includes fallback parsing that handles cases where the LLM wraps the JSON in markdown code blocks (<code>```json ... ```</code>), which is a common behavior for instruction-following models.
+                    </div>
+                </section>
+
+                <!-- ==================== VESSEL PROFILES ==================== -->
+                <section id="vessel-profiles">
+                    <h2>Vessel Profiles</h2>
+
+                    <p>
+                        Vessel profiles store reusable vessel information that can be pre-populated into forms, eliminating the need to re-enter static data for every port call.
+                    </p>
+
+                    <h3>Profile Fields</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>vessel_name</code></td>
+                                <td>string</td>
+                                <td>Full vessel name (e.g., "MV Pacific Star")</td>
+                            </tr>
+                            <tr>
+                                <td><code>imo_number</code></td>
+                                <td>string</td>
+                                <td>7-digit IMO identification number</td>
+                            </tr>
+                            <tr>
+                                <td><code>flag_state</code></td>
+                                <td>string</td>
+                                <td>Flag state / country of registration</td>
+                            </tr>
+                            <tr>
+                                <td><code>call_sign</code></td>
+                                <td>string</td>
+                                <td>Radio call sign</td>
+                            </tr>
+                            <tr>
+                                <td><code>mmsi</code></td>
+                                <td>string</td>
+                                <td>Maritime Mobile Service Identity (9 digits)</td>
+                            </tr>
+                            <tr>
+                                <td><code>gross_tonnage</code></td>
+                                <td>float</td>
+                                <td>Gross tonnage (GT)</td>
+                            </tr>
+                            <tr>
+                                <td><code>net_tonnage</code></td>
+                                <td>float</td>
+                                <td>Net tonnage (NT)</td>
+                            </tr>
+                            <tr>
+                                <td><code>deadweight</code></td>
+                                <td>float</td>
+                                <td>Deadweight tonnage (DWT)</td>
+                            </tr>
+                            <tr>
+                                <td><code>vessel_type</code></td>
+                                <td>string</td>
+                                <td>Type of vessel (bulk carrier, tanker, container, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td><code>year_built</code></td>
+                                <td>integer</td>
+                                <td>Year of construction</td>
+                            </tr>
+                            <tr>
+                                <td><code>owner</code></td>
+                                <td>string</td>
+                                <td>Registered owner</td>
+                            </tr>
+                            <tr>
+                                <td><code>operator</code></td>
+                                <td>string</td>
+                                <td>Ship operator / manager</td>
+                            </tr>
+                            <tr>
+                                <td><code>classification_society</code></td>
+                                <td>string</td>
+                                <td>Classification society (Lloyd's, DNV, BV, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td><code>extra_fields_json</code></td>
+                                <td>JSON</td>
+                                <td>Extensible key-value store for additional vessel-specific data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        The <code>extra_fields_json</code> column allows storing any additional vessel-specific data without schema changes. This is useful for fields that vary by vessel type, flag state requirements, or specific port authority needs.
+                    </p>
+                </section>
+
+                <!-- ==================== RAG API ==================== -->
+                <section id="rag-api">
+                    <h2>RAG API</h2>
+
+                    <p>Endpoints for executing RAG queries against indexed document collections.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/rag/query</span>
+                        <p class="endpoint-description">Execute a RAG query against a specified collection. Runs the full hybrid search pipeline (semantic + BM25 + RRF + cross-encoder reranking) and generates an LLM response with citations.</p>
+                    </div>
+
+                    <h4>Request Body</h4>
+                    <pre><code>{
+  "query": "What are the requirements for fire detection in machinery spaces?",
+  "mode": "regulatory",
+  "collection_name": "maritime_v1",
+  "top_k": 5
+}</code></pre>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>query</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>The user's question or search query</td>
+                            </tr>
+                            <tr>
+                                <td><code>mode</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Chat mode: regulatory, medical, general, forms, research. Default: regulatory</td>
+                            </tr>
+                            <tr>
+                                <td><code>collection_name</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Target collection for search. Default: first available collection</td>
+                            </tr>
+                            <tr>
+                                <td><code>top_k</code></td>
+                                <td>integer</td>
+                                <td>No</td>
+                                <td>Number of context chunks to retrieve. Default: 5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Response</h4>
+                    <pre><code>{
+  "answer": "According to SOLAS > Chapter II-2 > Regulation 7 > Para. 2.1 (Page 203), fixed fire detection and fire alarm systems shall be provided in machinery spaces of category A. The system must be capable of rapidly detecting the onset of fire...",
+  "retrieved_chunks": [
+    {
+      "text": "2.1 A fixed fire detection and fire alarm system...",
+      "metadata": {
+        "convention": "SOLAS",
+        "chapter": "CHAPTER II-2",
+        "regulation": "Regulation 7",
+        "paragraph": "2.1",
+        "page": 203
+      },
+      "score": 0.847
+    }
+  ],
+  "total_chunks_retrieved": 5,
+  "response_time_ms": 2340,
+  "mode": "regulatory"
+}</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/rag/history?limit=50</span>
+                        <p class="endpoint-description">Retrieve the query history with answers, modes, and response times. Useful for reviewing past queries and analyzing system performance.</p>
+                    </div>
+
+                    <h4>Query Parameters</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>limit</code></td>
+                                <td>integer</td>
+                                <td>No</td>
+                                <td>Maximum number of history entries to return. Default: 50</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Response</h4>
+                    <pre><code>[
+  {
+    "id": 42,
+    "query_text": "Fire detection in machinery spaces",
+    "answer_text": "According to SOLAS...",
+    "mode": "regulatory",
+    "response_time_ms": 2340,
+    "created_at": "2026-02-07T14:30:00Z"
+  }
+]</code></pre>
+                </section>
+
+                <!-- ==================== DOCUMENTS API ==================== -->
+                <section id="documents-api">
+                    <h2>Documents API</h2>
+
+                    <p>Endpoints for uploading, indexing, and managing PDF documents within collections.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/documents/upload</span>
+                        <p class="endpoint-description">Upload a PDF document to a collection. Optionally triggers automatic indexing (chunking + embedding + vector storage).</p>
+                    </div>
+
+                    <h4>Request (multipart/form-data)</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>file</code></td>
+                                <td>file</td>
+                                <td>Yes</td>
+                                <td>PDF file to upload</td>
+                            </tr>
+                            <tr>
+                                <td><code>document_type</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Type of document (convention, circular, guideline)</td>
+                            </tr>
+                            <tr>
+                                <td><code>collection_name</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Target collection name. Default: default collection</td>
+                            </tr>
+                            <tr>
+                                <td><code>auto_index</code></td>
+                                <td>boolean</td>
+                                <td>No</td>
+                                <td>Automatically index after upload. Default: true</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Response</h4>
+                    <pre><code>{
+  "id": 7,
+  "title": "SOLAS_Consolidated_2024",
+  "filename": "SOLAS_Consolidated_2024.pdf",
+  "status": "indexing",
+  "collection_id": 1,
+  "total_chunks": 0,
+  "created_at": "2026-02-07T10:15:00Z"
+}</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/documents/{id}/index</span>
+                        <p class="endpoint-description">Manually trigger indexing for an uploaded document. Processes the PDF through smart chunking, generates embeddings, stores vectors in Qdrant, and updates the BM25 index.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/documents</span>
+                        <p class="endpoint-description">List all uploaded documents with their status, collection assignment, and chunk count.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/documents/{id}</span>
+                        <p class="endpoint-description">Retrieve details for a specific document including metadata, chunk count, and indexing status.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/api/documents/{id}</span>
+                        <p class="endpoint-description">Delete a document and all its associated chunks from both Qdrant and the BM25 index.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/documents/{id}/preview</span>
+                        <p class="endpoint-description">Retrieve a preview of the document's first few pages. Returns extracted text for display in the frontend document viewer.</p>
+                    </div>
+                </section>
+
+                <!-- ==================== COLLECTIONS API ==================== -->
+                <section id="collections-api">
+                    <h2>Collections API</h2>
+
+                    <p>Endpoints for managing document collections. Each collection maps to a Qdrant collection and has its own schema, search configuration, and document set.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/collections</span>
+                        <p class="endpoint-description">List all collections with document counts and schema information.</p>
+                    </div>
+
+                    <h4>Response</h4>
+                    <pre><code>[
+  {
+    "id": 1,
+    "name": "Maritime Regulations",
+    "description": "SOLAS, MARPOL, STCW and other IMO conventions",
+    "schema_id": "maritime_v1",
+    "qdrant_collection_name": "maritime_v1",
+    "document_count": 12,
+    "created_at": "2026-01-15T09:00:00Z"
+  }
+]</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/collections</span>
+                        <p class="endpoint-description">Create a new collection with a specified schema. This creates the corresponding Qdrant collection with the correct vector dimension (1024) and distance metric (cosine).</p>
+                    </div>
+
+                    <h4>Request Body</h4>
+                    <pre><code>{
+  "name": "Medical Guidelines",
+  "description": "IMGS and maritime medical references",
+  "schema_id": "medical_v1"
+}</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/collections/{id}</span>
+                        <p class="endpoint-description">Retrieve details for a specific collection including its schema, search configuration, and associated documents.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/api/collections/{id}</span>
+                        <p class="endpoint-description">Delete a collection and all its associated documents, chunks, and Qdrant vectors.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/collections/schemas/list</span>
+                        <p class="endpoint-description">List all available collection schemas with their metadata field definitions and chunking configurations.</p>
+                    </div>
+
+                    <h4>Available Schemas</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Schema ID</th>
+                                <th>Description</th>
+                                <th>Optimized For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>maritime_v1</code></td>
+                                <td>IMO conventions and maritime regulations</td>
+                                <td>Hierarchical regulatory text (SOLAS, MARPOL, STCW)</td>
+                            </tr>
+                            <tr>
+                                <td><code>legal_v1</code></td>
+                                <td>Legal documents and contracts</td>
+                                <td>Clause-based legal text with section references</td>
+                            </tr>
+                            <tr>
+                                <td><code>medical_v1</code></td>
+                                <td>Medical guidelines and protocols</td>
+                                <td>IMGS, medical procedures, treatment guidelines</td>
+                            </tr>
+                            <tr>
+                                <td><code>technical_v1</code></td>
+                                <td>Technical manuals and documentation</td>
+                                <td>Equipment manuals, maintenance procedures, specifications</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- ==================== CHAT API ==================== -->
+                <section id="chat-api">
+                    <h2>Chat API</h2>
+
+                    <p>Endpoints for the multi-mode chat system. Chat sessions maintain conversation history for context continuity.</p>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/chat/message</span>
+                        <p class="endpoint-description">Send a message in a chat session. The system applies the specified mode's system prompt and optionally retrieves RAG context before generating a response.</p>
+                    </div>
+
+                    <h4>Request Body</h4>
+                    <pre><code>{
+  "session_id": "sess_abc123",
+  "message": "What are the minimum rest hour requirements for watchkeepers?",
+  "mode": "regulatory",
+  "use_rag": true,
+  "collection_name": "maritime_v1"
+}</code></pre>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>session_id</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Chat session identifier. Auto-generated if not provided.</td>
+                            </tr>
+                            <tr>
+                                <td><code>message</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>User's message text</td>
+                            </tr>
+                            <tr>
+                                <td><code>mode</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Chat mode. Default: general</td>
+                            </tr>
+                            <tr>
+                                <td><code>use_rag</code></td>
+                                <td>boolean</td>
+                                <td>No</td>
+                                <td>Whether to retrieve context from the document collection. Default: true</td>
+                            </tr>
+                            <tr>
+                                <td><code>collection_name</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Collection to search for RAG context. Required if use_rag is true.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Response</h4>
+                    <pre><code>{
+  "session_id": "sess_abc123",
+  "response": "According to STCW > Section A-VIII/1 > Para. 2 (Page 312), the minimum rest period for seafarers assigned to watchkeeping duties is:\n\n1. A minimum of 10 hours of rest in any 24-hour period\n2. A minimum of 77 hours in any 7-day period\n\nThe rest period may be divided into no more than two periods, one of which shall be at least 6 hours in length...",
+  "mode": "regulatory",
+  "sources": [
+    {
+      "convention": "STCW",
+      "chapter": "Section A-VIII/1",
+      "paragraph": "2",
+      "page": 312
+    }
+  ]
+}</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/chat/history/{session_id}</span>
+                        <p class="endpoint-description">Retrieve the full conversation history for a chat session, including both user messages and assistant responses.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/api/chat/history/{session_id}</span>
+                        <p class="endpoint-description">Delete all messages in a chat session.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/chat/sessions</span>
+                        <p class="endpoint-description">List all active chat sessions with their most recent message and mode.</p>
+                    </div>
+                </section>
+
+                <!-- ==================== FORMS API ==================== -->
+                <section id="forms-api">
+                    <h2>Forms API</h2>
+
+                    <p>Endpoints for managing form templates, filling forms (manually or with LLM assistance), and managing vessel profiles.</p>
+
+                    <h3>Template Management</h3>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/forms/templates/upload</span>
+                        <p class="endpoint-description">Upload a form template (Excel or DOCX). The system automatically detects {{placeholder}} fields and infers their types.</p>
+                    </div>
+
+                    <h4>Request (multipart/form-data)</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>file</code></td>
+                                <td>file</td>
+                                <td>Yes</td>
+                                <td>Excel (.xlsx) or Word (.docx) template file</td>
+                            </tr>
+                            <tr>
+                                <td><code>name</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Template display name. Defaults to filename.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Response</h4>
+                    <pre><code>{
+  "id": 3,
+  "name": "Rotterdam Pre-Arrival Form",
+  "file_type": "xlsx",
+  "field_count": 28,
+  "fields": [
+    {"name": "vessel_name", "field_type": "text", "location": "Sheet1!B3"},
+    {"name": "imo_number", "field_type": "text", "location": "Sheet1!B4"},
+    {"name": "eta", "field_type": "date", "location": "Sheet1!B7"},
+    {"name": "gross_tonnage", "field_type": "number", "location": "Sheet1!B10"},
+    {"name": "has_dangerous_goods", "field_type": "boolean", "location": "Sheet1!B15"}
+  ],
+  "created_at": "2026-02-07T11:00:00Z"
+}</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/forms/templates</span>
+                        <p class="endpoint-description">List all uploaded form templates with field counts and file types.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/forms/templates/{id}</span>
+                        <p class="endpoint-description">Retrieve details for a specific template including its full field list.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/api/forms/templates/{id}</span>
+                        <p class="endpoint-description">Delete a form template and its associated file.</p>
+                    </div>
+
+                    <h3>Form Filling</h3>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/forms/fill</span>
+                        <p class="endpoint-description">Fill a template with manually provided field values. Replaces {{placeholder}} patterns with the specified values.</p>
+                    </div>
+
+                    <h4>Request Body</h4>
+                    <pre><code>{
+  "template_id": 3,
+  "field_values": {
+    "vessel_name": "MV Pacific Star",
+    "imo_number": "9123456",
+    "eta": "2026-03-15T08:00:00",
+    "gross_tonnage": "45230",
+    "has_dangerous_goods": "No"
+  },
+  "vessel_profile_id": 1
+}</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/forms/fill/auto</span>
+                        <p class="endpoint-description">Fill a template using LLM-assisted auto-fill. The LLM extracts field values from the provided natural language context and optional vessel profile.</p>
+                    </div>
+
+                    <h4>Request Body</h4>
+                    <pre><code>{
+  "template_id": 3,
+  "context": "We are MV Pacific Star, IMO 9123456, Panama flag, arriving at Rotterdam on March 15th 2026 at approximately 0800 local time. Coming from Singapore via Suez Canal. Gross tonnage 45,230. 22 crew members, all healthy. No dangerous goods.",
+  "vessel_profile_id": 1
+}</code></pre>
+
+                    <h4>Response</h4>
+                    <pre><code>{
+  "id": 15,
+  "template_id": 3,
+  "vessel_profile_id": 1,
+  "field_values": {
+    "vessel_name": "MV Pacific Star",
+    "imo_number": "9123456",
+    "flag_state": "Panama",
+    "port_of_arrival": "Rotterdam",
+    "eta": "2026-03-15T08:00:00",
+    "last_port": "Singapore",
+    "gross_tonnage": "45230",
+    "crew_count": "22",
+    "has_dangerous_goods": "No"
+  },
+  "fields_filled": 9,
+  "fields_total": 28,
+  "created_at": "2026-02-07T11:30:00Z"
+}</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/forms/filled</span>
+                        <p class="endpoint-description">List all filled forms with their template association and fill completion percentage.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/forms/filled/{id}/download</span>
+                        <p class="endpoint-description">Download the filled form document (Excel or DOCX) with all placeholders replaced by their values.</p>
+                    </div>
+
+                    <h3>Vessel Profile Management</h3>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/forms/vessels</span>
+                        <p class="endpoint-description">Create a new vessel profile with static vessel information for form pre-population.</p>
+                    </div>
+
+                    <h4>Request Body</h4>
+                    <pre><code>{
+  "vessel_name": "MV Pacific Star",
+  "imo_number": "9123456",
+  "flag_state": "Panama",
+  "call_sign": "3FXY7",
+  "mmsi": "354123456",
+  "gross_tonnage": 45230,
+  "net_tonnage": 22615,
+  "deadweight": 52000,
+  "vessel_type": "Bulk Carrier",
+  "year_built": 2018,
+  "owner": "Pacific Shipping Ltd",
+  "operator": "StarBulk Management",
+  "classification_society": "Lloyd's Register"
+}</code></pre>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/forms/vessels</span>
+                        <p class="endpoint-description">List all vessel profiles.</p>
+                    </div>
+
+                    <div class="endpoint">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/forms/vessels/{id}</span>
+                        <p class="endpoint-description">Retrieve a specific vessel profile with all fields including extra_fields_json.</p>
+                    </div>
+                </section>
+
+                <!-- ==================== DATABASE SCHEMA ==================== -->
+                <section id="database-schema">
+                    <h2>Database Schema</h2>
+
+                    <p>
+                        MarChat uses SQLite for relational data storage with 11 tables organized into RAG-related and form-related groups. The database file is located at <code>data/marchat.db</code>.
+                    </p>
+
+                    <h3>RAG Tables</h3>
+
+                    <h4>DocumentSchema</h4>
+                    <p>Defines the metadata structure and chunking strategy for a collection type.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER PK</td>
+                                <td>Auto-increment primary key</td>
+                            </tr>
+                            <tr>
+                                <td><code>schema_id</code></td>
+                                <td>VARCHAR UNIQUE</td>
+                                <td>Schema identifier (e.g., "maritime_v1")</td>
+                            </tr>
+                            <tr>
+                                <td><code>name</code></td>
+                                <td>VARCHAR</td>
+                                <td>Human-readable schema name</td>
+                            </tr>
+                            <tr>
+                                <td><code>metadata_fields_json</code></td>
+                                <td>TEXT</td>
+                                <td>JSON array of metadata field definitions</td>
+                            </tr>
+                            <tr>
+                                <td><code>hierarchy_config_json</code></td>
+                                <td>TEXT</td>
+                                <td>JSON object defining hierarchy detection rules</td>
+                            </tr>
+                            <tr>
+                                <td><code>chunking_strategy_json</code></td>
+                                <td>TEXT</td>
+                                <td>JSON object with chunk_size, overlap, and strategy type</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Collection</h4>
+                    <p>Represents a document collection backed by a Qdrant vector collection.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER PK</td>
+                                <td>Auto-increment primary key</td>
+                            </tr>
+                            <tr>
+                                <td><code>name</code></td>
+                                <td>VARCHAR</td>
+                                <td>Collection display name</td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>TEXT</td>
+                                <td>Collection description</td>
+                            </tr>
+                            <tr>
+                                <td><code>schema_id</code></td>
+                                <td>VARCHAR FK</td>
+                                <td>References DocumentSchema.schema_id</td>
+                            </tr>
+                            <tr>
+                                <td><code>qdrant_collection_name</code></td>
+                                <td>VARCHAR</td>
+                                <td>Corresponding Qdrant collection name</td>
+                            </tr>
+                            <tr>
+                                <td><code>document_count</code></td>
+                                <td>INTEGER</td>
+                                <td>Number of documents in this collection</td>
+                            </tr>
+                            <tr>
+                                <td><code>created_at</code></td>
+                                <td>DATETIME</td>
+                                <td>Creation timestamp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>CollectionSearchConfig</h4>
+                    <p>Per-collection search configuration for the hybrid pipeline.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER PK</td>
+                                <td>Auto-increment primary key</td>
+                            </tr>
+                            <tr>
+                                <td><code>collection_id</code></td>
+                                <td>INTEGER FK</td>
+                                <td>References Collection.id</td>
+                            </tr>
+                            <tr>
+                                <td><code>use_hybrid</code></td>
+                                <td>BOOLEAN</td>
+                                <td>Enable hybrid search (semantic + BM25). Default: true</td>
+                            </tr>
+                            <tr>
+                                <td><code>semantic_weight</code></td>
+                                <td>FLOAT</td>
+                                <td>Weight for semantic search results in fusion</td>
+                            </tr>
+                            <tr>
+                                <td><code>keyword_weight</code></td>
+                                <td>FLOAT</td>
+                                <td>Weight for BM25 keyword results in fusion</td>
+                            </tr>
+                            <tr>
+                                <td><code>top_k</code></td>
+                                <td>INTEGER</td>
+                                <td>Number of results to return. Default: 5</td>
+                            </tr>
+                            <tr>
+                                <td><code>use_reranking</code></td>
+                                <td>BOOLEAN</td>
+                                <td>Enable cross-encoder reranking. Default: true</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Document</h4>
+                    <p>Represents an uploaded PDF document.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER PK</td>
+                                <td>Auto-increment primary key</td>
+                            </tr>
+                            <tr>
+                                <td><code>title</code></td>
+                                <td>VARCHAR</td>
+                                <td>Document title (derived from filename)</td>
+                            </tr>
+                            <tr>
+                                <td><code>filename</code></td>
+                                <td>VARCHAR</td>
+                                <td>Original uploaded filename</td>
+                            </tr>
+                            <tr>
+                                <td><code>file_path</code></td>
+                                <td>VARCHAR</td>
+                                <td>Path to stored file on disk</td>
+                            </tr>
+                            <tr>
+                                <td><code>collection_id</code></td>
+                                <td>INTEGER FK</td>
+                                <td>References Collection.id</td>
+                            </tr>
+                            <tr>
+                                <td><code>status</code></td>
+                                <td>VARCHAR</td>
+                                <td>Processing status: uploaded, indexing, indexed, error</td>
+                            </tr>
+                            <tr>
+                                <td><code>total_chunks</code></td>
+                                <td>INTEGER</td>
+                                <td>Number of chunks generated from this document</td>
+                            </tr>
+                            <tr>
+                                <td><code>created_at</code></td>
+                                <td>DATETIME</td>
+                                <td>Upload timestamp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Query</h4>
+                    <p>Stores RAG query history for analytics and debugging.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER PK</td>
+                                <td>Auto-increment primary key</td>
+                            </tr>
+                            <tr>
+                                <td><code>query_text</code></td>
+                                <td>TEXT</td>
+                                <td>The user's original query</td>
+                            </tr>
+                            <tr>
+                                <td><code>answer_text</code></td>
+                                <td>TEXT</td>
+                                <td>The LLM-generated answer</td>
+                            </tr>
+                            <tr>
+                                <td><code>mode</code></td>
+                                <td>VARCHAR</td>
+                                <td>Chat mode used for this query</td>
+                            </tr>
+                            <tr>
+                                <td><code>response_time_ms</code></td>
+                                <td>INTEGER</td>
+                                <td>Total response time in milliseconds</td>
+                            </tr>
+                            <tr>
+                                <td><code>created_at</code></td>
+                                <td>DATETIME</td>
+                                <td>Query timestamp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Form Tables</h3>
+
+                    <h4>VesselProfile</h4>
+                    <p>Stores reusable vessel information for form pre-population.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER PK</td>
+                                <td>Auto-increment primary key</td>
+                            </tr>
+                            <tr>
+                                <td><code>vessel_name</code></td>
+                                <td>VARCHAR</td>
+                                <td>Full vessel name</td>
+                            </tr>
+                            <tr>
+                                <td><code>imo_number</code></td>
+                                <td>VARCHAR UNIQUE</td>
+                                <td>7-digit IMO number</td>
+                            </tr>
+                            <tr>
+                                <td><code>flag_state</code></td>
+                                <td>VARCHAR</td>
+                                <td>Flag state</td>
+                            </tr>
+                            <tr>
+                                <td><code>call_sign</code></td>
+                                <td>VARCHAR</td>
+                                <td>Radio call sign</td>
+                            </tr>
+                            <tr>
+                                <td><code>mmsi</code></td>
+                                <td>VARCHAR</td>
+                                <td>MMSI number</td>
+                            </tr>
+                            <tr>
+                                <td><code>gross_tonnage</code></td>
+                                <td>FLOAT</td>
+                                <td>Gross tonnage (GT)</td>
+                            </tr>
+                            <tr>
+                                <td><code>net_tonnage</code></td>
+                                <td>FLOAT</td>
+                                <td>Net tonnage (NT)</td>
+                            </tr>
+                            <tr>
+                                <td><code>deadweight</code></td>
+                                <td>FLOAT</td>
+                                <td>Deadweight tonnage (DWT)</td>
+                            </tr>
+                            <tr>
+                                <td><code>vessel_type</code></td>
+                                <td>VARCHAR</td>
+                                <td>Type of vessel</td>
+                            </tr>
+                            <tr>
+                                <td><code>year_built</code></td>
+                                <td>INTEGER</td>
+                                <td>Year of construction</td>
+                            </tr>
+                            <tr>
+                                <td><code>owner</code></td>
+                                <td>VARCHAR</td>
+                                <td>Registered owner</td>
+                            </tr>
+                            <tr>
+                                <td><code>operator</code></td>
+                                <td>VARCHAR</td>
+                                <td>Ship operator</td>
+                            </tr>
+                            <tr>
+                                <td><code>classification_society</code></td>
+                                <td>VARCHAR</td>
+                                <td>Classification society</td>
+                            </tr>
+                            <tr>
+                                <td><code>extra_fields_json</code></td>
+                                <td>TEXT</td>
+                                <td>Extensible JSON key-value store</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>FormTemplate</h4>
+                    <p>Stores uploaded form templates with their detected fields.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER PK</td>
+                                <td>Auto-increment primary key</td>
+                            </tr>
+                            <tr>
+                                <td><code>name</code></td>
+                                <td>VARCHAR</td>
+                                <td>Template display name</td>
+                            </tr>
+                            <tr>
+                                <td><code>file_path</code></td>
+                                <td>VARCHAR</td>
+                                <td>Path to stored template file</td>
+                            </tr>
+                            <tr>
+                                <td><code>file_type</code></td>
+                                <td>VARCHAR</td>
+                                <td>File type: xlsx or docx</td>
+                            </tr>
+                            <tr>
+                                <td><code>fields_json</code></td>
+                                <td>TEXT</td>
+                                <td>JSON array of detected FormField objects</td>
+                            </tr>
+                            <tr>
+                                <td><code>created_at</code></td>
+                                <td>DATETIME</td>
+                                <td>Upload timestamp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>FilledForm</h4>
+                    <p>Stores completed form instances with their field values.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER PK</td>
+                                <td>Auto-increment primary key</td>
+                            </tr>
+                            <tr>
+                                <td><code>template_id</code></td>
+                                <td>INTEGER FK</td>
+                                <td>References FormTemplate.id</td>
+                            </tr>
+                            <tr>
+                                <td><code>vessel_profile_id</code></td>
+                                <td>INTEGER FK</td>
+                                <td>References VesselProfile.id (optional)</td>
+                            </tr>
+                            <tr>
+                                <td><code>field_values_json</code></td>
+                                <td>TEXT</td>
+                                <td>JSON object mapping field names to filled values</td>
+                            </tr>
+                            <tr>
+                                <td><code>file_path</code></td>
+                                <td>VARCHAR</td>
+                                <td>Path to the filled output file</td>
+                            </tr>
+                            <tr>
+                                <td><code>created_at</code></td>
+                                <td>DATETIME</td>
+                                <td>Fill timestamp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Settings_DB</h4>
+                    <p>Key-value store for application settings.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>key</code></td>
+                                <td>VARCHAR PK</td>
+                                <td>Setting key (e.g., "default_model", "embedding_model")</td>
+                            </tr>
+                            <tr>
+                                <td><code>value</code></td>
+                                <td>TEXT</td>
+                                <td>Setting value</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- ==================== COLLECTION SCHEMAS ==================== -->
+                <section id="collection-schemas">
+                    <h2>Collection Schemas</h2>
+
+                    <p>
+                        Collection schemas define how documents are chunked, what metadata fields are extracted, and how the hierarchy detection works for each collection type. MarChat ships with four built-in schemas optimized for different document types.
+                    </p>
+
+                    <h3>System Schemas</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Schema</th>
+                                <th>Metadata Fields</th>
+                                <th>Chunking Strategy</th>
+                                <th>Chunk Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>maritime_v1</code></td>
+                                <td>convention, annex, chapter, regulation, paragraph</td>
+                                <td>Hierarchical</td>
+                                <td>800 chars</td>
+                            </tr>
+                            <tr>
+                                <td><code>legal_v1</code></td>
+                                <td>document_type, section, clause</td>
+                                <td>Paragraph-based</td>
+                                <td>600 chars</td>
+                            </tr>
+                            <tr>
+                                <td><code>medical_v1</code></td>
+                                <td>guideline_type, specialty, section</td>
+                                <td>Sentence-based</td>
+                                <td>600 chars</td>
+                            </tr>
+                            <tr>
+                                <td><code>technical_v1</code></td>
+                                <td>doc_type, chapter, section</td>
+                                <td>Hierarchical</td>
+                                <td>700 chars</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Schema Configuration Example</h3>
+                    <pre><code># maritime_v1 schema definition
+{
+  "schema_id": "maritime_v1",
+  "name": "Maritime Regulations",
+  "metadata_fields": [
+    {"name": "convention", "type": "string", "required": true},
+    {"name": "annex", "type": "string", "required": false},
+    {"name": "chapter", "type": "string", "required": false},
+    {"name": "regulation", "type": "string", "required": false},
+    {"name": "paragraph", "type": "string", "required": false},
+    {"name": "page", "type": "integer", "required": true}
+  ],
+  "hierarchy_config": {
+    "levels": ["convention", "annex", "chapter", "regulation", "paragraph"],
+    "patterns": {
+      "convention": "(SOLAS|MARPOL|STCW|COLREG|LOADLINE|TONNAGE|SFV|STP|SAR)",
+      "annex": "ANNEX\\s+[IVX]+|ANNEX\\s+[0-9]+",
+      "chapter": "CHAPTER\\s+\\w+",
+      "regulation": "Regulation\\s+\\d+|Reg\\.\\s*\\d+",
+      "paragraph": "\\d+\\.\\d+(\\.\\d+)*"
+    },
+    "cascade_reset": true
+  },
+  "chunking_strategy": {
+    "type": "hierarchical",
+    "chunk_size": 800,
+    "overlap": 100,
+    "respect_boundaries": true
+  }
+}</code></pre>
+
+                    <h3>Schema Validation Rules</h3>
+                    <ul>
+                        <li><strong>schema_id pattern</strong> &mdash; Must match <code>[a-z_]+_v[0-9]+</code> (lowercase with version suffix)</li>
+                        <li><strong>name length</strong> &mdash; Minimum 3 characters</li>
+                        <li><strong>regex patterns</strong> &mdash; Must be valid regular expressions (tested at schema creation time)</li>
+                        <li><strong>chunk_size</strong> &mdash; Must be at least 100 characters</li>
+                        <li><strong>overlap</strong> &mdash; Must be less than chunk_size</li>
+                        <li><strong>metadata fields</strong> &mdash; At least one field must be defined per schema</li>
+                    </ul>
+                </section>
+
+                <!-- ==================== VALIDATION STEPS ==================== -->
+                <section id="validation-steps">
+                    <h2>Validation Steps</h2>
+
+                    <p>
+                        This section provides a comprehensive validation checklist for verifying that all MarChat components are functioning correctly. Follow these steps after initial installation or after making configuration changes.
+                    </p>
+
+                    <h3>1. Service Health</h3>
+                    <ul>
+                        <li><code>GET /health</code> returns all services green (qdrant: connected, ollama: connected, database: connected)</li>
+                        <li><code>GET /api/settings/health</code> shows service connectivity status with version information</li>
+                        <li>Ollama responds with the correct model (<code>gemma3:12b</code>) when queried via <code>/api/tags</code></li>
+                        <li>Qdrant has the correct vector dimension (1024) for all created collections</li>
+                    </ul>
+                    <pre><code># Verify service health
+curl http://localhost:8005/health
+
+# Verify Ollama models
+curl http://localhost:11434/api/tags | python -m json.tool
+
+# Verify Qdrant collections
+curl http://localhost:6333/collections | python -m json.tool</code></pre>
+
+                    <h3>2. Document Processing</h3>
+                    <ul>
+                        <li>Upload a PDF document &rarr; status changes from <code>uploaded</code> to <code>indexing</code> to <code>indexed</code></li>
+                        <li><code>total_chunks</code> is greater than 0 after indexing completes</li>
+                        <li>BM25 index is updated (<code>data/bm25_index.pkl</code> file modified timestamp changes)</li>
+                        <li>Qdrant collection has a matching point count (number of vectors equals total chunks)</li>
+                    </ul>
+                    <pre><code># Upload and verify
+curl -X POST http://localhost:8005/api/documents/upload \
+  -F "file=@SOLAS_Chapter_II-2.pdf" \
+  -F "collection_name=maritime_v1"
+
+# Check document status
+curl http://localhost:8005/api/documents/7</code></pre>
+
+                    <h3>3. RAG Query Pipeline</h3>
+                    <ul>
+                        <li>Semantic search returns relevant chunks based on meaning</li>
+                        <li>BM25 search returns keyword-matching chunks for exact terms (regulation numbers, abbreviations)</li>
+                        <li>RRF fusion combines both result sets, boosting documents that appear in both</li>
+                        <li>Cross-encoder reranking improves precision by filtering low-relevance candidates</li>
+                        <li>Generated answer includes proper citations with hierarchy metadata</li>
+                        <li>Response time is logged in the query history table</li>
+                    </ul>
+                    <pre><code># Test RAG query
+curl -X POST http://localhost:8005/api/rag/query \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "What are the fire detection requirements for machinery spaces?",
+    "mode": "regulatory",
+    "collection_name": "maritime_v1",
+    "top_k": 5
+  }'</code></pre>
+
+                    <h3>4. Multi-Mode Chat</h3>
+                    <ul>
+                        <li>Each mode produces appropriately formatted responses matching its system prompt</li>
+                        <li><strong>Regulatory mode</strong> includes full convention hierarchy citations (Convention &gt; Chapter &gt; Regulation &gt; Para, Page)</li>
+                        <li><strong>Medical mode</strong> references IMGS protocols and includes appropriate safety disclaimers</li>
+                        <li><strong>General mode</strong> provides practical operational advice with source references</li>
+                        <li><strong>Forms mode</strong> outputs valid JSON that can be parsed by the auto-fill engine</li>
+                        <li><strong>Research mode</strong> uses academic tone with page-level citations and source attribution</li>
+                    </ul>
+
+                    <h3>5. Pre-Arrival Forms</h3>
+                    <ul>
+                        <li>Template upload extracts the correct field count from the uploaded Excel or DOCX file</li>
+                        <li><code>{{placeholder}}</code> patterns are correctly detected in both Excel cells and DOCX paragraphs</li>
+                        <li>Manual fill replaces all placeholders with the provided values</li>
+                        <li>Auto-fill produces valid JSON from natural language context</li>
+                        <li>Downloaded file has all placeholder values filled correctly</li>
+                        <li>Vessel profile data is correctly pre-populated into form fields</li>
+                    </ul>
+                    <pre><code># Test template upload
+curl -X POST http://localhost:8005/api/forms/templates/upload \
+  -F "file=@Rotterdam_PreArrival.xlsx" \
+  -F "name=Rotterdam Pre-Arrival"
+
+# Test auto-fill
+curl -X POST http://localhost:8005/api/forms/fill/auto \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template_id": 3,
+    "context": "MV Pacific Star, IMO 9123456, arriving Rotterdam March 15th 2026",
+    "vessel_profile_id": 1
+  }'</code></pre>
+
+                    <h3>6. Collection Management</h3>
+                    <ul>
+                        <li>Create collection with schema &rarr; corresponding Qdrant collection is created with correct vector config (1024 dim, cosine distance)</li>
+                        <li>Upload document to specific collection &rarr; chunks are indexed in the correct Qdrant collection</li>
+                        <li>Query with <code>collection_name</code> parameter &rarr; search is scoped to only that collection</li>
+                        <li>Delete collection &rarr; removes both Qdrant vectors and all related database records (documents, chunks, search config)</li>
+                    </ul>
+
+                    <div class="alert success">
+                        <strong><i class="fas fa-check-circle"></i> Validation Status</strong><br>
+                        All validation steps have been verified during Phase 1 (RAG + Multi-Mode Chat) and Phase 2 (Pre-Arrival Forms) development. The hybrid search pipeline consistently outperforms single-method retrieval on maritime regulation queries, with cross-encoder reranking providing measurable precision improvements.
+                    </div>
+                </section>
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="docs-footer">
+        <div class="docs-footer-content">
+            <p>&copy; 2026 MarChat. Apache License 2.0.</p>
+            <p>
+                <a href="https://github.com/SL-Mar/MarChat">GitHub</a> &bull;
+                <a href="https://quantcoder-fs.com">Website</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Sidebar active state script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.sidebar-menu a[href^="#"]');
+
+            function setActiveLink() {
+                let current = '';
+                sections.forEach(function(section) {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.scrollY >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(function(link) {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', setActiveLink);
+            setActiveLink();
+
+            // Smooth scrolling for sidebar links
+            navLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                        const headerOffset = 80;
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
