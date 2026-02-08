@@ -161,8 +161,30 @@ Synthetic Current Generator (climatological patterns)
                 <div class="alert info">
                     <i class="fas fa-info-circle"></i>
                     <strong>No credentials needed for wind:</strong> GFS data from NOAA NOMADS is freely available without
-                    authentication. Only CMEMS wave/current data requires a Copernicus Marine Service account.
+                    authentication. Only CMEMS wave/current data requires a Copernicus Marine Service account (free registration).
                 </div>
+
+                <h3>Why GFS for Wind?</h3>
+                <p>
+                    GFS was chosen as the primary wind source for its simplicity of access and data freshness.
+                    The NOMADS GRIB filter provides direct HTTP access to subregion extracts &mdash; no SDK, no
+                    authentication, no client library to install. Each request returns an ~80 KB GRIB2 file for the
+                    Mediterranean region, parsed directly with <code>pygrib</code>.
+                </p>
+                <p>
+                    By contrast, the Copernicus ecosystem (ERA5 via CDS, waves and currents via CMEMS) requires
+                    account registration and a dedicated Python client (<code>copernicusmarine</code>). While CMEMS
+                    access is <strong>free</strong>, the integration pipeline is heavier: the SDK adds dependencies,
+                    the API has higher latency, and ERA5 reanalysis data carries a ~5-day lag that makes it unsuitable
+                    as a primary near-real-time source. CMEMS integration for wave and current data remains a work in
+                    progress.
+                </p>
+                <p>
+                    Wind fields from GFS are validated visually against <a href="https://www.windy.com" target="_blank">Windy.com</a>,
+                    which itself uses ECMWF IFS and GFS as underlying models. A comprehensive study of available
+                    metocean data sources (ECMWF IFS, ICON, NAM, CMEMS forecasts) will follow once
+                    end-to-end route optimization is validated.
+                </p>
             </section>
 
             <!-- ============================================================ -->
@@ -567,7 +589,8 @@ Example:
             <section id="model-comparison">
                 <h2>Weather Model Comparison</h2>
 
-                <p>How the data sources Windmar uses compare to other major weather models:</p>
+                <p>How the data sources Windmar uses compare to other major weather models. All sources marked
+                    &ldquo;Free&rdquo; require no payment; &ldquo;Free (account)&rdquo; means free registration is needed.</p>
 
                 <table>
                     <thead>
@@ -625,7 +648,7 @@ Example:
                             <td>Near RT</td>
                             <td>240h (10d)</td>
                             <td>Free (account)</td>
-                            <td>Primary wave source</td>
+                            <td>Wave source (integration in progress)</td>
                         </tr>
                         <tr>
                             <td><strong>CMEMS Physics</strong></td>
@@ -634,7 +657,7 @@ Example:
                             <td>Near RT</td>
                             <td>240h (10d)</td>
                             <td>Free (account)</td>
-                            <td>Primary current source</td>
+                            <td>Current source (integration in progress)</td>
                         </tr>
                     </tbody>
                 </table>
