@@ -144,8 +144,10 @@
                     theory for seakeeping motions.
                 </p>
                 <p>
-                    The system ingests weather forecasts from Copernicus Marine Service (CMEMS) for waves and ocean
-                    currents, and ERA5 reanalysis for wind fields. It evaluates vessel motions (roll, pitch,
+                    The system ingests near-real-time wind data from NOAA GFS (0.25&deg; resolution, via NOMADS),
+                    wave and current data from Copernicus Marine Service (CMEMS), with ERA5 reanalysis as a
+                    secondary wind fallback. A 5-day forecast timeline (f000&ndash;f120, 3-hourly steps) enables
+                    animated wind visualization. The system evaluates vessel motions (roll, pitch,
                     vertical acceleration) and enforces safety criteria that block or penalize dangerous sea states.
                     Finally, it calculates the IMO Carbon Intensity Indicator (CII) rating for the completed voyage,
                     enabling operators to assess regulatory compliance before departure.
@@ -182,10 +184,10 @@
                     <div class="feature-card">
                         <h4><i class="fas fa-cloud-sun"></i> Weather Integration</h4>
                         <ul>
-                            <li>Copernicus CMEMS wave data</li>
-                            <li>ERA5 wind reanalysis fields</li>
-                            <li>Ocean current vectors</li>
-                            <li>3-hourly forecast resolution</li>
+                            <li>NOAA GFS near-real-time wind (0.25&deg;)</li>
+                            <li>5-day forecast timeline with animation</li>
+                            <li>CMEMS wave and ocean current data</li>
+                            <li>ERA5 wind fallback, climatology blending</li>
                         </ul>
                     </div>
                     <div class="feature-card">
@@ -248,8 +250,8 @@
                         </tr>
                         <tr>
                             <td>Weather Provider</td>
-                            <td>Copernicus CMEMS / ERA5</td>
-                            <td>Wave height, wind fields, ocean currents, 3-hourly forecasts</td>
+                            <td>NOAA GFS / CMEMS / ERA5</td>
+                            <td>GFS wind (primary), CMEMS waves and currents, ERA5 wind fallback, 5-day forecast</td>
                         </tr>
                         <tr>
                             <td>Database</td>
@@ -258,8 +260,8 @@
                         </tr>
                         <tr>
                             <td>Cache</td>
-                            <td>Redis 7</td>
-                            <td>Weather field caching, session state, computation results</td>
+                            <td>Redis 7 / In-memory</td>
+                            <td>Rate limiting, session state; weather fields cached in-memory</td>
                         </tr>
                     </tbody>
                 </table>
@@ -277,26 +279,26 @@
                 <h3>Docker Services</h3>
                 <pre><code>services:
   db:
-    image: postgres:16
-    ports: ["5432:5432"]
-    environment:
-      POSTGRES_DB: windmar
-      POSTGRES_USER: windmar
-      POSTGRES_PASSWORD: windmar
+    image: postgres:16-alpine
+    ports: ["${DB_PORT:-5432}:5432"]
 
   redis:
     image: redis:7-alpine
-    ports: ["6379:6379"]
+    ports: ["${REDIS_PORT:-6379}:6379"]
 
-  backend:
-    build: ./backend
-    ports: ["8003:8000"]
+  api:
+    build: .
+    ports: ["${API_PORT:-8000}:8000"]
     depends_on: [db, redis]
 
   frontend:
     build: ./frontend
-    ports: ["3003:3000"]
-    depends_on: [backend]</code></pre>
+    ports: ["${FRONTEND_PORT:-3000}:3000"]
+    depends_on: [api]</code></pre>
+                <p>
+                    All ports and credentials are configured via environment variables in <code>.env</code>
+                    (see <code>.env.example</code> for defaults). Copy and customize before starting.
+                </p>
             </section>
 
             <!-- ============================================================ -->
@@ -315,23 +317,23 @@
                 <h3>Docker Compose (Recommended)</h3>
                 <pre><code>git clone https://github.com/SL-Mar/windmar.git
 cd windmar
-docker compose up -d</code></pre>
+cp .env.example .env    # Edit with your settings
+docker compose up -d --build</code></pre>
                 <p>
-                    This starts all four services (PostgreSQL, Redis, backend, frontend). The frontend is accessible
-                    at <code>http://localhost:3003</code> and the backend API at <code>http://localhost:8003</code>.
+                    This starts all four services (PostgreSQL, Redis, API, frontend). By default the frontend is accessible
+                    at <code>http://localhost:3000</code> and the backend API at <code>http://localhost:8000</code>.
+                    Ports are configurable via <code>.env</code>.
                 </p>
 
                 <h3>Manual Setup</h3>
                 <h4>Backend</h4>
-                <pre><code>cd backend
-pip install poetry
-poetry install
-poetry run uvicorn app.main:app --host 0.0.0.0 --port 8003</code></pre>
+                <pre><code>pip install -r requirements.txt
+python api/main.py</code></pre>
 
                 <h4>Frontend</h4>
                 <pre><code>cd frontend
-npm install
-npm run dev -- --port 3003</code></pre>
+npm install --legacy-peer-deps
+npm run dev</code></pre>
 
                 <h3>Environment Variables</h3>
                 <p>Create a <code>.env</code> file in the project root with the following variables:</p>
@@ -1496,61 +1498,75 @@ Where:
                 <h2>Weather API</h2>
 
                 <p>
-                    The Weather API provides access to interpolated weather fields for the route optimization
-                    grid. Data is sourced from Copernicus CMEMS (waves, currents) and ERA5 (wind) and cached
-                    in Redis for repeated queries.
+                    The Weather API provides access to weather fields for the route optimization
+                    grid and map visualization. Wind data is sourced from NOAA GFS (primary) with ERA5 fallback.
+                    Wave and current data comes from Copernicus CMEMS. Weather fields are cached in-memory for
+                    repeated queries. See <a href="weather-data.html">Weather Data Acquisition</a> for full details.
                 </p>
+
+                <h3>Grid Endpoints</h3>
 
                 <div class="endpoint">
                     <span class="endpoint-method method-get">GET</span>
                     <span class="endpoint-path">/api/weather/wind</span>
-                    <p class="endpoint-description">Returns the wind field grid for a specified bounding box and time.</p>
+                    <p class="endpoint-description">Returns the wind field grid (U/V components) for a bounding box.</p>
                     <p><strong>Query Parameters:</strong></p>
                     <ul>
-                        <li><code>lat_min</code>, <code>lat_max</code> &mdash; Latitude bounds (degrees)</li>
-                        <li><code>lon_min</code>, <code>lon_max</code> &mdash; Longitude bounds (degrees)</li>
-                        <li><code>timestamp</code> &mdash; ISO 8601 datetime for the forecast time</li>
+                        <li><code>lat_min</code>, <code>lat_max</code> &mdash; Latitude bounds (default: 30&ndash;60)</li>
+                        <li><code>lon_min</code>, <code>lon_max</code> &mdash; Longitude bounds (default: -15&ndash;40)</li>
+                        <li><code>resolution</code> &mdash; Grid resolution in degrees (default: 0.25)</li>
+                        <li><code>time</code> &mdash; Optional ISO 8601 datetime</li>
                     </ul>
-                    <p><strong>Response:</strong> JSON array of grid points with <code>lat</code>, <code>lon</code>, <code>wind_speed</code> (m/s), <code>wind_dir</code> (degrees true).</p>
+                    <p><strong>Response:</strong> JSON with <code>lats</code>, <code>lons</code>, <code>u</code>, <code>v</code> 2D arrays, <code>source</code> (gfs/era5/synthetic), ocean mask.</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/weather/wind/velocity</span>
+                    <p class="endpoint-description">Wind data in <a href="https://github.com/danwild/leaflet-velocity">leaflet-velocity</a> JSON format for particle animation.</p>
+                    <p><strong>Query Parameters:</strong> Same as <code>/api/weather/wind</code>, plus <code>forecast_hour</code> (0&ndash;120, step 3).</p>
+                    <p><strong>Source:</strong> NOAA GFS via NOMADS GRIB filter.</p>
                 </div>
 
                 <div class="endpoint">
                     <span class="endpoint-method method-get">GET</span>
                     <span class="endpoint-path">/api/weather/waves</span>
-                    <p class="endpoint-description">Returns the wave field grid for a specified bounding box and time.</p>
-                    <p><strong>Query Parameters:</strong></p>
-                    <ul>
-                        <li><code>lat_min</code>, <code>lat_max</code> &mdash; Latitude bounds (degrees)</li>
-                        <li><code>lon_min</code>, <code>lon_max</code> &mdash; Longitude bounds (degrees)</li>
-                        <li><code>timestamp</code> &mdash; ISO 8601 datetime</li>
-                    </ul>
-                    <p><strong>Response:</strong> JSON array of grid points with <code>lat</code>, <code>lon</code>, <code>wave_height</code> (m), <code>wave_period</code> (s), <code>wave_dir</code> (degrees true).</p>
+                    <p class="endpoint-description">Wave field grid (significant height, period, direction) from CMEMS.</p>
+                    <p><strong>Query Parameters:</strong> Same bounding box + <code>time</code>.</p>
                 </div>
 
                 <div class="endpoint">
                     <span class="endpoint-method method-get">GET</span>
                     <span class="endpoint-path">/api/weather/currents</span>
-                    <p class="endpoint-description">Returns the ocean current field grid for a specified bounding box and time.</p>
-                    <p><strong>Query Parameters:</strong></p>
-                    <ul>
-                        <li><code>lat_min</code>, <code>lat_max</code> &mdash; Latitude bounds (degrees)</li>
-                        <li><code>lon_min</code>, <code>lon_max</code> &mdash; Longitude bounds (degrees)</li>
-                        <li><code>timestamp</code> &mdash; ISO 8601 datetime</li>
-                    </ul>
-                    <p><strong>Response:</strong> JSON array of grid points with <code>lat</code>, <code>lon</code>, <code>current_speed</code> (m/s), <code>current_dir</code> (degrees true).</p>
+                    <p class="endpoint-description">Ocean current field grid (U/V components) from CMEMS.</p>
+                    <p><strong>Query Parameters:</strong> Same bounding box + <code>time</code>.</p>
                 </div>
 
                 <div class="endpoint">
                     <span class="endpoint-method method-get">GET</span>
-                    <span class="endpoint-path">/api/weather/point</span>
-                    <p class="endpoint-description">Returns interpolated weather at a specific geographic point and time.</p>
-                    <p><strong>Query Parameters:</strong></p>
-                    <ul>
-                        <li><code>lat</code> &mdash; Latitude (degrees)</li>
-                        <li><code>lon</code> &mdash; Longitude (degrees)</li>
-                        <li><code>timestamp</code> &mdash; ISO 8601 datetime</li>
-                    </ul>
-                    <p><strong>Response:</strong> JSON object with all weather parameters (wind, waves, currents) interpolated to the exact point.</p>
+                    <span class="endpoint-path">/api/weather/currents/velocity</span>
+                    <p class="endpoint-description">Ocean currents in leaflet-velocity JSON format for particle animation.</p>
+                </div>
+
+                <h3>Forecast Endpoints</h3>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/weather/forecast/status</span>
+                    <p class="endpoint-description">Returns GFS run info and which forecast hours (f000&ndash;f120) are cached.</p>
+                    <p><strong>Response:</strong> <code>run_date</code>, <code>run_hour</code>, <code>total_hours</code> (41), <code>cached_hours</code>, <code>complete</code> flag, <code>prefetch_running</code> flag.</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/weather/forecast/prefetch</span>
+                    <p class="endpoint-description">Triggers background download of all 41 GFS forecast hours (f000&ndash;f120, 3h steps). Skips already-cached files. Rate-limited to 2s between NOMADS requests.</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/weather/forecast/frames</span>
+                    <p class="endpoint-description">Bulk returns all cached forecast frames in leaflet-velocity format. Single response containing all 41 frames (~5&ndash;20 MB). Frontend calls this once after prefetch completes.</p>
                 </div>
             </section>
 
