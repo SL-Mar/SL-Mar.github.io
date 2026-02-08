@@ -20,6 +20,7 @@
             <ul class="docs-nav">
                 <li><a href="docs.html" class="active">Documentation</a></li>
                 <li><a href="weather-data.html">Weather Data</a></li>
+                <li><a href="monte-carlo.html">Monte Carlo</a></li>
                 <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
             </ul>
         </nav>
@@ -84,6 +85,15 @@
             <div class="sidebar-title">Weather Data</div>
             <ul class="sidebar-menu">
                 <li><a href="weather-data.html"><i class="fas fa-cloud-sun-rain"></i> Weather Data Acquisition</a></li>
+                <li><a href="#weather-database"><i class="fas fa-database"></i> Weather Database</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Monte Carlo</div>
+            <ul class="sidebar-menu">
+                <li><a href="#monte-carlo"><i class="fas fa-dice"></i> Simulation Engine</a></li>
+                <li><a href="monte-carlo.html"><i class="fas fa-book"></i> Technical Article</a></li>
             </ul>
         </div>
 
@@ -1800,6 +1810,209 @@ Where:
   }
 }</code></pre>
                 </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- WEATHER DATABASE -->
+            <!-- ============================================================ -->
+            <section id="weather-database">
+                <h2>Weather Database Architecture</h2>
+
+                <p>
+                    Starting with v0.0.5, Windmar pre-fetches weather grids on a 6-hourly schedule and stores them
+                    as compressed blobs in PostgreSQL. This eliminates the 30&ndash;60 second CMEMS/GFS download latency
+                    during route calculations, reducing optimization time from minutes to seconds.
+                </p>
+
+                <h3>Database Schema</h3>
+                <p>Two tables manage the weather grid lifecycle:</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Table</th><th>Purpose</th><th>Key Columns</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>weather_forecast_runs</code></td>
+                            <td>Tracks ingestion runs per source</td>
+                            <td>source, run_time, status, forecast_hours[]</td>
+                        </tr>
+                        <tr>
+                            <td><code>weather_grid_data</code></td>
+                            <td>Compressed grid blobs per forecast hour</td>
+                            <td>run_id, forecast_hour, parameter, lats/lons/data (BYTEA)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Compression</h3>
+                <p>
+                    Each grid is stored as a zlib-compressed float32 numpy array. A global 0.5&deg; grid
+                    (341 &times; 721 = ~246K points) compresses to ~200&ndash;400 KB per parameter per forecast hour.
+                    Total storage per ingestion cycle: 7 parameters &times; 41 hours &times; ~300 KB &asymp; 86 MB.
+                </p>
+
+                <h3>Provider Fallback Chain</h3>
+                <p>
+                    Weather data is resolved through a multi-tier fallback chain. Each tier is tried in order;
+                    the first successful response is used:
+                </p>
+                <ol>
+                    <li><strong>Redis shared cache</strong> &mdash; cross-worker, 15-minute TTL</li>
+                    <li><strong>PostgreSQL pre-ingested grids</strong> &mdash; latest complete forecast run</li>
+                    <li><strong>Live CMEMS/GFS download</strong> &mdash; direct API call (30&ndash;60s)</li>
+                    <li><strong>Synthetic data</strong> &mdash; deterministic test/demo fallback</li>
+                </ol>
+
+                <h3>Ingestion Service</h3>
+                <p>
+                    The <code>WeatherIngestionService</code> runs as a FastAPI background task on a 6-hour loop.
+                    It downloads global grids from CMEMS (waves, currents) and GFS (wind) and stores them
+                    compressed in PostgreSQL. Runs older than 24 hours are automatically marked as superseded.
+                </p>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Wave forecast</strong> &mdash; When available, the ingestion service stores multi-timestep
+                    wave forecasts (0&ndash;120h, 3-hourly = 41 steps), enabling the Monte Carlo simulator to use
+                    time-varying wave conditions along the voyage.
+                </div>
+
+                <h3>DbWeatherProvider</h3>
+                <p>
+                    The <code>DbWeatherProvider</code> class reads compressed grids from PostgreSQL, decompresses
+                    them into numpy arrays, crops to the requested bounding box, and returns <code>WeatherData</code>
+                    objects. It selects the best available forecast hour for time-specific queries using nearest-neighbour
+                    matching against available forecast hours.
+                </p>
+
+                <h3>Performance</h3>
+                <table>
+                    <thead>
+                        <tr><th>Operation</th><th>Before (live)</th><th>After (DB)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Route optimization (10-leg)</td><td>90&ndash;180s</td><td>2&ndash;5s</td></tr>
+                        <tr><td>Voyage calculation</td><td>30&ndash;60s</td><td>&lt; 1s</td></tr>
+                        <tr><td>Monte Carlo (100 sims)</td><td>N/A</td><td>&lt; 500ms</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- MONTE CARLO SIMULATION -->
+            <!-- ============================================================ -->
+            <section id="monte-carlo">
+                <h2>Monte Carlo Simulation</h2>
+
+                <p>
+                    Windmar includes a parametric Monte Carlo simulator that produces P10/P50/P90 confidence intervals
+                    for ETA, fuel consumption, and voyage time. The simulator accounts for weather forecast uncertainty
+                    by applying temporally correlated perturbations to base weather conditions along the route.
+                </p>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>For the full mathematical framework</strong>, see the
+                    <a href="monte-carlo.html">Parametric Monte Carlo Simulation</a> technical article with
+                    academic references.
+                </div>
+
+                <h3>Architecture</h3>
+                <p>The simulation proceeds in four stages:</p>
+                <ol>
+                    <li><strong>Route timeline</strong> &mdash; The voyage is divided into up to 100 evenly-spaced
+                        time slices (~1 slice per 1.2 hours). Each slice has a timestamp and interpolated
+                        (lat, lon) position along the rhumb-line route.</li>
+                    <li><strong>Weather pre-fetch</strong> &mdash; Base weather (wind, wave, current) is loaded
+                        for all slices. Wave data comes from multi-timestep DB grids (forecast hours 0&ndash;120h),
+                        currents from a single DB snapshot, and wind from the pre-built GridWeatherProvider.</li>
+                    <li><strong>Correlated perturbation</strong> &mdash; For each of N simulations, temporally
+                        correlated random factors are generated via Cholesky decomposition of an exponential
+                        correlation matrix. These factors perturb wind speed, wave height, current speed,
+                        and directions.</li>
+                    <li><strong>Voyage calculation</strong> &mdash; Each simulation runs a full voyage calculation
+                        with the perturbed weather provider. Results are collected and percentiles computed.</li>
+                </ol>
+
+                <h3>Perturbation Model</h3>
+                <table>
+                    <thead>
+                        <tr><th>Parameter</th><th>Distribution</th><th>&sigma;</th><th>Correlation</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Wind speed</td><td>Log-normal, E[f]=1</td><td>0.35</td><td>Temporal (Cholesky)</td></tr>
+                        <tr><td>Wave height</td><td>Log-normal, E[f]=1</td><td>0.20</td><td>70% with wind + 30% independent</td></tr>
+                        <tr><td>Current speed</td><td>Log-normal, E[f]=1</td><td>0.15</td><td>Independent temporal</td></tr>
+                        <tr><td>Directions</td><td>Gaussian offset</td><td>15&deg;</td><td>Temporal (Cholesky)</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Temporal Correlation</h3>
+
+                <div class="formula-block">
+                    <div class="formula-title">Exponential Correlation Matrix</div>
+cov(i, j) = exp(-|t<sub>i</sub> - t<sub>j</sub>| / &tau;)
+
+where t &in; [0, 1] is normalised time along the voyage
+&tau; = 0.3 (correlation length as fraction of voyage duration)
+
+Cholesky decomposition: L &middot; L<sup>T</sup> = cov
+Correlated normals: z = L &middot; &epsilon;,  &epsilon; ~ N(0, I)
+                </div>
+
+                <p>
+                    The exponential kernel ensures that weather perturbations at nearby time slices are
+                    strongly correlated (a storm at hour 12 implies bad weather at hour 15), while distant
+                    slices are nearly independent. The correlation length &tau; = 0.3 corresponds to ~1.5 days
+                    for a 5-day voyage.
+                </p>
+
+                <h3>Wind&ndash;Wave Coupling</h3>
+                <p>
+                    Wave height perturbations are 70% correlated with wind perturbations, reflecting the
+                    physical relationship between wind forcing and sea state:
+                </p>
+                <div class="formula-block">
+                    <div class="formula-title">Wind&ndash;Wave Coupling</div>
+z<sub>wave</sub> = 0.7 &middot; z<sub>wind</sub> + &radic;(1 - 0.7&sup2;) &middot; z<sub>wave,indep</sub>
+
+factor<sub>wave</sub> = exp(&sigma;<sub>wave</sub> &middot; z<sub>wave</sub> - 0.5 &middot; &sigma;<sub>wave</sub>&sup2;)
+                </div>
+
+                <h3>API Usage</h3>
+                <pre><code>POST /api/voyage/monte-carlo
+{
+  "waypoints": [
+    {"lat": 51.95, "lon": 4.05, "name": "Rotterdam"},
+    {"lat": 37.23, "lon": 15.22, "name": "Augusta"}
+  ],
+  "calm_speed_kts": 14.5,
+  "is_laden": true,
+  "departure_time": "2026-02-10T06:00:00Z",
+  "n_simulations": 100
+}
+
+Response:
+{
+  "n_simulations": 100,
+  "eta_p10": "2026-02-14T13:22:00Z",
+  "eta_p50": "2026-02-14T14:55:00Z",
+  "eta_p90": "2026-02-14T16:28:00Z",
+  "fuel_p10": 285.4,
+  "fuel_p50": 302.1,
+  "fuel_p90": 321.8,
+  "time_p10": 103.4,
+  "time_p50": 104.9,
+  "time_p90": 106.5,
+  "computation_time_ms": 399.2
+}</code></pre>
+
+                <h3>References</h3>
+                <ul>
+                    <li>Dickson, B. et al. (2019). &ldquo;Uncertainty in marine weather routing.&rdquo; <em>arXiv:1901.03840</em></li>
+                    <li>Aijjou, A.E. et al. (2021). &ldquo;A Comprehensive Approach to Account for Weather Uncertainties in Ship Route Optimization.&rdquo; <em>J. Mar. Sci. Eng.</em> 9(12):1434</li>
+                </ul>
             </section>
 
             <!-- ============================================================ -->
