@@ -335,19 +335,56 @@ python api/main.py</code></pre>
 npm install --legacy-peer-deps
 npm run dev</code></pre>
 
+                <h3>Weather Data Sources</h3>
+                <p>
+                    Windmar uses a three-tier provider chain that automatically falls back when a source is unavailable.
+                    See <a href="weather-data.html">Weather Data Acquisition</a> for full technical details.
+                </p>
+                <table>
+                    <thead>
+                        <tr><th>Data Type</th><th>Primary Source</th><th>Fallback</th><th>Credentials</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Wind</td><td>NOAA GFS (0.25&deg;)</td><td>ERA5 &rarr; Synthetic</td><td>None (free)</td></tr>
+                        <tr><td>Waves</td><td>CMEMS wave model</td><td>Synthetic</td><td>CMEMS account</td></tr>
+                        <tr><td>Currents</td><td>CMEMS physics model</td><td>Synthetic</td><td>CMEMS account</td></tr>
+                        <tr><td>Forecast</td><td>GFS f000&ndash;f120 (5-day)</td><td>&mdash;</td><td>None</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Wind works out of the box</strong> &mdash; GFS data from NOAA NOMADS is freely available
+                    without authentication. Only CMEMS wave/current data requires credentials.
+                </div>
+
+                <h3>Obtaining Weather Credentials</h3>
+                <p><strong>CMEMS</strong> (waves and currents): Register at
+                    <a href="https://marine.copernicus.eu/" target="_blank">marine.copernicus.eu</a>,
+                    then set in <code>.env</code>:
+                </p>
+                <pre><code>COPERNICUSMARINE_SERVICE_USERNAME=your_username
+COPERNICUSMARINE_SERVICE_PASSWORD=your_password</code></pre>
+
+                <p><strong>CDS ERA5</strong> (wind fallback): Register at
+                    <a href="https://cds.climate.copernicus.eu/" target="_blank">cds.climate.copernicus.eu</a>,
+                    copy your Personal Access Token from your profile, then set:
+                </p>
+                <pre><code>CDSAPI_KEY=your_personal_access_token</code></pre>
+
                 <h3>Environment Variables</h3>
-                <p>Create a <code>.env</code> file in the project root with the following variables:</p>
-                <pre><code>COPERNICUS_USERNAME=your_username
-COPERNICUS_PASSWORD=your_password
-DATABASE_URL=postgresql://windmar:windmar@localhost:5432/windmar
-REDIS_URL=redis://localhost:6379</code></pre>
+                <p>Copy <code>.env.example</code> to <code>.env</code> and configure. Key variables:</p>
+                <pre><code>DATABASE_URL=postgresql://windmar:password@db:5432/windmar
+REDIS_URL=redis://:password@redis:6379/0
+API_SECRET_KEY=generate_with_openssl_rand_hex_32
+COPERNICUSMARINE_SERVICE_USERNAME=your_username
+COPERNICUSMARINE_SERVICE_PASSWORD=your_password
+CDSAPI_KEY=your_cds_personal_access_token</code></pre>
 
                 <div class="alert warning">
-                    <strong><i class="fas fa-exclamation-triangle"></i> Weather Data Credentials</strong><br>
-                    Copernicus Marine Service credentials are required for real weather data (wave heights, wind fields,
-                    ocean currents). Register at <a href="https://marine.copernicus.eu/">marine.copernicus.eu</a> to
-                    obtain free credentials. A synthetic weather provider is available for testing and development
-                    without credentials.
+                    <strong><i class="fas fa-exclamation-triangle"></i> Security</strong><br>
+                    Never commit <code>.env</code> to version control. The <code>.gitignore</code> excludes it by default.
+                    See <code>.env.example</code> for all available variables with descriptions.
                 </div>
             </section>
 
