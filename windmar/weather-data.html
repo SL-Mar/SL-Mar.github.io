@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmar - Weather Data Acquisition</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="docs-header">
+    <div class="docs-header-content">
+        <a href="docs.html" class="docs-logo">
+            <i class="fas fa-ship"></i>
+            <span>Windmar</span>
+        </a>
+        <nav>
+            <ul class="docs-nav">
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="weather-data.html" class="active">Weather Data</a></li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </nav>
+        <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+    </div>
+</header>
+
+<!-- Main Layout -->
+<div class="docs-container">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Overview</div>
+            <ul class="sidebar-menu">
+                <li><a href="#overview"><i class="fas fa-cloud-sun"></i> Introduction</a></li>
+                <li><a href="#provider-chain"><i class="fas fa-link"></i> Provider Chain</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Data Sources</div>
+            <ul class="sidebar-menu">
+                <li><a href="#gfs-model"><i class="fas fa-globe-americas"></i> GFS Model</a></li>
+                <li><a href="#nomads-api"><i class="fas fa-server"></i> NOMADS API</a></li>
+                <li><a href="#era5"><i class="fas fa-database"></i> ERA5 Reanalysis</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Data Formats</div>
+            <ul class="sidebar-menu">
+                <li><a href="#grib2"><i class="fas fa-file-code"></i> GRIB2 Structure</a></li>
+                <li><a href="#velocity-json"><i class="fas fa-code"></i> Velocity JSON</a></li>
+                <li><a href="#coordinates"><i class="fas fa-map-pin"></i> Coordinates</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Implementation</div>
+            <ul class="sidebar-menu">
+                <li><a href="#caching"><i class="fas fa-hdd"></i> Caching Strategy</a></li>
+                <li><a href="#forecast-timeline"><i class="fas fa-clock"></i> Forecast Timeline</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Reference</div>
+            <ul class="sidebar-menu">
+                <li><a href="#model-comparison"><i class="fas fa-balance-scale"></i> Model Comparison</a></li>
+                <li><a href="#api-reference"><i class="fas fa-plug"></i> API Reference</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Resources</div>
+            <ul class="sidebar-menu">
+                <li><a href="docs.html"><i class="fas fa-book"></i> Main Docs</a></li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <div class="docs-content">
+
+            <!-- ============================================================ -->
+            <!-- OVERVIEW -->
+            <!-- ============================================================ -->
+            <section id="overview">
+                <h1>Weather Data Acquisition</h1>
+                <p class="docs-subtitle">How Windmar sources, processes, and visualizes meteorological data</p>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Data Sources:</strong> Windmar integrates NOAA GFS near-real-time forecasts, Copernicus ERA5 reanalysis,
+                    and CMEMS ocean data. A synthetic fallback ensures the system always has data available for development and demonstration.
+                </div>
+
+                <p>
+                    Windmar's weather visualization and route optimization depend on accurate, timely meteorological data.
+                    The system implements a <strong>three-tier provider chain</strong> that automatically selects the best
+                    available data source based on freshness, availability, and data type.
+                </p>
+
+                <h3>What Powers the Weather Map</h3>
+                <p>When you open Windmar and see wind particles flowing across the Mediterranean, here's what happens behind the scenes:</p>
+                <ul>
+                    <li><strong>Wind particles &amp; grid overlay</strong> &mdash; NOAA GFS 0.25&deg; resolution, updated every 6 hours, with ~3.5h availability lag</li>
+                    <li><strong>Wave height contours</strong> &mdash; Copernicus CMEMS global wave model (0.083&deg;), or synthetic fallback</li>
+                    <li><strong>Ocean current particles</strong> &mdash; Copernicus CMEMS global physics model, or synthetic fallback</li>
+                    <li><strong>Forecast animation</strong> &mdash; 41 GFS forecast frames (f000&ndash;f120, 3h steps) animated through a Windy-style timeline</li>
+                </ul>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- PROVIDER CHAIN -->
+            <!-- ============================================================ -->
+            <section id="provider-chain">
+                <h2>Provider Chain</h2>
+
+                <p>
+                    Each weather data type follows a fallback chain. The system tries the most authoritative and freshest
+                    source first, falling back gracefully when APIs are unavailable or credentials are not configured.
+                </p>
+
+                <h3>Wind Data Chain</h3>
+                <div class="code-block">
+<pre>
+GFS Near-Real-Time (0.25&deg;, ~3.5h lag)
+    &darr; unavailable
+ERA5 Reanalysis (0.25&deg;, ~5-day lag)
+    &darr; unavailable
+Synthetic Generator (configurable resolution)
+</pre>
+                </div>
+
+                <h3>Wave Data Chain</h3>
+                <div class="code-block">
+<pre>
+CMEMS Global Wave Model (0.083&deg;, near-real-time)
+    &darr; unavailable or no credentials
+Synthetic Wave Generator (wind-coupled)
+</pre>
+                </div>
+
+                <h3>Ocean Current Data Chain</h3>
+                <div class="code-block">
+<pre>
+CMEMS Global Physics Model (0.083&deg;, near-real-time)
+    &darr; unavailable or no credentials
+Synthetic Current Generator (climatological patterns)
+</pre>
+                </div>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>No credentials needed for wind:</strong> GFS data from NOAA NOMADS is freely available without
+                    authentication. Only CMEMS wave/current data requires a Copernicus Marine Service account.
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- GFS MODEL -->
+            <!-- ============================================================ -->
+            <section id="gfs-model">
+                <h2>GFS (Global Forecast System)</h2>
+
+                <p>
+                    The <strong>Global Forecast System (GFS)</strong> is NOAA's primary global weather model.
+                    It produces forecasts four times daily, covering the entire globe at 0.25&deg; resolution
+                    (~28 km at the equator) with forecast hours extending to 384 hours (16 days).
+                </p>
+
+                <h3>Model Characteristics</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Operator</td><td>NOAA / NCEP</td></tr>
+                        <tr><td>Resolution</td><td>0.25&deg; (~28 km)</td></tr>
+                        <tr><td>Model runs</td><td>00Z, 06Z, 12Z, 18Z daily</td></tr>
+                        <tr><td>Availability lag</td><td>~3.5 hours after run start</td></tr>
+                        <tr><td>Forecast range</td><td>384 hours (16 days)</td></tr>
+                        <tr><td>Temporal resolution</td><td>1h (f000&ndash;f120), 3h (f120&ndash;f384)</td></tr>
+                        <tr><td>Variables used</td><td>UGRD, VGRD at 10m above ground</td></tr>
+                        <tr><td>Data format</td><td>GRIB2</td></tr>
+                        <tr><td>Access</td><td>Free, no authentication</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>How Windmar Uses GFS</h3>
+                <p>Windmar downloads only the 10-metre U and V wind components for a subregion of the globe:</p>
+                <ul>
+                    <li><strong>Analysis (f000):</strong> Current conditions &mdash; loaded on page open for the wind overlay and particle animation</li>
+                    <li><strong>Forecast (f003&ndash;f120):</strong> 40 additional forecast hours in 3h steps &mdash; downloaded via the forecast prefetch system and animated through the timeline slider</li>
+                </ul>
+
+                <h3>Run Selection Algorithm</h3>
+                <p>
+                    Windmar automatically determines the latest <em>available</em> GFS run by subtracting the
+                    3.5-hour availability lag from the current UTC time and rounding down to the nearest run hour:
+                </p>
+                <div class="code-block">
+<pre>
+now_utc = 2026-02-08 14:30Z
+available_time = 14:30 - 3:30 = 11:00Z
+latest_run = max(h for h in [0, 6, 12, 18] if h &lt;= 11) = 06Z
+&rarr; Uses GFS run: 2026-02-08 / 06Z
+</pre>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- NOMADS API -->
+            <!-- ============================================================ -->
+            <section id="nomads-api">
+                <h2>NOMADS GRIB Filter API</h2>
+
+                <p>
+                    NOAA's <strong>NOMADS</strong> (NOAA Operational Model Archive and Distribution System) provides
+                    a GRIB filter service that allows downloading subsets of GFS output without transferring the
+                    entire global file (~300 MB per forecast hour).
+                </p>
+
+                <h3>URL Construction</h3>
+                <p>Each GRIB download is constructed as a parameterized HTTP GET request:</p>
+                <div class="code-block">
+<pre>
+https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?
+  file=gfs.t06z.pgrb2.0p25.f024       # Run hour + forecast hour
+  &amp;lev_10_m_above_ground=on            # Surface wind level
+  &amp;var_UGRD=on                          # U-component of wind
+  &amp;var_VGRD=on                          # V-component of wind
+  &amp;subregion=                            # Enable spatial filtering
+  &amp;leftlon=-15                           # Western bound
+  &amp;rightlon=40                           # Eastern bound
+  &amp;toplat=60                             # Northern bound
+  &amp;bottomlat=30                          # Southern bound
+  &amp;dir=/gfs.20260208/06/atmos            # Model run directory
+</pre>
+                </div>
+
+                <h3>Parameters Explained</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>file</code></td><td>GRIB2 filename with run hour and forecast hour</td><td><code>gfs.t06z.pgrb2.0p25.f024</code></td></tr>
+                        <tr><td><code>lev_10_m_above_ground</code></td><td>Selects the 10m wind level</td><td><code>on</code></td></tr>
+                        <tr><td><code>var_UGRD</code></td><td>U-component (east-west) of wind</td><td><code>on</code></td></tr>
+                        <tr><td><code>var_VGRD</code></td><td>V-component (north-south) of wind</td><td><code>on</code></td></tr>
+                        <tr><td><code>subregion</code></td><td>Enables spatial subsetting</td><td>(empty)</td></tr>
+                        <tr><td><code>leftlon</code>, <code>rightlon</code></td><td>Longitude bounds (accepts -180..180 or 0..360)</td><td><code>-15</code>, <code>40</code></td></tr>
+                        <tr><td><code>toplat</code>, <code>bottomlat</code></td><td>Latitude bounds</td><td><code>60</code>, <code>30</code></td></tr>
+                        <tr><td><code>dir</code></td><td>Server directory for the model run</td><td><code>/gfs.20260208/06/atmos</code></td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Rate Limiting</h3>
+                <div class="alert warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>NOMADS rate limit:</strong> NOAA asks users to limit requests. Windmar enforces a 2-second delay
+                    between consecutive downloads during forecast prefetch. For the default Mediterranean region
+                    (30&ndash;60&deg;N, 15&deg;W&ndash;40&deg;E), each GRIB2 file is approximately 80 KB.
+                </div>
+
+                <h3>File Size Estimates</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Region</th>
+                            <th>Grid Points</th>
+                            <th>Per-File Size</th>
+                            <th>41 Frames Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Mediterranean (30&ndash;60N, -15&ndash;40E)</td><td>121 &times; 221 = 26,741</td><td>~80 KB</td><td>~3.3 MB</td></tr>
+                        <tr><td>Global</td><td>721 &times; 1440 = 1,038,240</td><td>~8 MB</td><td>~330 MB</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- ERA5 REANALYSIS -->
+            <!-- ============================================================ -->
+            <section id="era5">
+                <h2>ERA5 Reanalysis</h2>
+
+                <p>
+                    <strong>ERA5</strong> is ECMWF's fifth-generation atmospheric reanalysis dataset, produced by
+                    the Copernicus Climate Data Store (CDS). It combines historical observations with numerical
+                    weather models to produce a consistent, gap-free record of past weather.
+                </p>
+
+                <h3>Key Characteristics</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Operator</td><td>ECMWF / Copernicus CDS</td></tr>
+                        <tr><td>Resolution</td><td>0.25&deg; (~31 km)</td></tr>
+                        <tr><td>Temporal resolution</td><td>Hourly</td></tr>
+                        <tr><td>Coverage</td><td>1940 to present</td></tr>
+                        <tr><td>Availability lag</td><td>~5 days</td></tr>
+                        <tr><td>Format</td><td>NetCDF / GRIB2</td></tr>
+                        <tr><td>Access</td><td>Free with CDS API key</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>When Windmar Uses ERA5</h3>
+                <p>ERA5 serves as the <strong>second-tier fallback</strong> in the wind provider chain:</p>
+                <ul>
+                    <li>When GFS data is temporarily unavailable (NOMADS outages, network issues)</li>
+                    <li>When pygrib library is not installed in the Docker container</li>
+                    <li>For historical analysis and route replay</li>
+                </ul>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Note:</strong> ERA5 requires a CDS API key configured via the <code>CDSAPI_KEY</code>
+                    environment variable. Register at <a href="https://cds.climate.copernicus.eu" target="_blank">cds.climate.copernicus.eu</a>.
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- DATA FORMATS -->
+            <!-- ============================================================ -->
+            <section id="grib2">
+                <h2>GRIB2 Data Format</h2>
+
+                <p>
+                    <strong>GRIB2</strong> (GRIdded Binary, Edition 2) is the WMO standard format for meteorological
+                    data. Each GRIB2 file contains one or more <em>messages</em>, where each message represents a
+                    single field (e.g., U-wind at 10m) on a regular latitude/longitude grid.
+                </p>
+
+                <h3>GFS GRIB2 Message Structure</h3>
+                <p>Windmar downloads GRIB2 files containing exactly two messages:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Message</th>
+                            <th>Short Name</th>
+                            <th>Description</th>
+                            <th>Units</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td><code>10u</code> (UGRD)</td><td>U-component of 10m wind (eastward)</td><td>m/s</td></tr>
+                        <tr><td>2</td><td><code>10v</code> (VGRD)</td><td>V-component of 10m wind (northward)</td><td>m/s</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Reading GRIB2 in Python</h3>
+                <div class="code-block">
+<pre>
+import pygrib
+
+grbs = pygrib.open("gfs_20260208_06_f024_lat30_60_lon-15_40.grib2")
+
+u_msg = grbs.select(shortName='10u')[0]
+v_msg = grbs.select(shortName='10v')[0]
+
+u_data = u_msg.values    # 2D numpy array [lat, lon]
+v_data = v_msg.values
+
+lats_2d, lons_2d = u_msg.latlons()
+lats = lats_2d[:, 0]     # 1D latitude vector
+lons = lons_2d[0, :]     # 1D longitude vector
+
+grbs.close()
+</pre>
+                </div>
+            </section>
+
+            <section id="velocity-json">
+                <h2>Leaflet-Velocity JSON Format</h2>
+
+                <p>
+                    Windmar's frontend uses <strong>leaflet-velocity</strong> to render animated wind and current
+                    particles on the map. This library expects data in a specific JSON format derived from GRIB2
+                    conventions.
+                </p>
+
+                <h3>Format Structure</h3>
+                <div class="code-block">
+<pre>
+[
+  {
+    "header": {
+      "parameterCategory": 2,    // Meteorological: Momentum
+      "parameterNumber": 2,      // U-component
+      "lo1": -15.0,              // First longitude (western edge)
+      "la1": 60.0,               // First latitude (northern edge)
+      "lo2": 40.0,               // Last longitude (eastern edge)
+      "la2": 30.0,               // Last latitude (southern edge)
+      "dx": 0.25,                // Longitude step (degrees)
+      "dy": 0.25,                // Latitude step (degrees)
+      "nx": 221,                 // Number of longitude points
+      "ny": 121,                 // Number of latitude points
+      "refTime": "2026-02-08T06:00:00"
+    },
+    "data": [...]                // Flattened N&rarr;S, W&rarr;E array
+  },
+  {
+    "header": {
+      ...
+      "parameterNumber": 3       // V-component
+    },
+    "data": [...]
+  }
+]
+</pre>
+                </div>
+
+                <div class="alert warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Data ordering:</strong> Leaflet-velocity expects data ordered from North to South (descending latitude),
+                    West to East (ascending longitude). GFS GRIB2 data arrives South-to-North, so Windmar flips the array
+                    before serving it to the frontend.
+                </div>
+            </section>
+
+            <section id="coordinates">
+                <h2>Coordinate Conventions</h2>
+
+                <p>Different data sources use different longitude conventions, which Windmar handles automatically:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Longitude Range</th>
+                            <th>Example: 15&deg;W</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>GFS GRIB2 (native)</td><td>0&deg; to 360&deg;</td><td>345&deg;</td></tr>
+                        <tr><td>ERA5 NetCDF</td><td>-180&deg; to 180&deg;</td><td>-15&deg;</td></tr>
+                        <tr><td>Leaflet / Frontend</td><td>-180&deg; to 180&deg;</td><td>-15&deg;</td></tr>
+                        <tr><td>NOMADS API</td><td>Accepts both conventions</td><td>-15&deg; or 345&deg;</td></tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    Windmar's <code>GFSDataProvider</code> converts all longitudes to the -180..180 convention
+                    after reading GRIB2 data, re-sorting the data array to maintain ascending longitude order.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- CACHING STRATEGY -->
+            <!-- ============================================================ -->
+            <section id="caching">
+                <h2>Caching Strategy</h2>
+
+                <p>
+                    All downloaded weather data is cached to disk. The cache key encodes the GFS run, forecast hour,
+                    and geographic bounds, ensuring that data is never re-downloaded for the same parameters.
+                </p>
+
+                <h3>Cache File Naming</h3>
+                <div class="code-block">
+<pre>
+data/gfs_cache/
+  gfs_{YYYYMMDD}_{HH}_f{FFF}_lat{S}_{N}_lon{W}_{E}.grib2
+
+Example:
+  gfs_20260208_06_f024_lat30_60_lon-15_40.grib2
+       &uarr;          &uarr;   &uarr;    &uarr;
+       run date   run  forecast  geographic bounds
+                  hour  hour
+</pre>
+                </div>
+
+                <h3>Cache Invalidation</h3>
+                <ul>
+                    <li><strong>Automatic:</strong> New GFS runs produce new filenames, so stale data coexists without conflict</li>
+                    <li><strong>Cleanup:</strong> The <code>clear_old_cache(keep_hours=12)</code> method removes files older than 12 hours</li>
+                    <li><strong>Disk usage:</strong> ~3.3 MB for a full 41-frame forecast (Mediterranean region)</li>
+                </ul>
+
+                <h3>Forecast Prefetch Workflow</h3>
+                <p>When the user enables the forecast timeline, the following sequence occurs:</p>
+                <ol>
+                    <li>Frontend sends <code>POST /api/weather/forecast/prefetch</code></li>
+                    <li>Backend starts a background task that downloads f000&ndash;f120 in 3h steps (41 files)</li>
+                    <li>Frontend polls <code>GET /api/weather/forecast/status</code> every 3 seconds</li>
+                    <li>Progress bar shows <em>N/41 frames cached</em></li>
+                    <li>Once all frames are cached, frontend calls <code>GET /api/weather/forecast/frames</code></li>
+                    <li>Backend reads all 41 GRIB2 files, converts to velocity JSON, returns as single bulk response</li>
+                    <li>Frontend stores all frames in memory and enables the timeline slider</li>
+                </ol>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Performance:</strong> Full prefetch takes ~82 seconds worst-case (41 files &times; 2s rate limit).
+                    Subsequent loads with cache hits complete in under 1 second.
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- FORECAST TIMELINE -->
+            <!-- ============================================================ -->
+            <section id="forecast-timeline">
+                <h2>Forecast Timeline</h2>
+
+                <p>
+                    The forecast timeline is a Windy.com-style animation control that lets users scrub through
+                    5 days (120 hours) of GFS wind forecasts. It renders as a bar at the bottom of the map.
+                </p>
+
+                <h3>Timeline Controls</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Control</th>
+                            <th>Function</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Play / Pause</td><td>Auto-advance through forecast hours</td></tr>
+                        <tr><td>Time display</td><td>Shows T+Nh and the valid UTC datetime</td></tr>
+                        <tr><td>Range slider</td><td>0 to 120 in steps of 3, with day markers at 0h/24h/48h/72h/96h/120h</td></tr>
+                        <tr><td>Speed (1x/2x/4x)</td><td>Animation speed: 2s/1s/0.5s per frame</td></tr>
+                        <tr><td>Close (X)</td><td>Disables forecast mode, reverts to live f000 data</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>How Animation Works</h3>
+                <p>
+                    Only the wind <strong>particles</strong> animate through forecast hours. The underlying grid overlay
+                    (colored wind speed cells) stays at f000, matching the Windy.com pattern where the particle layer
+                    conveys temporal change while the background provides spatial context.
+                </p>
+                <p>
+                    When the user moves the slider or the animation advances, the frontend swaps the
+                    <code>windVelocityData</code> state with the pre-loaded forecast frame for that hour.
+                    The <code>VelocityParticleLayer</code> component re-renders with the new data, creating the
+                    visual impression of wind patterns evolving over time.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- MODEL COMPARISON -->
+            <!-- ============================================================ -->
+            <section id="model-comparison">
+                <h2>Weather Model Comparison</h2>
+
+                <p>How the data sources Windmar uses compare to other major weather models:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Operator</th>
+                            <th>Resolution</th>
+                            <th>Lag</th>
+                            <th>Forecast Range</th>
+                            <th>Cost</th>
+                            <th>Windmar Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GFS</strong></td>
+                            <td>NOAA</td>
+                            <td>0.25&deg;</td>
+                            <td>~3.5h</td>
+                            <td>384h (16d)</td>
+                            <td>Free</td>
+                            <td>Primary wind source</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ERA5</strong></td>
+                            <td>ECMWF / CDS</td>
+                            <td>0.25&deg;</td>
+                            <td>~5 days</td>
+                            <td>Reanalysis only</td>
+                            <td>Free (API key)</td>
+                            <td>Wind fallback</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ECMWF IFS</strong></td>
+                            <td>ECMWF</td>
+                            <td>0.1&deg;</td>
+                            <td>~6h</td>
+                            <td>240h (10d)</td>
+                            <td>Commercial</td>
+                            <td>Not used</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ICON</strong></td>
+                            <td>DWD</td>
+                            <td>0.125&deg;</td>
+                            <td>~4h</td>
+                            <td>180h (7.5d)</td>
+                            <td>Free</td>
+                            <td>Not used</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CMEMS Waves</strong></td>
+                            <td>Copernicus</td>
+                            <td>0.083&deg;</td>
+                            <td>Near RT</td>
+                            <td>240h (10d)</td>
+                            <td>Free (account)</td>
+                            <td>Primary wave source</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CMEMS Physics</strong></td>
+                            <td>Copernicus</td>
+                            <td>0.083&deg;</td>
+                            <td>Near RT</td>
+                            <td>240h (10d)</td>
+                            <td>Free (account)</td>
+                            <td>Primary current source</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- API REFERENCE -->
+            <!-- ============================================================ -->
+            <section id="api-reference">
+                <h2>Weather &amp; Forecast API Reference</h2>
+
+                <!-- Wind Velocity -->
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <code>/api/weather/wind/velocity</code>
+                    </div>
+                    <p>Returns wind data in leaflet-velocity format. Supports forecast hours for timeline animation.</p>
+                    <h4>Parameters</h4>
+                    <ul class="params-list">
+                        <li><code>lat_min</code> <span class="param-type">float</span> &mdash; Southern latitude bound (default: 30.0)</li>
+                        <li><code>lat_max</code> <span class="param-type">float</span> &mdash; Northern latitude bound (default: 60.0)</li>
+                        <li><code>lon_min</code> <span class="param-type">float</span> &mdash; Western longitude bound (default: -15.0)</li>
+                        <li><code>lon_max</code> <span class="param-type">float</span> &mdash; Eastern longitude bound (default: 40.0)</li>
+                        <li><code>forecast_hour</code> <span class="param-type">int</span> &mdash; GFS forecast hour, 0&ndash;120 in steps of 3 (default: 0)</li>
+                    </ul>
+                    <h4>Response</h4>
+                    <p>Array of two velocity data objects (U-component, V-component) in leaflet-velocity format.</p>
+                </div>
+
+                <!-- Forecast Status -->
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <code>/api/weather/forecast/status</code>
+                    </div>
+                    <p>Returns GFS run information and which forecast hours are cached.</p>
+                    <h4>Response</h4>
+                    <div class="code-block">
+<pre>
+{
+  "run_date": "20260208",
+  "run_hour": "06",
+  "total_hours": 41,
+  "cached_hours": 15,
+  "complete": false,
+  "prefetch_running": true,
+  "hours": [
+    {"forecast_hour": 0, "valid_time": "2026-02-08T06:00:00Z", "cached": true},
+    {"forecast_hour": 3, "valid_time": "2026-02-08T09:00:00Z", "cached": true},
+    ...
+  ]
+}
+</pre>
+                    </div>
+                </div>
+
+                <!-- Forecast Prefetch -->
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <code>/api/weather/forecast/prefetch</code>
+                    </div>
+                    <p>
+                        Triggers background download of all 41 GFS forecast hours (f000&ndash;f120).
+                        Returns immediately. Poll <code>/status</code> for progress.
+                    </p>
+                    <h4>Parameters</h4>
+                    <ul class="params-list">
+                        <li><code>lat_min</code>, <code>lat_max</code>, <code>lon_min</code>, <code>lon_max</code> &mdash; Geographic bounds (same defaults as velocity endpoint)</li>
+                    </ul>
+                    <h4>Response</h4>
+                    <div class="code-block">
+<pre>
+{"status": "started", "message": "Prefetch triggered in background"}
+</pre>
+                    </div>
+                </div>
+
+                <!-- Forecast Frames -->
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <code>/api/weather/forecast/frames</code>
+                    </div>
+                    <p>
+                        Bulk endpoint returning all cached forecast frames in velocity format.
+                        Call after prefetch completes. Response is gzip-compressed (~5&ndash;10 MB).
+                    </p>
+                    <h4>Response</h4>
+                    <div class="code-block">
+<pre>
+{
+  "run_date": "20260208",
+  "run_hour": "06",
+  "run_time": "2026-02-08T06:00:00",
+  "total_hours": 41,
+  "cached_hours": 41,
+  "frames": {
+    "0":  [{"header": {...}, "data": [...]}, {"header": {...}, "data": [...]}],
+    "3":  [{"header": {...}, "data": [...]}, {"header": {...}, "data": [...]}],
+    "6":  [...],
+    ...
+    "120": [...]
+  }
+}
+</pre>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- Footer -->
+<footer class="docs-footer">
+    <p>&copy; 2026 Windmar. Weather-aware maritime route optimization.</p>
+    <p>
+        <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        &nbsp;|&nbsp;
+        <a href="docs.html">Main Documentation</a>
+        &nbsp;|&nbsp;
+        <a href="../index.html">quantcoder-fs.com</a>
+    </p>
+</footer>
+
+</body>
+</html>
