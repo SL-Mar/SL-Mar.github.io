@@ -100,13 +100,6 @@ nav {
     line-height: 26px;
 }
 
-.logo-tagline {
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: var(--text-tertiary);
-    margin-left: 0.5rem;
-}
-
 .nav-center {
     display: flex;
     gap: 2rem;
@@ -507,10 +500,6 @@ footer p {
 @media (max-width: 768px) {
     .container {
         padding: 0 1.5rem;
-    }
-
-    .logo-tagline {
-        display: none;
     }
 
     .nav-container {
