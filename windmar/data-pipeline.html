@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmar - Data Ingestion and Restitution Pipeline</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="docs-header">
+    <div class="docs-header-content">
+        <a href="docs.html" class="docs-logo">
+            <i class="fas fa-ship"></i>
+            <span>Windmar</span>
+        </a>
+        <nav>
+            <ul class="docs-nav">
+                <li><a href="docs.html">Documentation</a></li>
+                <li class="docs-nav-dropdown">
+                    <a href="#">Technical Articles <i class="fas fa-caret-down"></i></a>
+                    <ul class="docs-nav-dropdown-menu">
+                        <li><a href="weather-fields.html">Weather Fields</a></li>
+                        <li><a href="data-pipeline.html" class="active">Data Pipeline</a></li>
+                        <li><a href="hydrodynamics.html">Hydrodynamics &amp; RAO</a></li>
+                        <li><a href="astar-pathfinding.html">A* Pathfinding</a></li>
+                        <li><a href="weather-data.html">Weather Acquisition</a></li>
+                        <li><a href="monte-carlo.html">Monte Carlo</a></li>
+                    </ul>
+                </li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </nav>
+        <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+    </div>
+</header>
+
+<!-- Main Layout -->
+<div class="docs-container">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Article</div>
+            <ul class="sidebar-menu">
+                <li><a href="#abstract"><i class="fas fa-file-alt"></i> Abstract</a></li>
+                <li><a href="#introduction"><i class="fas fa-book-open"></i> Introduction</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Ingestion</div>
+            <ul class="sidebar-menu">
+                <li><a href="#acquisition-layer"><i class="fas fa-download"></i> Acquisition Layer</a></li>
+                <li><a href="#compression-storage"><i class="fas fa-database"></i> Compression &amp; Storage</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Retrieval</div>
+            <ul class="sidebar-menu">
+                <li><a href="#data-retrieval"><i class="fas fa-upload"></i> Data Retrieval</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Temporal Provider</div>
+            <ul class="sidebar-menu">
+                <li><a href="#temporal-interpolation"><i class="fas fa-clock"></i> Temporal Interpolation</a></li>
+                <li><a href="#provenance"><i class="fas fa-fingerprint"></i> Data Provenance</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Performance</div>
+            <ul class="sidebar-menu">
+                <li><a href="#caching"><i class="fas fa-bolt"></i> Caching Strategy</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Resources</div>
+            <ul class="sidebar-menu">
+                <li><a href="#references"><i class="fas fa-bookmark"></i> References</a></li>
+                <li><a href="docs.html"><i class="fas fa-arrow-left"></i> Back to Docs</a></li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <div class="docs-content">
+
+            <!-- ============================================================ -->
+            <!-- ABSTRACT -->
+            <!-- ============================================================ -->
+            <section id="abstract">
+                <h1>Data Ingestion and Restitution Pipeline</h1>
+                <p class="docs-subtitle">Architecture of the weather data pipeline from acquisition through database storage to route-ready interpolated grids</p>
+
+                <div class="alert info">
+                    <strong><i class="fas fa-info-circle"></i> Technical Article</strong><br>
+                    This article describes the data engineering architecture that underpins Windmar's weather-aware
+                    route optimization. It covers how meteorological and oceanographic data are acquired from external
+                    providers, compressed and stored in PostgreSQL, retrieved on demand, and delivered to the A*
+                    optimizer as temporally interpolated grid fields. For the definition of individual weather
+                    parameters, see <a href="weather-fields.html">Weather Fields</a>. For details on the upstream
+                    data sources themselves, see <a href="weather-data.html">Weather Data Acquisition</a>.
+                </div>
+
+                <h3>Abstract</h3>
+                <p>
+                    Weather-aware maritime route optimization requires the ability to serve spatially and temporally
+                    varying meteorological fields &mdash; wind, waves, swell, wind-wave decomposition, and ocean
+                    currents &mdash; to a graph-search algorithm that evaluates thousands of candidate route segments
+                    per optimization pass. Each evaluation demands weather conditions at a specific geographic
+                    coordinate and future time, placing stringent requirements on retrieval latency: the data must
+                    be available in sub-millisecond time per query, yet the underlying forecast grids are large,
+                    multi-parameter, and arrive from remote APIs with response times measured in seconds to minutes.
+                    This article presents the four-stage pipeline that Windmar implements to bridge this gap:
+                    (1) acquisition from GFS and CMEMS forecast services, (2) zlib compression and storage in a
+                    PostgreSQL schema optimised for bulk retrieval, (3) decompression with spatial cropping via
+                    boolean masking, and (4) trilinear interpolation across latitude, longitude, and forecast hour
+                    to produce a continuous weather field for the voyage calculator. The pipeline ingests 14 distinct
+                    meteorological parameters across up to 41 forecast timesteps, achieving typical retrieval
+                    latencies below 100 milliseconds and per-point interpolation costs below 1 millisecond.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- INTRODUCTION -->
+            <!-- ============================================================ -->
+            <section id="introduction">
+                <h2>1. Introduction</h2>
+
+                <p>
+                    The central engineering challenge in weather-aware route optimization is the mismatch between
+                    the time scale at which weather data can be fetched from external services and the time scale
+                    at which the optimizer needs to query it. A single CMEMS wave forecast download for the global
+                    domain can take 30 seconds to several minutes depending on network conditions and server load.
+                    A single GFS GRIB2 file download requires approximately 2 seconds, with NOAA imposing rate
+                    limits on consecutive requests. The A* pathfinding algorithm, by contrast, expands hundreds to
+                    thousands of nodes per second, and each node expansion requires weather conditions at the
+                    corresponding position and time. Querying an external API for each node expansion would make
+                    the optimization infeasible.
+                </p>
+
+                <p>
+                    Windmar resolves this mismatch through a <strong>database-backed ingestion pipeline</strong>
+                    that decouples the slow, IO-bound acquisition process from the fast, CPU-bound optimization
+                    process. Weather data is fetched once, compressed, and stored in PostgreSQL. The optimizer
+                    then reads from the database, benefiting from local disk latency rather than network latency.
+                    An additional temporal interpolation layer sits between the database and the optimizer, providing
+                    a continuous weather field from discrete forecast timesteps. This architecture also provides
+                    offline capability: once data has been ingested, routes can be optimized without any network
+                    connectivity.
+                </p>
+
+                <p>
+                    The pipeline consists of four stages arranged in a linear data flow:
+                </p>
+
+                <ol>
+                    <li><strong>Acquisition</strong> &mdash; Fetching raw forecast grids from GFS (wind), CMEMS
+                        (waves, currents), and ERA5 (fallback) via their respective APIs and client libraries.</li>
+                    <li><strong>Compression and Storage</strong> &mdash; Converting <code>numpy</code> arrays to
+                        zlib-compressed binary blobs and writing them to PostgreSQL alongside forecast run metadata.</li>
+                    <li><strong>Retrieval and Decompression</strong> &mdash; Selecting the latest complete forecast
+                        run, loading the relevant parameter grids, decompressing them, and cropping to the voyage
+                        bounding box.</li>
+                    <li><strong>Temporal Interpolation</strong> &mdash; Interpolating between adjacent forecast
+                        timesteps in three dimensions (latitude, longitude, time) to produce a weather value at any
+                        arbitrary position and time within the forecast horizon.</li>
+                </ol>
+
+                <p>
+                    Each stage is implemented as a distinct Python class with a well-defined interface, enabling
+                    independent testing and replacement. The following sections describe each stage in detail, with
+                    references to the source modules: <code>copernicus.py</code> (acquisition),
+                    <code>weather_ingestion.py</code> (compression and storage), <code>db_weather_provider.py</code>
+                    (retrieval), and <code>temporal_weather_provider.py</code> (interpolation).
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- DATA ACQUISITION LAYER -->
+            <!-- ============================================================ -->
+            <section id="acquisition-layer">
+                <h2>2. Data Acquisition Layer</h2>
+
+                <p>
+                    The acquisition layer is implemented in <code>CopernicusDataProvider</code> (module
+                    <code>copernicus.py</code>) and is responsible for fetching raw forecast grids from three
+                    external data sources. Each source serves a distinct set of meteorological parameters and
+                    uses a different access protocol, but all produce the same output format: a dictionary mapping
+                    parameter names to <code>numpy</code> arrays on a regular latitude-longitude grid, packaged
+                    in a <code>WeatherData</code> dataclass.
+                </p>
+
+                <h3>2.1 Three Ingestion Paths</h3>
+
+                <p>
+                    The acquisition layer implements three distinct ingestion paths, each tailored to the upstream
+                    data source:
+                </p>
+
+                <ul>
+                    <li><strong>Wind (GFS)</strong> &mdash; The Global Forecast System provides 10-metre U and V
+                        wind components via the NOAA NOMADS GRIB filter. Files are downloaded as GRIB2, parsed
+                        with <code>cfgrib</code> and <code>xarray</code>, and converted to numpy arrays. Each file
+                        is approximately 80 KB for a Mediterranean-scale subregion. NOMADS imposes a rate limit
+                        that Windmar respects with a 2-second delay between consecutive requests, yielding ~82
+                        seconds for a full 41-file forecast sequence.</li>
+                    <li><strong>Wave forecast (CMEMS)</strong> &mdash; The Copernicus Marine Environment Monitoring
+                        Service provides significant wave height, peak period, direction, and swell/wind-wave
+                        decomposition via the <code>copernicusmarine</code> Python library. The wave ingestion
+                        path supports multi-timestep downloads, fetching forecast hours 0 through 120 in 3-hour
+                        increments (41 timesteps) in a single API call that returns an <code>xarray.Dataset</code>.</li>
+                    <li><strong>Current forecast (CMEMS)</strong> &mdash; The same Copernicus infrastructure provides
+                        ocean surface current U and V components. Like wave data, current forecasts support
+                        multi-timestep ingestion across the 0&ndash;120h forecast horizon.</li>
+                </ul>
+
+                <h3>2.2 Bounding Box and Temporal Windowing</h3>
+
+                <p>
+                    All three paths apply spatial and temporal windowing at the API level to minimise download
+                    volume. The bounding box is specified in the acquisition request and restricts the returned
+                    grid to the geographic extent of the planned voyage, with a configurable margin. Temporal
+                    windowing limits the forecast hours to those relevant for the voyage duration, although the
+                    default behaviour is to download the full 0&ndash;120h range to support both the current
+                    optimization and any subsequent re-optimizations within the same forecast cycle.
+                </p>
+
+                <h3>2.3 Fallback Hierarchy</h3>
+
+                <p>
+                    When the primary data source is unavailable &mdash; due to API outages, credential
+                    configuration errors, or network interruptions &mdash; the acquisition layer follows a
+                    fallback hierarchy to ensure the optimizer always has weather data available:
+                </p>
+
+                <div class="code-block">
+<pre>
+Wind:     DB cache (previous run) --> GFS live (NOMADS) --> ERA5 live (CDS)
+Waves:    DB cache (previous run) --> CMEMS live
+Currents: DB cache (previous run) --> CMEMS live
+</pre>
+                </div>
+
+                <p>
+                    The database cache is always tried first, as it provides the lowest latency and does not
+                    depend on external network connectivity. If the latest cached run is older than the
+                    supersession threshold (24 hours), the system falls back to a live API call. For wind
+                    data, ERA5 reanalysis serves as a tertiary fallback, providing gap-free historical coverage
+                    at the cost of a ~5-day data lag.
+                </p>
+
+                <h3>2.4 Data Source Comparison</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Protocol</th>
+                            <th>Spatial Resolution</th>
+                            <th>Temporal Resolution</th>
+                            <th>Parameters</th>
+                            <th>Typical Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>GFS (NOMADS)</td>
+                            <td>HTTP GRIB filter</td>
+                            <td>0.25&deg; (~28 km)</td>
+                            <td>3h steps, 0&ndash;120h</td>
+                            <td>wind_u, wind_v</td>
+                            <td>~80 KB per file, ~3.3 MB total</td>
+                        </tr>
+                        <tr>
+                            <td>CMEMS Waves</td>
+                            <td><code>copernicusmarine</code> SDK</td>
+                            <td>0.083&deg; (~9 km)</td>
+                            <td>3h steps, 0&ndash;120h</td>
+                            <td>wave_hs, wave_tp, wave_dir, swell_*, windwave_*</td>
+                            <td>~50&ndash;200 MB (global)</td>
+                        </tr>
+                        <tr>
+                            <td>CMEMS Currents</td>
+                            <td><code>copernicusmarine</code> SDK</td>
+                            <td>0.083&deg; (~9 km)</td>
+                            <td>3h steps, 0&ndash;120h</td>
+                            <td>current_u, current_v</td>
+                            <td>~20&ndash;80 MB (global)</td>
+                        </tr>
+                        <tr>
+                            <td>ERA5 (fallback)</td>
+                            <td>CDS API</td>
+                            <td>0.25&deg; (~31 km)</td>
+                            <td>Hourly (reanalysis)</td>
+                            <td>wind_u, wind_v</td>
+                            <td>Variable (~5&ndash;50 MB)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- INGESTION AND COMPRESSION -->
+            <!-- ============================================================ -->
+            <section id="compression-storage">
+                <h2>3. Ingestion and Compression</h2>
+
+                <p>
+                    The ingestion layer is implemented in <code>WeatherIngestionService</code> (module
+                    <code>weather_ingestion.py</code>) and is responsible for transforming raw forecast grids
+                    from the acquisition layer into compressed binary records in PostgreSQL. The service
+                    operates on a global grid spanning latitudes &minus;85&deg; to 85&deg; and longitudes
+                    &minus;179.75&deg; to 179.75&deg; at a uniform resolution of 0.5&deg;, although subsets
+                    of this grid may be ingested when bounding-box windowing is applied at the acquisition
+                    stage.
+                </p>
+
+                <h3>3.1 Orchestration</h3>
+
+                <p>
+                    The top-level <code>ingest_all()</code> method orchestrates the ingestion of wave and
+                    current data. Wind data is not ingested through this path because GFS downloads are
+                    already fast enough to be cached on the filesystem (via the GRIB cache described in
+                    <a href="weather-data.html#caching">Weather Data Acquisition</a>) and served directly to
+                    the frontend forecast timeline. Wave and current data, by contrast, arrive as large
+                    xarray datasets that benefit from database-backed compression and indexed retrieval.
+                </p>
+
+                <p>
+                    For single-snapshot ingestion, <code>ingest_waves()</code> and <code>ingest_currents()</code>
+                    fetch the current analysis (forecast hour 0) and store a single grid per parameter. For
+                    multi-timestep forecast ingestion, <code>ingest_wave_forecast_frames()</code> and
+                    <code>ingest_current_forecast_frames()</code> accept a dictionary mapping forecast hours
+                    to <code>WeatherData</code> objects and store all 41 timesteps (0, 3, 6, &hellip;, 120h)
+                    under a single forecast run identifier.
+                </p>
+
+                <h3>3.2 Database Schema</h3>
+
+                <p>
+                    The ingestion service writes to two PostgreSQL tables that together form a two-level
+                    hierarchy: forecast runs and grid data. The <code>weather_forecast_runs</code> table
+                    records metadata about each ingestion event, while <code>weather_grid_data</code> stores
+                    the actual compressed arrays with a foreign key to the parent run.
+                </p>
+
+                <div class="code-block">
+<pre>
+-- Forecast run metadata
+CREATE TABLE weather_forecast_runs (
+    id              SERIAL PRIMARY KEY,
+    source          VARCHAR(50) NOT NULL,    -- 'CMEMS_wave', 'CMEMS_current', 'GFS', 'ERA5'
+    run_time        TIMESTAMP NOT NULL,      -- Model initialisation time
+    status          VARCHAR(20) NOT NULL,    -- 'ingesting', 'complete', 'superseded'
+    grid_resolution FLOAT,                   -- 0.5 (degrees)
+    lat_min         FLOAT,
+    lat_max         FLOAT,
+    lon_min         FLOAT,
+    lon_max         FLOAT,
+    forecast_hours  INTEGER,                 -- Number of timesteps ingested
+    ingested_at     TIMESTAMP DEFAULT NOW()
+);
+
+-- Compressed grid arrays
+CREATE TABLE weather_grid_data (
+    id              SERIAL PRIMARY KEY,
+    run_id          INTEGER REFERENCES weather_forecast_runs(id),
+    forecast_hour   INTEGER NOT NULL,        -- 0, 3, 6, ..., 120
+    parameter       VARCHAR(50) NOT NULL,    -- 'wave_hs', 'wind_u', etc.
+    lats            BYTEA NOT NULL,          -- zlib-compressed float32 1D array
+    lons            BYTEA NOT NULL,          -- zlib-compressed float32 1D array
+    data            BYTEA NOT NULL,          -- zlib-compressed float32 2D array (flattened)
+    shape_rows      INTEGER NOT NULL,        -- Number of latitude points
+    shape_cols      INTEGER NOT NULL,        -- Number of longitude points
+    UNIQUE(run_id, forecast_hour, parameter)
+);
+</pre>
+                </div>
+
+                <p>
+                    The <code>UNIQUE(run_id, forecast_hour, parameter)</code> constraint ensures that each
+                    combination of forecast run, timestep, and meteorological parameter is stored exactly
+                    once. This enables idempotent re-ingestion: if an ingestion is interrupted and restarted,
+                    the service can safely re-insert rows without creating duplicates.
+                </p>
+
+                <h3>3.3 Compression</h3>
+
+                <p>
+                    Before storage, each <code>numpy</code> array is converted to <code>float32</code> and
+                    compressed using zlib (deflate). The compression is applied independently to the latitude
+                    vector, longitude vector, and data matrix for each (run, forecast_hour, parameter) tuple.
+                    This approach allows selective decompression: for operations that only need the grid
+                    geometry (e.g., determining spatial extent), the coordinate vectors can be decompressed
+                    without touching the data blob.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Compression Pipeline</div>
+numpy.ndarray (float64) --> .astype(float32) --> .tobytes() --> zlib.compress() --> BYTEA column
+                </div>
+
+                <p>
+                    Typical compression ratios for meteorological grids range from 3:1 to 8:1, depending on
+                    the spatial smoothness of the field. Wave height grids, which exhibit large-scale spatial
+                    coherence, compress more effectively than current grids, which contain fine-scale eddies
+                    and sharp coastal gradients.
+                </p>
+
+                <h3>3.4 Stored Parameters</h3>
+
+                <p>
+                    The ingestion service stores 14 distinct meteorological parameters across three data
+                    sources. Each parameter is stored as a separate row in <code>weather_grid_data</code>,
+                    enabling the retrieval layer to load only the parameters required by the current
+                    computation.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Source</th>
+                            <th>Description</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>wind_u</code></td><td>GFS</td><td>Eastward wind component at 10 m</td><td>m/s</td></tr>
+                        <tr><td><code>wind_v</code></td><td>GFS</td><td>Northward wind component at 10 m</td><td>m/s</td></tr>
+                        <tr><td><code>wave_hs</code></td><td>CMEMS</td><td>Combined significant wave height</td><td>m</td></tr>
+                        <tr><td><code>wave_tp</code></td><td>CMEMS</td><td>Peak wave period</td><td>s</td></tr>
+                        <tr><td><code>wave_dir</code></td><td>CMEMS</td><td>Mean wave direction</td><td>deg</td></tr>
+                        <tr><td><code>swell_hs</code></td><td>CMEMS</td><td>Swell significant wave height</td><td>m</td></tr>
+                        <tr><td><code>swell_tp</code></td><td>CMEMS</td><td>Swell peak period</td><td>s</td></tr>
+                        <tr><td><code>swell_dir</code></td><td>CMEMS</td><td>Swell mean direction</td><td>deg</td></tr>
+                        <tr><td><code>windwave_hs</code></td><td>CMEMS</td><td>Wind-wave significant wave height</td><td>m</td></tr>
+                        <tr><td><code>windwave_tp</code></td><td>CMEMS</td><td>Wind-wave peak period</td><td>s</td></tr>
+                        <tr><td><code>windwave_dir</code></td><td>CMEMS</td><td>Wind-wave mean direction</td><td>deg</td></tr>
+                        <tr><td><code>current_u</code></td><td>CMEMS</td><td>Eastward ocean surface current</td><td>m/s</td></tr>
+                        <tr><td><code>current_v</code></td><td>CMEMS</td><td>Northward ocean surface current</td><td>m/s</td></tr>
+                        <tr><td><code>current_speed</code></td><td>Derived</td><td>Current magnitude (derived from U/V)</td><td>m/s</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>3.5 Run Supersession</h3>
+
+                <p>
+                    To prevent unbounded growth of the database, the ingestion service implements a
+                    supersession mechanism. After each successful ingestion, the
+                    <code>_supersede_old_runs()</code> method marks all forecast runs older than 24 hours
+                    as <code>'superseded'</code>. Superseded runs are excluded from the retrieval layer's
+                    run selection query, but their data remains in the database for potential historical
+                    analysis until explicitly purged by an administrative process.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- DATA RETRIEVAL AND DECOMPRESSION -->
+            <!-- ============================================================ -->
+            <section id="data-retrieval">
+                <h2>4. Data Retrieval and Decompression</h2>
+
+                <p>
+                    The retrieval layer is implemented in <code>DbWeatherProvider</code> (module
+                    <code>db_weather_provider.py</code>) and provides the interface between the compressed
+                    PostgreSQL storage and the temporal interpolation layer. Its primary responsibilities
+                    are: selecting the appropriate forecast run, matching forecast hours to target times,
+                    decompressing grid data, and cropping to the voyage bounding box. The class exposes
+                    three high-level methods &mdash; <code>get_wind_from_db()</code>,
+                    <code>get_wave_from_db()</code>, and <code>get_current_from_db()</code> &mdash; as well
+                    as a bulk retrieval method for multi-timestep pre-fetching.
+                </p>
+
+                <h3>4.1 Run Selection</h3>
+
+                <p>
+                    The <code>_find_latest_run(source)</code> method selects the most recent forecast run
+                    for a given data source (e.g., <code>'CMEMS_wave'</code> or <code>'GFS'</code>). The
+                    selection criteria are:
+                </p>
+
+                <ol>
+                    <li>The run must have <code>status = 'complete'</code> (excluding in-progress and
+                        superseded runs).</li>
+                    <li>Among complete runs, the one with the most recent <code>run_time</code> is
+                        preferred.</li>
+                    <li>If multiple runs share the same <code>run_time</code>, the one with the most
+                        <code>forecast_hours</code> is selected, as it provides the greatest temporal
+                        coverage for multi-day voyages.</li>
+                </ol>
+
+                <h3>4.2 Forecast Hour Matching</h3>
+
+                <p>
+                    Given a target time (e.g., the time at which a vessel will reach a particular waypoint),
+                    the <code>_best_forecast_hour(run_id, target_time)</code> method identifies the closest
+                    available forecast hour within the selected run. The method queries the distinct forecast
+                    hours stored for the given run and returns the one that minimises the absolute difference
+                    between the target time and the run initialisation time plus the forecast hour offset.
+                    This snapping behaviour is adequate for the retrieval layer; finer temporal resolution
+                    is handled by the interpolation layer described in Section 5.
+                </p>
+
+                <h3>4.3 Decompression</h3>
+
+                <p>
+                    The <code>_load_grid()</code> method reads a single compressed grid from the database
+                    and reconstructs the original numpy arrays. The decompression path mirrors the compression
+                    pipeline in reverse:
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Decompression Pipeline</div>
+BYTEA column --> zlib.decompress() --> numpy.frombuffer(dtype=float32) --> reshape(rows, cols)
+                </div>
+
+                <p>
+                    Two helper methods handle the dimensionality: <code>_decompress_1d(blob)</code> produces
+                    a flat vector (used for latitude and longitude coordinate arrays), while
+                    <code>_decompress_2d(blob, rows, cols)</code> produces a 2D matrix by reshaping the
+                    flat buffer according to the stored <code>shape_rows</code> and <code>shape_cols</code>
+                    metadata. The use of explicit shape metadata rather than inferring dimensions from the
+                    blob size provides a consistency check: if the decompressed buffer length does not match
+                    <code>rows &times; cols</code>, an error is raised.
+                </p>
+
+                <h3>4.4 Bounding Box Cropping</h3>
+
+                <p>
+                    After decompression, the grid is cropped to the voyage bounding box using boolean
+                    masking. The <code>_crop_grid()</code> method constructs boolean index arrays for
+                    the latitude and longitude dimensions and applies them to extract the rectangular
+                    sub-grid corresponding to the voyage area. This approach handles both ascending and
+                    descending latitude orderings, which differ between data sources (GFS stores latitudes
+                    south-to-north; CMEMS stores them north-to-south).
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Spatial Cropping via Boolean Masking</div>
+lat_mask = (lats >= lat_min) & (lats <= lat_max)
+lon_mask = (lons >= lon_min) & (lons <= lon_max)
+
+lats_cropped = lats[lat_mask]
+lons_cropped = lons[lon_mask]
+data_cropped = data[np.ix_(lat_mask, lon_mask)]
+                </div>
+
+                <p>
+                    The <code>np.ix_</code> construct generates an open mesh from the two boolean vectors,
+                    enabling extraction of the sub-matrix without flattening the 2D structure. For a
+                    Mediterranean voyage (30&ndash;50&deg;N, 5&deg;W&ndash;35&deg;E) on a 0.5&deg; global
+                    grid, cropping reduces the grid from 340 &times; 720 points to approximately 40 &times;
+                    80 points &mdash; a 77-fold reduction in memory footprint and proportional speedup in
+                    subsequent interpolation operations.
+                </p>
+
+                <h3>4.5 Bulk Retrieval</h3>
+
+                <p>
+                    For multi-day voyage optimization, the temporal interpolation layer requires grids at
+                    multiple forecast hours simultaneously. The <code>get_grids_for_timeline()</code> method
+                    provides a single-pass bulk retrieval interface that loads all requested parameters across
+                    all relevant forecast hours in one database round-trip. It returns a nested dictionary
+                    structured as <code>parameter &rarr; {forecast_hour &rarr; (lats, lons, data)}</code>,
+                    which the temporal provider consumes directly. A specialized variant,
+                    <code>get_wave_grids_for_timeline()</code>, pre-fetches all wave-related parameters
+                    (wave, swell, wind-wave decomposition) in a single coordinated call.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TEMPORAL WEATHER PROVISIONING -->
+            <!-- ============================================================ -->
+            <section id="temporal-interpolation">
+                <h2>5. Temporal Weather Provisioning</h2>
+
+                <p>
+                    The <code>TemporalGridWeatherProvider</code> (module <code>temporal_weather_provider.py</code>)
+                    is the final stage of the pipeline and the direct interface consumed by the voyage
+                    calculator and route optimizer. It receives the pre-fetched multi-timestep grids from
+                    <code>DbWeatherProvider</code> and exposes a single method &mdash;
+                    <code>get_weather(lat, lon, time)</code> &mdash; that returns a <code>LegWeather</code>
+                    dataclass containing all meteorological fields needed by the vessel performance model.
+                    The method performs trilinear interpolation across three axes: latitude, longitude, and
+                    forecast hour.
+                </p>
+
+                <h3>5.1 Internal Data Structure</h3>
+
+                <p>
+                    The provider is constructed with a <code>run_time</code> (the forecast model
+                    initialisation time) and a <code>grids</code> dictionary with the structure
+                    <code>parameter &rarr; {forecast_hour &rarr; (lats, lons, data)}</code>. Parameters
+                    are grouped by type:
+                </p>
+
+                <ul>
+                    <li><strong>Vector parameters</strong> &mdash; Wind (<code>wind_u</code>,
+                        <code>wind_v</code>) and current (<code>current_u</code>, <code>current_v</code>)
+                        are stored as U/V component pairs. Interpolation is performed independently on
+                        each component, and the magnitude and direction are computed from the interpolated
+                        components.</li>
+                    <li><strong>Wave parameters</strong> &mdash; Combined wave (<code>wave_hs</code>,
+                        <code>wave_tp</code>, <code>wave_dir</code>), swell (<code>swell_hs</code>,
+                        <code>swell_tp</code>, <code>swell_dir</code>), and wind-wave
+                        (<code>windwave_hs</code>, <code>windwave_tp</code>, <code>windwave_dir</code>)
+                        are interpolated as scalar fields.</li>
+                </ul>
+
+                <h3>5.2 Trilinear Interpolation Algorithm</h3>
+
+                <p>
+                    The core interpolation method, <code>_interp_temporal()</code>, brackets the requested
+                    forecast hour between the two nearest available timesteps (h<sub>0</sub> and
+                    h<sub>1</sub>), performs bilinear spatial interpolation at each timestep independently,
+                    and then blends the two results with a linear temporal weight:
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Temporal Linear Interpolation</div>
+v<sub>final</sub> = v(h<sub>0</sub>) &middot; (1 &minus; &alpha;) + v(h<sub>1</sub>) &middot; &alpha;
+
+where &alpha; = (fh &minus; h<sub>0</sub>) / (h<sub>1</sub> &minus; h<sub>0</sub>)
+
+fh = fractional forecast hour corresponding to the query time
+h<sub>0</sub> = greatest available forecast hour &le; fh
+h<sub>1</sub> = smallest available forecast hour &ge; fh
+                </div>
+
+                <p>
+                    When the query time falls exactly on an available forecast hour (i.e.,
+                    h<sub>0</sub> = h<sub>1</sub>), the temporal blending reduces to a single spatial
+                    interpolation with &alpha; = 0. At each timestep, the spatial interpolation uses
+                    bilinear interpolation on the regular latitude-longitude grid, locating the four
+                    surrounding grid cells and weighting by the fractional position within the cell.
+                </p>
+
+                <h3>5.3 Vector Parameter Handling</h3>
+
+                <p>
+                    For vector quantities (wind and current), interpolation is performed on the Cartesian
+                    components (U and V) rather than on magnitude and direction. This avoids the
+                    discontinuity and non-linearity that would arise from interpolating angular quantities
+                    directly. After interpolation, the provider computes derived scalars:
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">U/V to Speed and Direction Conversion</div>
+speed = sqrt(u&sup2; + v&sup2;)
+
+direction = (270&deg; &minus; atan2(v, u)) mod 360&deg;
+                </div>
+
+                <p>
+                    This convention produces meteorological direction (the direction <em>from</em> which
+                    the wind or current is coming), consistent with standard maritime practice where a
+                    270&deg; wind blows from the west.
+                </p>
+
+                <h3>5.4 NaN and Coastal Cell Handling</h3>
+
+                <p>
+                    Coastal grid cells in ocean models frequently contain NaN values where the model grid
+                    intersects land. Rather than propagating NaN through the interpolation (which would
+                    cause the vessel model to fail), the provider implements a fallback strategy: any
+                    interpolated value that is NaN or infinite is replaced with 0.0. This is physically
+                    reasonable for coastal cells where the query point is near land: wind and current
+                    speeds approach zero in sheltered waters, and wave heights are attenuated by
+                    shallow-water effects. The fallback ensures that the optimizer never encounters
+                    undefined values while traversing coastal waypoints.
+                </p>
+
+                <h3>5.5 End-to-End Data Flow</h3>
+
+                <p>
+                    The complete data flow from external API to route optimizer is summarized below:
+                </p>
+
+                <div class="code-block">
+<pre>
++------------------+     +------------------+     +--------------------+
+|   CMEMS / GFS    |     |   PostgreSQL DB  |     |  DbWeatherProvider |
+|  (External API)  | --> |  weather_forecast |  -> |  (Decompress +    |
+|                  |     |  _runs / _data   |     |   Crop to BBox)   |
++------------------+     +------------------+     +--------------------+
+                                                          |
+                                                          v
+                          +----------------------------+--+-------------------+
+                          |  TemporalGridWeatherProvider                      |
+                          |  - Brackets forecast hours (h0, h1)              |
+                          |  - Bilinear spatial interpolation at each        |
+                          |  - Linear temporal blend: v = v0*(1-a) + v1*a    |
+                          |  - U/V -> speed/direction conversion             |
+                          +----------------------------+---------------------+
+                                                       |
+                                                       v
+                          +----------------------------+---------------------+
+                          |  VoyageCalculator / RouteOptimizer (A*)          |
+                          |  - get_weather(lat, lon, time) -> LegWeather     |
+                          |  - Sub-millisecond per query                     |
+                          +--------------------------------------------------+
+</pre>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- DATA PROVENANCE -->
+            <!-- ============================================================ -->
+            <section id="provenance">
+                <h3>5.1 Data Provenance and Confidence</h3>
+
+                <p>
+                    Each weather query carries a <code>WeatherProvenance</code> dataclass that records
+                    the lineage of the returned data. This metadata enables downstream consumers &mdash;
+                    particularly the Monte Carlo uncertainty engine (see
+                    <a href="monte-carlo.html">Parametric Monte Carlo Simulation</a>) &mdash; to weight
+                    their confidence in the weather values and adjust perturbation magnitudes accordingly.
+                </p>
+
+                <p>
+                    The provenance dataclass contains four fields:
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Example Values</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>source_type</code></td>
+                            <td><code>str</code></td>
+                            <td>Category of the data source</td>
+                            <td><code>"forecast"</code>, <code>"hindcast"</code>, <code>"climatology"</code>, <code>"blended"</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>model_name</code></td>
+                            <td><code>str</code></td>
+                            <td>Name of the originating model</td>
+                            <td><code>"GFS"</code>, <code>"CMEMS_wave"</code>, <code>"CMEMS_current"</code>, <code>"ERA5"</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>forecast_lead_hours</code></td>
+                            <td><code>float</code></td>
+                            <td>Hours between model init and query time</td>
+                            <td>0.0 &ndash; 240.0</td>
+                        </tr>
+                        <tr>
+                            <td><code>confidence</code></td>
+                            <td><code>str</code></td>
+                            <td>Qualitative confidence level</td>
+                            <td><code>"high"</code>, <code>"medium"</code>, <code>"low"</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Confidence Levels</h3>
+
+                <p>
+                    The confidence field is assigned based on the forecast lead time:
+                </p>
+
+                <ul>
+                    <li><strong>High</strong> (&lt; 72 hours) &mdash; The forecast is within the range
+                        where NWP models exhibit skill significantly above climatology. Wind speed RMS
+                        errors are typically 1.5&ndash;2.5 m/s; significant wave height errors are
+                        0.2&ndash;0.5 m.</li>
+                    <li><strong>Medium</strong> (72&ndash;120 hours) &mdash; The forecast remains useful
+                        for synoptic-scale features (major storm systems, prevailing wind patterns) but
+                        mesoscale details are increasingly unreliable. The Monte Carlo engine increases
+                        perturbation magnitudes in this range.</li>
+                    <li><strong>Low</strong> (&gt; 120 hours or climatological data) &mdash; The forecast
+                        approaches climatological skill. For voyages extending beyond the 10-day forecast
+                        horizon (<code>FORECAST_HORIZON_DAYS = 10</code>), the system transitions to a
+                        blended mode that interpolates between the latest available forecast and
+                        climatological means over a 2-day blending window
+                        (<code>BLEND_WINDOW_DAYS = 2</code>).</li>
+                </ul>
+
+                <p>
+                    The route optimizer uses the confidence level to weight uncertainty in its cost
+                    function. Routes that rely heavily on low-confidence weather data incur a penalty
+                    that biases the optimizer toward paths with more reliable forecasts &mdash; typically
+                    shorter routes or routes that avoid weather-sensitive ocean regions in the extended
+                    forecast period.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- CACHING AND PERFORMANCE -->
+            <!-- ============================================================ -->
+            <section id="caching">
+                <h2>6. Caching and Performance</h2>
+
+                <p>
+                    Performance is critical at every stage of the pipeline, as the end-to-end latency
+                    directly affects the user experience: a route optimization request should complete
+                    within a few seconds, not minutes. Windmar employs a multi-level caching strategy
+                    that minimises redundant computation and data transfer at each stage.
+                </p>
+
+                <h3>6.1 Redis Caching for API Responses</h3>
+
+                <p>
+                    The frontend API layer uses Redis to cache serialized weather responses. When the
+                    frontend requests wave forecast frames, wind velocity data, or current visualization
+                    grids, the API first checks the Redis cache for a recent result matching the
+                    requested parameters and geographic bounds. Cache entries are keyed by data source,
+                    forecast hour, and bounding box coordinates, with a time-to-live that aligns with
+                    the forecast model update cycle (typically 6 hours for GFS, 12 hours for CMEMS).
+                    This caching layer eliminates redundant database queries when multiple users view
+                    the same geographic region or when the frontend re-requests data after a page
+                    reload.
+                </p>
+
+                <h3>6.2 Pre-fetch Strategy for Multi-Day Voyages</h3>
+
+                <p>
+                    When a route optimization is initiated, the <code>TemporalGridWeatherProvider</code>
+                    is constructed with all forecast hours that the voyage will span. The
+                    <code>get_grids_for_timeline()</code> bulk retrieval method loads all parameters
+                    across all relevant forecast hours in a single database transaction, rather than
+                    issuing individual queries as each waypoint is evaluated. For a 5-day voyage with
+                    14 parameters and 41 forecast hours, this reduces the number of database round-trips
+                    from potentially thousands (one per node expansion) to a single bulk query.
+                </p>
+
+                <h3>6.3 Performance Characteristics</h3>
+
+                <p>
+                    The following table summarizes the typical latency at each pipeline stage, measured
+                    on a standard development machine with PostgreSQL running locally:
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Stage</th>
+                            <th>Operation</th>
+                            <th>Typical Latency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Acquisition</td>
+                            <td>Full GFS 41-frame download</td>
+                            <td>~82 seconds (rate-limited)</td>
+                        </tr>
+                        <tr>
+                            <td>Acquisition</td>
+                            <td>CMEMS wave forecast download</td>
+                            <td>30&ndash;120 seconds (varies)</td>
+                        </tr>
+                        <tr>
+                            <td>Ingestion</td>
+                            <td>Compress and store 41 timesteps &times; 14 params</td>
+                            <td>5&ndash;15 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Retrieval</td>
+                            <td>Bulk load all grids for a voyage</td>
+                            <td>&lt; 100 ms</td>
+                        </tr>
+                        <tr>
+                            <td>Interpolation</td>
+                            <td>Single <code>get_weather()</code> call</td>
+                            <td>&lt; 1 ms</td>
+                        </tr>
+                        <tr>
+                            <td>Redis cache</td>
+                            <td>Cached API response lookup</td>
+                            <td>&lt; 5 ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    The key insight is the three-orders-of-magnitude gap between the acquisition stage
+                    (minutes) and the retrieval/interpolation stages (milliseconds). The database acts
+                    as an impedance-matching layer that absorbs the slow, bursty acquisition process
+                    and presents a fast, uniform interface to the optimizer. Once data has been ingested,
+                    route optimizations can run repeatedly against the same forecast data without
+                    incurring any network latency, and each A* node expansion pays only the sub-millisecond
+                    cost of trilinear interpolation against in-memory grids.
+                </p>
+
+                <h3>6.4 Pipeline Summary</h3>
+
+                <p>
+                    From the user's perspective, the pipeline operates transparently. A background
+                    ingestion task fetches and stores the latest forecasts on a scheduled cadence.
+                    When the user requests a route optimization, the system selects the most recent
+                    complete forecast run, loads the relevant grids into memory, constructs a
+                    <code>TemporalGridWeatherProvider</code>, and passes it to the A* optimizer.
+                    The optimizer calls <code>get_weather(lat, lon, time)</code> at each candidate
+                    waypoint, receiving interpolated conditions in sub-millisecond time. The total
+                    wall-clock time for a route optimization is dominated by the A* graph search
+                    itself, not by weather data retrieval.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- REFERENCES -->
+            <!-- ============================================================ -->
+            <section id="references">
+                <h2>References</h2>
+
+                <ol>
+                    <li>CMEMS, &ldquo;Global Ocean Waves Analysis and Forecast &mdash; Product User Manual,&rdquo; Copernicus Marine Environment Monitoring Service, 2024.</li>
+                    <li>CMEMS, &ldquo;Global Ocean Physics Analysis and Forecast &mdash; Product User Manual,&rdquo; Copernicus Marine Environment Monitoring Service, 2024.</li>
+                    <li>NCEP/NOAA, &ldquo;GFS Model Documentation and GRIB2 Format Specification,&rdquo; National Centers for Environmental Prediction, 2023.</li>
+                    <li>Hersbach, H. et al., &ldquo;The ERA5 Global Reanalysis,&rdquo; <em>Quarterly Journal of the Royal Meteorological Society</em>, vol. 146, no. 730, pp. 1999&ndash;2049, 2020.</li>
+                    <li>PostgreSQL Global Development Group, &ldquo;PostgreSQL Documentation &mdash; Large Objects and Binary Data,&rdquo; 2024.</li>
+                    <li>Hoyer, S. and Hamman, J., &ldquo;xarray: N-D labeled arrays and datasets in Python,&rdquo; <em>Journal of Open Research Software</em>, vol. 5, no. 1, 2017.</li>
+                </ol>
+            </section>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- Footer -->
+<footer class="docs-footer">
+    <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+    <p>
+        <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        &nbsp;|&nbsp;
+        <a href="docs.html">Main Documentation</a>
+        &nbsp;|&nbsp;
+        <a href="../index.html">quantcoder-fs.com</a>
+    </p>
+</footer>
+
+<!-- Sidebar active state script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar-menu a[href^="#"]');
+        function setActiveLink() {
+            let current = '';
+            sections.forEach(function(section) {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(function(link) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', setActiveLink);
+        setActiveLink();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmar - Hydrodynamic Modelling and Response Amplitude Operators</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="docs-header">
+    <div class="docs-header-content">
+        <a href="docs.html" class="docs-logo">
+            <i class="fas fa-ship"></i>
+            <span>Windmar</span>
+        </a>
+        <nav>
+            <ul class="docs-nav">
+                <li><a href="docs.html">Documentation</a></li>
+                <li class="docs-nav-dropdown">
+                    <a href="#">Technical Articles <i class="fas fa-caret-down"></i></a>
+                    <ul class="docs-nav-dropdown-menu">
+                        <li><a href="weather-fields.html">Weather Fields</a></li>
+                        <li><a href="data-pipeline.html">Data Pipeline</a></li>
+                        <li><a href="hydrodynamics.html" class="active">Hydrodynamics &amp; RAO</a></li>
+                        <li><a href="astar-pathfinding.html">A* Pathfinding</a></li>
+                        <li><a href="weather-data.html">Weather Acquisition</a></li>
+                        <li><a href="monte-carlo.html">Monte Carlo</a></li>
+                    </ul>
+                </li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </nav>
+        <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+    </div>
+</header>
+
+<!-- Main Layout -->
+<div class="docs-container">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Article</div>
+            <ul class="sidebar-menu">
+                <li><a href="#abstract"><i class="fas fa-file-alt"></i> Abstract</a></li>
+                <li><a href="#introduction"><i class="fas fa-book-open"></i> Introduction</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Calm Water</div>
+            <ul class="sidebar-menu">
+                <li><a href="#holtrop-mennen"><i class="fas fa-water"></i> Holtrop-Mennen</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Added Resistance</div>
+            <ul class="sidebar-menu">
+                <li><a href="#wave-resistance"><i class="fas fa-wave-square"></i> Wave Resistance</a></li>
+                <li><a href="#wind-resistance"><i class="fas fa-wind"></i> Wind Resistance</a></li>
+                <li><a href="#current-effects"><i class="fas fa-arrows-alt-h"></i> Current Effects</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Seakeeping</div>
+            <ul class="sidebar-menu">
+                <li><a href="#ship-motions"><i class="fas fa-arrows-alt"></i> Ship Motions</a></li>
+                <li><a href="#safety-limits"><i class="fas fa-shield-alt"></i> Safety Limits</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Propulsion</div>
+            <ul class="sidebar-menu">
+                <li><a href="#propulsion-fuel"><i class="fas fa-gas-pump"></i> Propulsion &amp; Fuel</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Calibration</div>
+            <ul class="sidebar-menu">
+                <li><a href="#noon-report-calibration"><i class="fas fa-sliders-h"></i> Noon Report Calibration</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Resources</div>
+            <ul class="sidebar-menu">
+                <li><a href="#references"><i class="fas fa-bookmark"></i> References</a></li>
+                <li><a href="docs.html"><i class="fas fa-arrow-left"></i> Back to Docs</a></li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <div class="docs-content">
+
+            <!-- ============================================================ -->
+            <!-- ABSTRACT -->
+            <!-- ============================================================ -->
+            <section id="abstract">
+                <h1>Hydrodynamic Modelling and Response Amplitude Operators</h1>
+                <p class="docs-subtitle">Integrated vessel performance model combining Holtrop-Mennen resistance, STAWAVE-1 added resistance, and simplified RAO for operational seakeeping assessment</p>
+
+                <div class="alert info">
+                    <strong><i class="fas fa-info-circle"></i> Technical Article</strong><br>
+                    This article presents the physics-based vessel performance model implemented in Windmar.
+                    The model couples calm-water resistance prediction (Holtrop-Mennen 1984), added resistance
+                    in waves (ISO 15016 STAWAVE-1), wind drag, seakeeping response via simplified Response
+                    Amplitude Operators, and propulsion efficiency modelling into a unified framework that
+                    predicts fuel consumption, required power, and motion safety margins for each route leg.
+                </div>
+
+                <h3>Abstract</h3>
+                <p>
+                    Weather routing applications require a vessel performance model that translates environmental
+                    conditions &mdash; wind, waves, swell, and current &mdash; into fuel consumption rates and
+                    motion safety assessments at each point along a candidate route. This article describes the
+                    hydrodynamic model implemented in Windmar's <code>VesselModel</code> and <code>SeakeepingModel</code>
+                    classes, which together form the ship performance engine that drives the route optimiser
+                    (see <a href="astar-pathfinding.html">A* Pathfinding</a>) and the Monte Carlo uncertainty
+                    quantification system (see <a href="monte-carlo.html">Monte Carlo</a>). The calm-water
+                    resistance prediction follows the Holtrop-Mennen (1984) regression with ITTC-1957 friction
+                    coefficients. Added resistance in waves is computed using the STAWAVE-1 method from
+                    ISO 15016:2015, while wind resistance follows a projected-area drag model with directional
+                    decomposition. Seakeeping assessment employs a single-degree-of-freedom oscillator model for
+                    roll, the Ochi (1964) method for slamming probability, and parametric roll detection via
+                    encounter frequency analysis. A noon-report calibration module adjusts model coefficients
+                    against observed consumption data using L-BFGS-B optimisation.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- INTRODUCTION -->
+            <!-- ============================================================ -->
+            <section id="introduction">
+                <h2>1. Introduction</h2>
+
+                <p>
+                    The central challenge in maritime weather routing is to predict how a vessel will perform
+                    under a given set of environmental conditions. Empirical tables, while historically useful,
+                    lack the resolution and generality needed for optimisation across a continuous space of
+                    headings, speeds, and sea states. Windmar therefore implements a physics-based performance
+                    model grounded in established naval architecture methods, calibrated for the reference vessel
+                    class and adaptable to individual hulls through noon-report calibration.
+                </p>
+
+                <p>
+                    The model is structured as a layered computation pipeline. Calm-water resistance provides
+                    the baseline power requirement at a given speed and loading condition. Added resistance
+                    from waves, wind, and current effects is computed independently and summed with the
+                    calm-water component to yield total resistance. This total resistance is then converted
+                    to brake power through the propulsive efficiency chain. Finally, the SFOC curve maps
+                    engine load fraction to specific fuel consumption, yielding a fuel rate in metric tonnes
+                    per hour. In parallel, the seakeeping model evaluates ship motions and safety margins to
+                    flag hazardous conditions that the <a href="astar-pathfinding.html">A* pathfinding</a>
+                    algorithm must avoid.
+                </p>
+
+                <p>
+                    The reference vessel throughout this article is an MR (Medium Range) Product Tanker, a
+                    widely operated class in the global petroleum trade. The principal particulars, which serve
+                    as defaults in the <code>VesselSpecs</code> dataclass, are summarised below.
+                </p>
+
+                <h3>MR Product Tanker &mdash; Principal Particulars</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Laden</th>
+                            <th>Ballast</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Length overall (LOA)</td><td colspan="2">183.0</td><td>m</td></tr>
+                        <tr><td>Length between perpendiculars (L<sub>pp</sub>)</td><td colspan="2">176.0</td><td>m</td></tr>
+                        <tr><td>Beam (B)</td><td colspan="2">32.0</td><td>m</td></tr>
+                        <tr><td>Design draft (T)</td><td>11.8</td><td>6.5</td><td>m</td></tr>
+                        <tr><td>Deadweight (DWT)</td><td colspan="2">49,000</td><td>MT</td></tr>
+                        <tr><td>Displacement (&Delta;)</td><td>65,000</td><td>20,000</td><td>MT</td></tr>
+                        <tr><td>Block coefficient (C<sub>b</sub>)</td><td>0.82</td><td>0.75</td><td>&mdash;</td></tr>
+                        <tr><td>Wetted surface (S)</td><td>7,500</td><td>5,200</td><td>m&sup2;</td></tr>
+                        <tr><td>Frontal projected area (A<sub>f</sub>)</td><td>450</td><td>850</td><td>m&sup2;</td></tr>
+                        <tr><td>Lateral projected area (A<sub>L</sub>)</td><td>2,100</td><td>2,800</td><td>m&sup2;</td></tr>
+                        <tr><td>MCR</td><td colspan="2">8,840</td><td>kW</td></tr>
+                        <tr><td>SFOC at MCR</td><td colspan="2">171</td><td>g/kWh</td></tr>
+                        <tr><td>Service speed</td><td>14.5</td><td>15.0</td><td>kts</td></tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    The significant difference between laden and ballast conditions is characteristic of tanker
+                    operations. In ballast, the vessel rides higher, exposing substantially more freeboard and
+                    superstructure area to wind (frontal area increases from 450 m&sup2; to 850 m&sup2;), while
+                    wetted surface and displacement are reduced, lowering the calm-water resistance. These
+                    competing effects mean that wind resistance can dominate the total resistance budget for
+                    a ballast tanker in strong headwinds, a phenomenon that the model captures through
+                    condition-dependent parameters.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- HOLTROP-MENNEN -->
+            <!-- ============================================================ -->
+            <section id="holtrop-mennen">
+                <h2>2. Calm-Water Resistance</h2>
+
+                <p>
+                    The calm-water resistance prediction follows the Holtrop-Mennen (1984) statistical method,
+                    one of the most widely used resistance estimation procedures in preliminary ship design and
+                    operational performance assessment. The method decomposes total calm-water resistance into
+                    frictional, wave-making, and appendage components, each computed from hull form parameters
+                    and speed. This decomposition allows independent calibration of each component against
+                    sea-trial or noon-report data (see <a href="#noon-report-calibration">Section 8</a>).
+                </p>
+
+                <h3>2.1 Physical Constants</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Constant</th>
+                            <th>Symbol</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Seawater density</td><td>&rho;<sub>sw</sub></td><td>1025.0</td><td>kg/m&sup3;</td></tr>
+                        <tr><td>Kinematic viscosity (15&deg;C)</td><td>&nu;<sub>sw</sub></td><td>1.19 &times; 10<sup>-6</sup></td><td>m&sup2;/s</td></tr>
+                        <tr><td>Gravitational acceleration</td><td>g</td><td>9.81</td><td>m/s&sup2;</td></tr>
+                        <tr><td>Air density</td><td>&rho;<sub>air</sub></td><td>1.225</td><td>kg/m&sup3;</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>2.2 Froude and Reynolds Numbers</h3>
+                <p>
+                    The two fundamental dimensionless parameters that characterise the flow regime around the
+                    hull are the Froude number and the Reynolds number. The Froude number governs the
+                    wave-making resistance, while the Reynolds number governs frictional resistance. For the
+                    MR tanker at service speed (14.5 kts laden, approximately 7.46 m/s), the Froude number
+                    is approximately 0.18, placing the vessel firmly in the displacement regime where frictional
+                    resistance dominates.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Froude Number</div>
+Fn = v / &radic;(g &middot; L<sub>pp</sub>)
+
+where v is the ship speed through water [m/s]
+      g = 9.81 m/s&sup2;
+      L<sub>pp</sub> = 176.0 m
+                </div>
+
+                <div class="formula-block">
+                    <div class="formula-title">Reynolds Number</div>
+Re = v &middot; L<sub>pp</sub> / &nu;<sub>sw</sub>
+
+where &nu;<sub>sw</sub> = 1.19 &times; 10<sup>-6</sup> m&sup2;/s
+                </div>
+
+                <h3>2.3 Frictional Resistance</h3>
+                <p>
+                    The frictional resistance component is the dominant term for full-form vessels such as
+                    tankers operating at moderate Froude numbers. It is computed using the ITTC-1957
+                    model-ship correlation line, which provides the flat-plate friction coefficient as a
+                    function of Reynolds number. A hull roughness allowance &Delta;C<sub>f</sub> accounts for
+                    paint roughness, biofouling, and other surface imperfections. The form factor (1 + k<sub>1</sub>)
+                    converts the flat-plate friction to a three-dimensional hull resistance by accounting for
+                    the pressure resistance due to hull form.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">ITTC-1957 Friction Coefficient</div>
+C<sub>f</sub> = 0.075 / (log<sub>10</sub>(Re) - 2)&sup2;
+                </div>
+
+                <div class="formula-block">
+                    <div class="formula-title">Hull Roughness Allowance</div>
+&Delta;C<sub>f</sub> = 0.00025
+                </div>
+
+                <div class="formula-block">
+                    <div class="formula-title">Form Factor (Holtrop-Mennen Regression)</div>
+k<sub>1</sub> = 0.93 + 0.4871 &middot; (B / L<sub>pp</sub>) - 0.2156 &middot; (B / T) + 0.1027 &middot; C<sub>b</sub>
+
+k<sub>1</sub> = max(0.1, k<sub>1</sub>)
+
+where B = beam [m], T = draft [m], C<sub>b</sub> = block coefficient
+                </div>
+
+                <p>
+                    The form factor regression used in the implementation is a simplified variant of the
+                    original Holtrop-Mennen formulation, retaining the primary dependencies on beam-to-length
+                    ratio (B/L<sub>pp</sub>), beam-to-draft ratio (B/T), and block coefficient (C<sub>b</sub>).
+                    The lower bound of 0.1 prevents physically unrealistic negative values for unusual hull
+                    proportions.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Frictional Resistance</div>
+R<sub>f</sub> = &frac12; &middot; &rho;<sub>sw</sub> &middot; v&sup2; &middot; S &middot; (C<sub>f</sub> + &Delta;C<sub>f</sub>) &middot; (1 + k<sub>1</sub>)
+
+where S = wetted surface area [m&sup2;]
+                </div>
+
+                <h3>2.4 Wave-Making Resistance</h3>
+                <p>
+                    The wave-making component represents the energy radiated away from the hull as surface
+                    waves generated by the moving ship. For the Froude number range typical of laden tankers
+                    (Fn &asymp; 0.15&ndash;0.20), wave-making resistance is a secondary contributor, typically
+                    10&ndash;15% of frictional resistance. The implementation uses a simplified scaling
+                    proportional to the square of the Froude number.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Wave-Making Resistance</div>
+R<sub>w</sub> = 4 &middot; Fn&sup2; &middot; R<sub>f</sub>
+                </div>
+
+                <h3>2.5 Appendage Resistance</h3>
+                <p>
+                    Appendage resistance accounts for drag from rudder, bilge keels, propeller shaft brackets,
+                    and other hull protuberances. It is modelled as a fixed fraction of frictional resistance,
+                    a simplification that is acceptable for standard merchant vessel configurations.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Appendage Resistance</div>
+R<sub>app</sub> = 0.05 &middot; R<sub>f</sub>
+                </div>
+
+                <h3>2.6 Total Calm-Water Resistance</h3>
+                <div class="formula-block">
+                    <div class="formula-title">Total Calm-Water Resistance</div>
+R<sub>total,calm</sub> = R<sub>f</sub> + R<sub>w</sub> + R<sub>app</sub>
+                </div>
+
+                <p>
+                    The total calm-water resistance is the sum of the three components. For the MR tanker at
+                    14.5 knots laden, frictional resistance typically accounts for approximately 80% of the
+                    total, with wave-making contributing around 15% and appendages the remaining 5%. This
+                    distribution shifts in favour of wave-making at higher speeds, which is why the speed-power
+                    relationship exhibits a steeper-than-cubic growth above the design speed.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- WAVE RESISTANCE (STAWAVE-1) -->
+            <!-- ============================================================ -->
+            <section id="wave-resistance">
+                <h2>3. Added Resistance in Waves</h2>
+
+                <p>
+                    When a vessel advances through a seaway, it experiences an additional mean resistance
+                    force beyond its calm-water value. This added resistance arises from the interaction
+                    between the hull and the incident wave field: the ship radiates and diffracts waves,
+                    and the resulting pressure distribution produces a net retarding force. The magnitude
+                    depends on significant wave height, wave period, vessel dimensions, and the relative
+                    angle between the wave propagation direction and the ship heading.
+                </p>
+
+                <p>
+                    Windmar computes added wave resistance using the <strong>STAWAVE-1</strong> method
+                    from ISO 15016:2015 and the ITTC Recommended Procedures (2014). STAWAVE-1 is a
+                    simplified empirical formula intended for use in speed-power analysis when detailed
+                    hull form data (e.g., waterline offsets for strip-theory calculations) is unavailable.
+                    Despite its simplicity, it has been validated against model test data and provides
+                    acceptable accuracy for full-form vessels (C<sub>b</sub> &ge; 0.75) in moderate sea
+                    states.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">STAWAVE-1 Added Resistance in Waves</div>
+R<sub>AW</sub> = (1/16) &middot; &rho;<sub>sw</sub> &middot; g &middot; H<sub>s</sub>&sup2; &middot; B &middot; &radic;(B / L<sub>pp</sub>) &middot; &alpha;<sub>BK</sub> &middot; f<sub>dir</sub>
+
+where H<sub>s</sub> = significant wave height [m]
+      B = beam = 32.0 m
+      L<sub>pp</sub> = 176.0 m
+      &alpha;<sub>BK</sub> &asymp; 1.0 for C<sub>b</sub> &gt; 0.75
+      f<sub>dir</sub> = directional factor
+                </div>
+
+                <p>
+                    The bluntness coefficient &alpha;<sub>BK</sub> characterises the bow waterline shape and
+                    its influence on wave reflection. For full-form vessels with block coefficients exceeding
+                    0.75 &mdash; which includes the MR tanker in both laden (C<sub>b</sub> = 0.82) and ballast
+                    (C<sub>b</sub> = 0.75) conditions &mdash; the coefficient is set to 1.0 as specified in
+                    the standard.
+                </p>
+
+                <h3>3.1 Directional Factor</h3>
+                <p>
+                    The directional factor accounts for the heading-dependent nature of added wave resistance.
+                    Head seas produce the maximum added resistance, while following seas produce significantly
+                    less. The implementation computes the relative angle between the wave propagation direction
+                    and the vessel heading, then applies a cosine-based weighting.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Directional Factor</div>
+&alpha;<sub>rel</sub> = |((wave_dir - heading) + 180) mod 360 - 180|
+
+f<sub>dir</sub> = (1 + cos(&alpha;<sub>rel</sub>)) / 2
+
+where &alpha;<sub>rel</sub> is the relative wave encounter angle [degrees]
+      f<sub>dir</sub> = 1.0 for head seas (&alpha;<sub>rel</sub> = 0&deg;)
+      f<sub>dir</sub> = 0.5 for beam seas (&alpha;<sub>rel</sub> = 90&deg;)
+      f<sub>dir</sub> = 0.0 for following seas (&alpha;<sub>rel</sub> = 180&deg;)
+                </div>
+
+                <p>
+                    This directional model captures the first-order heading dependence observed in both model
+                    tests and full-scale measurements. The <a href="astar-pathfinding.html">A* pathfinding</a>
+                    algorithm exploits this directional sensitivity by evaluating candidate legs at different
+                    headings, preferring routes that minimise head-sea exposure when wave heights are significant.
+                    The wave data driving this computation is sourced from the
+                    <a href="data-pipeline.html">data pipeline</a>, which provides separate wind-wave and
+                    swell components with independent directions.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- WIND RESISTANCE -->
+            <!-- ============================================================ -->
+            <section id="wind-resistance">
+                <h2>4. Wind Resistance</h2>
+
+                <p>
+                    Aerodynamic resistance arises from the interaction between the relative wind and the
+                    above-water structure of the vessel. For tankers, particularly in ballast condition where
+                    the freeboard is large, wind resistance can constitute a significant fraction of total
+                    resistance. The model decomposes wind drag into a longitudinal (headwind) component that
+                    directly opposes forward motion and a transverse (crosswind) component that induces leeway
+                    drift, adding an indirect resistance penalty through increased hydrodynamic drag.
+                </p>
+
+                <h3>4.1 Projected Areas</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Area</th>
+                            <th>Laden</th>
+                            <th>Ballast</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Frontal projected area (A<sub>f</sub>)</td><td>450</td><td>850</td><td>m&sup2;</td></tr>
+                        <tr><td>Lateral projected area (A<sub>L</sub>)</td><td>2,100</td><td>2,800</td><td>m&sup2;</td></tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    The near-doubling of frontal area from laden to ballast reflects the exposed hull above
+                    the waterline and the higher superstructure silhouette when the vessel rides light. The
+                    lateral area increase is less pronounced but still significant, affecting the transverse
+                    wind force and hence leeway.
+                </p>
+
+                <h3>4.2 Apparent Wind and Relative Angle</h3>
+                <p>
+                    The wind resistance calculation uses the true wind speed and direction from the
+                    <a href="weather-fields.html">weather field</a> data, resolving the relative angle
+                    between the wind vector and the ship heading to determine longitudinal and transverse
+                    drag components.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Relative Wind Angle</div>
+&alpha;<sub>rel</sub> = |((wind_dir - heading) + 180) mod 360 - 180|
+
+where wind_dir = true wind direction [degrees, meteorological convention]
+      heading = vessel heading [degrees true]
+                </div>
+
+                <h3>4.3 Longitudinal Drag Component</h3>
+                <div class="formula-block">
+                    <div class="formula-title">Longitudinal Wind Resistance</div>
+C<sub>x</sub> = 0.8 &middot; cos(&alpha;<sub>rel</sub>)
+
+R<sub>wind,direct</sub> = max(0, C<sub>x</sub>) &middot; &frac12; &middot; &rho;<sub>air</sub> &middot; v<sub>wind</sub>&sup2; &middot; A<sub>f</sub>
+
+where &rho;<sub>air</sub> = 1.225 kg/m&sup3;
+      v<sub>wind</sub> = true wind speed [m/s]
+      A<sub>f</sub> = frontal projected area [m&sup2;]
+                </div>
+
+                <p>
+                    The longitudinal drag coefficient C<sub>x</sub> = 0.8 for pure headwind is consistent
+                    with wind-tunnel measurements on tanker superstructures. The <code>max(0, ...)</code>
+                    clamp ensures that following winds do not produce a negative (propulsive) resistance;
+                    the model conservatively assumes zero wind thrust from stern quarters.
+                </p>
+
+                <h3>4.4 Transverse Drift Component</h3>
+                <div class="formula-block">
+                    <div class="formula-title">Transverse Wind Resistance (Drift Penalty)</div>
+C<sub>y</sub> = 0.9 &middot; |sin(&alpha;<sub>rel</sub>)|
+
+R<sub>wind,drift</sub> = 0.1 &middot; C<sub>y</sub> &middot; &frac12; &middot; &rho;<sub>air</sub> &middot; v<sub>wind</sub>&sup2; &middot; A<sub>L</sub>
+
+where A<sub>L</sub> = lateral projected area [m&sup2;]
+                </div>
+
+                <p>
+                    The transverse component represents the added resistance due to leeway. When a crosswind
+                    pushes the vessel sideways, the hull develops a drift angle, and the resulting hydrodynamic
+                    side force produces an induced drag component. The 0.1 scaling factor converts the
+                    transverse aerodynamic force into an equivalent longitudinal resistance increase, an
+                    approximation that avoids the need for explicit drift angle computation while capturing
+                    the first-order effect.
+                </p>
+
+                <h3>4.5 Total Wind Resistance</h3>
+                <div class="formula-block">
+                    <div class="formula-title">Total Wind Resistance</div>
+R<sub>wind</sub> = R<sub>wind,direct</sub> + R<sub>wind,drift</sub>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- CURRENT EFFECTS -->
+            <!-- ============================================================ -->
+            <section id="current-effects">
+                <h2>5. Current Effects</h2>
+
+                <p>
+                    Ocean currents affect vessel performance by altering the speed over ground (SOG) relative
+                    to the speed through water (STW). The vessel's propulsion system drives the hull through
+                    the water at STW, but the actual ground track velocity &mdash; and hence the time to
+                    traverse a route leg &mdash; depends on the vector sum of STW and the current velocity.
+                    Unlike waves and wind, currents do not change the hydrodynamic resistance directly;
+                    instead, they modify the effective distance the vessel must travel through the water to
+                    cover a given ground distance.
+                </p>
+
+                <p>
+                    The implementation resolves the current vector into a component along the vessel's track
+                    heading. A favourable current (following) increases SOG, reducing transit time and hence
+                    total fuel consumption for the leg. An adverse current (opposing) decreases SOG, increasing
+                    transit time and fuel. Cross-currents are resolved into their along-track projection, with
+                    the perpendicular component assumed to be compensated by the autopilot heading correction
+                    at negligible additional fuel cost.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Current Component Along Track</div>
+v<sub>current,along</sub> = v<sub>current</sub> &middot; cos(&theta;<sub>current</sub> - &theta;<sub>heading</sub>)
+
+SOG = STW + v<sub>current,along</sub>
+
+where v<sub>current</sub> = current speed [m/s]
+      &theta;<sub>current</sub> = current direction (towards) [degrees]
+      &theta;<sub>heading</sub> = vessel heading [degrees]
+                </div>
+
+                <p>
+                    Current data in Windmar is sourced from the CMEMS global physics model or a synthetic
+                    fallback, as described in the <a href="data-pipeline.html">data pipeline</a> article.
+                    For routes in areas with strong tidal or permanent currents (e.g., the Strait of Gibraltar,
+                    the Dardanelles), the current contribution to voyage time can be significant &mdash; on the
+                    order of 10&ndash;20% of transit time for narrow passages with 2&ndash;3 knot currents.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- SHIP MOTIONS AND RAO -->
+            <!-- ============================================================ -->
+            <section id="ship-motions">
+                <h2>6. Seakeeping and Response Amplitude Operators</h2>
+
+                <p>
+                    Beyond resistance and fuel consumption, the vessel performance model must assess whether
+                    the ship motions induced by the seaway remain within safe operational limits. Excessive
+                    roll, pitch, or vertical accelerations can endanger cargo, crew, and structural integrity.
+                    The <code>SeakeepingModel</code> class implements a simplified seakeeping assessment based
+                    on the concept of Response Amplitude Operators (RAOs), which relate the amplitude of ship
+                    motion responses to the amplitude of incident waves as a function of encounter frequency.
+                </p>
+
+                <h3>6.1 Seakeeping Parameters</h3>
+                <p>
+                    The seakeeping model uses the following vessel-specific parameters, defined in the
+                    <code>SeakeepingSpecs</code> dataclass with defaults for the MR Product Tanker.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Laden</th>
+                            <th>Ballast</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Metacentric height (GM)</td><td>2.5</td><td>4.0</td><td>m</td></tr>
+                        <tr><td>Natural roll period (T<sub>roll</sub>)</td><td>14.0</td><td>10.0</td><td>s</td></tr>
+                        <tr><td>Roll damping coefficient (&zeta;)</td><td colspan="2">0.05</td><td>&mdash;</td></tr>
+                        <tr><td>KG (centre of gravity height)</td><td>8.5</td><td>10.0</td><td>m</td></tr>
+                        <tr><td>Bow distance from midship</td><td colspan="2">88.0</td><td>m</td></tr>
+                        <tr><td>Bridge distance from midship</td><td colspan="2">-70.0</td><td>m (aft)</td></tr>
+                        <tr><td>Bow freeboard</td><td>6.0</td><td>12.0</td><td>m</td></tr>
+                        <tr><td>Critical slamming pressure</td><td colspan="2">100.0</td><td>kPa</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>6.2 Encounter Frequency</h3>
+                <p>
+                    The encounter frequency is the frequency at which the vessel experiences successive wave
+                    crests, which differs from the absolute wave frequency due to the vessel's forward motion.
+                    It is the fundamental parameter governing ship motion response in a seaway. When the
+                    encounter frequency approaches the natural frequency of a particular motion (e.g., roll),
+                    resonance amplification occurs.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Wave and Encounter Frequencies</div>
+&lambda; = g &middot; T<sub>p</sub>&sup2; / (2&pi;)          (wavelength)
+
+&omega;<sub>wave</sub> = 2&pi; / T<sub>p</sub>              (wave circular frequency)
+
+&psi;<sub>e</sub> = (wave_dir - heading + 180) mod 360    (encounter angle)
+
+&omega;<sub>e</sub> = |&omega;<sub>wave</sub> - &omega;<sub>wave</sub>&sup2; &middot; v &middot; cos(&psi;<sub>e</sub>) / g|
+
+T<sub>e</sub> = 2&pi; / &omega;<sub>e</sub>                (encounter period)
+
+where T<sub>p</sub> = peak wave period [s]
+      v = ship speed [m/s]
+                </div>
+
+                <p>
+                    The encounter frequency depends on both ship speed and heading relative to the waves.
+                    In head seas, the encounter frequency is higher than the wave frequency (the vessel
+                    meets crests more frequently), while in following seas, it is lower. This heading
+                    dependence is critical for roll resonance avoidance, as the
+                    <a href="astar-pathfinding.html">route optimiser</a> can choose headings that keep
+                    the encounter frequency away from the natural roll period.
+                </p>
+
+                <h3>6.3 Roll RAO (Single-DOF Oscillator)</h3>
+                <p>
+                    The roll response is modelled as a single-degree-of-freedom damped harmonic oscillator,
+                    where the hull is the mass, hydrostatic restoring moment (proportional to GM) provides
+                    the stiffness, and viscous effects provide damping. The RAO gives the amplification
+                    factor between incident wave slope and roll angle amplitude as a function of the
+                    frequency ratio.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Roll Response Amplitude Operator</div>
+&omega;<sub>roll</sub> = 2&pi; / T<sub>roll</sub>          (natural roll frequency)
+
+r = &omega;<sub>e</sub> / &omega;<sub>roll</sub>            (frequency ratio)
+
+RAO = 1 / &radic;((1 - r&sup2;)&sup2; + (2&zeta;r)&sup2;)
+
+where &zeta; = 0.05 (roll damping ratio)
+
+Roll amplitude:
+&phi;<sub>roll</sub> = arcsin(a &middot; RAO &middot; (H<sub>s</sub> / 2))
+
+where a is the effective wave slope coefficient
+                </div>
+
+                <p>
+                    At resonance (r = 1), the RAO amplification reaches 1/(2&zeta;) = 10.0 for the default
+                    damping ratio of 0.05. This extreme amplification highlights why roll resonance is one
+                    of the most dangerous seakeeping phenomena and why avoidance is a primary routing
+                    constraint. The low damping coefficient of 0.05 is characteristic of tankers without
+                    active anti-roll devices &mdash; bilge keels provide some additional damping, but tankers
+                    remain lightly damped compared to vessels with fin stabilisers or anti-roll tanks.
+                </p>
+
+                <h3>6.4 Decomposed Response</h3>
+                <p>
+                    When both wind-waves and swell are present simultaneously, the seakeeping model computes
+                    the response to each component independently and combines them using root-sum-square (RSS)
+                    combination. This reflects the physical assumption that wind-waves and swell are
+                    statistically independent processes with different frequency content and directions.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">RSS Combination of Responses</div>
+&phi;<sub>combined</sub> = &radic;(&phi;<sub>ww</sub>&sup2; + &phi;<sub>sw</sub>&sup2;)
+
+where &phi;<sub>ww</sub> = response to wind-waves
+      &phi;<sub>sw</sub> = response to swell
+                </div>
+
+                <h3>6.5 Slamming Probability (Ochi Method)</h3>
+                <p>
+                    Bottom slamming occurs when the bow emerges from the water and re-enters with high
+                    velocity, producing impulsive pressure loads on the hull bottom. The probability of
+                    slamming is estimated using the Ochi (1964) method, which relates the probability of
+                    bow emergence to the relative freeboard and the vertical motion amplitude at the bow.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Slamming Probability (Ochi 1964)</div>
+r<sub>emerg</sub> = bow_freeboard / (H<sub>s</sub> / 2)     (relative freeboard ratio)
+
+p<sub>emerg</sub> = exp(-2 &middot; r<sub>emerg</sub>&sup2;)   (probability of bow emergence)
+
+p<sub>slam</sub> = p<sub>emerg</sub> &middot; f<sub>head</sub> &middot; f<sub>speed</sub>
+
+where f<sub>head</sub> = heading correction factor (higher in head seas)
+      f<sub>speed</sub> = speed correction factor (higher at greater speeds)
+                </div>
+
+                <p>
+                    The slamming probability is strongly dependent on loading condition. In laden condition
+                    with a bow freeboard of 6.0 m, slamming risk is elevated in significant wave heights
+                    above 4&ndash;5 m. In ballast with 12.0 m freeboard, substantially higher waves are
+                    required to cause emergence. The route optimiser uses slamming probability as one of
+                    the safety constraints that trigger voluntary speed reduction or route deviation.
+                </p>
+
+                <h3>6.6 Parametric Roll Detection</h3>
+                <p>
+                    Parametric rolling is a resonance phenomenon that can produce extreme roll angles (30&ndash;40
+                    degrees) in certain combinations of wave period, ship speed, and heading. It occurs when the
+                    encounter period is approximately half the natural roll period, causing periodic variations
+                    in the waterplane area and hence the restoring moment. The conditions are most dangerous in
+                    head and following seas when the wavelength is comparable to the ship length.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Parametric Roll Criterion</div>
+r<sub>period</sub> = T<sub>e</sub> / (T<sub>roll</sub> / 2)
+
+Parametric roll is flagged when r<sub>period</sub> &asymp; 1.0
+
+i.e., when the encounter period equals half the natural roll period
+                </div>
+
+                <p>
+                    When the parametric roll criterion approaches unity, the seakeeping model flags the
+                    condition as dangerous regardless of the conventional roll amplitude calculation. This
+                    information is passed to the routing algorithm, which can then select headings and speeds
+                    that detune the encounter frequency away from the parametric resonance condition.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- SAFETY LIMITS -->
+            <!-- ============================================================ -->
+            <section id="safety-limits">
+                <h2>6.7 Safety Limits</h2>
+
+                <p>
+                    The seakeeping model classifies motion responses into three severity categories: safe,
+                    marginal, and dangerous. These thresholds, defined in the <code>SafetyLimits</code>
+                    dataclass, are based on IMO guidance, classification society rules, and operational
+                    experience. When a route leg produces motions in the marginal or dangerous range, the
+                    <a href="astar-pathfinding.html">A* pathfinding</a> algorithm applies a cost penalty
+                    proportional to severity, effectively steering the optimiser away from hazardous conditions.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Motion Parameter</th>
+                            <th>Safe</th>
+                            <th>Marginal</th>
+                            <th>Dangerous</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Roll angle</td>
+                            <td>&le; 15&deg;</td>
+                            <td>&le; 25&deg;</td>
+                            <td>&gt; 30&deg;</td>
+                        </tr>
+                        <tr>
+                            <td>Pitch angle</td>
+                            <td>&le; 5&deg;</td>
+                            <td>&le; 8&deg;</td>
+                            <td>&gt; 12&deg;</td>
+                        </tr>
+                        <tr>
+                            <td>Vertical acceleration</td>
+                            <td>&le; 0.2g (1.96 m/s&sup2;)</td>
+                            <td>&le; 0.3g (2.94 m/s&sup2;)</td>
+                            <td>&gt; 0.5g (4.9 m/s&sup2;)</td>
+                        </tr>
+                        <tr>
+                            <td>Slamming probability</td>
+                            <td>&le; 3%</td>
+                            <td>&le; 10%</td>
+                            <td>&gt; 10%</td>
+                        </tr>
+                        <tr>
+                            <td>Parametric roll risk</td>
+                            <td colspan="3">Maximum tolerable risk: 30%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    The roll limit of 15 degrees for the safe category corresponds to the threshold beyond
+                    which unsecured cargo may begin to shift and crew operational effectiveness degrades.
+                    The dangerous threshold of 30 degrees represents conditions where structural damage,
+                    cargo loss, or capsize risk become significant concerns. The acceleration limits at
+                    the bridge location are driven by crew habitability and equipment operability
+                    requirements. The slamming threshold of 3% follows the Ochi recommendation for
+                    structural fatigue avoidance on routine voyages.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- PROPULSION AND FUEL -->
+            <!-- ============================================================ -->
+            <section id="propulsion-fuel">
+                <h2>7. Propulsion and Fuel Consumption</h2>
+
+                <p>
+                    The propulsion model converts total resistance into brake power demand and then into
+                    fuel consumption rate. The chain of efficiencies between the hull tow rope and the
+                    engine output shaft accounts for propeller open-water efficiency, hull-propeller
+                    interaction, and the relative rotative efficiency of the propeller operating behind
+                    the hull. These three factors combine to produce the overall propulsive coefficient.
+                </p>
+
+                <h3>7.1 Propulsive Efficiency Chain</h3>
+                <div class="formula-block">
+                    <div class="formula-title">Overall Propulsive Coefficient</div>
+&eta;<sub>total</sub> = &eta;<sub>prop</sub> &times; &eta;<sub>hull</sub> &times; &eta;<sub>rr</sub>
+
+&eta;<sub>total</sub> = 0.65 &times; 1.05 &times; 1.00 = 0.6825
+
+where &eta;<sub>prop</sub> = propeller open-water efficiency = 0.65
+      &eta;<sub>hull</sub> = hull efficiency = 1.05
+      &eta;<sub>rr</sub>   = relative rotative efficiency = 1.00
+                </div>
+
+                <p>
+                    The hull efficiency exceeding unity (1.05) reflects the beneficial effect of the wake
+                    field: the propeller operates in the hull boundary layer where the local inflow velocity
+                    is lower than the ship speed, effectively recovering some of the frictional energy loss.
+                    This is a well-established phenomenon for single-screw merchant vessels. The overall
+                    propulsive coefficient of 0.6825 means that approximately 68% of the engine's shaft
+                    power is converted into useful thrust work.
+                </p>
+
+                <h3>7.2 Brake Power Requirement</h3>
+                <div class="formula-block">
+                    <div class="formula-title">Brake Power from Total Resistance</div>
+P<sub>B</sub> = R<sub>total</sub> &middot; v / &eta;<sub>total</sub>
+
+where R<sub>total</sub> = R<sub>calm</sub> + R<sub>AW</sub> + R<sub>wind</sub> [N]
+      v = ship speed through water [m/s]
+      &eta;<sub>total</sub> = 0.6825
+                </div>
+
+                <p>
+                    The speed-power relationship follows an approximately cubic law, since resistance is
+                    roughly proportional to the square of speed and power equals resistance times speed.
+                    This cubic relationship has a profound operational implication: a 10% speed reduction
+                    yields approximately 27% power savings, making slow steaming an effective fuel-saving
+                    strategy that the route optimiser can exploit by selecting speeds below the design point.
+                </p>
+
+                <h3>7.3 Voluntary Speed Reduction</h3>
+                <p>
+                    When the required brake power exceeds the engine's maximum continuous rating (MCR = 8,840 kW),
+                    the vessel cannot maintain the commanded speed. The model caps the delivered power at MCR
+                    and reports the required (uncapped) power separately, enabling the routing system to
+                    identify legs where involuntary speed loss occurs. The <code>calculate_fuel_consumption</code>
+                    method returns both <code>power_kw</code> (capped at MCR) and <code>required_power_kw</code>
+                    (uncapped) to facilitate this distinction.
+                </p>
+
+                <h3>7.4 Specific Fuel Oil Consumption (SFOC)</h3>
+                <p>
+                    Marine diesel engines do not consume fuel at a constant rate per unit of power output.
+                    The specific fuel oil consumption varies with engine load, reaching an optimum in the
+                    75&ndash;85% MCR range where thermal efficiency is highest. At lower loads, increased
+                    relative heat losses and suboptimal injection timing raise the SFOC, while at loads
+                    approaching 100% MCR, thermal stress and detonation avoidance measures also increase
+                    consumption.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">SFOC Curve</div>
+Load fraction: LF = P<sub>B</sub> / MCR,  clamped to [0.15, 1.0]
+
+If LF &lt; 0.75:
+    SFOC = SFOC<sub>MCR</sub> &middot; (1.0 + 0.15 &middot; (0.75 - LF))
+
+If LF &ge; 0.75:
+    SFOC = SFOC<sub>MCR</sub> &middot; (1.0 + 0.05 &middot; (LF - 0.75))
+
+where SFOC<sub>MCR</sub> = 171 g/kWh
+                </div>
+
+                <p>
+                    The asymmetric shape of this curve &mdash; steeper below the optimum than above &mdash;
+                    reflects the disproportionate efficiency penalty of deep part-load operation. At 50% MCR,
+                    the SFOC penalty is approximately 3.75% above the MCR value, while at 100% MCR, it is
+                    only 1.25% above. This SFOC variation, combined with the cubic speed-power relationship,
+                    determines the optimal operating speed for minimum fuel consumption per nautical mile.
+                </p>
+
+                <h3>7.5 Fuel Consumption Calculation</h3>
+                <div class="formula-block">
+                    <div class="formula-title">Fuel Consumption</div>
+fuel<sub>MT</sub> = P<sub>B</sub> &middot; SFOC &middot; t / 10<sup>6</sup>
+
+where P<sub>B</sub> = brake power [kW]
+      SFOC = specific fuel oil consumption [g/kWh]
+      t = transit time for the leg [hours]
+      10<sup>6</sup> converts grams to metric tonnes
+                </div>
+
+                <p>
+                    The <code>calculate_fuel_consumption</code> method returns a comprehensive result including
+                    total fuel in metric tonnes, brake power, required (uncapped) power, transit time, and
+                    a breakdown of fuel attributable to calm-water resistance, wind resistance, and wave
+                    resistance. This breakdown is computed by running the resistance calculation with each
+                    environmental component isolated, then expressing each as a fraction of the total. The
+                    breakdown enables post-voyage analysis of which environmental factors dominated fuel
+                    consumption on each leg &mdash; information valuable for both operational debriefing and
+                    model calibration.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- NOON REPORT CALIBRATION -->
+            <!-- ============================================================ -->
+            <section id="noon-report-calibration">
+                <h2>8. Noon Report Calibration</h2>
+
+                <p>
+                    The physics-based model described in the preceding sections provides a general prediction
+                    framework, but individual vessels deviate from the reference hull due to differences in
+                    hull form, propeller condition, engine tuning, and hull fouling state. The
+                    <code>VesselCalibrator</code> class addresses this gap by adjusting the model's prediction
+                    coefficients to match observed fuel consumption data from noon reports &mdash; the daily
+                    operational records that every merchant vessel compiles.
+                </p>
+
+                <h3>8.1 Calibration Factors</h3>
+                <p>
+                    The calibration operates on four multiplicative correction factors that scale the
+                    corresponding resistance or consumption components. Each factor has a nominal value of
+                    1.0 (no correction) and is bounded to prevent physically unreasonable values.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th>Default</th>
+                            <th>Lower Bound</th>
+                            <th>Upper Bound</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Calm water</td>
+                            <td>1.0</td>
+                            <td>0.85</td>
+                            <td>1.50</td>
+                            <td>Scales R<sub>f</sub> + R<sub>w</sub> + R<sub>app</sub></td>
+                        </tr>
+                        <tr>
+                            <td>Wind</td>
+                            <td>1.0</td>
+                            <td>0.50</td>
+                            <td>1.50</td>
+                            <td>Scales R<sub>wind</sub></td>
+                        </tr>
+                        <tr>
+                            <td>Waves</td>
+                            <td>1.0</td>
+                            <td>0.50</td>
+                            <td>1.50</td>
+                            <td>Scales R<sub>AW</sub></td>
+                        </tr>
+                        <tr>
+                            <td>SFOC</td>
+                            <td>1.0</td>
+                            <td>0.90</td>
+                            <td>1.20</td>
+                            <td>Scales the SFOC curve output</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>8.2 Optimisation Method</h3>
+                <p>
+                    The calibrator uses the <strong>L-BFGS-B</strong> (Limited-memory Broyden-Fletcher-Goldfarb-Shanno
+                    with Bound constraints) algorithm from <code>scipy.optimize</code> to minimise the sum
+                    of squared differences between predicted and observed fuel consumption across all available
+                    noon reports. A minimum of 5 reports (<code>MIN_REPORTS = 5</code>) is required to ensure
+                    statistical significance, and the maximum allowable deviation from the default factors is
+                    capped at 0.5 (<code>MAX_FACTOR_DEVIATION = 0.5</code>) to prevent overfitting.
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Calibration Objective Function</div>
+min  &Sigma;<sub>i=1..N</sub> (fuel<sub>predicted,i</sub>(f<sub>calm</sub>, f<sub>wind</sub>, f<sub>wave</sub>, f<sub>sfoc</sub>) - fuel<sub>observed,i</sub>)&sup2;
+
+subject to:
+    0.85 &le; f<sub>calm</sub> &le; 1.50
+    0.50 &le; f<sub>wind</sub> &le; 1.50
+    0.50 &le; f<sub>wave</sub> &le; 1.50
+    0.90 &le; f<sub>sfoc</sub> &le; 1.20
+                </div>
+
+                <p>
+                    Each noon report provides the vessel's speed over ground, fuel consumption for the
+                    reporting period, loading condition, and observed weather (wind speed and direction,
+                    wave height and direction, swell height and direction, and current speed and direction).
+                    The calibrator computes predicted fuel consumption for each report using the vessel model
+                    with the candidate correction factors, and the optimiser iterates until the residual is
+                    minimised.
+                </p>
+
+                <h3>8.3 Hull Fouling Model</h3>
+                <p>
+                    Between calibration events, the calm-water resistance is expected to increase due to
+                    biological growth on the hull bottom. The calibrator applies a hull fouling penalty that
+                    accumulates over time since the last dry-docking or hull cleaning event. The base fouling
+                    rate of 1% per month is modulated by regional water temperature multipliers, reflecting
+                    the higher biological productivity of tropical waters.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Water Temperature Zone</th>
+                            <th>Multiplier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Tropical (&gt; 25&deg;C)</td><td>1.5&times;</td></tr>
+                        <tr><td>Warm (18&ndash;25&deg;C)</td><td>1.2&times;</td></tr>
+                        <tr><td>Cold (5&ndash;18&deg;C)</td><td>0.8&times;</td></tr>
+                        <tr><td>Polar (&lt; 5&deg;C)</td><td>0.5&times;</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="formula-block">
+                    <div class="formula-title">Hull Fouling Factor</div>
+fouling = base_rate &middot; months_since_cleaning &middot; zone_multiplier
+
+fouling = min(fouling, 0.20)    (capped at 20%)
+
+R<sub>calm,fouled</sub> = R<sub>calm</sub> &middot; (1 + fouling)
+                </div>
+
+                <p>
+                    The 20% cap represents an extreme fouling state that would typically trigger a hull
+                    cleaning operation. In practice, most operators clean the hull when the fouling penalty
+                    reaches 10&ndash;15%, as the fuel cost of the additional resistance exceeds the cost of
+                    cleaning. The fouling model allows the vessel performance prediction to remain accurate
+                    between calibration events by extrapolating the expected degradation based on the vessel's
+                    trading pattern.
+                </p>
+
+                <h3>8.4 Validation</h3>
+                <p>
+                    After calibration, the calibrator reports the mean absolute error (MAE) and root mean
+                    square error (RMSE) of the predicted fuel consumption against the training set. A
+                    well-calibrated model typically achieves a fuel prediction MAE of 2&ndash;5% of the
+                    observed consumption. When the RMSE exceeds 10%, the system raises a warning suggesting
+                    that the noon report data may contain errors (e.g., incorrect fuel figures, missing weather
+                    observations) or that the vessel's performance has changed significantly from the modelled
+                    baseline (e.g., propeller damage, engine degradation).
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- REFERENCES -->
+            <!-- ============================================================ -->
+            <section id="references">
+                <h2>References</h2>
+
+                <ol>
+                    <li>
+                        Holtrop, J. and Mennen, G.G.J.,
+                        &ldquo;An Approximate Power Prediction Method,&rdquo;
+                        <em>International Shipbuilding Progress</em>, vol. 29, no. 335, pp. 166&ndash;170, 1982.
+                    </li>
+                    <li>
+                        Holtrop, J.,
+                        &ldquo;A Statistical Re-analysis of Resistance and Propulsion Data,&rdquo;
+                        <em>International Shipbuilding Progress</em>, vol. 31, no. 363, pp. 272&ndash;276, 1984.
+                    </li>
+                    <li>
+                        ITTC,
+                        &ldquo;Recommended Procedures and Guidelines &mdash; Speed and Power Trials,&rdquo;
+                        7.5-04-01-01.1, International Towing Tank Conference, 2014.
+                    </li>
+                    <li>
+                        ISO 15016:2015,
+                        &ldquo;Ships and Marine Technology &mdash; Guidelines for the Assessment of Speed and Power Performance by Analysis of Speed Trial Data,&rdquo;
+                        International Organization for Standardization, 2015.
+                    </li>
+                    <li>
+                        Faltinsen, O.M.,
+                        <em>Sea Loads on Ships and Offshore Structures</em>,
+                        Cambridge University Press, 1990.
+                    </li>
+                    <li>
+                        Salvesen, N., Tuck, E.O. and Faltinsen, O.,
+                        &ldquo;Ship Motions and Sea Loads,&rdquo;
+                        <em>Transactions SNAME</em>, vol. 78, pp. 250&ndash;287, 1970.
+                    </li>
+                    <li>
+                        Journ&eacute;e, J.M.J. and Massie, W.W.,
+                        <em>Offshore Hydromechanics</em>,
+                        Delft University of Technology, 2001.
+                    </li>
+                    <li>
+                        Ochi, M.K.,
+                        &ldquo;Prediction of Occurrence and Severity of Ship Slamming at Sea,&rdquo;
+                        <em>Proceedings of the 5th Symposium on Naval Hydrodynamics</em>, 1964.
+                    </li>
+                    <li>
+                        IMO,
+                        &ldquo;Guidelines for Voluntary Use of the Ship Energy Efficiency Operational Indicator (EEOI),&rdquo;
+                        MEPC.1/Circ.684, 2009.
+                    </li>
+                </ol>
+            </section>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- Footer -->
+<footer class="docs-footer">
+    <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+    <p>
+        <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        &nbsp;|&nbsp;
+        <a href="docs.html">Main Documentation</a>
+        &nbsp;|&nbsp;
+        <a href="../index.html">quantcoder-fs.com</a>
+    </p>
+</footer>
+
+<!-- Sidebar active state script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar-menu a[href^="#"]');
+        function setActiveLink() {
+            let current = '';
+            sections.forEach(function(section) {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(function(link) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', setActiveLink);
+        setActiveLink();
+    });
+</script>
+</body>
+</html>

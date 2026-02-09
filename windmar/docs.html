@@ -19,8 +19,17 @@
         <nav>
             <ul class="docs-nav">
                 <li><a href="docs.html" class="active">Documentation</a></li>
-                <li><a href="weather-data.html">Weather Data</a></li>
-                <li><a href="monte-carlo.html">Monte Carlo</a></li>
+                <li class="docs-nav-dropdown">
+                    <a href="#">Technical Articles <i class="fas fa-caret-down"></i></a>
+                    <ul class="docs-nav-dropdown-menu">
+                        <li><a href="weather-fields.html">Weather Fields</a></li>
+                        <li><a href="data-pipeline.html">Data Pipeline</a></li>
+                        <li><a href="hydrodynamics.html">Hydrodynamics &amp; RAO</a></li>
+                        <li><a href="astar-pathfinding.html">A* Pathfinding</a></li>
+                        <li><a href="weather-data.html">Weather Acquisition</a></li>
+                        <li><a href="monte-carlo.html">Monte Carlo</a></li>
+                    </ul>
+                </li>
                 <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
             </ul>
         </nav>
@@ -111,6 +120,19 @@
             <ul class="sidebar-menu">
                 <li><a href="#model-validation"><i class="fas fa-check-circle"></i> Model Validation</a></li>
                 <li><a href="#calibration"><i class="fas fa-sliders-h"></i> Calibration</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Technical Articles</div>
+            <ul class="sidebar-menu">
+                <li><a href="#technical-articles"><i class="fas fa-newspaper"></i> Article Index</a></li>
+                <li><a href="weather-fields.html"><i class="fas fa-cloud-sun"></i> Weather Fields</a></li>
+                <li><a href="data-pipeline.html"><i class="fas fa-database"></i> Data Pipeline</a></li>
+                <li><a href="hydrodynamics.html"><i class="fas fa-water"></i> Hydrodynamics &amp; RAO</a></li>
+                <li><a href="astar-pathfinding.html"><i class="fas fa-route"></i> A* Pathfinding</a></li>
+                <li><a href="weather-data.html"><i class="fas fa-cloud-sun-rain"></i> Weather Acquisition</a></li>
+                <li><a href="monte-carlo.html"><i class="fas fa-dice"></i> Monte Carlo</a></li>
             </ul>
         </div>
 
@@ -2155,6 +2177,70 @@ Method: Nelder-Mead (derivative-free simplex)
                     outside this range indicates either bad input data or a fundamental mismatch between the vessel
                     and the default model parameters, requiring manual review of the vessel specifications.
                 </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TECHNICAL ARTICLES INDEX -->
+            <!-- ============================================================ -->
+            <section id="technical-articles">
+                <h2>Technical Articles</h2>
+                <p>
+                    The following peer-reviewed-style articles provide in-depth coverage of Windmar's core subsystems.
+                    Each article presents the mathematical foundations, implementation details, and relevant references
+                    for a specific domain of the weather routing pipeline.
+                </p>
+
+                <div class="feature-grid" style="grid-template-columns: repeat(2, 1fr);">
+
+                    <div class="feature-card">
+                        <h4><i class="fas fa-cloud-sun"></i> Weather Data Fields</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 1rem 0;">
+                            <li>Meteorological and oceanographic parameters: wind (GFS), waves (CMEMS), currents, and ocean masking used in vessel performance prediction.</li>
+                        </ul>
+                        <a href="weather-fields.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Read article</a>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4><i class="fas fa-database"></i> Data Ingestion &amp; Restitution</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 1rem 0;">
+                            <li>Pipeline architecture from acquisition through compressed PostgreSQL storage to trilinear-interpolated, route-ready weather grids.</li>
+                        </ul>
+                        <a href="data-pipeline.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Read article</a>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4><i class="fas fa-water"></i> Hydrodynamics &amp; RAO</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 1rem 0;">
+                            <li>Holtrop-Mennen calm-water resistance, STAWAVE-1 added wave resistance, simplified RAO seakeeping, and noon-report calibration.</li>
+                        </ul>
+                        <a href="hydrodynamics.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Read article</a>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4><i class="fas fa-route"></i> A* Pathfinding</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 1rem 0;">
+                            <li>Adaptation of A* graph search to minimum-fuel ocean routing with physics-based cost evaluation and time-varying weather integration.</li>
+                        </ul>
+                        <a href="astar-pathfinding.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Read article</a>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4><i class="fas fa-cloud-sun-rain"></i> Weather Data Acquisition</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 1rem 0;">
+                            <li>GFS and ERA5 wind data acquisition, CMEMS wave and current forecasts, and the unified forecast-climatology blending framework.</li>
+                        </ul>
+                        <a href="weather-data.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Read article</a>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4><i class="fas fa-dice"></i> Monte Carlo Simulation</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 1rem 0;">
+                            <li>Parametric Monte Carlo simulation with temporal weather correlation for voyage uncertainty quantification of fuel and ETA.</li>
+                        </ul>
+                        <a href="monte-carlo.html" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Read article</a>
+                    </div>
+
+                </div>
             </section>
 
         </div>

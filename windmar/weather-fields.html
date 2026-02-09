@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmar - Meteorological and Oceanographic Data Fields for Maritime Weather Routing</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="docs-header">
+    <div class="docs-header-content">
+        <a href="docs.html" class="docs-logo">
+            <i class="fas fa-ship"></i>
+            <span>Windmar</span>
+        </a>
+        <nav>
+            <ul class="docs-nav">
+                <li><a href="docs.html">Documentation</a></li>
+                <li class="docs-nav-dropdown">
+                    <a href="#">Technical Articles <i class="fas fa-caret-down"></i></a>
+                    <ul class="docs-nav-dropdown-menu">
+                        <li><a href="weather-fields.html" class="active">Weather Fields</a></li>
+                        <li><a href="data-pipeline.html">Data Pipeline</a></li>
+                        <li><a href="hydrodynamics.html">Hydrodynamics &amp; RAO</a></li>
+                        <li><a href="astar-pathfinding.html">A* Pathfinding</a></li>
+                        <li><a href="weather-data.html">Weather Acquisition</a></li>
+                        <li><a href="monte-carlo.html">Monte Carlo</a></li>
+                    </ul>
+                </li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </nav>
+        <a href="../index.html" class="back-to-main"><i class="fas fa-arrow-left"></i> Back to Main Site</a>
+    </div>
+</header>
+
+<!-- Main Layout -->
+<div class="docs-container">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Article</div>
+            <ul class="sidebar-menu">
+                <li><a href="#abstract"><i class="fas fa-file-alt"></i> Abstract</a></li>
+                <li><a href="#introduction"><i class="fas fa-book-open"></i> Introduction</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Wind Fields</div>
+            <ul class="sidebar-menu">
+                <li><a href="#atmospheric-fields"><i class="fas fa-wind"></i> Atmospheric Fields</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Wave Fields</div>
+            <ul class="sidebar-menu">
+                <li><a href="#sea-state-fields"><i class="fas fa-water"></i> Sea State Fields</a></li>
+                <li><a href="#wave-decomposition"><i class="fas fa-wave-square"></i> Wave Decomposition</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Ocean Currents</div>
+            <ul class="sidebar-menu">
+                <li><a href="#current-fields"><i class="fas fa-arrows-alt-h"></i> Current Fields</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Implementation</div>
+            <ul class="sidebar-menu">
+                <li><a href="#ocean-mask"><i class="fas fa-globe"></i> Ocean Mask</a></li>
+                <li><a href="#data-quality"><i class="fas fa-check-circle"></i> Data Quality</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Resources</div>
+            <ul class="sidebar-menu">
+                <li><a href="#references"><i class="fas fa-bookmark"></i> References</a></li>
+                <li><a href="docs.html"><i class="fas fa-arrow-left"></i> Back to Docs</a></li>
+                <li><a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <div class="docs-content">
+
+            <!-- ============================================================ -->
+            <!-- ABSTRACT -->
+            <!-- ============================================================ -->
+            <section id="abstract">
+                <h1>Meteorological and Oceanographic Data Fields for Maritime Weather Routing</h1>
+                <p class="docs-subtitle">Environmental forcing parameters used in Windmar's vessel performance prediction and route optimization</p>
+
+                <div class="alert info">
+                    <strong><i class="fas fa-info-circle"></i> Technical Article</strong><br>
+                    This article details the meteorological and oceanographic fields ingested by Windmar
+                    for computing vessel resistance, speed loss, and fuel consumption along candidate routes.
+                    It covers atmospheric wind fields from GFS and ERA5, spectral wave parameters from
+                    CMEMS, ocean current vectors, and the ocean masking procedure used to exclude land
+                    pixels from routing grids.
+                </div>
+
+                <h3>Abstract</h3>
+                <p>
+                    Maritime weather routing systems depend on accurate environmental forcing data to predict
+                    vessel performance under realistic sea conditions. Windmar ingests three categories of
+                    geophysical fields &mdash; atmospheric winds, ocean surface waves, and ocean currents &mdash;
+                    from operational numerical weather prediction (NWP) and ocean analysis systems. Wind fields
+                    are obtained from the NCEP Global Forecast System (GFS) at 0.25&deg; resolution with ERA5
+                    reanalysis serving as a climatological fallback. Wave fields are sourced from the Copernicus
+                    Marine Environment Monitoring Service (CMEMS) global wave analysis and forecast product at
+                    0.083&deg; resolution, providing total sea state parameters along with decomposed swell and
+                    wind-wave components. Ocean current fields are drawn from the CMEMS global physics analysis
+                    and forecast at the same spatial resolution. This article describes each field, its physical
+                    meaning, the data source and resolution, the vector decomposition conventions used, and the
+                    ocean masking procedure that filters land pixels from weather grids before they enter the
+                    routing engine.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- INTRODUCTION -->
+            <!-- ============================================================ -->
+            <section id="introduction">
+                <h2>1. Introduction</h2>
+
+                <p>
+                    The performance of an ocean-going vessel is governed by the environmental conditions it
+                    encounters along its route. Wind generates aerodynamic resistance on the hull superstructure
+                    and cargo (particularly significant for container ships and car carriers with high windage
+                    areas). Waves impose added resistance through radiation, diffraction, and motion-induced
+                    effects that can increase fuel consumption by 15&ndash;30% in heavy weather relative to
+                    calm-water conditions. Ocean currents alter the vessel's speed over ground (SOG) without
+                    changing its speed through water (STW), directly affecting passage time and, indirectly,
+                    fuel consumption through engine load adjustments. Accurate representation of these three
+                    forcing categories is therefore essential for any weather routing system that aims to
+                    optimize fuel efficiency or minimize voyage duration under realistic conditions. In Windmar,
+                    the environmental data feeds into the <a href="hydrodynamics.html">hydrodynamic resistance
+                    models</a> (Blendermann wind resistance, STA-wave added resistance, seakeeping response
+                    amplitude operators) and the <a href="astar-pathfinding.html">A* pathfinding algorithm</a>
+                    that evaluates candidate route segments.
+                </p>
+
+                <p>
+                    Windmar organizes environmental data into a unified <code>WeatherData</code> dataclass
+                    that encapsulates scalar fields (significant wave height, wave period), vector fields
+                    (wind and current as U/V components), and decomposed spectral fields (swell versus
+                    wind-wave partitions). Each field carries metadata including its source parameter name,
+                    timestamp, geographic extent (latitude and longitude arrays), physical unit, and spatial
+                    grid of values. This article documents the complete set of fields, grouped into three
+                    categories: atmospheric fields (Section 2), sea state fields (Section 3), and ocean
+                    current fields (Section 4). Section 5 describes the ocean mask used to distinguish water
+                    from land in the routing grid, and Section 6 discusses data quality considerations and
+                    limitations of the forecast products employed.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- ATMOSPHERIC FIELDS -->
+            <!-- ============================================================ -->
+            <section id="atmospheric-fields">
+                <h2>2. Atmospheric Fields</h2>
+
+                <p>
+                    Wind forcing is the primary atmospheric input to the routing engine. Windmar obtains
+                    10-metre wind fields from two sources: the NCEP Global Forecast System (GFS) for
+                    operational forecasts and the ECMWF ERA5 reanalysis for climatological fallback when
+                    the forecast horizon is exceeded. Both products provide wind as orthogonal U and V
+                    components on a regular latitude-longitude grid, which Windmar converts to scalar
+                    speed and meteorological direction for use in the Blendermann wind resistance model.
+                </p>
+
+                <h3>2.1 GFS Operational Forecast</h3>
+                <p>
+                    The GFS model is produced by the National Centers for Environmental Prediction (NCEP)
+                    of the U.S. National Oceanic and Atmospheric Administration (NOAA). Windmar accesses
+                    GFS data via the NOMADS (NOAA Operational Model Archive and Distribution System)
+                    endpoint at <code>https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl</code>,
+                    which provides filtered GRIB2 data for specific parameters and subregions. The GFS
+                    runs four times daily at 00, 06, 12, and 18 UTC, with output becoming available
+                    approximately 3.5 hours after each run time. Windmar's <code>GFSDataProvider</code>
+                    automatically selects the most recent available run, accounting for this production
+                    lag. The forecast extends to 120 hours (5 days) at 3-hourly temporal resolution,
+                    yielding 41 forecast steps (hours 0, 3, 6, &hellip;, 120).
+                </p>
+
+                <p>
+                    The two parameters retrieved are the U-component (<code>UGRD</code>) and V-component
+                    (<code>VGRD</code>) of wind at 10 metres above the surface. The U-component represents
+                    the eastward wind velocity and the V-component represents the northward wind velocity,
+                    both in metres per second. These are provided on a global 0.25&deg; &times; 0.25&deg;
+                    latitude-longitude grid (1440 &times; 721 grid points). The GRIB2 format is parsed
+                    using the <code>cfgrib</code> and <code>pygrib</code> libraries.
+                </p>
+
+                <h3>2.2 ERA5 Reanalysis</h3>
+                <p>
+                    For climatological conditions beyond the operational forecast horizon, Windmar falls
+                    back to the ERA5 global reanalysis produced by ECMWF. ERA5 provides hourly estimates
+                    of atmospheric variables on a 0.25&deg; grid from 1940 to the present, combining model
+                    data with observations through 4D-Var data assimilation. Windmar's
+                    <code>ClimatologyProvider</code> retrieves ERA5 monthly means from the
+                    <code>reanalysis-era5-single-levels</code> dataset for the variables
+                    <code>u10</code> (10-metre U-wind) and <code>v10</code> (10-metre V-wind). These
+                    climatological fields serve as the baseline wind estimate when the voyage extends
+                    beyond the 10-day forecast-to-climatology blending window.
+                </p>
+
+                <h3>2.3 Vector Decomposition</h3>
+                <p>
+                    The routing engine requires scalar wind speed and meteorological direction (the
+                    direction <em>from</em> which the wind blows, measured clockwise from true north).
+                    These are derived from the U and V components using standard meteorological
+                    conventions:
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Wind Speed and Direction from U/V Components</div>
+wind_speed = &radic;(u&sup2; + v&sup2;)
+
+wind_direction = (270 &minus; atan2(v, u) &times; 180 / &pi;) mod 360
+
+where u is the eastward component (m/s)
+      v is the northward component (m/s)
+      wind_direction is in degrees from true north (meteorological convention)
+                </div>
+
+                <p>
+                    The 270&deg; offset and sign convention ensure that a purely westerly wind (u &gt; 0,
+                    v = 0) yields a direction of 270&deg;, corresponding to "wind from the west," which
+                    is the standard meteorological convention. The <code>WeatherData</code> dataclass
+                    stores both the raw <code>u_component</code> and <code>v_component</code> arrays and
+                    the derived scalar <code>values</code> (speed) field, allowing downstream consumers
+                    to use whichever representation is most convenient.
+                </p>
+
+                <h3>2.4 Summary of Atmospheric Parameters</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Variable</th>
+                            <th>Source</th>
+                            <th>Resolution</th>
+                            <th>Units</th>
+                            <th>Update Frequency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Wind U-component</td>
+                            <td><code>UGRD:10m</code></td>
+                            <td>GFS (NCEP/NOAA)</td>
+                            <td>0.25&deg;</td>
+                            <td>m/s</td>
+                            <td>6-hourly runs</td>
+                        </tr>
+                        <tr>
+                            <td>Wind V-component</td>
+                            <td><code>VGRD:10m</code></td>
+                            <td>GFS (NCEP/NOAA)</td>
+                            <td>0.25&deg;</td>
+                            <td>m/s</td>
+                            <td>6-hourly runs</td>
+                        </tr>
+                        <tr>
+                            <td>Wind speed (derived)</td>
+                            <td>&mdash;</td>
+                            <td>Computed</td>
+                            <td>0.25&deg;</td>
+                            <td>m/s</td>
+                            <td>&mdash;</td>
+                        </tr>
+                        <tr>
+                            <td>Wind direction (derived)</td>
+                            <td>&mdash;</td>
+                            <td>Computed</td>
+                            <td>0.25&deg;</td>
+                            <td>degrees</td>
+                            <td>&mdash;</td>
+                        </tr>
+                        <tr>
+                            <td>ERA5 U-wind</td>
+                            <td><code>u10</code></td>
+                            <td>ERA5 (ECMWF)</td>
+                            <td>0.25&deg;</td>
+                            <td>m/s</td>
+                            <td>Monthly reanalysis</td>
+                        </tr>
+                        <tr>
+                            <td>ERA5 V-wind</td>
+                            <td><code>v10</code></td>
+                            <td>ERA5 (ECMWF)</td>
+                            <td>0.25&deg;</td>
+                            <td>m/s</td>
+                            <td>Monthly reanalysis</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert info">
+                    <strong><i class="fas fa-info-circle"></i> Forecast Horizon</strong><br>
+                    GFS forecasts extend to 120 hours (5 days) at 3-hourly steps, providing 41 forecast
+                    time steps per model run. For voyages exceeding this horizon, Windmar blends the
+                    forecast with ERA5 climatology over a 2-day transition window controlled by the
+                    <code>FORECAST_HORIZON_DAYS</code> (10) and <code>BLEND_WINDOW_DAYS</code> (2)
+                    parameters in the <code>ClimatologyProvider</code>.
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- SEA STATE FIELDS -->
+            <!-- ============================================================ -->
+            <section id="sea-state-fields">
+                <h2>3. Sea State Fields</h2>
+
+                <p>
+                    Wave forcing is the dominant contributor to added resistance and speed loss for most
+                    commercial vessel types. Windmar obtains wave data from the CMEMS Global Ocean Waves
+                    Analysis and Forecast product (<code>cmems_mod_glo_wav_anfc_0.083deg_PT3H-i</code>),
+                    which provides spectral wave parameters on a global 0.083&deg; grid
+                    (approximately 9 km at the equator) at 3-hourly temporal resolution. The forecast
+                    extends to 120 hours (5 days) with output at hours 0, 3, 6, &hellip;, 120. This
+                    product is based on the MFWAM wave model, forced by ECMWF atmospheric analyses, and
+                    assimilates satellite altimetry observations to constrain the significant wave height field.
+                </p>
+
+                <p>
+                    Windmar retrieves a comprehensive set of wave parameters that describe both the total
+                    sea state and its decomposition into swell and locally generated wind-wave components.
+                    The total sea state parameters (significant wave height, peak period, mean direction)
+                    characterize the aggregate ocean surface conditions, while the decomposed fields enable
+                    the <a href="hydrodynamics.html">seakeeping model</a> to compute vessel motions and
+                    added resistance separately for long-period swell and short-crested wind-waves, which
+                    produce qualitatively different vessel responses.
+                </p>
+
+                <h3>3.1 Total Sea State Parameters</h3>
+                <p>
+                    The total sea state is described by three primary parameters derived from the
+                    two-dimensional wave energy spectrum. The significant wave height (H<sub>s</sub>) is
+                    defined as four times the square root of the zeroth spectral moment (H<sub>s</sub> =
+                    4&radic;m<sub>0</sub>) and approximates the average height of the highest one-third
+                    of waves, which is the quantity most directly related to wave-induced ship motions and
+                    structural loads. The peak wave period (T<sub>p</sub>) is the period at which the
+                    wave energy spectrum reaches its maximum, and the mean wave direction indicates the
+                    direction from which the dominant wave energy propagates.
+                </p>
+
+                <h3>3.2 Complete Wave Parameter Table</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>CMEMS Variable</th>
+                            <th>Units</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Significant wave height (H<sub>s</sub>)</td>
+                            <td><code>VHM0</code></td>
+                            <td>m</td>
+                            <td>Total sea state</td>
+                        </tr>
+                        <tr>
+                            <td>Peak wave period (T<sub>p</sub>)</td>
+                            <td><code>VTPK</code></td>
+                            <td>s</td>
+                            <td>Total sea state</td>
+                        </tr>
+                        <tr>
+                            <td>Mean wave direction</td>
+                            <td><code>VMDR</code></td>
+                            <td>degrees</td>
+                            <td>Total sea state</td>
+                        </tr>
+                        <tr>
+                            <td>Swell significant height</td>
+                            <td><code>VHM0_SW1</code></td>
+                            <td>m</td>
+                            <td>Primary swell system</td>
+                        </tr>
+                        <tr>
+                            <td>Swell mean period</td>
+                            <td><code>VTM01_SW1</code></td>
+                            <td>s</td>
+                            <td>Primary swell system</td>
+                        </tr>
+                        <tr>
+                            <td>Swell mean direction</td>
+                            <td><code>VMDR_SW1</code></td>
+                            <td>degrees</td>
+                            <td>Primary swell system</td>
+                        </tr>
+                        <tr>
+                            <td>Wind-wave significant height</td>
+                            <td><code>VHM0_WW</code></td>
+                            <td>m</td>
+                            <td>Locally generated</td>
+                        </tr>
+                        <tr>
+                            <td>Wind-wave mean period</td>
+                            <td><code>VTM01_WW</code></td>
+                            <td>s</td>
+                            <td>Locally generated</td>
+                        </tr>
+                        <tr>
+                            <td>Wind-wave mean direction</td>
+                            <td><code>VMDR_WW</code></td>
+                            <td>degrees</td>
+                            <td>Locally generated</td>
+                        </tr>
+                        <tr>
+                            <td>Mean wave period (spectral)</td>
+                            <td><code>VTM02</code></td>
+                            <td>s</td>
+                            <td>Spectral moment</td>
+                        </tr>
+                        <tr>
+                            <td>Peak wave period</td>
+                            <td><code>VTPK</code></td>
+                            <td>s</td>
+                            <td>Spectral peak</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    The spectral mean period <code>VTM02</code> is computed from the ratio of the zeroth
+                    and second spectral moments (T<sub>m02</sub> = &radic;(m<sub>0</sub>/m<sub>2</sub>))
+                    and provides a measure of the average wave period that is less sensitive to spectral
+                    shape than the peak period. Both period measures are retained because the peak period
+                    is more relevant for resonance calculations (encounter frequency), while the mean
+                    period better characterizes the bulk energy content of the sea state.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- WAVE DECOMPOSITION -->
+            <!-- ============================================================ -->
+            <section id="wave-decomposition">
+                <h3>3.3 Wave Spectrum Decomposition</h3>
+
+                <p>
+                    The ocean wave field at any location is typically composed of multiple wave systems
+                    with different origins. Wind-waves (also called wind-sea) are generated locally by
+                    the action of wind stress on the sea surface; they are short-crested, have relatively
+                    short periods (typically 3&ndash;8 seconds), and their direction aligns closely with
+                    the local wind direction. Swell, by contrast, consists of waves that have propagated
+                    away from their generation area (a distant storm) and can travel thousands of
+                    kilometres with minimal energy loss. Swell waves are long-crested, have longer
+                    periods (typically 8&ndash;20 seconds), and their direction may bear no relationship
+                    to the local wind. A vessel transiting the North Atlantic, for example, may
+                    simultaneously experience locally generated wind-waves from a northwesterly breeze
+                    and long-period swell arriving from a storm system far to the southwest.
+                </p>
+
+                <p>
+                    The CMEMS wave model partitions the two-dimensional wave spectrum into swell and
+                    wind-wave components using the Hasselmann et al. (1994) spectral partitioning
+                    algorithm. This decomposition is physically meaningful because the two wave types
+                    produce qualitatively different vessel responses. Short-period wind-waves with periods
+                    near the vessel's natural roll period (typically 8&ndash;15 seconds for cargo ships)
+                    can excite resonant rolling motions, while long-period swell primarily causes heaving
+                    and pitching. The added resistance mechanisms also differ: wind-waves contribute mainly
+                    through radiation stress and wave reflection at the bow, while swell contributes
+                    through diffraction effects and hull pressure changes that depend on the ratio of
+                    wavelength to ship length.
+                </p>
+
+                <p>
+                    The total significant wave height is related to the component heights through the
+                    energy conservation principle:
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Wave Energy Partition</div>
+H<sub>s</sub>&sup2; &asymp; H<sub>swell</sub>&sup2; + H<sub>windwave</sub>&sup2;
+
+where H<sub>s</sub> = total significant wave height (VHM0)
+      H<sub>swell</sub> = primary swell significant height (VHM0_SW1)
+      H<sub>windwave</sub> = wind-wave significant height (VHM0_WW)
+
+This follows from the additivity of spectral energy (variance):
+  m<sub>0,total</sub> = m<sub>0,swell</sub> + m<sub>0,windwave</sub>
+  (H<sub>s</sub> = 4&radic;m<sub>0</sub>)
+                </div>
+
+                <p>
+                    The decomposition is critical for Windmar's seakeeping model, which implements
+                    <code>SeakeepingModel.calculate_motions_decomposed()</code> to compute vessel
+                    response separately for each wave system. For a given vessel heading, the encounter
+                    frequency differs between swell (long period, hence low encounter frequency) and
+                    wind-waves (short period, higher encounter frequency), leading to different positions
+                    on the vessel's Response Amplitude Operator (RAO) curves. Summing the motions from
+                    each component provides a more accurate estimate of total vessel response than
+                    computing motions from the aggregate sea state parameters alone, particularly in
+                    bimodal sea states where swell and wind-waves arrive from different directions.
+                    Further details on the hydrodynamic response calculations are provided in the
+                    <a href="hydrodynamics.html">Hydrodynamics &amp; RAO</a> article.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- CURRENT FIELDS -->
+            <!-- ============================================================ -->
+            <section id="current-fields">
+                <h2>4. Ocean Current Fields</h2>
+
+                <p>
+                    Ocean surface currents affect vessel routing by altering the speed over ground (SOG)
+                    relative to the speed through water (STW). A favourable current of 1&ndash;2 knots
+                    (common in regions such as the Gulf Stream, Kuroshio, or Agulhas Current) can reduce
+                    passage time by several hours on a trans-oceanic voyage, while an adverse current of
+                    the same magnitude increases both passage time and fuel consumption. Windmar obtains
+                    ocean current data from the CMEMS Global Ocean Physics Analysis and Forecast product
+                    (<code>cmems_mod_glo_phy_anfc_0.083deg_PT1H-m</code>), which provides surface current
+                    vectors on a 0.083&deg; global grid (approximately 9 km) at hourly temporal resolution.
+                    Forecast output extends to 120 hours at 3-hourly steps (hours 0, 3, 6, &hellip;, 120),
+                    consistent with the wave forecast horizon.
+                </p>
+
+                <p>
+                    The current field is represented as two orthogonal velocity components: <code>uo</code>
+                    (eastward velocity, positive eastward) and <code>vo</code> (northward velocity, positive
+                    northward), both in metres per second. These are stored in the <code>WeatherData</code>
+                    dataclass as <code>u_component</code> and <code>v_component</code>, analogous to the
+                    wind field representation. The scalar current speed and direction are derived using the
+                    same vector decomposition as for wind:
+                </p>
+
+                <div class="formula-block">
+                    <div class="formula-title">Current Speed and Direction from U/V Components</div>
+current_speed = &radic;(uo&sup2; + vo&sup2;)
+
+current_direction = (270 &minus; atan2(vo, uo) &times; 180 / &pi;) mod 360
+
+where uo is the eastward current velocity (m/s)
+      vo is the northward current velocity (m/s)
+      current_direction is the direction FROM which the current flows (degrees)
+                </div>
+
+                <p>
+                    The effect of currents on vessel ground speed is computed in the voyage calculator
+                    (<code>VoyageCalculator._calculate_sog()</code>) by vector addition. The vessel's
+                    speed through water (STW) along its heading is combined with the current vector
+                    projected onto the vessel's track direction to obtain the effective speed over ground.
+                    When the current has a component aligned with the vessel's heading, it increases SOG
+                    and reduces passage time; when opposed, it decreases SOG and increases fuel consumption
+                    per nautical mile of ground track covered.
+                </p>
+
+                <h3>4.1 Current Parameter Table</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>CMEMS Variable</th>
+                            <th>Source Dataset</th>
+                            <th>Resolution</th>
+                            <th>Units</th>
+                            <th>Temporal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Eastward current velocity</td>
+                            <td><code>uo</code></td>
+                            <td><code>cmems_mod_glo_phy_anfc_0.083deg_PT1H-m</code></td>
+                            <td>0.083&deg;</td>
+                            <td>m/s</td>
+                            <td>Hourly</td>
+                        </tr>
+                        <tr>
+                            <td>Northward current velocity</td>
+                            <td><code>vo</code></td>
+                            <td><code>cmems_mod_glo_phy_anfc_0.083deg_PT1H-m</code></td>
+                            <td>0.083&deg;</td>
+                            <td>m/s</td>
+                            <td>Hourly</td>
+                        </tr>
+                        <tr>
+                            <td>Current speed (derived)</td>
+                            <td>&mdash;</td>
+                            <td>Computed</td>
+                            <td>0.083&deg;</td>
+                            <td>m/s</td>
+                            <td>&mdash;</td>
+                        </tr>
+                        <tr>
+                            <td>Current direction (derived)</td>
+                            <td>&mdash;</td>
+                            <td>Computed</td>
+                            <td>0.083&deg;</td>
+                            <td>degrees</td>
+                            <td>&mdash;</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    Compared to the atmospheric wind and wave fields, the ocean current analysis product
+                    has higher temporal resolution (hourly versus 3-hourly for waves and wind forecasts)
+                    but represents an analysis rather than a pure forecast product. The CMEMS physics
+                    model assimilates in-situ observations (Argo floats, moored buoys) and satellite
+                    altimetry to produce a nowcast, which is then propagated forward as a forecast. The
+                    current field is generally more persistent and predictable than wind or waves over
+                    the 5-day forecast horizon, particularly for major ocean currents whose positions
+                    are determined by large-scale thermohaline and wind-driven circulation patterns.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- OCEAN MASK -->
+            <!-- ============================================================ -->
+            <section id="ocean-mask">
+                <h2>5. Ocean Mask and Land Filtering</h2>
+
+                <p>
+                    A practical requirement for any maritime weather routing system is the ability to
+                    distinguish ocean grid points from land grid points. While the CMEMS and GFS
+                    products naturally contain NaN or missing values over land, the routing grid must
+                    explicitly exclude land nodes to prevent the <a href="astar-pathfinding.html">A*
+                    pathfinding algorithm</a> from generating routes that cross land masses. Windmar
+                    implements ocean masking at two levels: server-side during weather data ingestion
+                    and client-side during weather grid visualization.
+                </p>
+
+                <h3>5.1 Server-Side Masking</h3>
+                <p>
+                    The backend uses the <code>global_land_mask</code> Python library to generate a
+                    boolean ocean mask at 0.05&deg; resolution (approximately 5.5 km at the equator).
+                    The <code>_build_ocean_mask()</code> function evaluates every grid point within
+                    the requested geographic extent and returns a two-dimensional boolean array where
+                    <code>True</code> indicates water and <code>False</code> indicates land. This mask
+                    is applied to all weather grids before they are served to the routing engine,
+                    ensuring that NaN-filled land pixels from the upstream data sources are explicitly
+                    flagged as non-navigable. The 0.05&deg; mask resolution is finer than the coarsest
+                    weather data (GFS at 0.25&deg;), which prevents the mask from inadvertently
+                    blocking narrow straits or coastal passages that are resolved by the land mask
+                    but not by the weather grid.
+                </p>
+
+                <h3>5.2 Client-Side Masking</h3>
+                <p>
+                    On the frontend, the <code>WeatherGridLayer</code> component applies per-pixel
+                    ocean masking when rendering weather data on the map. Each grid cell is checked
+                    against the land mask before rendering its colour-coded weather value, preventing
+                    the display of weather data over land areas. This is purely a visualization concern
+                    and does not affect the routing computation, but it provides users with a clear
+                    visual representation of where weather data is available and where the routing
+                    graph has been constrained to water-only nodes.
+                </p>
+
+                <h3>5.3 Why Explicit Masking is Necessary</h3>
+                <p>
+                    Relying solely on NaN values in the upstream CMEMS or GFS data for land exclusion
+                    is insufficient for several reasons. First, different data products have different
+                    land-sea masks: the GFS 0.25&deg; grid treats some coastal grid cells as land that
+                    the CMEMS 0.083&deg; grid treats as water, and vice versa. Second, interpolation at
+                    grid boundaries can produce non-NaN values over land when nearby ocean grid points
+                    are used in the bilinear weighting. Third, the A* routing algorithm requires a
+                    consistent binary navigability grid that does not depend on which weather parameter
+                    happens to be queried. The <code>global_land_mask</code> at 0.05&deg; provides
+                    this consistent reference, derived from high-resolution geographic data rather than
+                    from the weather model's own land-sea classification.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- DATA QUALITY -->
+            <!-- ============================================================ -->
+            <section id="data-quality">
+                <h2>6. Data Quality and Limitations</h2>
+
+                <p>
+                    The quality and reliability of the environmental data used in weather routing
+                    directly affects the fidelity of vessel performance predictions and route
+                    optimization outcomes. Several factors limit the accuracy of the data fields
+                    described in this article, and Windmar implements a provenance tracking system
+                    to communicate forecast confidence to the user.
+                </p>
+
+                <h3>6.1 Forecast Accuracy Degradation</h3>
+                <p>
+                    All numerical weather prediction products exhibit accuracy degradation with
+                    increasing forecast lead time. For GFS 10-metre wind, the root-mean-square error
+                    (RMSE) is approximately 1.5 m/s at 24 hours, increasing to approximately 3.5 m/s
+                    at 120 hours. CMEMS significant wave height errors follow a similar pattern, with
+                    RMSE of approximately 0.2 m at short lead times growing to 0.5&ndash;0.8 m at
+                    the 5-day horizon. Ocean current forecasts are generally more stable, with RMSE
+                    below 0.1 m/s for major current systems, though mesoscale eddies and transient
+                    features are poorly predicted beyond 2&ndash;3 days.
+                </p>
+
+                <p>
+                    Windmar communicates forecast confidence through the <code>WeatherProvenance</code>
+                    system, which assigns three confidence levels based on data age and forecast
+                    lead time:
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Confidence Level</th>
+                            <th>Forecast Lead Time</th>
+                            <th>Interpretation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>High</strong></td>
+                            <td>&lt; 72 hours</td>
+                            <td>Weather forecast is within the high-skill window; route optimization is reliable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Medium</strong></td>
+                            <td>72 &ndash; 120 hours</td>
+                            <td>Forecast skill is moderate; significant uncertainty in timing and intensity of weather systems</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Low</strong></td>
+                            <td>&gt; 120 hours</td>
+                            <td>Beyond deterministic forecast horizon; data is blended with or replaced by ERA5 climatology</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>6.2 Spatial Resolution Limitations</h3>
+                <p>
+                    The 0.083&deg; resolution of CMEMS wave and current products corresponds to
+                    approximately 9 km at the equator and approximately 5 km at 55&deg;N latitude.
+                    While this resolution is adequate for open-ocean routing, it is insufficient for
+                    resolving coastal processes such as wave refraction in shallow water, tidal current
+                    acceleration in straits, and sheltering effects behind headlands and islands. Port
+                    approach routing, where these effects are significant, would require higher-resolution
+                    regional models (e.g., 100&ndash;500 m coastal wave models) that are outside the
+                    scope of Windmar's current data architecture. The GFS wind field at 0.25&deg;
+                    (approximately 28 km) is even coarser and cannot resolve local wind effects such
+                    as orographic acceleration, land-sea breezes, or gap winds in mountainous coastal
+                    terrain.
+                </p>
+
+                <h3>6.3 Climatological Fallback</h3>
+                <p>
+                    When the voyage duration exceeds the operational forecast horizon, Windmar's
+                    <code>ClimatologyProvider</code> transitions from forecast data to ERA5 monthly
+                    climatological means. The transition is governed by two parameters:
+                    <code>FORECAST_HORIZON_DAYS = 10</code>, which defines the outer boundary of
+                    the forecast window, and <code>BLEND_WINDOW_DAYS = 2</code>, which defines
+                    a linear blending zone between pure forecast and pure climatology. Within
+                    the blending window, wind fields are computed as a weighted average of the
+                    forecast and climatological values, producing a smooth transition that avoids
+                    discontinuities at the forecast boundary. Climatological fields represent
+                    long-term average conditions and do not capture individual weather systems;
+                    the <a href="monte-carlo.html">Monte Carlo simulation</a> is particularly
+                    important for quantifying uncertainty in the climatological portion of a
+                    long voyage.
+                </p>
+
+                <h3>6.4 Geographic Coverage</h3>
+                <p>
+                    The data sources used by Windmar provide global coverage with latitude bounds
+                    of &minus;85&deg; to +85&deg;, excluding extreme polar regions where sea ice
+                    prevents commercial navigation and where weather model output is unreliable.
+                    Within this domain, the GFS model provides complete global coverage at 0.25&deg;,
+                    while the CMEMS wave and current products cover the global ocean at 0.083&deg;.
+                    Coverage gaps may occur in semi-enclosed seas or near the coast where the CMEMS
+                    model grid does not extend, though such gaps are rare in the open ocean where
+                    weather routing is most relevant.
+                </p>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- REFERENCES -->
+            <!-- ============================================================ -->
+            <section id="references">
+                <h2>References</h2>
+
+                <ol>
+                    <li>
+                        NCEP/NOAA (2023).
+                        &ldquo;Global Forecast System (GFS) Model Documentation.&rdquo;
+                        National Centers for Environmental Prediction.
+                    </li>
+                    <li>
+                        Hersbach, H. et al. (2020).
+                        &ldquo;The ERA5 Global Reanalysis.&rdquo;
+                        <em>Quarterly Journal of the Royal Meteorological Society</em>, vol. 146, no. 730, pp. 1999&ndash;2049.
+                        DOI: 10.1002/qj.3803
+                    </li>
+                    <li>
+                        CMEMS (2024).
+                        &ldquo;Global Ocean Waves Analysis and Forecast &mdash; Product User Manual.&rdquo;
+                        Copernicus Marine Environment Monitoring Service.
+                    </li>
+                    <li>
+                        CMEMS (2024).
+                        &ldquo;Global Ocean Physics Analysis and Forecast &mdash; Product User Manual.&rdquo;
+                        Copernicus Marine Environment Monitoring Service.
+                    </li>
+                    <li>
+                        WMO (1998).
+                        &ldquo;Guide to Wave Analysis and Forecasting.&rdquo;
+                        WMO-No. 702, World Meteorological Organization, 2nd ed.
+                    </li>
+                    <li>
+                        Holthuijsen, L.H. (2007).
+                        <em>Waves in Oceanic and Coastal Waters</em>.
+                        Cambridge University Press.
+                    </li>
+                    <li>
+                        Komen, G.J. et al. (1994).
+                        <em>Dynamics and Modelling of Ocean Waves</em>.
+                        Cambridge University Press.
+                    </li>
+                </ol>
+            </section>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- Footer -->
+<footer class="docs-footer">
+    <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+    <p>
+        <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        &nbsp;|&nbsp;
+        <a href="docs.html">Main Documentation</a>
+        &nbsp;|&nbsp;
+        <a href="../index.html">quantcoder-fs.com</a>
+    </p>
+</footer>
+
+<!-- Sidebar active state script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar-menu a[href^="#"]');
+
+        function setActiveLink() {
+            let current = '';
+            sections.forEach(function(section) {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(function(link) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', setActiveLink);
+        setActiveLink();
+    });
+</script>
+
+</body>
+</html>
