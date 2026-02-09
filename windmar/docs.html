@@ -158,11 +158,40 @@
             <section id="overview">
                 <h1>WindMar Technical Documentation</h1>
                 <p class="docs-subtitle">Weather-aware maritime route optimization for MR product tankers</p>
-                <p style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #e6f4ea; border: 1px solid #34a853; color: #1e7e34; padding: 0.25rem 0.85rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 600;">
-                        <i class="fas fa-tag"></i> v0.0.5 &mdash; last stable
+
+                <div class="alert" style="background: #f0f7f0; border-left: 4px solid #34a853; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+                    <strong><i class="fas fa-code-branch"></i> Development Log</strong>
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #e6f4ea; border: 1px solid #34a853; color: #1e7e34; padding: 0.15rem 0.65rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600; margin-left: 0.5rem; vertical-align: middle;">
+                        <i class="fas fa-tag"></i> v0.0.5 &mdash; Last Stable
                     </span>
-                </p>
+                    <table style="width: 100%; margin-top: 0.75rem; font-size: 0.9rem; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #d4e6d4;">
+                            <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.5</strong></td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-09</td>
+                            <td style="padding: 0.35rem 0;">Weather DB architecture, temporal weather provisioning, Monte Carlo with correlated perturbations, CII compliance, PostgreSQL persistence</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #d4e6d4;">
+                            <td style="padding: 0.35rem 0; white-space: nowrap; color: #555;"><strong>v0.0.4</strong></td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666;">2026-02-09</td>
+                            <td style="padding: 0.35rem 0;">Frontend refactor, Monte Carlo simulation, grid weather provider</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #d4e6d4;">
+                            <td style="padding: 0.35rem 0; white-space: nowrap; color: #555;"><strong>v0.0.3</strong></td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666;">2026-02-09</td>
+                            <td style="padding: 0.35rem 0;">Data sources docs, credential setup, modernize pyproject.toml</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #d4e6d4;">
+                            <td style="padding: 0.35rem 0; white-space: nowrap; color: #555;"><strong>v0.0.2</strong></td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666;">2026-02-08</td>
+                            <td style="padding: 0.35rem 0;">GFS near-real-time wind data + 5-day forecast timeline</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.35rem 0; white-space: nowrap; color: #555;"><strong>v0.0.1</strong></td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666;">2026-02-08</td>
+                            <td style="padding: 0.35rem 0;">Initial public release</td>
+                        </tr>
+                    </table>
+                </div>
 
                 <div class="alert info">
                     <strong><i class="fas fa-info-circle"></i> Maritime Operations Tool</strong><br>
