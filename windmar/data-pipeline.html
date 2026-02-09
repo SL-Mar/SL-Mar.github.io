@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windmar - Data Ingestion and Restitution Pipeline</title>
+    <title>WindMar - Data Ingestion and Restitution Pipeline</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -17,7 +17,7 @@
     <div class="docs-header-content">
         <a href="docs.html" class="docs-logo">
             <i class="fas fa-ship"></i>
-            <span>Windmar</span>
+            <span>WindMar</span>
         </a>
         <nav>
             <ul class="docs-nav">
@@ -103,7 +103,7 @@
 
                 <div class="alert info">
                     <strong><i class="fas fa-info-circle"></i> Technical Article</strong><br>
-                    This article describes the data engineering architecture that underpins Windmar's weather-aware
+                    This article describes the data engineering architecture that underpins WindMar's weather-aware
                     route optimization. It covers how meteorological and oceanographic data are acquired from external
                     providers, compressed and stored in PostgreSQL, retrieved on demand, and delivered to the A*
                     optimizer as temporally interpolated grid fields. For the definition of individual weather
@@ -120,7 +120,7 @@
                     coordinate and future time, placing stringent requirements on retrieval latency: the data must
                     be available in sub-millisecond time per query, yet the underlying forecast grids are large,
                     multi-parameter, and arrive from remote APIs with response times measured in seconds to minutes.
-                    This article presents the four-stage pipeline that Windmar implements to bridge this gap:
+                    This article presents the four-stage pipeline that WindMar implements to bridge this gap:
                     (1) acquisition from GFS and CMEMS forecast services, (2) zlib compression and storage in a
                     PostgreSQL schema optimised for bulk retrieval, (3) decompression with spatial cropping via
                     boolean masking, and (4) trilinear interpolation across latitude, longitude, and forecast hour
@@ -149,7 +149,7 @@
                 </p>
 
                 <p>
-                    Windmar resolves this mismatch through a <strong>database-backed ingestion pipeline</strong>
+                    WindMar resolves this mismatch through a <strong>database-backed ingestion pipeline</strong>
                     that decouples the slow, IO-bound acquisition process from the fast, CPU-bound optimization
                     process. Weather data is fetched once, compressed, and stored in PostgreSQL. The optimizer
                     then reads from the database, benefiting from local disk latency rather than network latency.
@@ -212,7 +212,7 @@
                         wind components via the NOAA NOMADS GRIB filter. Files are downloaded as GRIB2, parsed
                         with <code>cfgrib</code> and <code>xarray</code>, and converted to numpy arrays. Each file
                         is approximately 80 KB for a Mediterranean-scale subregion. NOMADS imposes a rate limit
-                        that Windmar respects with a 2-second delay between consecutive requests, yielding ~82
+                        that WindMar respects with a 2-second delay between consecutive requests, yielding ~82
                         seconds for a full 41-file forecast sequence.</li>
                     <li><strong>Wave forecast (CMEMS)</strong> &mdash; The Copernicus Marine Environment Monitoring
                         Service provides significant wave height, peak period, direction, and swell/wind-wave
@@ -809,7 +809,7 @@ where \( fh \) = fractional forecast hour corresponding to the query time<br>
                 <p>
                     Performance is critical at every stage of the pipeline, as the end-to-end latency
                     directly affects the user experience: a route optimization request should complete
-                    within a few seconds, not minutes. Windmar employs a multi-level caching strategy
+                    within a few seconds, not minutes. WindMar employs a multi-level caching strategy
                     that minimises redundant computation and data transfer at each stage.
                 </p>
 
@@ -936,7 +936,7 @@ where \( fh \) = fractional forecast hour corresponding to the query time<br>
 
 <!-- Footer -->
 <footer class="docs-footer">
-    <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+    <p>&copy; 2026 WindMar. Apache License 2.0.</p>
     <p>
         <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
         &nbsp;|&nbsp;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windmar - A* Pathfinding for Maritime Weather Routing</title>
+    <title>WindMar - A* Pathfinding for Maritime Weather Routing</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -17,7 +17,7 @@
     <div class="docs-header-content">
         <a href="docs.html" class="docs-logo">
             <i class="fas fa-ship"></i>
-            <span>Windmar</span>
+            <span>WindMar</span>
         </a>
         <nav>
             <ul class="docs-nav">
@@ -109,7 +109,7 @@
 
                 <div class="alert info">
                     <strong><i class="fas fa-info-circle"></i> Technical Article</strong><br>
-                    This article presents the graph-based route optimization engine at the core of Windmar.
+                    This article presents the graph-based route optimization engine at the core of WindMar.
                     It covers the construction of a navigable ocean grid, the adaptation of the A* search
                     algorithm to minimise fuel consumption under weather forcing, the physics-based cost
                     function that couples vessel hydrodynamics with environmental conditions at each leg,
@@ -120,7 +120,7 @@
                 <p>
                     The A* algorithm, originally developed for shortest-path search in weighted graphs,
                     is adapted here for minimum-fuel ocean routing subject to time-varying meteorological
-                    and oceanographic conditions. Windmar discretises the ocean surface into a regular
+                    and oceanographic conditions. WindMar discretises the ocean surface into a regular
                     latitude-longitude grid at configurable resolution (default 0.5&deg;, approximately
                     30 nautical miles at the equator) with eight-connected cell adjacency. Land cells
                     are excluded using a high-resolution global land mask, and the search corridor is
@@ -134,7 +134,7 @@
                     checks to reduce waypoint density, followed by optional variable-speed optimisation
                     across the smoothed route. The complete pipeline &mdash; grid construction, A* search,
                     smoothing, and route statistics &mdash; executes in 0.5&ndash;2 seconds for typical
-                    Mediterranean routes, enabling interactive use in the Windmar web application.
+                    Mediterranean routes, enabling interactive use in the WindMar web application.
                 </p>
             </section>
 
@@ -160,7 +160,7 @@
                 </p>
 
                 <p>
-                    Windmar adopts the A* algorithm rather than dynamic programming or evolutionary
+                    WindMar adopts the A* algorithm rather than dynamic programming or evolutionary
                     approaches for several reasons. First, A* with an admissible heuristic guarantees
                     that the returned path is optimal with respect to the cost function, a property that
                     evolutionary algorithms cannot provide without exhaustive evaluation. Second, the
@@ -192,7 +192,7 @@
                 <h2>2. Problem Formulation</h2>
 
                 <p>
-                    The route optimisation problem solved by Windmar can be stated as follows. Given an
+                    The route optimisation problem solved by WindMar can be stated as follows. Given an
                     origin waypoint, a destination waypoint, a departure time, a vessel model with known
                     hydrodynamic characteristics, and a time-varying weather field covering the transit
                     area, find the sequence of intermediate waypoints and (optionally) the speed at each
@@ -404,7 +404,7 @@ where \( g(n) \) = actual accumulated fuel cost from origin to node \( n \) (met
                 <h3>4.2 Admissible Heuristic</h3>
                 <p>
                     The heuristic <code>h(n)</code> must never overestimate the true remaining cost for
-                    A* to guarantee optimality. Windmar computes the heuristic as the great-circle
+                    A* to guarantee optimality. WindMar computes the heuristic as the great-circle
                     distance from the current cell to the destination, divided by the maximum attainable
                     service speed, multiplied by the fuel consumption rate, and then scaled by a factor
                     of 0.8. The 0.8 multiplier provides a deliberate underestimate: even under the most
@@ -658,7 +658,7 @@ equivalently, reducing power by factor \( m \) reduces speed by factor \( m^{1/3
                 </p>
 
                 <p>
-                    Windmar configures the simplification tolerance at <code>tolerance_nm=5.0</code>
+                    WindMar configures the simplification tolerance at <code>tolerance_nm=5.0</code>
                     nautical miles, meaning that any waypoint whose removal would cause the route to
                     deviate by less than 5 nm from its original shape is discarded. This value
                     represents a balance between route fidelity (preserving the optimiser's chosen
@@ -713,7 +713,7 @@ equivalently, reducing power by factor \( m \) reduces speed by factor \( m^{1/3
                 <h2>7. Temporal Weather Integration</h2>
 
                 <p>
-                    A distinguishing feature of Windmar's route optimisation is its use of time-varying
+                    A distinguishing feature of WindMar's route optimisation is its use of time-varying
                     weather data throughout the search and route evaluation process. Rather than
                     evaluating all legs against a single weather snapshot at departure time, the system
                     queries weather conditions at the estimated time of arrival at each grid cell during
@@ -963,7 +963,7 @@ equivalently, reducing power by factor \( m \) reduces speed by factor \( m^{1/3
 
 <!-- Footer -->
 <footer class="docs-footer">
-    <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+    <p>&copy; 2026 WindMar. Apache License 2.0.</p>
     <p>
         <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
         &nbsp;|&nbsp;

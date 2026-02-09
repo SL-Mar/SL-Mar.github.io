@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windmar - Weather Data Acquisition</title>
+    <title>WindMar - Weather Data Acquisition</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -14,7 +14,7 @@
     <div class="docs-header-content">
         <a href="docs.html" class="docs-logo">
             <i class="fas fa-ship"></i>
-            <span>Windmar</span>
+            <span>WindMar</span>
         </a>
         <nav>
             <ul class="docs-nav">
@@ -104,22 +104,22 @@
             <!-- ============================================================ -->
             <section id="overview">
                 <h1>Weather Data Acquisition</h1>
-                <p class="docs-subtitle">How Windmar sources, processes, and visualizes meteorological data</p>
+                <p class="docs-subtitle">How WindMar sources, processes, and visualizes meteorological data</p>
 
                 <div class="alert info">
                     <i class="fas fa-info-circle"></i>
-                    <strong>Data Sources:</strong> Windmar integrates NOAA GFS near-real-time forecasts, Copernicus ERA5 reanalysis,
+                    <strong>Data Sources:</strong> WindMar integrates NOAA GFS near-real-time forecasts, Copernicus ERA5 reanalysis,
                     and CMEMS ocean data. A synthetic fallback ensures the system always has data available for development and demonstration.
                 </div>
 
                 <p>
-                    Windmar's weather visualization and route optimization depend on accurate, timely meteorological data.
+                    WindMar's weather visualization and route optimization depend on accurate, timely meteorological data.
                     The system implements a <strong>three-tier provider chain</strong> that automatically selects the best
                     available data source based on freshness, availability, and data type.
                 </p>
 
                 <h3>What Powers the Weather Map</h3>
-                <p>When you open Windmar and see wind particles flowing across the Mediterranean, here's what happens behind the scenes:</p>
+                <p>When you open WindMar and see wind particles flowing across the Mediterranean, here's what happens behind the scenes:</p>
                 <ul>
                     <li><strong>Wind particles &amp; grid overlay</strong> &mdash; NOAA GFS 0.25&deg; resolution, updated every 6 hours, with ~3.5h availability lag</li>
                     <li><strong>Wave height contours</strong> &mdash; Copernicus CMEMS global wave model (0.083&deg;), or synthetic fallback</li>
@@ -230,8 +230,8 @@ Synthetic Current Generator (climatological patterns)
                     </tbody>
                 </table>
 
-                <h3>How Windmar Uses GFS</h3>
-                <p>Windmar downloads only the 10-metre U and V wind components for a subregion of the globe:</p>
+                <h3>How WindMar Uses GFS</h3>
+                <p>WindMar downloads only the 10-metre U and V wind components for a subregion of the globe:</p>
                 <ul>
                     <li><strong>Analysis (f000):</strong> Current conditions &mdash; loaded on page open for the wind overlay and particle animation</li>
                     <li><strong>Forecast (f003&ndash;f120):</strong> 40 additional forecast hours in 3h steps &mdash; downloaded via the forecast prefetch system and animated through the timeline slider</li>
@@ -239,7 +239,7 @@ Synthetic Current Generator (climatological patterns)
 
                 <h3>Run Selection Algorithm</h3>
                 <p>
-                    Windmar automatically determines the latest <em>available</em> GFS run by subtracting the
+                    WindMar automatically determines the latest <em>available</em> GFS run by subtracting the
                     3.5-hour availability lag from the current UTC time and rounding down to the nearest run hour:
                 </p>
                 <div class="code-block">
@@ -306,7 +306,7 @@ https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?
                 <h3>Rate Limiting</h3>
                 <div class="alert warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <strong>NOMADS rate limit:</strong> NOAA asks users to limit requests. Windmar enforces a 2-second delay
+                    <strong>NOMADS rate limit:</strong> NOAA asks users to limit requests. WindMar enforces a 2-second delay
                     between consecutive downloads during forecast prefetch. For the default Mediterranean region
                     (30&ndash;60&deg;N, 15&deg;W&ndash;40&deg;E), each GRIB2 file is approximately 80 KB.
                 </div>
@@ -359,7 +359,7 @@ https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?
                     </tbody>
                 </table>
 
-                <h3>When Windmar Uses ERA5</h3>
+                <h3>When WindMar Uses ERA5</h3>
                 <p>ERA5 serves as the <strong>second-tier fallback</strong> in the wind provider chain:</p>
                 <ul>
                     <li>When GFS data is temporarily unavailable (NOMADS outages, network issues)</li>
@@ -387,7 +387,7 @@ https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?
                 </p>
 
                 <h3>GFS GRIB2 Message Structure</h3>
-                <p>Windmar downloads GRIB2 files containing exactly two messages:</p>
+                <p>WindMar downloads GRIB2 files containing exactly two messages:</p>
                 <table>
                     <thead>
                         <tr>
@@ -429,7 +429,7 @@ grbs.close()
                 <h2>Leaflet-Velocity JSON Format</h2>
 
                 <p>
-                    Windmar's frontend uses <strong>leaflet-velocity</strong> to render animated wind and current
+                    WindMar's frontend uses <strong>leaflet-velocity</strong> to render animated wind and current
                     particles on the map. This library expects data in a specific JSON format derived from GRIB2
                     conventions.
                 </p>
@@ -468,7 +468,7 @@ grbs.close()
                 <div class="alert warning">
                     <i class="fas fa-exclamation-triangle"></i>
                     <strong>Data ordering:</strong> Leaflet-velocity expects data ordered from North to South (descending latitude),
-                    West to East (ascending longitude). GFS GRIB2 data arrives South-to-North, so Windmar flips the array
+                    West to East (ascending longitude). GFS GRIB2 data arrives South-to-North, so WindMar flips the array
                     before serving it to the frontend.
                 </div>
             </section>
@@ -476,7 +476,7 @@ grbs.close()
             <section id="coordinates">
                 <h2>Coordinate Conventions</h2>
 
-                <p>Different data sources use different longitude conventions, which Windmar handles automatically:</p>
+                <p>Different data sources use different longitude conventions, which WindMar handles automatically:</p>
 
                 <table>
                     <thead>
@@ -495,7 +495,7 @@ grbs.close()
                 </table>
 
                 <p>
-                    Windmar's <code>GFSDataProvider</code> converts all longitudes to the -180..180 convention
+                    WindMar's <code>GFSDataProvider</code> converts all longitudes to the -180..180 convention
                     after reading GRIB2 data, re-sorting the data array to maintain ascending longitude order.
                 </p>
             </section>
@@ -599,7 +599,7 @@ Example:
             <section id="model-comparison">
                 <h2>Weather Model Comparison</h2>
 
-                <p>How the data sources Windmar uses compare to other major weather models. All sources marked
+                <p>How the data sources WindMar uses compare to other major weather models. All sources marked
                     &ldquo;Free&rdquo; require no payment; &ldquo;Free (account)&rdquo; means free registration is needed.</p>
 
                 <table>
@@ -611,7 +611,7 @@ Example:
                             <th>Lag</th>
                             <th>Forecast Range</th>
                             <th>Cost</th>
-                            <th>Windmar Status</th>
+                            <th>WindMar Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -786,7 +786,7 @@ Example:
 
 <!-- Footer -->
 <footer class="docs-footer">
-    <p>&copy; 2026 Windmar. Weather-aware maritime route optimization.</p>
+    <p>&copy; 2026 WindMar. Weather-aware maritime route optimization.</p>
     <p>
         <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
         &nbsp;|&nbsp;

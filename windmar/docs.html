@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windmar Documentation - Technical Reference</title>
+    <title>WindMar Documentation - Technical Reference</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -17,7 +17,7 @@
     <div class="docs-header-content">
         <a href="docs.html" class="docs-logo">
             <i class="fas fa-ship"></i>
-            <span>Windmar</span>
+            <span>WindMar</span>
         </a>
         <nav>
             <ul class="docs-nav">
@@ -156,20 +156,20 @@
             <!-- OVERVIEW -->
             <!-- ============================================================ -->
             <section id="overview">
-                <h1>Windmar Technical Documentation</h1>
+                <h1>WindMar Technical Documentation</h1>
                 <p class="docs-subtitle">Weather-aware maritime route optimization for MR product tankers</p>
 
                 <div class="alert info">
                     <strong><i class="fas fa-info-circle"></i> Maritime Operations Tool</strong><br>
-                    Windmar is a physics-based vessel performance modeling system with weather-aware A* route optimization,
+                    WindMar is a physics-based vessel performance modeling system with weather-aware A* route optimization,
                     fuel consumption minimization, and IMO CII compliance tracking. It combines hydrodynamic resistance
                     calculations, seakeeping analysis, and real-time weather data to find the safest and most fuel-efficient
                     routes for MR product tankers.
                 </div>
 
-                <h3>What is Windmar?</h3>
+                <h3>What is WindMar?</h3>
                 <p>
-                    Windmar is an end-to-end maritime route optimization platform designed for Medium Range (MR) product
+                    WindMar is an end-to-end maritime route optimization platform designed for Medium Range (MR) product
                     tankers. It models the complete chain of vessel performance physics &mdash; from calm water resistance
                     through wind and wave added resistance, engine SFOC curves, and propulsion efficiency &mdash; to
                     predict fuel consumption under real weather conditions. The A* pathfinding algorithm then searches
@@ -254,7 +254,7 @@
 
                 <h3>Component Overview</h3>
                 <p>
-                    Windmar follows a layered architecture with a clear separation between the user-facing frontend,
+                    WindMar follows a layered architecture with a clear separation between the user-facing frontend,
                     the API backend, the physics-based optimization engine, and external data providers. Each component
                     runs as an independent service orchestrated via Docker Compose.
                 </p>
@@ -372,7 +372,7 @@ npm run dev</code></pre>
 
                 <h3>Weather Data Sources</h3>
                 <p>
-                    Windmar uses a three-tier provider chain that automatically falls back when a source is unavailable.
+                    WindMar uses a three-tier provider chain that automatically falls back when a source is unavailable.
                     See <a href="weather-data.html">Weather Data Acquisition</a> for full technical details.
                 </p>
                 <table>
@@ -502,7 +502,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h2>Calm Water Resistance</h2>
 
                 <p>
-                    Calm water resistance is the foundation of all fuel consumption predictions. Windmar implements the
+                    Calm water resistance is the foundation of all fuel consumption predictions. WindMar implements the
                     Holtrop-Mennen method, the industry-standard empirical approach for estimating hull resistance of
                     displacement vessels. The method decomposes total resistance into frictional, wave-making, and
                     appendage components, each derived from the vessel's principal dimensions and hull form coefficients.
@@ -740,7 +740,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
 
                 <p>
                     Wave added resistance is the increase in hull resistance caused by the vessel's interaction with
-                    ocean waves. Windmar uses the Kwon empirical formula, which estimates added resistance as a function
+                    ocean waves. WindMar uses the Kwon empirical formula, which estimates added resistance as a function
                     of significant wave height, beam, Froude number, and the encounter angle between the vessel heading
                     and the dominant wave direction.
                 </p>
@@ -801,7 +801,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                     Specific Fuel Oil Consumption (SFOC) describes the mass of fuel consumed per unit of energy delivered
                     by the engine. It varies with engine load: marine diesel engines have an optimal efficiency zone
                     around 75% of Maximum Continuous Rating (MCR), with increasing specific consumption at both lower
-                    and higher loads. Windmar models this behavior with a piecewise linear correction applied to the
+                    and higher loads. WindMar models this behavior with a piecewise linear correction applied to the
                     MCR reference SFOC.
                 </p>
 
@@ -931,7 +931,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
 
                 <p>
                     Ship motion prediction is essential for seakeeping assessment and safety enforcement during route
-                    optimization. Windmar implements simplified strip-theory models for roll, pitch, and vertical
+                    optimization. WindMar implements simplified strip-theory models for roll, pitch, and vertical
                     acceleration. These models provide physically meaningful motion estimates that capture the dominant
                     effects of wave height, encounter frequency, and vessel loading condition.
                 </p>
@@ -1038,7 +1038,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h2>Safety Criteria</h2>
 
                 <p>
-                    Windmar enforces a three-tier safety classification (Safe, Marginal, Dangerous) based on vessel
+                    WindMar enforces a three-tier safety classification (Safe, Marginal, Dangerous) based on vessel
                     motion amplitudes and derived seakeeping parameters. These criteria are applied during route
                     optimization to block unsafe routes and penalize marginally safe routes.
                 </p>
@@ -1311,7 +1311,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h2>Variable Speed Optimization</h2>
 
                 <p>
-                    Rather than maintaining a constant speed throughout the voyage, Windmar optimizes speed
+                    Rather than maintaining a constant speed throughout the voyage, WindMar optimizes speed
                     independently for each leg of the route. This allows the vessel to slow down in adverse
                     weather (reducing resistance cubically) and speed up in calm conditions, minimizing total
                     fuel consumption for the voyage.
@@ -1413,7 +1413,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
 
                 <p>
                     The Carbon Intensity Indicator (CII) is a mandatory IMO measure under MEPC.339(76) that rates
-                    a ship's operational carbon efficiency on an A-to-E scale. Windmar calculates the attained CII
+                    a ship's operational carbon efficiency on an A-to-E scale. WindMar calculates the attained CII
                     for a voyage and compares it against the required CII to determine the rating. This enables
                     operators to assess whether a planned voyage will contribute positively or negatively to their
                     annual CII rating.
@@ -1515,7 +1515,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h2>Regulatory Zones</h2>
 
                 <p>
-                    Windmar supports the definition and enforcement of regulatory zones that constrain route
+                    WindMar supports the definition and enforcement of regulatory zones that constrain route
                     optimization. Zones are defined as GeoJSON polygons and classified by type, each with a
                     specific effect on the A* cost function.
                 </p>
@@ -1863,7 +1863,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h2>Weather Database Architecture</h2>
 
                 <p>
-                    Starting with v0.0.5, Windmar pre-fetches weather grids on a 6-hourly schedule and stores them
+                    Starting with v0.0.5, WindMar pre-fetches weather grids on a 6-hourly schedule and stores them
                     as compressed blobs in PostgreSQL. This eliminates the 30&ndash;60 second CMEMS/GFS download latency
                     during route calculations, reducing optimization time from minutes to seconds.
                 </p>
@@ -1950,7 +1950,7 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h2>Monte Carlo Simulation</h2>
 
                 <p>
-                    Windmar includes a parametric Monte Carlo simulator that produces P10/P50/P90 confidence intervals
+                    WindMar includes a parametric Monte Carlo simulator that produces P10/P50/P90 confidence intervals
                     for ETA, fuel consumption, and voyage time. The simulator accounts for weather forecast uncertainty
                     by applying temporally correlated perturbations to base weather conditions along the route.
                 </p>
@@ -2066,7 +2066,7 @@ Response:
                 <h2>Model Validation</h2>
 
                 <p>
-                    Windmar includes a comprehensive test suite that validates physical models against expected
+                    WindMar includes a comprehensive test suite that validates physical models against expected
                     behaviors, empirical relationships, and boundary conditions. Tests are structured to verify
                     both individual model components and the integrated optimization pipeline.
                 </p>
@@ -2207,7 +2207,7 @@ Response:
             <section id="technical-articles">
                 <h2>Technical Articles</h2>
                 <p>
-                    The following peer-reviewed-style articles provide in-depth coverage of Windmar's core subsystems.
+                    The following peer-reviewed-style articles provide in-depth coverage of WindMar's core subsystems.
                     Each article presents the mathematical foundations, implementation details, and relevant references
                     for a specific domain of the weather routing pipeline.
                 </p>
@@ -2273,7 +2273,7 @@ Response:
 <!-- Footer -->
 <footer class="docs-footer">
     <div class="docs-footer-content">
-        <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+        <p>&copy; 2026 WindMar. Apache License 2.0.</p>
         <p>
             <a href="https://github.com/SL-Mar/windmar">GitHub</a> &bull;
             <a href="https://quantcoder-fs.com">Website</a>

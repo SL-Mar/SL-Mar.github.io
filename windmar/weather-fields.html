@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windmar - Meteorological and Oceanographic Data Fields for Maritime Weather Routing</title>
+    <title>WindMar - Meteorological and Oceanographic Data Fields for Maritime Weather Routing</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -17,7 +17,7 @@
     <div class="docs-header-content">
         <a href="docs.html" class="docs-logo">
             <i class="fas fa-ship"></i>
-            <span>Windmar</span>
+            <span>WindMar</span>
         </a>
         <nav>
             <ul class="docs-nav">
@@ -104,11 +104,11 @@
             <!-- ============================================================ -->
             <section id="abstract">
                 <h1>Meteorological and Oceanographic Data Fields for Maritime Weather Routing</h1>
-                <p class="docs-subtitle">Environmental forcing parameters used in Windmar's vessel performance prediction and route optimization</p>
+                <p class="docs-subtitle">Environmental forcing parameters used in WindMar's vessel performance prediction and route optimization</p>
 
                 <div class="alert info">
                     <strong><i class="fas fa-info-circle"></i> Technical Article</strong><br>
-                    This article details the meteorological and oceanographic fields ingested by Windmar
+                    This article details the meteorological and oceanographic fields ingested by WindMar
                     for computing vessel resistance, speed loss, and fuel consumption along candidate routes.
                     It covers atmospheric wind fields from GFS and ERA5, spectral wave parameters from
                     CMEMS, ocean current vectors, and the ocean masking procedure used to exclude land
@@ -118,7 +118,7 @@
                 <h3>Abstract</h3>
                 <p>
                     Maritime weather routing systems depend on accurate environmental forcing data to predict
-                    vessel performance under realistic sea conditions. Windmar ingests three categories of
+                    vessel performance under realistic sea conditions. WindMar ingests three categories of
                     geophysical fields &mdash; atmospheric winds, ocean surface waves, and ocean currents &mdash;
                     from operational numerical weather prediction (NWP) and ocean analysis systems. Wind fields
                     are obtained from the NCEP Global Forecast System (GFS) at 0.25&deg; resolution with ERA5
@@ -149,7 +149,7 @@
                     changing its speed through water (STW), directly affecting passage time and, indirectly,
                     fuel consumption through engine load adjustments. Accurate representation of these three
                     forcing categories is therefore essential for any weather routing system that aims to
-                    optimize fuel efficiency or minimize voyage duration under realistic conditions. In Windmar,
+                    optimize fuel efficiency or minimize voyage duration under realistic conditions. In WindMar,
                     the environmental data feeds into the <a href="hydrodynamics.html">hydrodynamic resistance
                     models</a> (Blendermann wind resistance, STA-wave added resistance, seakeeping response
                     amplitude operators) and the <a href="astar-pathfinding.html">A* pathfinding algorithm</a>
@@ -157,7 +157,7 @@
                 </p>
 
                 <p>
-                    Windmar organizes environmental data into a unified <code>WeatherData</code> dataclass
+                    WindMar organizes environmental data into a unified <code>WeatherData</code> dataclass
                     that encapsulates scalar fields (significant wave height, wave period), vector fields
                     (wind and current as U/V components), and decomposed spectral fields (swell versus
                     wind-wave partitions). Each field carries metadata including its source parameter name,
@@ -177,23 +177,23 @@
                 <h2>2. Atmospheric Fields</h2>
 
                 <p>
-                    Wind forcing is the primary atmospheric input to the routing engine. Windmar obtains
+                    Wind forcing is the primary atmospheric input to the routing engine. WindMar obtains
                     10-metre wind fields from two sources: the NCEP Global Forecast System (GFS) for
                     operational forecasts and the ECMWF ERA5 reanalysis for climatological fallback when
                     the forecast horizon is exceeded. Both products provide wind as orthogonal U and V
-                    components on a regular latitude-longitude grid, which Windmar converts to scalar
+                    components on a regular latitude-longitude grid, which WindMar converts to scalar
                     speed and meteorological direction for use in the Blendermann wind resistance model.
                 </p>
 
                 <h3>2.1 GFS Operational Forecast</h3>
                 <p>
                     The GFS model is produced by the National Centers for Environmental Prediction (NCEP)
-                    of the U.S. National Oceanic and Atmospheric Administration (NOAA). Windmar accesses
+                    of the U.S. National Oceanic and Atmospheric Administration (NOAA). WindMar accesses
                     GFS data via the NOMADS (NOAA Operational Model Archive and Distribution System)
                     endpoint at <code>https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl</code>,
                     which provides filtered GRIB2 data for specific parameters and subregions. The GFS
                     runs four times daily at 00, 06, 12, and 18 UTC, with output becoming available
-                    approximately 3.5 hours after each run time. Windmar's <code>GFSDataProvider</code>
+                    approximately 3.5 hours after each run time. WindMar's <code>GFSDataProvider</code>
                     automatically selects the most recent available run, accounting for this production
                     lag. The forecast extends to 120 hours (5 days) at 3-hourly temporal resolution,
                     yielding 41 forecast steps (hours 0, 3, 6, &hellip;, 120).
@@ -210,10 +210,10 @@
 
                 <h3>2.2 ERA5 Reanalysis</h3>
                 <p>
-                    For climatological conditions beyond the operational forecast horizon, Windmar falls
+                    For climatological conditions beyond the operational forecast horizon, WindMar falls
                     back to the ERA5 global reanalysis produced by ECMWF. ERA5 provides hourly estimates
                     of atmospheric variables on a 0.25&deg; grid from 1940 to the present, combining model
-                    data with observations through 4D-Var data assimilation. Windmar's
+                    data with observations through 4D-Var data assimilation. WindMar's
                     <code>ClimatologyProvider</code> retrieves ERA5 monthly means from the
                     <code>reanalysis-era5-single-levels</code> dataset for the variables
                     <code>u10</code> (10-metre U-wind) and <code>v10</code> (10-metre V-wind). These
@@ -316,7 +316,7 @@ where \( u \) is the eastward component (m/s)<br>
                 <div class="alert info">
                     <strong><i class="fas fa-info-circle"></i> Forecast Horizon</strong><br>
                     GFS forecasts extend to 120 hours (5 days) at 3-hourly steps, providing 41 forecast
-                    time steps per model run. For voyages exceeding this horizon, Windmar blends the
+                    time steps per model run. For voyages exceeding this horizon, WindMar blends the
                     forecast with ERA5 climatology over a 2-day transition window controlled by the
                     <code>FORECAST_HORIZON_DAYS</code> (10) and <code>BLEND_WINDOW_DAYS</code> (2)
                     parameters in the <code>ClimatologyProvider</code>.
@@ -331,7 +331,7 @@ where \( u \) is the eastward component (m/s)<br>
 
                 <p>
                     Wave forcing is the dominant contributor to added resistance and speed loss for most
-                    commercial vessel types. Windmar obtains wave data from the CMEMS Global Ocean Waves
+                    commercial vessel types. WindMar obtains wave data from the CMEMS Global Ocean Waves
                     Analysis and Forecast product (<code>cmems_mod_glo_wav_anfc_0.083deg_PT3H-i</code>),
                     which provides spectral wave parameters on a global 0.083&deg; grid
                     (approximately 9 km at the equator) at 3-hourly temporal resolution. The forecast
@@ -341,7 +341,7 @@ where \( u \) is the eastward component (m/s)<br>
                 </p>
 
                 <p>
-                    Windmar retrieves a comprehensive set of wave parameters that describe both the total
+                    WindMar retrieves a comprehensive set of wave parameters that describe both the total
                     sea state and its decomposition into swell and locally generated wind-wave components.
                     The total sea state parameters (significant wave height, peak period, mean direction)
                     characterize the aggregate ocean surface conditions, while the decomposed fields enable
@@ -506,7 +506,7 @@ This follows from the additivity of spectral energy (variance):<br>
                 </div>
 
                 <p>
-                    The decomposition is critical for Windmar's seakeeping model, which implements
+                    The decomposition is critical for WindMar's seakeeping model, which implements
                     <code>SeakeepingModel.calculate_motions_decomposed()</code> to compute vessel
                     response separately for each wave system. For a given vessel heading, the encounter
                     frequency differs between swell (long period, hence low encounter frequency) and
@@ -531,7 +531,7 @@ This follows from the additivity of spectral energy (variance):<br>
                     relative to the speed through water (STW). A favourable current of 1&ndash;2 knots
                     (common in regions such as the Gulf Stream, Kuroshio, or Agulhas Current) can reduce
                     passage time by several hours on a trans-oceanic voyage, while an adverse current of
-                    the same magnitude increases both passage time and fuel consumption. Windmar obtains
+                    the same magnitude increases both passage time and fuel consumption. WindMar obtains
                     ocean current data from the CMEMS Global Ocean Physics Analysis and Forecast product
                     (<code>cmems_mod_glo_phy_anfc_0.083deg_PT1H-m</code>), which provides surface current
                     vectors on a 0.083&deg; global grid (approximately 9 km) at hourly temporal resolution.
@@ -640,7 +640,7 @@ where \( u_o \) is the eastward current velocity (m/s)<br>
                     distinguish ocean grid points from land grid points. While the CMEMS and GFS
                     products naturally contain NaN or missing values over land, the routing grid must
                     explicitly exclude land nodes to prevent the <a href="astar-pathfinding.html">A*
-                    pathfinding algorithm</a> from generating routes that cross land masses. Windmar
+                    pathfinding algorithm</a> from generating routes that cross land masses. WindMar
                     implements ocean masking at two levels: server-side during weather data ingestion
                     and client-side during weather grid visualization.
                 </p>
@@ -696,7 +696,7 @@ where \( u_o \) is the eastward current velocity (m/s)<br>
                     The quality and reliability of the environmental data used in weather routing
                     directly affects the fidelity of vessel performance predictions and route
                     optimization outcomes. Several factors limit the accuracy of the data fields
-                    described in this article, and Windmar implements a provenance tracking system
+                    described in this article, and WindMar implements a provenance tracking system
                     to communicate forecast confidence to the user.
                 </p>
 
@@ -713,7 +713,7 @@ where \( u_o \) is the eastward current velocity (m/s)<br>
                 </p>
 
                 <p>
-                    Windmar communicates forecast confidence through the <code>WeatherProvenance</code>
+                    WindMar communicates forecast confidence through the <code>WeatherProvenance</code>
                     system, which assigns three confidence levels based on data age and forecast
                     lead time:
                 </p>
@@ -754,7 +754,7 @@ where \( u_o \) is the eastward current velocity (m/s)<br>
                     acceleration in straits, and sheltering effects behind headlands and islands. Port
                     approach routing, where these effects are significant, would require higher-resolution
                     regional models (e.g., 100&ndash;500 m coastal wave models) that are outside the
-                    scope of Windmar's current data architecture. The GFS wind field at 0.25&deg;
+                    scope of WindMar's current data architecture. The GFS wind field at 0.25&deg;
                     (approximately 28 km) is even coarser and cannot resolve local wind effects such
                     as orographic acceleration, land-sea breezes, or gap winds in mountainous coastal
                     terrain.
@@ -762,7 +762,7 @@ where \( u_o \) is the eastward current velocity (m/s)<br>
 
                 <h3>6.3 Climatological Fallback</h3>
                 <p>
-                    When the voyage duration exceeds the operational forecast horizon, Windmar's
+                    When the voyage duration exceeds the operational forecast horizon, WindMar's
                     <code>ClimatologyProvider</code> transitions from forecast data to ERA5 monthly
                     climatological means. The transition is governed by two parameters:
                     <code>FORECAST_HORIZON_DAYS = 10</code>, which defines the outer boundary of
@@ -779,7 +779,7 @@ where \( u_o \) is the eastward current velocity (m/s)<br>
 
                 <h3>6.4 Geographic Coverage</h3>
                 <p>
-                    The data sources used by Windmar provide global coverage with latitude bounds
+                    The data sources used by WindMar provide global coverage with latitude bounds
                     of &minus;85&deg; to +85&deg;, excluding extreme polar regions where sea ice
                     prevents commercial navigation and where weather model output is unreliable.
                     Within this domain, the GFS model provides complete global coverage at 0.25&deg;,
@@ -843,7 +843,7 @@ where \( u_o \) is the eastward current velocity (m/s)<br>
 
 <!-- Footer -->
 <footer class="docs-footer">
-    <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+    <p>&copy; 2026 WindMar. Apache License 2.0.</p>
     <p>
         <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
         &nbsp;|&nbsp;

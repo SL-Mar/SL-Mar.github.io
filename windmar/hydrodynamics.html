@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windmar - Hydrodynamic Modelling and Response Amplitude Operators</title>
+    <title>WindMar - Hydrodynamic Modelling and Response Amplitude Operators</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -17,7 +17,7 @@
     <div class="docs-header-content">
         <a href="docs.html" class="docs-logo">
             <i class="fas fa-ship"></i>
-            <span>Windmar</span>
+            <span>WindMar</span>
         </a>
         <nav>
             <ul class="docs-nav">
@@ -110,7 +110,7 @@
 
                 <div class="alert info">
                     <strong><i class="fas fa-info-circle"></i> Technical Article</strong><br>
-                    This article presents the physics-based vessel performance model implemented in Windmar.
+                    This article presents the physics-based vessel performance model implemented in WindMar.
                     The model couples calm-water resistance prediction (Holtrop-Mennen 1984), added resistance
                     in waves (ISO 15016 STAWAVE-1), wind drag, seakeeping response via simplified Response
                     Amplitude Operators, and propulsion efficiency modelling into a unified framework that
@@ -122,7 +122,7 @@
                     Weather routing applications require a vessel performance model that translates environmental
                     conditions &mdash; wind, waves, swell, and current &mdash; into fuel consumption rates and
                     motion safety assessments at each point along a candidate route. This article describes the
-                    hydrodynamic model implemented in Windmar's <code>VesselModel</code> and <code>SeakeepingModel</code>
+                    hydrodynamic model implemented in WindMar's <code>VesselModel</code> and <code>SeakeepingModel</code>
                     classes, which together form the ship performance engine that drives the route optimiser
                     (see <a href="astar-pathfinding.html">A* Pathfinding</a>) and the Monte Carlo uncertainty
                     quantification system (see <a href="monte-carlo.html">Monte Carlo</a>). The calm-water
@@ -146,7 +146,7 @@
                     The central challenge in maritime weather routing is to predict how a vessel will perform
                     under a given set of environmental conditions. Empirical tables, while historically useful,
                     lack the resolution and generality needed for optimisation across a continuous space of
-                    headings, speeds, and sea states. Windmar therefore implements a physics-based performance
+                    headings, speeds, and sea states. WindMar therefore implements a physics-based performance
                     model grounded in established naval architecture methods, calibrated for the reference vessel
                     class and adaptable to individual hulls through noon-report calibration.
                 </p>
@@ -371,7 +371,7 @@ where \( S \) = wetted surface area [m&sup2;]
                 </p>
 
                 <p>
-                    Windmar computes added wave resistance using the <strong>STAWAVE-1</strong> method
+                    WindMar computes added wave resistance using the <strong>STAWAVE-1</strong> method
                     from ISO 15016:2015 and the ITTC Recommended Procedures (2014). STAWAVE-1 is a
                     simplified empirical formula intended for use in speed-power analysis when detailed
                     hull form data (e.g., waterline offsets for strip-theory calculations) is unavailable.
@@ -567,7 +567,7 @@ where \( v_{\text{current}} \) = current speed [m/s]<br>
                 </div>
 
                 <p>
-                    Current data in Windmar is sourced from the CMEMS global physics model or a synthetic
+                    Current data in WindMar is sourced from the CMEMS global physics model or a synthetic
                     fallback, as described in the <a href="data-pipeline.html">data pipeline</a> article.
                     For routes in areas with strong tidal or permanent currents (e.g., the Strait of Gibraltar,
                     the Dardanelles), the current contribution to voyage time can be significant &mdash; on the
@@ -1140,7 +1140,7 @@ subject to:<br>
 
 <!-- Footer -->
 <footer class="docs-footer">
-    <p>&copy; 2026 Windmar. Apache License 2.0.</p>
+    <p>&copy; 2026 WindMar. Apache License 2.0.</p>
     <p>
         <a href="https://github.com/SL-Mar/windmar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
         &nbsp;|&nbsp;
