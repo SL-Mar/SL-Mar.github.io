@@ -49,7 +49,7 @@
                 <article class="project">
                     <div class="project-header">
                         <div>
-                            <h3>QuantCoder</h3>
+                            <h3>QuantCoder <span class="github-stars" data-repo="SL-Mar/quantcoder"></span></h3>
                             <p>AI-powered CLI for generating QuantConnect trading algorithms</p>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                 <article class="project">
                     <div class="project-header">
                         <div>
-                            <h3>Chat with Fundamentals</h3>
+                            <h3>Chat with Fundamentals <span class="github-stars" data-repo="SL-Mar/chat-with-fundamentals"></span></h3>
                             <p>Full-stack financial research and portfolio management platform</p>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                 <article class="project">
                     <div class="project-header">
                         <div>
-                            <h3>WindMar</h3>
+                            <h3>WindMar <span class="github-stars" data-repo="SL-Mar/windmar"></span></h3>
                             <p>Maritime route optimization for MR product tankers</p>
                         </div>
                     </div>
@@ -192,7 +192,7 @@
                 <article class="project">
                     <div class="project-header">
                         <div>
-                            <h3>MarChat</h3>
+                            <h3>MarChat <span class="github-stars" data-repo="SL-Mar/marchat"></span></h3>
                             <p>Maritime shipboard AI assistant with RAG and pre-arrival form engine</p>
                         </div>
                     </div>
@@ -248,5 +248,35 @@
             <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions l&eacute;gales</a></p>
         </div>
     </footer>
+    <style>
+        .github-stars {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 0.15rem 0.6rem;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+        .github-stars i { color: #e3b341; font-size: 0.75rem; }
+    </style>
+    <script>
+        document.querySelectorAll('.github-stars').forEach(el => {
+            const repo = el.dataset.repo;
+            fetch(`https://api.github.com/repos/${repo}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.stargazers_count !== undefined) {
+                        el.innerHTML = `<i class="fa-solid fa-star"></i> ${data.stargazers_count}`;
+                    }
+                })
+                .catch(() => {});
+        });
+    </script>
 </body>
 </html>
