@@ -71,7 +71,7 @@
             <div class="sidebar-section">
                 <div class="sidebar-title">Configuration</div>
                 <ul class="sidebar-menu">
-                    <li><a href="#llm-providers"><i class="fas fa-brain"></i> LLM Providers</a></li>
+                    <li><a href="#llm-providers"><i class="fas fa-brain"></i> LLM Provider</a></li>
                     <li><a href="#configuration"><i class="fas fa-sliders-h"></i> Configuration</a></li>
                     <li><a href="#validation-testing"><i class="fas fa-check-circle"></i> Validation &amp; Testing</a></li>
                 </ul>
@@ -136,12 +136,12 @@
                         </div>
 
                         <div class="feature-card">
-                            <h4><i class="fas fa-brain"></i> LLM Providers</h4>
+                            <h4><i class="fas fa-brain"></i> Local LLM</h4>
                             <ul>
-                                <li>Anthropic Claude</li>
-                                <li>Mistral (Devstral)</li>
-                                <li>DeepSeek</li>
-                                <li>OpenAI &amp; Ollama (local)</li>
+                                <li>Ollama-only, no cloud API keys</li>
+                                <li>qwen2.5-coder:14b (code)</li>
+                                <li>mistral (reasoning)</li>
+                                <li>Task-based model routing</li>
                             </ul>
                         </div>
 
@@ -211,9 +211,9 @@
                         <div class="formula-title">Generation Pipeline</div>
                         Article PDF
                         &rarr; ArticleProcessor (pdfplumber + spaCy)
-                        &rarr; LLMHandler (Claude / Mistral / DeepSeek / OpenAI / Ollama)
+                        &rarr; LLMHandler (Ollama: qwen2.5-coder / mistral)
                         &rarr; ValidateCodeTool (local AST + QuantConnect cloud compile)
-                        &rarr; BacktestTool (QuantConnect cloud backtest + Sharpe extraction)
+                        &rarr; BacktestTool (QuantConnect cloud backtest + metrics extraction)
                         &rarr; Validated Strategy (.py files)
                     </div>
 
@@ -230,7 +230,7 @@
                             <tr>
                                 <td><strong>Factory</strong></td>
                                 <td>LLM Providers</td>
-                                <td>Instantiates the correct LLM client (Anthropic, Mistral, DeepSeek, OpenAI, Ollama) based on configuration. Allows runtime provider switching.</td>
+                                <td>Instantiates the correct LLM client via task-based routing (e.g., <code>LLMFactory.create(task="coding")</code> selects qwen2.5-coder, <code>task="reasoning"</code> selects mistral).</td>
                             </tr>
                             <tr>
                                 <td><strong>Strategy</strong></td>
@@ -325,16 +325,18 @@ pip install -e .
 # Or install directly
 pip install .</code></pre>
 
+                    <h3>Pull Ollama Models</h3>
+                    <p>QuantCoder v2.0 requires Ollama running locally with two models:</p>
+<pre><code># Install Ollama (https://ollama.ai)
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Pull the required models
+ollama pull qwen2.5-coder:14b
+ollama pull mistral</code></pre>
+
                     <h3>Configure Environment</h3>
                     <p>Create the configuration directory and environment file at <code>~/.quantcoder/.env</code>:</p>
-<pre><code># Required - at minimum one LLM provider
-ANTHROPIC_API_KEY=sk-ant-...
-
-# Optional - additional LLM providers
-OPENAI_API_KEY=sk-...
-MISTRAL_API_KEY=...
-
-# Optional - QuantConnect cloud compilation and backtesting
+<pre><code># Optional - QuantConnect cloud compilation and backtesting
 QUANTCONNECT_API_KEY=...
 QUANTCONNECT_USER_ID=...
 
@@ -344,8 +346,8 @@ NOTION_API_KEY=secret_...
 # Optional - Tavily deep search for article discovery
 TAVILY_API_KEY=tvly-...</code></pre>
 
-                    <div class="alert warning">
-                        <strong>API Keys Required:</strong> At minimum, you need an Anthropic API key for code generation. QuantConnect credentials are required for cloud compilation and backtesting. Without QuantConnect keys, only local AST validation is available. For fully local operation, configure Ollama as your LLM provider (no API key needed).
+                    <div class="alert info">
+                        <strong>No Cloud LLM Keys Required:</strong> QuantCoder v2.0 runs entirely on local Ollama models. QuantConnect credentials are only needed for cloud compilation and backtesting. Without them, only local AST validation is available.
                     </div>
 
                     <h3>Verify Installation</h3>
@@ -409,24 +411,19 @@ quantcoder search "momentum trading strategies"</code></pre>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Anthropic SDK</td>
-                                <td>0.30+</td>
-                                <td>Claude API client for primary code generation</td>
-                            </tr>
-                            <tr>
-                                <td>Mistral SDK</td>
-                                <td>1.x</td>
-                                <td>Mistral/Devstral API client for code alternative</td>
-                            </tr>
-                            <tr>
-                                <td>OpenAI SDK</td>
-                                <td>1.x</td>
-                                <td>OpenAI and DeepSeek API client (shared SDK)</td>
-                            </tr>
-                            <tr>
                                 <td>Ollama</td>
                                 <td>-</td>
-                                <td>Local LLM inference (llama3.2, codellama, qwen2.5-coder)</td>
+                                <td>Local LLM inference — all models run locally, no cloud API keys required</td>
+                            </tr>
+                            <tr>
+                                <td>qwen2.5-coder:14b</td>
+                                <td>-</td>
+                                <td>Code generation, refinement, error fixing (via Ollama)</td>
+                            </tr>
+                            <tr>
+                                <td>mistral</td>
+                                <td>-</td>
+                                <td>Reasoning, summarization, chat (via Ollama)</td>
                             </tr>
                             <tr>
                                 <td>pdfplumber</td>
@@ -634,8 +631,8 @@ quantcoder library export --format zip --output strategies.zip</code></pre>
 
                     <div class="endpoint">
                         <span class="endpoint-method method-post">START</span>
-                        <span class="endpoint-path">quantcoder evolve start &lt;article_id&gt; --gens &lt;n&gt; --variants &lt;n&gt;</span>
-                        <p class="endpoint-description">Start an evolution run for the specified article. Creates <code>--variants</code> structural mutations per generation for <code>--gens</code> generations, selecting the best-performing variants to seed the next generation.</p>
+                        <span class="endpoint-path">quantcoder evolve start &lt;article_id&gt; --gens &lt;n&gt; --variants &lt;n&gt; [--push-to-qc]</span>
+                        <p class="endpoint-description">Start an evolution run for the specified article. Creates <code>--variants</code> structural mutations per generation for <code>--gens</code> generations (default: 3), selecting the best-performing variants to seed the next generation. With <code>--push-to-qc</code>, automatically creates a QuantConnect project with the best variant.</p>
                     </div>
 
                     <div class="endpoint">
@@ -657,13 +654,16 @@ quantcoder library export --format zip --output strategies.zip</code></pre>
                     </div>
 
                     <h4>Example</h4>
-<pre><code># Evolve article 1 over 10 generations with 5 variants each
-quantcoder evolve start 1 --gens 10 --variants 5
+<pre><code># Evolve article 1 over 3 generations with 5 variants each
+quantcoder evolve start 1 --gens 3 --variants 5
+
+# Evolve and push best variant to QuantConnect
+quantcoder evolve start 1 --gens 3 --push-to-qc
 
 # List all evolution runs
 quantcoder evolve list
 
-# Show details of a specific run
+# Show details of a specific run (includes CAGR, Win Rate, Trades)
 quantcoder evolve show abc123
 
 # Export the best algorithm
@@ -1149,7 +1149,7 @@ async def orchestrate(self, context: dict) -&gt; dict:
                             </tr>
                             <tr>
                                 <td>LLM timeout</td>
-                                <td>Switch to a faster LLM provider if configured (e.g., DeepSeek as fallback)</td>
+                                <td>Retry with adjusted timeout or switch to a smaller Ollama model if configured</td>
                             </tr>
                             <tr>
                                 <td>Context too large</td>
@@ -1621,7 +1621,7 @@ Progress: 11/39 strategies | 28% complete | Elapsed: 2h 15m</code></pre>
                     </ul>
 
 <pre><code># Example evolution progress output
-$ quantcoder evolve start 1 --gens 10 --variants 5
+$ quantcoder evolve start 1 --gens 3 --variants 5 --push-to-qc
 
 Evolution Engine - Article 1
 ============================
@@ -1629,17 +1629,70 @@ Base algorithm: momentum_rsi_sma.py (Sharpe: 0.85)
 
 Generation 1: 5 variants | Best fitness: 1.02 (+20.0%)
 Generation 2: 5 variants | Best fitness: 1.15 (+35.3%)
-Generation 3: 5 variants | Best fitness: 1.15 (no improvement)
-Generation 4: 5 variants | Best fitness: 1.28 (+50.6%)
-...
-Generation 10: 5 variants | Best fitness: 1.41 (+65.9%)
+Generation 3: 5 variants | Best fitness: 1.28 (+50.6%)
 
 Elite Pool:
-  1. variant_g4_v2.py  Sharpe: 1.41  Return: 12.3%  Drawdown: -2.8%
-  2. variant_g7_v1.py  Sharpe: 1.35  Return: 11.1%  Drawdown: -3.1%
-  3. variant_g4_v4.py  Sharpe: 1.28  Return: 10.5%  Drawdown: -2.5%
-  4. variant_g10_v3.py Sharpe: 1.22  Return: 9.8%   Drawdown: -3.4%
-  5. variant_g2_v1.py  Sharpe: 1.15  Return: 8.7%   Drawdown: -2.9%</code></pre>
+  1. variant_g2_v3  Sharpe=1.28, Return=10.5%, MaxDD=2.5%, CAGR=15.2%, WinRate=62.0%, Trades=47
+  2. variant_g1_v1  Sharpe=1.15, Return=8.7%,  MaxDD=2.9%, CAGR=12.1%, WinRate=58.0%, Trades=39
+  3. variant_g3_v2  Sharpe=1.02, Return=7.3%,  MaxDD=3.1%, CAGR=10.5%, WinRate=55.0%, Trades=42
+
+✓ Created QC project: Evolved_abc123
+  Project ID: 25541234
+  URL: https://www.quantconnect.com/terminal/25541234</code></pre>
+
+                    <h3>QC Integration</h3>
+                    <p>When using the <code>--push-to-qc</code> flag, the evolution engine automatically:</p>
+                    <ol>
+                        <li>Creates a new QuantConnect project named <code>Evolved_{evolution_id}</code></li>
+                        <li>Uploads the best variant's code as <code>main.py</code></li>
+                        <li>Compiles and verifies the code on the QC cloud</li>
+                        <li>Prints the project ID and direct URL for immediate access</li>
+                    </ol>
+                    <p>This eliminates the manual step of copying evolved code into QuantConnect after evolution completes.</p>
+
+                    <h3>Backtest Metrics</h3>
+                    <p>All backtest commands now display 6 structured metrics extracted from QuantConnect results:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Description</th>
+                                <th>Source Statistic</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Sharpe Ratio</td>
+                                <td>Risk-adjusted return (annualized)</td>
+                                <td><code>Sharpe Ratio</code></td>
+                            </tr>
+                            <tr>
+                                <td>Total Return</td>
+                                <td>Net profit as percentage</td>
+                                <td><code>Net Profit</code></td>
+                            </tr>
+                            <tr>
+                                <td>CAGR</td>
+                                <td>Compounding annual growth rate</td>
+                                <td><code>Compounding Annual Return</code></td>
+                            </tr>
+                            <tr>
+                                <td>Max Drawdown</td>
+                                <td>Largest peak-to-trough decline</td>
+                                <td><code>Drawdown</code></td>
+                            </tr>
+                            <tr>
+                                <td>Win Rate</td>
+                                <td>Percentage of profitable trades</td>
+                                <td><code>Win Rate</code></td>
+                            </tr>
+                            <tr>
+                                <td>Total Trades</td>
+                                <td>Number of orders executed</td>
+                                <td><code>Total Orders</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </section>
 
                 <!-- ============================================================ -->
@@ -1737,89 +1790,68 @@ Press Ctrl+C to stop the scheduler.</code></pre>
                 <!-- LLM PROVIDERS SECTION -->
                 <!-- ============================================================ -->
                 <section id="llm-providers">
-                    <h2>LLM Providers</h2>
+                    <h2>LLM Provider</h2>
 
-                    <p>QuantCoder supports 5 LLM providers through a unified <code>LLMHandler</code> abstraction. Each provider can be configured for code generation, article summarization, or both.</p>
+                    <p>QuantCoder v2.0 runs exclusively on <strong>Ollama</strong> for local LLM inference. No cloud API keys are required. All models run on your machine.</p>
 
-                    <h3>Supported Providers</h3>
+                    <h3>Models</h3>
                     <table>
                         <thead>
                             <tr>
-                                <th>Provider</th>
-                                <th>Default Model</th>
-                                <th>API Key Env Var</th>
-                                <th>Use Case</th>
+                                <th>Model</th>
+                                <th>Task</th>
+                                <th>Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Anthropic</td>
-                                <td><code>claude-sonnet-4-5-20250929</code></td>
-                                <td><code>ANTHROPIC_API_KEY</code></td>
-                                <td>Primary code generation - best accuracy for QuantConnect LEAN code</td>
+                                <td><code>qwen2.5-coder:14b</code></td>
+                                <td>Code generation, refinement, error fixing</td>
+                                <td>Selected via <code>LLMFactory.create(task="coding")</code></td>
                             </tr>
                             <tr>
-                                <td>Mistral</td>
-                                <td><code>devstral-2-123b</code></td>
-                                <td><code>MISTRAL_API_KEY</code></td>
-                                <td>Code alternative - strong performance on structured code generation</td>
-                            </tr>
-                            <tr>
-                                <td>DeepSeek</td>
-                                <td><code>deepseek-chat</code></td>
-                                <td><code>OPENAI_API_KEY</code> *</td>
-                                <td>Cost-effective option - good balance of quality and API cost</td>
-                            </tr>
-                            <tr>
-                                <td>OpenAI</td>
-                                <td><code>gpt-4o</code></td>
-                                <td><code>OPENAI_API_KEY</code></td>
-                                <td>Fallback provider - broad capability, widely available</td>
-                            </tr>
-                            <tr>
-                                <td>Ollama</td>
-                                <td><code>llama3.2</code> / <code>codellama</code> / <code>qwen2.5-coder</code></td>
-                                <td>None (local)</td>
-                                <td>Fully local inference - no API key required, runs on your machine</td>
+                                <td><code>mistral</code></td>
+                                <td>Reasoning, summarization, chat</td>
+                                <td>Selected via <code>LLMFactory.create(task="reasoning")</code></td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <p>* DeepSeek uses the OpenAI SDK with a custom base URL (<code>https://api.deepseek.com</code>).</p>
-
-                    <h3>Dual-Provider Strategy</h3>
-                    <p>QuantCoder supports configuring separate providers for code generation and article summarization. This allows you to use a high-quality (and potentially more expensive) model for code generation while using a faster or cheaper model for summarization.</p>
+                    <h3>Task-Based Model Routing</h3>
+                    <p>The <code>LLMFactory</code> automatically selects the right model based on the task type. This replaces the previous multi-provider configuration:</p>
 
 <pre><code># In ~/.quantcoder/config.toml
 
 [model]
-# Provider for code generation (algorithms)
-code_provider = "anthropic"
-code_model = "claude-sonnet-4-5-20250929"
+provider = "ollama"
+model = "qwen2.5-coder:14b"
+code_model = "qwen2.5-coder:14b"
+reasoning_model = "mistral"
+ollama_base_url = "http://localhost:11434"
+ollama_timeout = 600</code></pre>
 
-# Provider for article summarization
-summary_provider = "deepseek"
-summary_model = "deepseek-chat"</code></pre>
-
-                    <div class="alert info">
-                        <strong>Provider Selection:</strong> For best results with QuantConnect code generation, Anthropic Claude is recommended as the code provider. The model's instruction-following capability produces code that adheres most consistently to LEAN API conventions. DeepSeek or Ollama models work well for the less-constrained summarization task.
-                    </div>
-
-                    <h3>Ollama (Local) Setup</h3>
-                    <p>For fully local operation without any API keys:</p>
+                    <h3>Setup</h3>
 <pre><code># Install Ollama (https://ollama.ai)
 curl -fsSL https://ollama.ai/install.sh | sh
 
-# Pull a code-optimized model
-ollama pull qwen2.5-coder:7b
+# Pull the required models
+ollama pull qwen2.5-coder:14b
+ollama pull mistral
 
-# Configure QuantCoder to use Ollama
-# In ~/.quantcoder/config.toml:
-[model]
-code_provider = "ollama"
-code_model = "qwen2.5-coder:7b"
-summary_provider = "ollama"
-summary_model = "llama3.2"</code></pre>
+# Verify Ollama is running
+curl http://localhost:11434/api/tags
+
+# Launch QuantCoder
+quantcoder</code></pre>
+
+                    <h3>Remote Ollama</h3>
+                    <p>To use a remote Ollama instance on another machine:</p>
+<pre><code>[model]
+ollama_base_url = "http://192.168.1.100:11434"</code></pre>
+
+                    <div class="alert info">
+                        <strong>No Cloud Keys Required:</strong> v2.0 removed all cloud LLM providers (Anthropic, OpenAI, Mistral cloud, DeepSeek). The only requirement is a running Ollama instance with the two models pulled. QuantConnect API credentials are still needed for cloud compilation and backtesting.
+                    </div>
                 </section>
 
                 <!-- ============================================================ -->
@@ -1836,24 +1868,21 @@ summary_model = "llama3.2"</code></pre>
 <pre><code># ~/.quantcoder/config.toml
 
 # ============================================================
-# Model Configuration
+# Model Configuration (Ollama-only)
 # ============================================================
 [model]
-# Code generation provider: anthropic, mistral, deepseek, openai, ollama
-code_provider = "anthropic"
-code_model = "claude-sonnet-4-5-20250929"
-
-# Summarization provider (can differ from code provider)
-summary_provider = "deepseek"
-summary_model = "deepseek-chat"
+provider = "ollama"
+model = "qwen2.5-coder:14b"
+code_model = "qwen2.5-coder:14b"    # Code generation, refinement
+reasoning_model = "mistral"           # Summarization, chat
 
 # Generation parameters
-temperature = 0.2          # Lower = more deterministic code
-max_tokens = 8192          # Max output tokens per generation
-retry_attempts = 3         # Retries on LLM API errors
+temperature = 0.5
+max_tokens = 3000
 
-# Ollama-specific settings (only when using ollama provider)
+# Ollama connection
 ollama_base_url = "http://localhost:11434"
+ollama_timeout = 600
 
 # ============================================================
 # UI Configuration
@@ -1914,7 +1943,7 @@ enable_error_learning = true
 # Evolution Engine
 # ============================================================
 [evolution]
-default_generations = 10
+default_generations = 3
 default_variants = 5
 elite_pool_size = 5
 fitness_weights = [0.40, 0.25, 0.25, 0.10]  # sharpe, return, drawdown, error
@@ -1940,14 +1969,9 @@ publish_to_notion = false</code></pre>
                     <h3>Environment Variables</h3>
                     <p>Sensitive credentials are stored in <code>~/.quantcoder/.env</code> (never committed to version control):</p>
 
-<pre><code># Required - at least one LLM provider
-ANTHROPIC_API_KEY=sk-ant-api03-...
+<pre><code># No LLM API keys required — Ollama runs locally
 
-# Optional - additional providers
-OPENAI_API_KEY=sk-...
-MISTRAL_API_KEY=...
-
-# Optional - QuantConnect cloud
+# Optional - QuantConnect cloud compilation and backtesting
 QUANTCONNECT_API_KEY=...
 QUANTCONNECT_USER_ID=...
 
