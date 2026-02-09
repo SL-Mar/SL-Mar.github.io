@@ -6,6 +6,9 @@
     <title>Windmar Documentation - Technical Reference</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -509,12 +512,15 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
 
                 <div class="formula-block">
                     <div class="formula-title">Total Calm Water Resistance</div>
-R_total = R_f + R_w + R_app
-
-Where:
-  R_f   = Frictional resistance (dominant at low Froude numbers)
-  R_w   = Wave-making resistance (grows exponentially with speed)
-  R_app = Appendage resistance (rudder, shaft brackets, etc.)
+                    \[R_{\text{total}} = R_f + R_w + R_{\text{app}}\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(R_f\) = Frictional resistance (dominant at low Froude numbers)</li>
+                            <li>\(R_w\) = Wave-making resistance (grows exponentially with speed)</li>
+                            <li>\(R_{\text{app}}\) = Appendage resistance (rudder, shaft brackets, etc.)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <h3>A) Frictional Resistance (R_f)</h3>
@@ -527,15 +533,18 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Frictional Resistance</div>
-R_f = 0.5 &times; &rho;_sw &times; V&sup2; &times; S &times; C_f &times; (1 + k_1)
-
-Where:
-  &rho;_sw = 1025 kg/m&sup3;                      (seawater density)
-  V     = ship speed (m/s)
-  S     = wetted surface area (m&sup2;)
-  C_f   = 0.075 / (log10(Rn) - 2)&sup2;        (ITTC 1957 friction line)
-  Rn    = V &times; L_pp / &nu;_sw                  (Reynolds number)
-  &nu;_sw  = 1.19 &times; 10&sup_6 m&sup2;/s              (kinematic viscosity at 15&deg;C)
+                    \[R_f = \tfrac{1}{2} \cdot \rho_{sw} \cdot V^2 \cdot S \cdot C_f \cdot (1 + k_1)\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(\rho_{sw} = 1025 \; \text{kg/m}^3\) (seawater density)</li>
+                            <li>\(V\) = ship speed (m/s)</li>
+                            <li>\(S\) = wetted surface area (m&sup2;)</li>
+                            <li>\(C_f = \frac{0.075}{(\log_{10} Re - 2)^2}\) (ITTC 1957 friction line)</li>
+                            <li>\(Re = \frac{V \cdot L_{pp}}{\nu_{sw}}\) (Reynolds number)</li>
+                            <li>\(\nu_{sw} = 1.19 \times 10^{-6} \; \text{m}^2\text{/s}\) (kinematic viscosity at 15&deg;C)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -553,19 +562,22 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Holtrop-Mennen Form Factor for Tankers</div>
-k_1 = 0.93 + 0.4871 &times; (B / L_pp) - 0.2156 &times; (B / T) + 0.1027 &times; C_b
-
-Default MR tanker values:
-  B / L_pp          = 32 / 176 = 0.182
-  B / T_laden       = 32 / 11.8 = 2.71
-  B / T_ballast     = 32 / 6.5 = 4.92
-  C_b_laden         = 0.82
-  C_b_ballast       = 0.75
-
-Resulting form factors:
-  (1 + k_1)_laden   = 1 + 0.93 + 0.4871 &times; 0.182 - 0.2156 &times; 2.71 + 0.1027 &times; 0.82
-                     &asymp; 1.52
-  (1 + k_1)_ballast &asymp; 1.35
+                    \[k_1 = 0.93 + 0.4871 \cdot \frac{B}{L_{pp}} - 0.2156 \cdot \frac{B}{T} + 0.1027 \cdot C_b\]
+                    <div class="formula-where">
+                        <p>Default MR tanker values:</p>
+                        <ul>
+                            <li>\(B / L_{pp} = 32 / 176 = 0.182\)</li>
+                            <li>\(B / T_{\text{laden}} = 32 / 11.8 = 2.71\)</li>
+                            <li>\(B / T_{\text{ballast}} = 32 / 6.5 = 4.92\)</li>
+                            <li>\(C_{b,\text{laden}} = 0.82\)</li>
+                            <li>\(C_{b,\text{ballast}} = 0.75\)</li>
+                        </ul>
+                        <p>Resulting form factors:</p>
+                        <ul>
+                            <li>\((1 + k_1)_{\text{laden}} = 1 + 0.93 + 0.4871 \times 0.182 - 0.2156 \times 2.71 + 0.1027 \times 0.82 \approx 1.52\)</li>
+                            <li>\((1 + k_1)_{\text{ballast}} \approx 1.35\)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <h3>B) Wave-Making Resistance (R_w)</h3>
@@ -578,15 +590,18 @@ Resulting form factors:
 
                 <div class="formula-block">
                     <div class="formula-title">Wave-Making Resistance</div>
-R_w = c_1 &times; c_7 &times; &Delta; &times; &rho;_sw &times; g &times; exp(-0.4 &times; Fr^(-2))     for Fr &lt; 0.4
-R_w = 0                                                            for Fr &ge; 0.4
-
-Where:
-  Fr  = V / sqrt(g &times; L_pp)                 (Froude number)
-  c_1 = 2223105 &times; C_b^3.78613 &times; (T/B)^1.07961
-  c_7 = 0.229577 &times; (B/L_pp)^(1/3)
-  &Delta;   = displacement (tonnes)
-  g   = 9.81 m/s&sup2;
+                    \[R_w = c_1 \cdot c_7 \cdot \Delta \cdot \rho_{sw} \cdot g \cdot e^{-0.4 \cdot Fr^{-2}} \quad \text{for } Fr < 0.4\]
+                    \[R_w = 0 \quad \text{for } Fr \ge 0.4\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(Fr = \frac{V}{\sqrt{g \cdot L_{pp}}}\) (Froude number)</li>
+                            <li>\(c_1 = 2223105 \cdot C_b^{3.78613} \cdot (T/B)^{1.07961}\)</li>
+                            <li>\(c_7 = 0.229577 \cdot (B/L_{pp})^{1/3}\)</li>
+                            <li>\(\Delta\) = displacement (tonnes)</li>
+                            <li>\(g = 9.81 \; \text{m/s}^2\)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -605,7 +620,7 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Appendage Resistance</div>
-R_app = 0.05 &times; R_f     (5% of frictional resistance)
+                    \[R_{\text{app}} = 0.05 \times R_f \quad \text{(5\% of frictional resistance)}\]
                 </div>
 
                 <h3>Default MR Tanker Specifications</h3>
@@ -652,36 +667,37 @@ R_app = 0.05 &times; R_f     (5% of frictional resistance)
 
                 <div class="formula-block">
                     <div class="formula-title">Relative Wind Angle</div>
-&theta;_rel = |((wind_dir - heading) + 180) % 360 - 180|
-
-Range: 0&deg; (head wind) to 180&deg; (following wind)
+                    \[\theta_{\text{rel}} = \left| \left( (\text{wind\_dir} - \text{heading}) + 180 \right) \bmod 360 - 180 \right|\]
+                    <div class="formula-where">
+                        <p>Range: \(0°\) (head wind) to \(180°\) (following wind)</p>
+                    </div>
                 </div>
 
                 <div class="formula-block">
                     <div class="formula-title">Wind Force Coefficients</div>
-Longitudinal coefficient:
-  C_x = -0.6 &times; cos(&theta;_rel) + 0.8 &times; cos&sup2;(&theta;_rel)
-
-Transverse coefficient:
-  C_y = 0.9 &times; sin(&theta;_rel)
+                    <p>Longitudinal coefficient:</p>
+                    \[C_x = -0.6 \cdot \cos(\theta_{\text{rel}}) + 0.8 \cdot \cos^2(\theta_{\text{rel}})\]
+                    <p>Transverse coefficient:</p>
+                    \[C_y = 0.9 \cdot \sin(\theta_{\text{rel}})\]
                 </div>
 
                 <div class="formula-block">
                     <div class="formula-title">Wind Forces and Total Resistance</div>
-Longitudinal force:
-  F_x = 0.5 &times; &rho;_air &times; V_wind&sup2; &times; A_frontal &times; |C_x|
-
-Transverse force:
-  F_y = 0.5 &times; &rho;_air &times; V_wind&sup2; &times; A_lateral &times; |C_y|
-
-Total wind resistance:
-  R_wind = F_x + 0.1 &times; F_y
-
-Where:
-  &rho;_air = 1.225 kg/m&sup3; (air density at 15&deg;C, sea level)
-  V_wind = true wind speed (m/s)
-  A_frontal = projected frontal area (m&sup2;)
-  A_lateral = projected lateral area (m&sup2;)
+                    <p>Longitudinal force:</p>
+                    \[F_x = \tfrac{1}{2} \cdot \rho_{\text{air}} \cdot V_{\text{wind}}^2 \cdot A_{\text{frontal}} \cdot |C_x|\]
+                    <p>Transverse force:</p>
+                    \[F_y = \tfrac{1}{2} \cdot \rho_{\text{air}} \cdot V_{\text{wind}}^2 \cdot A_{\text{lateral}} \cdot |C_y|\]
+                    <p>Total wind resistance:</p>
+                    \[R_{\text{wind}} = F_x + 0.1 \cdot F_y\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(\rho_{\text{air}} = 1.225 \; \text{kg/m}^3\) (air density at 15&deg;C, sea level)</li>
+                            <li>\(V_{\text{wind}}\) = true wind speed (m/s)</li>
+                            <li>\(A_{\text{frontal}}\) = projected frontal area (m&sup2;)</li>
+                            <li>\(A_{\text{lateral}}\) = projected lateral area (m&sup2;)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <h3>Wind Projection Areas</h3>
@@ -733,24 +749,27 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Wave Added Resistance</div>
-R_wave = directional_factor &times; 4.5 &times; &rho;_sw &times; g &times; B &times; H_s&sup2; &times; (1 + Fr)
-
-Directional factor:
-  directional_factor = (1 + cos(&theta;_encounter)) / 2
-
-Values by encounter angle:
-  Head seas   (&theta; = 0&deg;):   directional_factor = 1.0
-  Bow quarter (&theta; = 45&deg;):  directional_factor = 0.85
-  Beam seas   (&theta; = 90&deg;):  directional_factor = 0.5
-  Stern quarter (&theta; = 135&deg;): directional_factor = 0.15
-  Following seas (&theta; = 180&deg;): directional_factor = 0.0
-
-Where:
-  H_s  = significant wave height (m)
-  B    = beam (m)
-  Fr   = V / sqrt(g &times; L_pp)    (Froude number)
-  &rho;_sw = 1025 kg/m&sup3;
-  g    = 9.81 m/s&sup2;
+                    \[R_{\text{wave}} = f_{\text{dir}} \cdot 4.5 \cdot \rho_{sw} \cdot g \cdot B \cdot H_s^2 \cdot (1 + Fr)\]
+                    <p>Directional factor:</p>
+                    \[f_{\text{dir}} = \frac{1 + \cos(\theta_{\text{encounter}})}{2}\]
+                    <div class="formula-where">
+                        <p>Values by encounter angle:</p>
+                        <ul>
+                            <li>Head seas (\(\theta = 0°\)): \(f_{\text{dir}} = 1.0\)</li>
+                            <li>Bow quarter (\(\theta = 45°\)): \(f_{\text{dir}} = 0.85\)</li>
+                            <li>Beam seas (\(\theta = 90°\)): \(f_{\text{dir}} = 0.5\)</li>
+                            <li>Stern quarter (\(\theta = 135°\)): \(f_{\text{dir}} = 0.15\)</li>
+                            <li>Following seas (\(\theta = 180°\)): \(f_{\text{dir}} = 0.0\)</li>
+                        </ul>
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(H_s\) = significant wave height (m)</li>
+                            <li>\(B\) = beam (m)</li>
+                            <li>\(Fr = \frac{V}{\sqrt{g \cdot L_{pp}}}\) (Froude number)</li>
+                            <li>\(\rho_{sw} = 1025 \; \text{kg/m}^3\)</li>
+                            <li>\(g = 9.81 \; \text{m/s}^2\)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -767,9 +786,8 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Example Calculation</div>
-R_wave = 1.0 &times; 4.5 &times; 1025 &times; 9.81 &times; 32 &times; 3&sup2; &times; (1 + 0.179)
-       = 1.0 &times; 4.5 &times; 1025 &times; 9.81 &times; 32 &times; 9 &times; 1.179
-       &asymp; 15,400 N  &asymp; 15.4 kN
+                    \[R_{\text{wave}} = 1.0 \times 4.5 \times 1025 \times 9.81 \times 32 \times 3^2 \times (1 + 0.179)\]
+                    \[= 1.0 \times 4.5 \times 1025 \times 9.81 \times 32 \times 9 \times 1.179 \approx 15{,}400 \; \text{N} \approx 15.4 \; \text{kN}\]
                 </div>
             </section>
 
@@ -789,15 +807,17 @@ R_wave = 1.0 &times; 4.5 &times; 1025 &times; 9.81 &times; 32 &times; 3&sup2; &t
 
                 <div class="formula-block">
                     <div class="formula-title">SFOC Load Correction</div>
-Below optimal load (load_fraction &lt; 0.75):
-  SFOC = SFOC_MCR &times; (1.0 + 0.15 &times; (0.75 - load_fraction))
-
-At or above optimal load (load_fraction &ge; 0.75):
-  SFOC = SFOC_MCR &times; (1.0 + 0.05 &times; (load_fraction - 0.75))
-
-Constraints:
-  load_fraction = max(0.15, min(1.0, P_brake / P_MCR))
-  SFOC_MCR = 171 g/kWh    (manufacturer specification)
+                    <p>Below optimal load (\(l_f < 0.75\)):</p>
+                    \[\text{SFOC} = \text{SFOC}_{MCR} \times \bigl(1.0 + 0.15 \times (0.75 - l_f)\bigr)\]
+                    <p>At or above optimal load (\(l_f \ge 0.75\)):</p>
+                    \[\text{SFOC} = \text{SFOC}_{MCR} \times \bigl(1.0 + 0.05 \times (l_f - 0.75)\bigr)\]
+                    <div class="formula-where">
+                        <p>Constraints:</p>
+                        <ul>
+                            <li>\(l_f = \max\bigl(0.15,\; \min(1.0,\; P_{\text{brake}} / P_{MCR})\bigr)\)</li>
+                            <li>\(\text{SFOC}_{MCR} = 171 \; \text{g/kWh}\) (manufacturer specification)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -849,27 +869,29 @@ Constraints:
 
                 <div class="formula-block">
                     <div class="formula-title">Tow Power to Brake Power</div>
-Tow power (power to overcome resistance):
-  P_tow = R_total &times; V / 1000     [kW]
-
-Where:
-  R_total = R_calm + R_wind + R_wave   [N]
-  V = ship speed [m/s]
-
-Brake power (engine output):
-  P_brake = P_tow / (&eta;_prop &times; &eta;_hull &times; &eta;_rre)
-
-Where:
-  &eta;_prop = 0.65     (propeller open-water efficiency)
-  &eta;_hull = 1.05     (hull efficiency; &gt; 1 due to wake gain)
-  &eta;_rre  = 1.00     (relative rotative efficiency)
-
-Combined propulsive efficiency:
-  &eta;_total = &eta;_prop &times; &eta;_hull &times; &eta;_rre = 0.65 &times; 1.05 &times; 1.00 = 0.6825
-
-Power capped at MCR:
-  P_brake = min(P_brake, P_MCR)
-  P_MCR = 8,840 kW
+                    <p>Tow power (power to overcome resistance):</p>
+                    \[P_{\text{tow}} = \frac{R_{\text{total}} \cdot V}{1000} \quad [\text{kW}]\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(R_{\text{total}} = R_{\text{calm}} + R_{\text{wind}} + R_{\text{wave}}\) [N]</li>
+                            <li>\(V\) = ship speed [m/s]</li>
+                        </ul>
+                    </div>
+                    <p>Brake power (engine output):</p>
+                    \[P_{\text{brake}} = \frac{P_{\text{tow}}}{\eta_{\text{prop}} \cdot \eta_{\text{hull}} \cdot \eta_{\text{rre}}}\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(\eta_{\text{prop}} = 0.65\) (propeller open-water efficiency)</li>
+                            <li>\(\eta_{\text{hull}} = 1.05\) (hull efficiency; &gt; 1 due to wake gain)</li>
+                            <li>\(\eta_{\text{rre}} = 1.00\) (relative rotative efficiency)</li>
+                        </ul>
+                    </div>
+                    <p>Combined propulsive efficiency:</p>
+                    \[\eta_{\text{total}} = \eta_{\text{prop}} \cdot \eta_{\text{hull}} \cdot \eta_{\text{rre}} = 0.65 \times 1.05 \times 1.00 = 0.6825\]
+                    <p>Power capped at MCR:</p>
+                    \[P_{\text{brake}} = \min(P_{\text{brake}},\; P_{MCR}) \quad \text{where } P_{MCR} = 8{,}840 \; \text{kW}\]
                 </div>
 
                 <p>
@@ -882,13 +904,16 @@ Power capped at MCR:
 
                 <div class="formula-block">
                     <div class="formula-title">Fuel Consumption per Time Step</div>
-Fuel [MT] = (P_brake &times; SFOC &times; time_hours) / 1,000,000
-
-Where:
-  P_brake    = brake power [kW]
-  SFOC       = specific fuel oil consumption [g/kWh] (load-dependent)
-  time_hours = duration of the leg [hours]
-  1,000,000  = conversion from grams to metric tonnes
+                    \[\text{Fuel} \; [\text{MT}] = \frac{P_{\text{brake}} \times \text{SFOC} \times t_{\text{hours}}}{1{,}000{,}000}\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(P_{\text{brake}}\) = brake power [kW]</li>
+                            <li>\(\text{SFOC}\) = specific fuel oil consumption [g/kWh] (load-dependent)</li>
+                            <li>\(t_{\text{hours}}\) = duration of the leg [hours]</li>
+                            <li>\(1{,}000{,}000\) = conversion from grams to metric tonnes</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -920,19 +945,21 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Roll Amplitude</div>
-Roll amplitude [rad]:
-  &phi; = (wave_slope / GM) &times; (H_s / 2) &times; RAO &times; sin(&theta;_beam)
-
-Response Amplitude Operator:
-  RAO = 1 / sqrt((1 - (&omega;_e / &omega;_roll)&sup2;)&sup2; + (2 &times; &zeta; &times; (&omega;_e / &omega;_roll))&sup2;)
-
-Where:
-  &omega;_roll = 2&pi; / T_roll           (natural roll frequency)
-  T_roll:  14 s (laden), 10 s (ballast)
-  &zeta;      = 0.05                    (5% critical damping)
-  GM:      2.5 m (laden), 4.0 m (ballast)
-  &theta;_beam = angle from beam          (90&deg; = pure beam seas)
-  &omega;_e   = encounter frequency      (depends on ship speed &amp; heading)
+                    <p>Roll amplitude [rad]:</p>
+                    \[\phi = \frac{\text{wave\_slope}}{GM} \cdot \frac{H_s}{2} \cdot \text{RAO} \cdot \sin(\theta_{\text{beam}})\]
+                    <p>Response Amplitude Operator:</p>
+                    \[\text{RAO} = \frac{1}{\sqrt{\left(1 - \left(\frac{\omega_e}{\omega_{\text{roll}}}\right)^2\right)^2 + \left(2 \zeta \cdot \frac{\omega_e}{\omega_{\text{roll}}}\right)^2}}\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(\omega_{\text{roll}} = \frac{2\pi}{T_{\text{roll}}}\) (natural roll frequency)</li>
+                            <li>\(T_{\text{roll}}\): 14 s (laden), 10 s (ballast)</li>
+                            <li>\(\zeta = 0.05\) (5% critical damping)</li>
+                            <li>\(GM\): 2.5 m (laden), 4.0 m (ballast)</li>
+                            <li>\(\theta_{\text{beam}}\) = angle from beam (90&deg; = pure beam seas)</li>
+                            <li>\(\omega_e\) = encounter frequency (depends on ship speed &amp; heading)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -952,24 +979,18 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Pitch Amplitude</div>
-Pitch amplitude [deg]:
-  &theta;_pitch = 10 &times; wave_slope &times; |cos(&theta;_enc)| &times; pitch_factor
-
-Pitch factor depends on L/&lambda; ratio:
-
-  L/&lambda; &lt; 0.5:
-    pitch_factor = 2 &times; (L / &lambda;)
-
-  0.5 &le; L/&lambda; &lt; 1.5:
-    pitch_factor = 1 - 0.3 &times; |L/&lambda; - 1|
-
-  L/&lambda; &ge; 1.5:
-    pitch_factor = 0.5 / (L / &lambda;)
-
-Where:
-  &lambda; = g &times; T_wave&sup2; / (2&pi;)     (deep water wavelength)
-  L = L_pp = 176 m
-  T_wave = peak wave period (s)
+                    <p>Pitch amplitude [deg]:</p>
+                    \[\theta_{\text{pitch}} = 10 \cdot \text{wave\_slope} \cdot |\cos(\theta_{\text{enc}})| \cdot f_{\text{pitch}}\]
+                    <p>Pitch factor depends on \(L/\lambda\) ratio:</p>
+                    \[f_{\text{pitch}} = \begin{cases} 2 \cdot (L / \lambda) & L/\lambda < 0.5 \\ 1 - 0.3 \cdot |L/\lambda - 1| & 0.5 \le L/\lambda < 1.5 \\ 0.5 / (L / \lambda) & L/\lambda \ge 1.5 \end{cases}\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(\lambda = \frac{g \cdot T_{\text{wave}}^2}{2\pi}\) (deep water wavelength)</li>
+                            <li>\(L = L_{pp} = 176 \; \text{m}\)</li>
+                            <li>\(T_{\text{wave}}\) = peak wave period (s)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -988,16 +1009,18 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Vertical Acceleration</div>
-Heave acceleration (at center of gravity):
-  a_heave = (H_s / 2) &times; &omega;_e&sup2; &times; (0.3 + 0.7 &times; cos(&theta;_enc))
-
-Point acceleration (at distance x from midship):
-  a_point = sqrt(a_heave&sup2; + (x &times; &theta;_pitch_rad &times; &omega;_e&sup2;)&sup2;)
-
-Reference locations:
-  Bridge:  x = -70 m from midship (aft)
-  Bow:     x = +88 m from midship (forward)
-  Midship: x = 0 m (minimum acceleration)
+                    <p>Heave acceleration (at center of gravity):</p>
+                    \[a_{\text{heave}} = \frac{H_s}{2} \cdot \omega_e^2 \cdot \bigl(0.3 + 0.7 \cdot \cos(\theta_{\text{enc}})\bigr)\]
+                    <p>Point acceleration (at distance \(x\) from midship):</p>
+                    \[a_{\text{point}} = \sqrt{a_{\text{heave}}^2 + \bigl(x \cdot \theta_{\text{pitch,rad}} \cdot \omega_e^2\bigr)^2}\]
+                    <div class="formula-where">
+                        <p>Reference locations:</p>
+                        <ul>
+                            <li>Bridge: \(x = -70\) m from midship (aft)</li>
+                            <li>Bow: \(x = +88\) m from midship (forward)</li>
+                            <li>Midship: \(x = 0\) m (minimum acceleration)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -1091,31 +1114,33 @@ Reference locations:
 
                 <div class="formula-block">
                     <div class="formula-title">Bow Vertical Motion at Forward Perpendicular</div>
-Bow vertical motion:
-  y_bow = H_s / 2 + L_fp &times; sin(&theta;_pitch)
-
-Where:
-  H_s = significant wave height (m)
-  L_fp = distance from midship to forward perpendicular (m)
-  &theta;_pitch = pitch amplitude (rad)
+                    \[y_{\text{bow}} = \frac{H_s}{2} + L_{fp} \cdot \sin(\theta_{\text{pitch}})\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(H_s\) = significant wave height (m)</li>
+                            <li>\(L_{fp}\) = distance from midship to forward perpendicular (m)</li>
+                            <li>\(\theta_{\text{pitch}}\) = pitch amplitude (rad)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="formula-block">
                     <div class="formula-title">Emergence Probability and Impact Velocity</div>
-Emergence probability:
-  P_emergence = f(y_bow, bow_freeboard)
-
-  When y_bow exceeds bow freeboard, the bow emerges from the water
-  and slamming becomes possible on re-entry.
-
-Re-entry velocity:
-  v_impact = sqrt(2 &times; g &times; max(0, y_bow - freeboard))
-
-Where:
-  g = 9.81 m/s&sup2;
-  freeboard = distance from waterline to deck at bow (m)
-    Laden:   freeboard &asymp; 5.2 m
-    Ballast: freeboard &asymp; 10.5 m (higher deck but lower draft = more emergence)
+                    <p>Emergence probability:</p>
+                    \[P_{\text{emergence}} = f(y_{\text{bow}},\; \text{freeboard})\]
+                    <p>When \(y_{\text{bow}}\) exceeds bow freeboard, the bow emerges from the water and slamming becomes possible on re-entry.</p>
+                    <p>Re-entry velocity:</p>
+                    \[v_{\text{impact}} = \sqrt{2 \cdot g \cdot \max(0,\; y_{\text{bow}} - \text{freeboard})}\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(g = 9.81 \; \text{m/s}^2\)</li>
+                            <li>freeboard = distance from waterline to deck at bow (m)</li>
+                            <li>Laden: freeboard \(\approx 5.2\) m</li>
+                            <li>Ballast: freeboard \(\approx 10.5\) m (higher deck but lower draft = more emergence)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <p>
@@ -1135,19 +1160,13 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Parametric Roll Conditions</div>
-Parametric roll risk is elevated when:
-
-  1. Encounter period ratio:  T_wave / T_roll &asymp; 2.0
-     (tolerance: 1.8 &lt; T_wave/T_roll &lt; 2.2)
-
-  2. Wave height exceeds critical threshold:
-     H_s &gt; H_critical
-
-  3. Head seas or following seas:
-     &theta;_encounter &lt; 30&deg; or &theta;_encounter &gt; 150&deg;
-
-When all three conditions are met, the route cell is flagged
-for elevated parametric roll risk.
+                    <p>Parametric roll risk is elevated when:</p>
+                    <ol>
+                        <li>Encounter period ratio: \(\frac{T_{\text{wave}}}{T_{\text{roll}}} \approx 2.0\) &ensp; (tolerance: \(1.8 < T_{\text{wave}}/T_{\text{roll}} < 2.2\))</li>
+                        <li>Wave height exceeds critical threshold: \(H_s > H_{\text{critical}}\)</li>
+                        <li>Head seas or following seas: \(\theta_{\text{encounter}} < 30°\) or \(\theta_{\text{encounter}} > 150°\)</li>
+                    </ol>
+                    <p>When all three conditions are met, the route cell is flagged for elevated parametric roll risk.</p>
                 </div>
 
                 <p>
@@ -1183,29 +1202,32 @@ for elevated parametric roll risk.
 
                 <div class="formula-block">
                     <div class="formula-title">A* Cost Function</div>
-f(n) = g(n) + h(n)
-
-Where:
-  f(n) = total estimated cost of path through node n
-  g(n) = actual cost from start to node n (accumulated fuel consumption)
-  h(n) = heuristic estimate of cost from node n to goal
-
-Heuristic:
-  h(n) = distance_to_goal &times; minimum_fuel_rate
-  (admissible: never overestimates actual cost)
-
-Move cost (node m to neighbor n):
-  cost(m, n) = fuel_consumption(m, n, optimal_speed)
-
-  Where fuel_consumption accounts for:
-    - Calm water resistance (Holtrop-Mennen)
-    - Wind resistance (Blendermann) at local wind conditions
-    - Wave resistance (Kwon) at local wave conditions
-    - Engine SFOC at resulting load
-    - Safety penalty multiplier (1.0x safe, 1.5x marginal, &infin; dangerous)
-
-Diagonal cost:
-  cost_diagonal = sqrt(2) &times; cost_cardinal
+                    \[f(n) = g(n) + h(n)\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(f(n)\) = total estimated cost of path through node \(n\)</li>
+                            <li>\(g(n)\) = actual cost from start to node \(n\) (accumulated fuel consumption)</li>
+                            <li>\(h(n)\) = heuristic estimate of cost from node \(n\) to goal</li>
+                        </ul>
+                    </div>
+                    <p>Heuristic:</p>
+                    \[h(n) = d_{\text{goal}} \times r_{\text{fuel,min}}\]
+                    <p>(admissible: never overestimates actual cost)</p>
+                    <p>Move cost (node \(m\) to neighbor \(n\)):</p>
+                    \[\text{cost}(m, n) = \text{fuel\_consumption}(m, n, V_{\text{optimal}})\]
+                    <div class="formula-where">
+                        <p>Where fuel_consumption accounts for:</p>
+                        <ul>
+                            <li>Calm water resistance (Holtrop-Mennen)</li>
+                            <li>Wind resistance (Blendermann) at local wind conditions</li>
+                            <li>Wave resistance (Kwon) at local wave conditions</li>
+                            <li>Engine SFOC at resulting load</li>
+                            <li>Safety penalty multiplier (\(1.0\times\) safe, \(1.5\times\) marginal, \(\infty\) dangerous)</li>
+                        </ul>
+                    </div>
+                    <p>Diagonal cost:</p>
+                    \[\text{cost}_{\text{diagonal}} = \sqrt{2} \times \text{cost}_{\text{cardinal}}\]
                 </div>
 
                 <h3>Search Procedure</h3>
@@ -1305,15 +1327,11 @@ Diagonal cost:
 
                 <div class="formula-block">
                     <div class="formula-title">Speed Optimization Objective</div>
-For each leg i with distance d_i and weather conditions w_i:
-
-  optimal_speed_i = argmin_{V} [ fuel(V, w_i) / d_i ]
-
-  Subject to:
-    6 kts &le; V &le; 18 kts
-    P_brake(V, w_i) &le; P_MCR
-
-fuel(V, w_i) = P_brake(V, w_i) &times; SFOC(load) &times; (d_i / V) / 10^6
+                    <p>For each leg \(i\) with distance \(d_i\) and weather conditions \(w_i\):</p>
+                    \[V_i^* = \arg\min_{V} \left[ \frac{\text{fuel}(V, w_i)}{d_i} \right]\]
+                    <p>Subject to:</p>
+                    \[6 \; \text{kts} \le V \le 18 \; \text{kts}, \quad P_{\text{brake}}(V, w_i) \le P_{MCR}\]
+                    \[\text{fuel}(V, w_i) = \frac{P_{\text{brake}}(V, w_i) \times \text{SFOC}(\text{load}) \times (d_i / V)}{10^6}\]
                 </div>
 
                 <p>
@@ -1405,28 +1423,32 @@ fuel(V, w_i) = P_brake(V, w_i) &times; SFOC(load) &times; (d_i / V) / 10^6
 
                 <div class="formula-block">
                     <div class="formula-title">Attained Carbon Intensity Indicator</div>
-Attained CII = (Total CO2 [MT] &times; 10^6) / (Capacity [DWT] &times; Distance [nm])
-
-Unit: grams CO2 per deadweight-tonne per nautical mile [g CO2 / DWT.nm]
-
-Where:
-  Total CO2 = Total fuel consumed [MT] &times; CO2 emission factor [g CO2 / g fuel]
-  Capacity  = vessel DWT (49,000 MT for MR tanker)
-  Distance  = total voyage distance [nm]
+                    \[\text{CII}_{\text{attained}} = \frac{\text{Total CO}_2 \; [\text{MT}] \times 10^6}{\text{Capacity} \; [\text{DWT}] \times \text{Distance} \; [\text{nm}]}\]
+                    <p>Unit: grams CO<sub>2</sub> per deadweight-tonne per nautical mile [g CO<sub>2</sub> / DWT&middot;nm]</p>
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>Total CO<sub>2</sub> = Total fuel consumed [MT] \(\times\) CO<sub>2</sub> emission factor [g CO<sub>2</sub> / g fuel]</li>
+                            <li>Capacity = vessel DWT (49,000 MT for MR tanker)</li>
+                            <li>Distance = total voyage distance [nm]</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <h3>Required CII</h3>
 
                 <div class="formula-block">
                     <div class="formula-title">Required CII with Annual Reduction</div>
-Reference CII = a &times; Capacity^(-c)
-
-Required CII = Reference CII &times; (1 - Z / 100)
-
-Where:
-  a = 5247          (tanker reference parameter, MEPC.339(76))
-  c = 0.610         (tanker capacity exponent, MEPC.339(76))
-  Z = reduction factor (% per year, increasing annually)
+                    \[\text{CII}_{\text{ref}} = a \cdot \text{Capacity}^{-c}\]
+                    \[\text{CII}_{\text{req}} = \text{CII}_{\text{ref}} \times \left(1 - \frac{Z}{100}\right)\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(a = 5247\) (tanker reference parameter, MEPC.339(76))</li>
+                            <li>\(c = 0.610\) (tanker capacity exponent, MEPC.339(76))</li>
+                            <li>\(Z\) = reduction factor (% per year, increasing annually)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <h3>Rating Boundaries</h3>
@@ -1974,13 +1996,14 @@ Where:
 
                 <div class="formula-block">
                     <div class="formula-title">Exponential Correlation Matrix</div>
-cov(i, j) = exp(-|t<sub>i</sub> - t<sub>j</sub>| / &tau;)
-
-where t &in; [0, 1] is normalised time along the voyage
-&tau; = 0.3 (correlation length as fraction of voyage duration)
-
-Cholesky decomposition: L &middot; L<sup>T</sup> = cov
-Correlated normals: z = L &middot; &epsilon;,  &epsilon; ~ N(0, I)
+                    \[\text{cov}(i, j) = \exp\!\left(-\frac{|t_i - t_j|}{\tau}\right)\]
+                    <div class="formula-where">
+                        <p>where \(t \in [0, 1]\) is normalised time along the voyage, \(\tau = 0.3\) (correlation length as fraction of voyage duration)</p>
+                    </div>
+                    <p>Cholesky decomposition:</p>
+                    \[L \cdot L^T = \text{cov}\]
+                    <p>Correlated normals:</p>
+                    \[\mathbf{z} = L \cdot \boldsymbol{\varepsilon}, \quad \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, I)\]
                 </div>
 
                 <p>
@@ -1997,9 +2020,8 @@ Correlated normals: z = L &middot; &epsilon;,  &epsilon; ~ N(0, I)
                 </p>
                 <div class="formula-block">
                     <div class="formula-title">Wind&ndash;Wave Coupling</div>
-z<sub>wave</sub> = 0.7 &middot; z<sub>wind</sub> + &radic;(1 - 0.7&sup2;) &middot; z<sub>wave,indep</sub>
-
-factor<sub>wave</sub> = exp(&sigma;<sub>wave</sub> &middot; z<sub>wave</sub> - 0.5 &middot; &sigma;<sub>wave</sub>&sup2;)
+                    \[z_{\text{wave}} = 0.7 \cdot z_{\text{wind}} + \sqrt{1 - 0.7^2} \cdot z_{\text{wave,indep}}\]
+                    \[f_{\text{wave}} = \exp\!\left(\sigma_{\text{wave}} \cdot z_{\text{wave}} - 0.5 \cdot \sigma_{\text{wave}}^2\right)\]
                 </div>
 
                 <h3>API Usage</h3>
@@ -2147,21 +2169,21 @@ Response:
 
                 <div class="formula-block">
                     <div class="formula-title">Calibration Objective Function</div>
-Objective: minimize RMSE
-
-  RMSE = sqrt( (1/N) &times; &Sigma;(fuel_predicted_i - fuel_actual_i)&sup2; )
-
-Predicted fuel for each reporting period:
-  R_total = k_calm &times; R_calm + k_wind &times; R_wind + k_wave &times; R_wave
-  fuel_predicted = f(R_total, speed, distance, SFOC)
-
-Calibration factors (decision variables):
-  k_calm  &in; [0.5, 2.0]   (calm water resistance multiplier)
-  k_wind  &in; [0.5, 2.0]   (wind resistance multiplier)
-  k_wave  &in; [0.5, 2.0]   (wave resistance multiplier)
-
-Initial values: k_calm = k_wind = k_wave = 1.0
-Method: Nelder-Mead (derivative-free simplex)
+                    <p>Objective: minimize RMSE</p>
+                    \[\text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} \bigl(\text{fuel}_{\text{predicted},i} - \text{fuel}_{\text{actual},i}\bigr)^2}\]
+                    <p>Predicted fuel for each reporting period:</p>
+                    \[R_{\text{total}} = k_{\text{calm}} \cdot R_{\text{calm}} + k_{\text{wind}} \cdot R_{\text{wind}} + k_{\text{wave}} \cdot R_{\text{wave}}\]
+                    \[\text{fuel}_{\text{predicted}} = f(R_{\text{total}},\; V,\; d,\; \text{SFOC})\]
+                    <div class="formula-where">
+                        <p>Calibration factors (decision variables):</p>
+                        <ul>
+                            <li>\(k_{\text{calm}} \in [0.5, 2.0]\) (calm water resistance multiplier)</li>
+                            <li>\(k_{\text{wind}} \in [0.5, 2.0]\) (wind resistance multiplier)</li>
+                            <li>\(k_{\text{wave}} \in [0.5, 2.0]\) (wave resistance multiplier)</li>
+                        </ul>
+                        <p>Initial values: \(k_{\text{calm}} = k_{\text{wind}} = k_{\text{wave}} = 1.0\)</p>
+                        <p>Method: Nelder-Mead (derivative-free simplex)</p>
+                    </div>
                 </div>
 
                 <h3>Interpretation of Calibration Factors</h3>
@@ -2284,6 +2306,18 @@ Method: Nelder-Mead (derivative-free simplex)
 
         window.addEventListener('scroll', setActiveLink);
         setActiveLink();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
     });
 </script>
 

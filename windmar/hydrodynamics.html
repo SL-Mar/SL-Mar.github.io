@@ -6,6 +6,9 @@
     <title>Windmar - Hydrodynamic Modelling and Response Amplitude Operators</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -249,18 +252,20 @@
 
                 <div class="formula-block">
                     <div class="formula-title">Froude Number</div>
-Fn = v / &radic;(g &middot; L<sub>pp</sub>)
-
-where v is the ship speed through water [m/s]
-      g = 9.81 m/s&sup2;
-      L<sub>pp</sub> = 176.0 m
+\[ Fn = \frac{v}{\sqrt{g \cdot L_{pp}}} \]
+<div class="formula-where">
+where \( v \) is the ship speed through water [m/s]<br>
+\( g = 9.81 \) m/s&sup2;<br>
+\( L_{pp} = 176.0 \) m
+</div>
                 </div>
 
                 <div class="formula-block">
                     <div class="formula-title">Reynolds Number</div>
-Re = v &middot; L<sub>pp</sub> / &nu;<sub>sw</sub>
-
-where &nu;<sub>sw</sub> = 1.19 &times; 10<sup>-6</sup> m&sup2;/s
+\[ Re = \frac{v \cdot L_{pp}}{\nu_{sw}} \]
+<div class="formula-where">
+where \( \nu_{sw} = 1.19 \times 10^{-6} \) m&sup2;/s
+</div>
                 </div>
 
                 <h3>2.3 Frictional Resistance</h3>
@@ -276,21 +281,21 @@ where &nu;<sub>sw</sub> = 1.19 &times; 10<sup>-6</sup> m&sup2;/s
 
                 <div class="formula-block">
                     <div class="formula-title">ITTC-1957 Friction Coefficient</div>
-C<sub>f</sub> = 0.075 / (log<sub>10</sub>(Re) - 2)&sup2;
+\[ C_f = \frac{0.075}{(\log_{10} Re - 2)^2} \]
                 </div>
 
                 <div class="formula-block">
                     <div class="formula-title">Hull Roughness Allowance</div>
-&Delta;C<sub>f</sub> = 0.00025
+\[ \Delta C_f = 0.00025 \]
                 </div>
 
                 <div class="formula-block">
                     <div class="formula-title">Form Factor (Holtrop-Mennen Regression)</div>
-k<sub>1</sub> = 0.93 + 0.4871 &middot; (B / L<sub>pp</sub>) - 0.2156 &middot; (B / T) + 0.1027 &middot; C<sub>b</sub>
-
-k<sub>1</sub> = max(0.1, k<sub>1</sub>)
-
-where B = beam [m], T = draft [m], C<sub>b</sub> = block coefficient
+\[ k_1 = 0.93 + 0.4871 \cdot \frac{B}{L_{pp}} - 0.2156 \cdot \frac{B}{T} + 0.1027 \cdot C_b \]
+\[ k_1 = \max(0.1,\; k_1) \]
+<div class="formula-where">
+where \( B \) = beam [m], \( T \) = draft [m], \( C_b \) = block coefficient
+</div>
                 </div>
 
                 <p>
@@ -303,9 +308,10 @@ where B = beam [m], T = draft [m], C<sub>b</sub> = block coefficient
 
                 <div class="formula-block">
                     <div class="formula-title">Frictional Resistance</div>
-R<sub>f</sub> = &frac12; &middot; &rho;<sub>sw</sub> &middot; v&sup2; &middot; S &middot; (C<sub>f</sub> + &Delta;C<sub>f</sub>) &middot; (1 + k<sub>1</sub>)
-
-where S = wetted surface area [m&sup2;]
+\[ R_f = \tfrac{1}{2}\,\rho_{sw}\,v^2\,S\,(C_f + \Delta C_f)\,(1 + k_1) \]
+<div class="formula-where">
+where \( S \) = wetted surface area [m&sup2;]
+</div>
                 </div>
 
                 <h3>2.4 Wave-Making Resistance</h3>
@@ -319,7 +325,7 @@ where S = wetted surface area [m&sup2;]
 
                 <div class="formula-block">
                     <div class="formula-title">Wave-Making Resistance</div>
-R<sub>w</sub> = 4 &middot; Fn&sup2; &middot; R<sub>f</sub>
+\[ R_w = 4 \cdot Fn^2 \cdot R_f \]
                 </div>
 
                 <h3>2.5 Appendage Resistance</h3>
@@ -331,13 +337,13 @@ R<sub>w</sub> = 4 &middot; Fn&sup2; &middot; R<sub>f</sub>
 
                 <div class="formula-block">
                     <div class="formula-title">Appendage Resistance</div>
-R<sub>app</sub> = 0.05 &middot; R<sub>f</sub>
+\[ R_{\text{app}} = 0.05 \cdot R_f \]
                 </div>
 
                 <h3>2.6 Total Calm-Water Resistance</h3>
                 <div class="formula-block">
                     <div class="formula-title">Total Calm-Water Resistance</div>
-R<sub>total,calm</sub> = R<sub>f</sub> + R<sub>w</sub> + R<sub>app</sub>
+\[ R_{\text{total,calm}} = R_f + R_w + R_{\text{app}} \]
                 </div>
 
                 <p>
@@ -376,13 +382,13 @@ R<sub>total,calm</sub> = R<sub>f</sub> + R<sub>w</sub> + R<sub>app</sub>
 
                 <div class="formula-block">
                     <div class="formula-title">STAWAVE-1 Added Resistance in Waves</div>
-R<sub>AW</sub> = (1/16) &middot; &rho;<sub>sw</sub> &middot; g &middot; H<sub>s</sub>&sup2; &middot; B &middot; &radic;(B / L<sub>pp</sub>) &middot; &alpha;<sub>BK</sub> &middot; f<sub>dir</sub>
-
-where H<sub>s</sub> = significant wave height [m]
-      B = beam = 32.0 m
-      L<sub>pp</sub> = 176.0 m
-      &alpha;<sub>BK</sub> &asymp; 1.0 for C<sub>b</sub> &gt; 0.75
-      f<sub>dir</sub> = directional factor
+\[ R_{AW} = \frac{1}{16}\,\rho_{sw}\,g\,H_s^2\,B\,\sqrt{\frac{B}{L_{pp}}}\;\alpha_{BK}\;f_{\text{dir}} \]
+<div class="formula-where">
+where \( H_s \) = significant wave height [m]<br>
+\( B = 32.0 \) m, \( L_{pp} = 176.0 \) m<br>
+\( \alpha_{BK} \approx 1.0 \) for \( C_b > 0.75 \)<br>
+\( f_{\text{dir}} \) = directional factor
+</div>
                 </div>
 
                 <p>
@@ -403,14 +409,14 @@ where H<sub>s</sub> = significant wave height [m]
 
                 <div class="formula-block">
                     <div class="formula-title">Directional Factor</div>
-&alpha;<sub>rel</sub> = |((wave_dir - heading) + 180) mod 360 - 180|
-
-f<sub>dir</sub> = (1 + cos(&alpha;<sub>rel</sub>)) / 2
-
-where &alpha;<sub>rel</sub> is the relative wave encounter angle [degrees]
-      f<sub>dir</sub> = 1.0 for head seas (&alpha;<sub>rel</sub> = 0&deg;)
-      f<sub>dir</sub> = 0.5 for beam seas (&alpha;<sub>rel</sub> = 90&deg;)
-      f<sub>dir</sub> = 0.0 for following seas (&alpha;<sub>rel</sub> = 180&deg;)
+\[ \alpha_{\text{rel}} = \bigl|(\text{wave\_dir} - \text{heading} + 180) \bmod 360 - 180\bigr| \]
+\[ f_{\text{dir}} = \frac{1 + \cos(\alpha_{\text{rel}})}{2} \]
+<div class="formula-where">
+where \( \alpha_{\text{rel}} \) is the relative wave encounter angle [degrees]<br>
+\( f_{\text{dir}} = 1.0 \) for head seas (\( \alpha_{\text{rel}} = 0° \))<br>
+\( f_{\text{dir}} = 0.5 \) for beam seas (\( \alpha_{\text{rel}} = 90° \))<br>
+\( f_{\text{dir}} = 0.0 \) for following seas (\( \alpha_{\text{rel}} = 180° \))
+</div>
                 </div>
 
                 <p>
@@ -472,22 +478,23 @@ where &alpha;<sub>rel</sub> is the relative wave encounter angle [degrees]
 
                 <div class="formula-block">
                     <div class="formula-title">Relative Wind Angle</div>
-&alpha;<sub>rel</sub> = |((wind_dir - heading) + 180) mod 360 - 180|
-
-where wind_dir = true wind direction [degrees, meteorological convention]
-      heading = vessel heading [degrees true]
+\[ \alpha_{\text{rel}} = \bigl|(\text{wind\_dir} - \text{heading} + 180) \bmod 360 - 180\bigr| \]
+<div class="formula-where">
+where wind_dir = true wind direction [degrees, meteorological convention]<br>
+heading = vessel heading [degrees true]
+</div>
                 </div>
 
                 <h3>4.3 Longitudinal Drag Component</h3>
                 <div class="formula-block">
                     <div class="formula-title">Longitudinal Wind Resistance</div>
-C<sub>x</sub> = 0.8 &middot; cos(&alpha;<sub>rel</sub>)
-
-R<sub>wind,direct</sub> = max(0, C<sub>x</sub>) &middot; &frac12; &middot; &rho;<sub>air</sub> &middot; v<sub>wind</sub>&sup2; &middot; A<sub>f</sub>
-
-where &rho;<sub>air</sub> = 1.225 kg/m&sup3;
-      v<sub>wind</sub> = true wind speed [m/s]
-      A<sub>f</sub> = frontal projected area [m&sup2;]
+\[ C_x = 0.8 \cdot \cos(\alpha_{\text{rel}}) \]
+\[ R_{\text{wind,direct}} = \max(0,\; C_x) \cdot \tfrac{1}{2}\,\rho_{\text{air}}\,v_{\text{wind}}^2\,A_f \]
+<div class="formula-where">
+where \( \rho_{\text{air}} = 1.225 \) kg/m&sup3;<br>
+\( v_{\text{wind}} \) = true wind speed [m/s]<br>
+\( A_f \) = frontal projected area [m&sup2;]
+</div>
                 </div>
 
                 <p>
@@ -500,11 +507,11 @@ where &rho;<sub>air</sub> = 1.225 kg/m&sup3;
                 <h3>4.4 Transverse Drift Component</h3>
                 <div class="formula-block">
                     <div class="formula-title">Transverse Wind Resistance (Drift Penalty)</div>
-C<sub>y</sub> = 0.9 &middot; |sin(&alpha;<sub>rel</sub>)|
-
-R<sub>wind,drift</sub> = 0.1 &middot; C<sub>y</sub> &middot; &frac12; &middot; &rho;<sub>air</sub> &middot; v<sub>wind</sub>&sup2; &middot; A<sub>L</sub>
-
-where A<sub>L</sub> = lateral projected area [m&sup2;]
+\[ C_y = 0.9 \cdot |\sin(\alpha_{\text{rel}})| \]
+\[ R_{\text{wind,drift}} = 0.1 \cdot C_y \cdot \tfrac{1}{2}\,\rho_{\text{air}}\,v_{\text{wind}}^2\,A_L \]
+<div class="formula-where">
+where \( A_L \) = lateral projected area [m&sup2;]
+</div>
                 </div>
 
                 <p>
@@ -519,7 +526,7 @@ where A<sub>L</sub> = lateral projected area [m&sup2;]
                 <h3>4.5 Total Wind Resistance</h3>
                 <div class="formula-block">
                     <div class="formula-title">Total Wind Resistance</div>
-R<sub>wind</sub> = R<sub>wind,direct</sub> + R<sub>wind,drift</sub>
+\[ R_{\text{wind}} = R_{\text{wind,direct}} + R_{\text{wind,drift}} \]
                 </div>
             </section>
 
@@ -550,13 +557,13 @@ R<sub>wind</sub> = R<sub>wind,direct</sub> + R<sub>wind,drift</sub>
 
                 <div class="formula-block">
                     <div class="formula-title">Current Component Along Track</div>
-v<sub>current,along</sub> = v<sub>current</sub> &middot; cos(&theta;<sub>current</sub> - &theta;<sub>heading</sub>)
-
-SOG = STW + v<sub>current,along</sub>
-
-where v<sub>current</sub> = current speed [m/s]
-      &theta;<sub>current</sub> = current direction (towards) [degrees]
-      &theta;<sub>heading</sub> = vessel heading [degrees]
+\[ v_{\text{current,along}} = v_{\text{current}} \cdot \cos(\theta_{\text{current}} - \theta_{\text{heading}}) \]
+\[ \text{SOG} = \text{STW} + v_{\text{current,along}} \]
+<div class="formula-where">
+where \( v_{\text{current}} \) = current speed [m/s]<br>
+\( \theta_{\text{current}} \) = current direction (towards) [degrees]<br>
+\( \theta_{\text{heading}} \) = vessel heading [degrees]
+</div>
                 </div>
 
                 <p>
@@ -621,18 +628,14 @@ where v<sub>current</sub> = current speed [m/s]
 
                 <div class="formula-block">
                     <div class="formula-title">Wave and Encounter Frequencies</div>
-&lambda; = g &middot; T<sub>p</sub>&sup2; / (2&pi;)          (wavelength)
-
-&omega;<sub>wave</sub> = 2&pi; / T<sub>p</sub>              (wave circular frequency)
-
-&psi;<sub>e</sub> = (wave_dir - heading + 180) mod 360    (encounter angle)
-
-&omega;<sub>e</sub> = |&omega;<sub>wave</sub> - &omega;<sub>wave</sub>&sup2; &middot; v &middot; cos(&psi;<sub>e</sub>) / g|
-
-T<sub>e</sub> = 2&pi; / &omega;<sub>e</sub>                (encounter period)
-
-where T<sub>p</sub> = peak wave period [s]
-      v = ship speed [m/s]
+\[ \lambda = \frac{g \cdot T_p^2}{2\pi} \quad\text{(wavelength)} \]
+\[ \omega_{\text{wave}} = \frac{2\pi}{T_p} \quad\text{(wave circular frequency)} \]
+\[ \psi_e = (\text{wave\_dir} - \text{heading} + 180) \bmod 360 \quad\text{(encounter angle)} \]
+\[ \omega_e = \left|\omega_{\text{wave}} - \frac{\omega_{\text{wave}}^2 \cdot v \cdot \cos(\psi_e)}{g}\right| \]
+\[ T_e = \frac{2\pi}{\omega_e} \quad\text{(encounter period)} \]
+<div class="formula-where">
+where \( T_p \) = peak wave period [s], \( v \) = ship speed [m/s]
+</div>
                 </div>
 
                 <p>
@@ -655,18 +658,16 @@ where T<sub>p</sub> = peak wave period [s]
 
                 <div class="formula-block">
                     <div class="formula-title">Roll Response Amplitude Operator</div>
-&omega;<sub>roll</sub> = 2&pi; / T<sub>roll</sub>          (natural roll frequency)
-
-r = &omega;<sub>e</sub> / &omega;<sub>roll</sub>            (frequency ratio)
-
-RAO = 1 / &radic;((1 - r&sup2;)&sup2; + (2&zeta;r)&sup2;)
-
-where &zeta; = 0.05 (roll damping ratio)
-
-Roll amplitude:
-&phi;<sub>roll</sub> = arcsin(a &middot; RAO &middot; (H<sub>s</sub> / 2))
-
-where a is the effective wave slope coefficient
+\[ \omega_{\text{roll}} = \frac{2\pi}{T_{\text{roll}}} \quad\text{(natural roll frequency)} \]
+\[ r = \frac{\omega_e}{\omega_{\text{roll}}} \quad\text{(frequency ratio)} \]
+\[ \text{RAO} = \frac{1}{\sqrt{(1 - r^2)^2 + (2\zeta r)^2}} \]
+<div class="formula-where">
+where \( \zeta = 0.05 \) (roll damping ratio)
+</div>
+\[ \phi_{\text{roll}} = \arcsin\!\bigl(a \cdot \text{RAO} \cdot (H_s / 2)\bigr) \]
+<div class="formula-where">
+where \( a \) is the effective wave slope coefficient
+</div>
                 </div>
 
                 <p>
@@ -688,10 +689,11 @@ where a is the effective wave slope coefficient
 
                 <div class="formula-block">
                     <div class="formula-title">RSS Combination of Responses</div>
-&phi;<sub>combined</sub> = &radic;(&phi;<sub>ww</sub>&sup2; + &phi;<sub>sw</sub>&sup2;)
-
-where &phi;<sub>ww</sub> = response to wind-waves
-      &phi;<sub>sw</sub> = response to swell
+\[ \phi_{\text{combined}} = \sqrt{\phi_{ww}^2 + \phi_{sw}^2} \]
+<div class="formula-where">
+where \( \phi_{ww} \) = response to wind-waves<br>
+\( \phi_{sw} \) = response to swell
+</div>
                 </div>
 
                 <h3>6.5 Slamming Probability (Ochi Method)</h3>
@@ -704,14 +706,13 @@ where &phi;<sub>ww</sub> = response to wind-waves
 
                 <div class="formula-block">
                     <div class="formula-title">Slamming Probability (Ochi 1964)</div>
-r<sub>emerg</sub> = bow_freeboard / (H<sub>s</sub> / 2)     (relative freeboard ratio)
-
-p<sub>emerg</sub> = exp(-2 &middot; r<sub>emerg</sub>&sup2;)   (probability of bow emergence)
-
-p<sub>slam</sub> = p<sub>emerg</sub> &middot; f<sub>head</sub> &middot; f<sub>speed</sub>
-
-where f<sub>head</sub> = heading correction factor (higher in head seas)
-      f<sub>speed</sub> = speed correction factor (higher at greater speeds)
+\[ r_{\text{emerg}} = \frac{\text{bow\_freeboard}}{H_s / 2} \quad\text{(relative freeboard ratio)} \]
+\[ p_{\text{emerg}} = \exp\!\bigl(-2\,r_{\text{emerg}}^2\bigr) \quad\text{(probability of bow emergence)} \]
+\[ p_{\text{slam}} = p_{\text{emerg}} \cdot f_{\text{head}} \cdot f_{\text{speed}} \]
+<div class="formula-where">
+where \( f_{\text{head}} \) = heading correction factor (higher in head seas)<br>
+\( f_{\text{speed}} \) = speed correction factor (higher at greater speeds)
+</div>
                 </div>
 
                 <p>
@@ -733,11 +734,11 @@ where f<sub>head</sub> = heading correction factor (higher in head seas)
 
                 <div class="formula-block">
                     <div class="formula-title">Parametric Roll Criterion</div>
-r<sub>period</sub> = T<sub>e</sub> / (T<sub>roll</sub> / 2)
-
-Parametric roll is flagged when r<sub>period</sub> &asymp; 1.0
-
+\[ r_{\text{period}} = \frac{T_e}{T_{\text{roll}} / 2} \]
+<div class="formula-where">
+Parametric roll is flagged when \( r_{\text{period}} \approx 1.0 \)<br>
 i.e., when the encounter period equals half the natural roll period
+</div>
                 </div>
 
                 <p>
@@ -832,13 +833,13 @@ i.e., when the encounter period equals half the natural roll period
                 <h3>7.1 Propulsive Efficiency Chain</h3>
                 <div class="formula-block">
                     <div class="formula-title">Overall Propulsive Coefficient</div>
-&eta;<sub>total</sub> = &eta;<sub>prop</sub> &times; &eta;<sub>hull</sub> &times; &eta;<sub>rr</sub>
-
-&eta;<sub>total</sub> = 0.65 &times; 1.05 &times; 1.00 = 0.6825
-
-where &eta;<sub>prop</sub> = propeller open-water efficiency = 0.65
-      &eta;<sub>hull</sub> = hull efficiency = 1.05
-      &eta;<sub>rr</sub>   = relative rotative efficiency = 1.00
+\[ \eta_{\text{total}} = \eta_{\text{prop}} \times \eta_{\text{hull}} \times \eta_{rr} \]
+\[ \eta_{\text{total}} = 0.65 \times 1.05 \times 1.00 = 0.6825 \]
+<div class="formula-where">
+where \( \eta_{\text{prop}} \) = propeller open-water efficiency = 0.65<br>
+\( \eta_{\text{hull}} \) = hull efficiency = 1.05<br>
+\( \eta_{rr} \) = relative rotative efficiency = 1.00
+</div>
                 </div>
 
                 <p>
@@ -853,11 +854,12 @@ where &eta;<sub>prop</sub> = propeller open-water efficiency = 0.65
                 <h3>7.2 Brake Power Requirement</h3>
                 <div class="formula-block">
                     <div class="formula-title">Brake Power from Total Resistance</div>
-P<sub>B</sub> = R<sub>total</sub> &middot; v / &eta;<sub>total</sub>
-
-where R<sub>total</sub> = R<sub>calm</sub> + R<sub>AW</sub> + R<sub>wind</sub> [N]
-      v = ship speed through water [m/s]
-      &eta;<sub>total</sub> = 0.6825
+\[ P_B = \frac{R_{\text{total}} \cdot v}{\eta_{\text{total}}} \]
+<div class="formula-where">
+where \( R_{\text{total}} = R_{\text{calm}} + R_{AW} + R_{\text{wind}} \) [N]<br>
+\( v \) = ship speed through water [m/s]<br>
+\( \eta_{\text{total}} = 0.6825 \)
+</div>
                 </div>
 
                 <p>
@@ -890,15 +892,11 @@ where R<sub>total</sub> = R<sub>calm</sub> + R<sub>AW</sub> + R<sub>wind</sub> [
 
                 <div class="formula-block">
                     <div class="formula-title">SFOC Curve</div>
-Load fraction: LF = P<sub>B</sub> / MCR,  clamped to [0.15, 1.0]
-
-If LF &lt; 0.75:
-    SFOC = SFOC<sub>MCR</sub> &middot; (1.0 + 0.15 &middot; (0.75 - LF))
-
-If LF &ge; 0.75:
-    SFOC = SFOC<sub>MCR</sub> &middot; (1.0 + 0.05 &middot; (LF - 0.75))
-
-where SFOC<sub>MCR</sub> = 171 g/kWh
+\[ LF = \frac{P_B}{\text{MCR}}, \quad \text{clamped to } [0.15,\; 1.0] \]
+\[ \text{SFOC} = \begin{cases} \text{SFOC}_{\text{MCR}} \cdot (1.0 + 0.15 \cdot (0.75 - LF)) & \text{if } LF < 0.75 \\ \text{SFOC}_{\text{MCR}} \cdot (1.0 + 0.05 \cdot (LF - 0.75)) & \text{if } LF \ge 0.75 \end{cases} \]
+<div class="formula-where">
+where \( \text{SFOC}_{\text{MCR}} = 171 \) g/kWh
+</div>
                 </div>
 
                 <p>
@@ -912,12 +910,13 @@ where SFOC<sub>MCR</sub> = 171 g/kWh
                 <h3>7.5 Fuel Consumption Calculation</h3>
                 <div class="formula-block">
                     <div class="formula-title">Fuel Consumption</div>
-fuel<sub>MT</sub> = P<sub>B</sub> &middot; SFOC &middot; t / 10<sup>6</sup>
-
-where P<sub>B</sub> = brake power [kW]
-      SFOC = specific fuel oil consumption [g/kWh]
-      t = transit time for the leg [hours]
-      10<sup>6</sup> converts grams to metric tonnes
+\[ \text{fuel}_{\text{MT}} = \frac{P_B \cdot \text{SFOC} \cdot t}{10^6} \]
+<div class="formula-where">
+where \( P_B \) = brake power [kW]<br>
+SFOC = specific fuel oil consumption [g/kWh]<br>
+\( t \) = transit time for the leg [hours]<br>
+\( 10^6 \) converts grams to metric tonnes
+</div>
                 </div>
 
                 <p>
@@ -1008,13 +1007,14 @@ where P<sub>B</sub> = brake power [kW]
 
                 <div class="formula-block">
                     <div class="formula-title">Calibration Objective Function</div>
-min  &Sigma;<sub>i=1..N</sub> (fuel<sub>predicted,i</sub>(f<sub>calm</sub>, f<sub>wind</sub>, f<sub>wave</sub>, f<sub>sfoc</sub>) - fuel<sub>observed,i</sub>)&sup2;
-
-subject to:
-    0.85 &le; f<sub>calm</sub> &le; 1.50
-    0.50 &le; f<sub>wind</sub> &le; 1.50
-    0.50 &le; f<sub>wave</sub> &le; 1.50
-    0.90 &le; f<sub>sfoc</sub> &le; 1.20
+\[ \min \sum_{i=1}^{N} \bigl(\text{fuel}_{\text{predicted},i}(f_{\text{calm}}, f_{\text{wind}}, f_{\text{wave}}, f_{\text{sfoc}}) - \text{fuel}_{\text{observed},i}\bigr)^2 \]
+<div class="formula-where">
+subject to:<br>
+&nbsp;&nbsp;\( 0.85 \le f_{\text{calm}} \le 1.50 \)<br>
+&nbsp;&nbsp;\( 0.50 \le f_{\text{wind}} \le 1.50 \)<br>
+&nbsp;&nbsp;\( 0.50 \le f_{\text{wave}} \le 1.50 \)<br>
+&nbsp;&nbsp;\( 0.90 \le f_{\text{sfoc}} \le 1.20 \)
+</div>
                 </div>
 
                 <p>
@@ -1052,11 +1052,9 @@ subject to:
 
                 <div class="formula-block">
                     <div class="formula-title">Hull Fouling Factor</div>
-fouling = base_rate &middot; months_since_cleaning &middot; zone_multiplier
-
-fouling = min(fouling, 0.20)    (capped at 20%)
-
-R<sub>calm,fouled</sub> = R<sub>calm</sub> &middot; (1 + fouling)
+\[ \text{fouling} = \text{base\_rate} \cdot \text{months\_since\_cleaning} \cdot \text{zone\_multiplier} \]
+\[ \text{fouling} = \min(\text{fouling},\; 0.20) \quad\text{(capped at 20\%)} \]
+\[ R_{\text{calm,fouled}} = R_{\text{calm}} \cdot (1 + \text{fouling}) \]
                 </div>
 
                 <p>
@@ -1174,6 +1172,17 @@ R<sub>calm,fouled</sub> = R<sub>calm</sub> &middot; (1 + fouling)
         }
         window.addEventListener('scroll', setActiveLink);
         setActiveLink();
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
     });
 </script>
 </body>

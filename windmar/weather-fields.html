@@ -6,6 +6,9 @@
     <title>Windmar - Meteorological and Oceanographic Data Fields for Maritime Weather Routing</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -228,13 +231,13 @@
 
                 <div class="formula-block">
                     <div class="formula-title">Wind Speed and Direction from U/V Components</div>
-wind_speed = &radic;(u&sup2; + v&sup2;)
-
-wind_direction = (270 &minus; atan2(v, u) &times; 180 / &pi;) mod 360
-
-where u is the eastward component (m/s)
-      v is the northward component (m/s)
-      wind_direction is in degrees from true north (meteorological convention)
+\[ \text{wind\_speed} = \sqrt{u^2 + v^2} \]
+\[ \text{wind\_direction} = \bigl(270 - \arctan2(v, u) \times \tfrac{180}{\pi}\bigr) \bmod 360 \]
+<div class="formula-where">
+where \( u \) is the eastward component (m/s)<br>
+\( v \) is the northward component (m/s)<br>
+\( \text{wind\_direction} \) is in degrees from true north (meteorological convention)
+</div>
                 </div>
 
                 <p>
@@ -489,15 +492,17 @@ where u is the eastward component (m/s)
 
                 <div class="formula-block">
                     <div class="formula-title">Wave Energy Partition</div>
-H<sub>s</sub>&sup2; &asymp; H<sub>swell</sub>&sup2; + H<sub>windwave</sub>&sup2;
-
-where H<sub>s</sub> = total significant wave height (VHM0)
-      H<sub>swell</sub> = primary swell significant height (VHM0_SW1)
-      H<sub>windwave</sub> = wind-wave significant height (VHM0_WW)
-
-This follows from the additivity of spectral energy (variance):
-  m<sub>0,total</sub> = m<sub>0,swell</sub> + m<sub>0,windwave</sub>
-  (H<sub>s</sub> = 4&radic;m<sub>0</sub>)
+\[ H_s^2 \approx H_{\text{swell}}^2 + H_{\text{windwave}}^2 \]
+<div class="formula-where">
+where \( H_s \) = total significant wave height (VHM0)<br>
+\( H_{\text{swell}} \) = primary swell significant height (VHM0_SW1)<br>
+\( H_{\text{windwave}} \) = wind-wave significant height (VHM0_WW)
+</div>
+<div class="formula-where" style="margin-top: 0.75rem;">
+This follows from the additivity of spectral energy (variance):<br>
+\( m_{0,\text{total}} = m_{0,\text{swell}} + m_{0,\text{windwave}} \)<br>
+\( H_s = 4\sqrt{m_0} \)
+</div>
                 </div>
 
                 <p>
@@ -545,13 +550,13 @@ This follows from the additivity of spectral energy (variance):
 
                 <div class="formula-block">
                     <div class="formula-title">Current Speed and Direction from U/V Components</div>
-current_speed = &radic;(uo&sup2; + vo&sup2;)
-
-current_direction = (270 &minus; atan2(vo, uo) &times; 180 / &pi;) mod 360
-
-where uo is the eastward current velocity (m/s)
-      vo is the northward current velocity (m/s)
-      current_direction is the direction FROM which the current flows (degrees)
+\[ \text{current\_speed} = \sqrt{u_o^2 + v_o^2} \]
+\[ \text{current\_direction} = \bigl(270 - \arctan2(v_o, u_o) \times \tfrac{180}{\pi}\bigr) \bmod 360 \]
+<div class="formula-where">
+where \( u_o \) is the eastward current velocity (m/s)<br>
+\( v_o \) is the northward current velocity (m/s)<br>
+\( \text{current\_direction} \) is the direction FROM which the current flows (degrees)
+</div>
                 </div>
 
                 <p>
@@ -873,6 +878,18 @@ where uo is the eastward current velocity (m/s)
 
         window.addEventListener('scroll', setActiveLink);
         setActiveLink();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
     });
 </script>
 

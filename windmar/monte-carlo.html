@@ -6,6 +6,9 @@
     <title>Windmar - Parametric Monte Carlo Simulation with Temporal Weather Correlation</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -260,10 +263,11 @@
 
                 <div class="formula-block">
                     <div class="formula-title">Number of Time Slices</div>
-n = min(100, max(20, &lfloor;T / 1.2&rfloor;))
-
-where T is the estimated voyage duration in hours
-(T = total_distance / calm_speed)
+\[ n = \min\!\bigl(100,\; \max(20,\; \lfloor T / 1.2 \rfloor)\bigr) \]
+<div class="formula-where">
+where \( T \) is the estimated voyage duration in hours<br>
+(\( T = \text{total\_distance} / \text{calm\_speed} \))
+</div>
                 </div>
 
                 <p>
@@ -331,9 +335,8 @@ where T is the estimated voyage duration in hours
 
                 <div class="formula-block">
                     <div class="formula-title">Forecast Hour Matching</div>
-&Delta;h = (t<sub>i</sub> - t<sub>run</sub>) / 3600
-
-fh<sub>best</sub> = argmin<sub>fh &in; available_hours</sub> |fh - &Delta;h|
+\[ \Delta h = \frac{t_i - t_{\text{run}}}{3600} \]
+\[ fh_{\text{best}} = \operatorname*{argmin}_{fh \,\in\, \text{available\_hours}} |fh - \Delta h| \]
                 </div>
 
                 <p>
@@ -353,19 +356,12 @@ fh<sub>best</sub> = argmin<sub>fh &in; available_hours</sub> |fh - &Delta;h|
 
                 <div class="formula-block">
                     <div class="formula-title">Bilinear Interpolation</div>
-Given grid point (lat, lon) and surrounding grid cells:
-  (lat<sub>0</sub>, lon<sub>0</sub>), (lat<sub>0</sub>, lon<sub>1</sub>),
-  (lat<sub>1</sub>, lon<sub>0</sub>), (lat<sub>1</sub>, lon<sub>1</sub>)
-
-Fractional positions:
-  f<sub>lat</sub> = (lat - lat<sub>0</sub>) / (lat<sub>1</sub> - lat<sub>0</sub>)
-  f<sub>lon</sub> = (lon - lon<sub>0</sub>) / (lon<sub>1</sub> - lon<sub>0</sub>)
-
-Interpolated value:
-  v = (1-f<sub>lat</sub>)(1-f<sub>lon</sub>) v<sub>00</sub>
-    + (1-f<sub>lat</sub>)(f<sub>lon</sub>) v<sub>01</sub>
-    + (f<sub>lat</sub>)(1-f<sub>lon</sub>) v<sub>10</sub>
-    + (f<sub>lat</sub>)(f<sub>lon</sub>) v<sub>11</sub>
+<div class="formula-where">
+Given grid point \( (\text{lat}, \text{lon}) \) and surrounding grid cells:<br>
+\( (\text{lat}_0, \text{lon}_0) \), \( (\text{lat}_0, \text{lon}_1) \), \( (\text{lat}_1, \text{lon}_0) \), \( (\text{lat}_1, \text{lon}_1) \)
+</div>
+\[ f_{\text{lat}} = \frac{\text{lat} - \text{lat}_0}{\text{lat}_1 - \text{lat}_0} \qquad f_{\text{lon}} = \frac{\text{lon} - \text{lon}_0}{\text{lon}_1 - \text{lon}_0} \]
+\[ v = (1 - f_{\text{lat}})(1 - f_{\text{lon}})\,v_{00} + (1 - f_{\text{lat}})\,f_{\text{lon}}\,v_{01} + f_{\text{lat}}(1 - f_{\text{lon}})\,v_{10} + f_{\text{lat}}\,f_{\text{lon}}\,v_{11} \]
                 </div>
 
                 <p>
@@ -396,10 +392,11 @@ Interpolated value:
 
                 <div class="formula-block">
                     <div class="formula-title">Correlation Matrix</div>
-C<sub>ij</sub> = exp(-|t<sub>i</sub> - t<sub>j</sub>| / &tau;)
-
-where t &in; [0, 1] is normalized time along the voyage
-&tau; = 0.3 (correlation length parameter)
+\[ C_{ij} = \exp\!\Bigl(-\frac{|t_i - t_j|}{\tau}\Bigr) \]
+<div class="formula-where">
+where \( t \in [0, 1] \) is normalized time along the voyage<br>
+\( \tau = 0.3 \) (correlation length parameter)
+</div>
                 </div>
 
                 <p>
@@ -415,12 +412,11 @@ where t &in; [0, 1] is normalized time along the voyage
 
                 <div class="formula-block">
                     <div class="formula-title">Cholesky Factorization</div>
-C = L &middot; L<sup>T</sup>
-
-where L is lower-triangular (computed once per simulation batch)
-
-A small diagonal regularization (10<sup>-8</sup> &middot; I) is added for
-numerical stability of the decomposition.
+\[ C = L \cdot L^T \]
+<div class="formula-where">
+where \( L \) is lower-triangular (computed once per simulation batch)<br><br>
+A small diagonal regularization (\( 10^{-8} \cdot I \)) is added for numerical stability of the decomposition.
+</div>
                 </div>
 
                 <p>
@@ -429,10 +425,11 @@ numerical stability of the decomposition.
 
                 <div class="formula-block">
                     <div class="formula-title">Correlated Variate Generation</div>
-z = L &middot; &epsilon;,    &epsilon; ~ N(0, I<sub>n</sub>)
-
-where &epsilon; is a vector of n independent standard normals
-and z has the desired correlation structure: E[z z<sup>T</sup>] = C
+\[ \mathbf{z} = L \cdot \boldsymbol{\varepsilon}, \qquad \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, I_n) \]
+<div class="formula-where">
+where \( \boldsymbol{\varepsilon} \) is a vector of \( n \) independent standard normals<br>
+and \( \mathbf{z} \) has the desired correlation structure: \( \mathbb{E}[\mathbf{z}\,\mathbf{z}^T] = C \)
+</div>
                 </div>
 
                 <p>
@@ -479,14 +476,12 @@ and z has the desired correlation structure: E[z z<sup>T</sup>] = C
 
                 <div class="formula-block">
                     <div class="formula-title">Log-Normal Perturbation Factor</div>
-f = exp(&sigma; &middot; z - &frac12; &sigma;&sup2;)
-
-where z is a correlated standard normal (from Section 5)
-and &sigma; is the parameter-specific log-normal sigma
-
-This ensures E[f] = 1 (unbiased perturbation) and
-the distribution is right-skewed (occasional large values,
-bounded below by zero).
+\[ f = \exp\!\bigl(\sigma \cdot z - \tfrac{1}{2}\sigma^2\bigr) \]
+<div class="formula-where">
+where \( z \) is a correlated standard normal (from Section 5)<br>
+and \( \sigma \) is the parameter-specific log-normal sigma<br><br>
+This ensures \( \mathbb{E}[f] = 1 \) (unbiased perturbation) and the distribution is right-skewed (occasional large values, bounded below by zero).
+</div>
                 </div>
 
                 <h3>6.2 Parameter-Specific Sigmas</h3>
@@ -539,10 +534,11 @@ bounded below by zero).
 
                 <div class="formula-block">
                     <div class="formula-title">Direction Perturbation</div>
-dir' = (dir + &sigma;<sub>dir</sub> &middot; z<sub>dir</sub>) mod 360&deg;
-
-where z<sub>dir</sub> is a temporally correlated standard normal
-and &sigma;<sub>dir</sub> = 15&deg;
+\[ \text{dir}' = (\text{dir} + \sigma_{\text{dir}} \cdot z_{\text{dir}}) \bmod 360° \]
+<div class="formula-where">
+where \( z_{\text{dir}} \) is a temporally correlated standard normal<br>
+and \( \sigma_{\text{dir}} = 15° \)
+</div>
                 </div>
             </section>
 
@@ -561,13 +557,13 @@ and &sigma;<sub>dir</sub> = 15&deg;
 
                 <div class="formula-block">
                     <div class="formula-title">Wind&ndash;Wave Coupled Perturbation</div>
-z<sub>wave</sub> = &rho; &middot; z<sub>wind</sub> + &radic;(1 - &rho;&sup2;) &middot; z<sub>wave,indep</sub>
-
-where &rho; = 0.7 (wind&ndash;wave correlation coefficient)
-
-This gives:
-  Var(z<sub>wave</sub>) = &rho;&sup2; + (1 - &rho;&sup2;) = 1
-  Corr(z<sub>wave</sub>, z<sub>wind</sub>) = &rho; = 0.7
+\[ z_{\text{wave}} = \rho \cdot z_{\text{wind}} + \sqrt{1 - \rho^2} \cdot z_{\text{wave,indep}} \]
+<div class="formula-where">
+where \( \rho = 0.7 \) (wind&ndash;wave correlation coefficient)<br><br>
+This gives:<br>
+\( \text{Var}(z_{\text{wave}}) = \rho^2 + (1 - \rho^2) = 1 \)<br>
+\( \text{Corr}(z_{\text{wave}}, z_{\text{wind}}) = \rho = 0.7 \)
+</div>
                 </div>
 
                 <p>
@@ -874,6 +870,18 @@ This gives:
 
         window.addEventListener('scroll', setActiveLink);
         setActiveLink();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
     });
 </script>
 

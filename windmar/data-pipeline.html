@@ -6,6 +6,9 @@
     <title>Windmar - Data Ingestion and Restitution Pipeline</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -404,7 +407,7 @@ CREATE TABLE weather_grid_data (
 
                 <div class="formula-block">
                     <div class="formula-title">Compression Pipeline</div>
-numpy.ndarray (float64) --> .astype(float32) --> .tobytes() --> zlib.compress() --> BYTEA column
+<div class="formula-pipeline">numpy.ndarray (float64) &rarr; .astype(float32) &rarr; .tobytes() &rarr; zlib.compress() &rarr; BYTEA column</div>
                 </div>
 
                 <p>
@@ -519,7 +522,7 @@ numpy.ndarray (float64) --> .astype(float32) --> .tobytes() --> zlib.compress() 
 
                 <div class="formula-block">
                     <div class="formula-title">Decompression Pipeline</div>
-BYTEA column --> zlib.decompress() --> numpy.frombuffer(dtype=float32) --> reshape(rows, cols)
+<div class="formula-pipeline">BYTEA column &rarr; zlib.decompress() &rarr; numpy.frombuffer(dtype=float32) &rarr; reshape(rows, cols)</div>
                 </div>
 
                 <p>
@@ -545,12 +548,12 @@ BYTEA column --> zlib.decompress() --> numpy.frombuffer(dtype=float32) --> resha
 
                 <div class="formula-block">
                     <div class="formula-title">Spatial Cropping via Boolean Masking</div>
-lat_mask = (lats >= lat_min) & (lats <= lat_max)
-lon_mask = (lons >= lon_min) & (lons <= lon_max)
+<div class="formula-pipeline">lat_mask = (lats >= lat_min) &amp; (lats <= lat_max)
+lon_mask = (lons >= lon_min) &amp; (lons <= lon_max)
 
 lats_cropped = lats[lat_mask]
 lons_cropped = lons[lon_mask]
-data_cropped = data[np.ix_(lat_mask, lon_mask)]
+data_cropped = data[np.ix_(lat_mask, lon_mask)]</div>
                 </div>
 
                 <p>
@@ -626,13 +629,13 @@ data_cropped = data[np.ix_(lat_mask, lon_mask)]
 
                 <div class="formula-block">
                     <div class="formula-title">Temporal Linear Interpolation</div>
-v<sub>final</sub> = v(h<sub>0</sub>) &middot; (1 &minus; &alpha;) + v(h<sub>1</sub>) &middot; &alpha;
-
-where &alpha; = (fh &minus; h<sub>0</sub>) / (h<sub>1</sub> &minus; h<sub>0</sub>)
-
-fh = fractional forecast hour corresponding to the query time
-h<sub>0</sub> = greatest available forecast hour &le; fh
-h<sub>1</sub> = smallest available forecast hour &ge; fh
+\[ v_{\text{final}} = v(h_0) \cdot (1 - \alpha) + v(h_1) \cdot \alpha \]
+\[ \alpha = \frac{fh - h_0}{h_1 - h_0} \]
+<div class="formula-where">
+where \( fh \) = fractional forecast hour corresponding to the query time<br>
+\( h_0 \) = greatest available forecast hour \( \le fh \)<br>
+\( h_1 \) = smallest available forecast hour \( \ge fh \)
+</div>
                 </div>
 
                 <p>
@@ -654,9 +657,8 @@ h<sub>1</sub> = smallest available forecast hour &ge; fh
 
                 <div class="formula-block">
                     <div class="formula-title">U/V to Speed and Direction Conversion</div>
-speed = sqrt(u&sup2; + v&sup2;)
-
-direction = (270&deg; &minus; atan2(v, u)) mod 360&deg;
+\[ \text{speed} = \sqrt{u^2 + v^2} \]
+\[ \text{direction} = (270° - \arctan2(v, u)) \bmod 360° \]
                 </div>
 
                 <p>
@@ -966,6 +968,17 @@ direction = (270&deg; &minus; atan2(v, u)) mod 360&deg;
         }
         window.addEventListener('scroll', setActiveLink);
         setActiveLink();
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
     });
 </script>
 </body>

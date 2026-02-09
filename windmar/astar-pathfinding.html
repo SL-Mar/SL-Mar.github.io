@@ -6,6 +6,9 @@
     <title>Windmar - A* Pathfinding for Maritime Weather Routing</title>
     <link rel="stylesheet" href="assets/css/docs.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -200,13 +203,14 @@
 
                 <div class="formula-block">
                     <div class="formula-title">Objective Function</div>
-minimise  &Sigma;<sub>i=1..N</sub> fuel(leg<sub>i</sub>)
-
-subject to:
-  safety_status(leg<sub>i</sub>) &ne; DANGEROUS    &forall; i
-  waypoint<sub>i</sub> &isin; ocean                 &forall; i
-  waypoint<sub>i</sub> &notin; exclusion_zones      &forall; i
-  6.0 &le; speed<sub>i</sub> &le; 18.0 kts          &forall; i
+\[ \min \sum_{i=1}^{N} \text{fuel}(\text{leg}_i) \]
+<div class="formula-where">
+subject to:<br>
+&nbsp;&nbsp;\( \text{safety\_status}(\text{leg}_i) \ne \text{DANGEROUS} \quad \forall\, i \)<br>
+&nbsp;&nbsp;\( \text{waypoint}_i \in \text{ocean} \quad \forall\, i \)<br>
+&nbsp;&nbsp;\( \text{waypoint}_i \notin \text{exclusion\_zones} \quad \forall\, i \)<br>
+&nbsp;&nbsp;\( 6.0 \le \text{speed}_i \le 18.0 \;\text{kts} \quad \forall\, i \)
+</div>
                 </div>
 
                 <p>
@@ -327,15 +331,15 @@ subject to:
 
                 <div class="formula-block">
                     <div class="formula-title">Haversine Distance Formula</div>
-a = sin&sup2;(&Delta;&phi;/2) + cos(&phi;<sub>1</sub>) &middot; cos(&phi;<sub>2</sub>) &middot; sin&sup2;(&Delta;&lambda;/2)
-
-d = 2 &middot; R &middot; atan2(&radic;a, &radic;(1 &minus; a))
-
-where &phi;<sub>1</sub>, &phi;<sub>2</sub> = latitudes in radians
-      &Delta;&phi; = &phi;<sub>2</sub> &minus; &phi;<sub>1</sub>
-      &Delta;&lambda; = &lambda;<sub>2</sub> &minus; &lambda;<sub>1</sub> (longitude difference)
-      R = 3440.065 nm (Earth radius in nautical miles)
-      d = great-circle distance in nautical miles
+\[ a = \sin^2\!\Bigl(\frac{\Delta\phi}{2}\Bigr) + \cos(\phi_1)\,\cos(\phi_2)\,\sin^2\!\Bigl(\frac{\Delta\lambda}{2}\Bigr) \]
+\[ d = 2\,R\;\arctan2\!\bigl(\sqrt{a},\;\sqrt{1-a}\bigr) \]
+<div class="formula-where">
+where \( \phi_1, \phi_2 \) = latitudes in radians<br>
+\( \Delta\phi = \phi_2 - \phi_1 \)<br>
+\( \Delta\lambda = \lambda_2 - \lambda_1 \) (longitude difference)<br>
+\( R = 3440.065 \) nm (Earth radius in nautical miles)<br>
+\( d \) = great-circle distance in nautical miles
+</div>
                 </div>
 
                 <p>
@@ -345,12 +349,11 @@ where &phi;<sub>1</sub>, &phi;<sub>2</sub> = latitudes in radians
 
                 <div class="formula-block">
                     <div class="formula-title">Initial Bearing Calculation</div>
-&theta; = atan2(sin(&Delta;&lambda;) &middot; cos(&phi;<sub>2</sub>),
-              cos(&phi;<sub>1</sub>) &middot; sin(&phi;<sub>2</sub>) &minus; sin(&phi;<sub>1</sub>) &middot; cos(&phi;<sub>2</sub>) &middot; cos(&Delta;&lambda;))
-
-bearing = (&theta; &times; 180 / &pi;) mod 360
-
+\[ \theta = \arctan2\!\bigl(\sin(\Delta\lambda)\,\cos(\phi_2),\;\cos(\phi_1)\,\sin(\phi_2) - \sin(\phi_1)\,\cos(\phi_2)\,\cos(\Delta\lambda)\bigr) \]
+\[ \text{bearing} = \bigl(\theta \times \tfrac{180}{\pi}\bigr) \bmod 360 \]
+<div class="formula-where">
 where the result is in degrees clockwise from true north
+</div>
                 </div>
             </section>
 
@@ -379,12 +382,12 @@ where the result is in degrees clockwise from true north
 
                 <div class="formula-block">
                     <div class="formula-title">A* Evaluation Function</div>
-f(n) = g(n) + h(n)
-
-where:
-  g(n) = actual accumulated fuel cost from origin to node n (metric tonnes)
-  h(n) = admissible heuristic estimate of remaining fuel cost from n to destination
-  f(n) = estimated total fuel cost of the cheapest path through n
+\[ f(n) = g(n) + h(n) \]
+<div class="formula-where">
+where \( g(n) \) = actual accumulated fuel cost from origin to node \( n \) (metric tonnes)<br>
+\( h(n) \) = admissible heuristic estimate of remaining fuel cost from \( n \) to destination<br>
+\( f(n) \) = estimated total fuel cost of the cheapest path through \( n \)
+</div>
                 </div>
 
                 <p>
@@ -413,13 +416,13 @@ where:
 
                 <div class="formula-block">
                     <div class="formula-title">Admissible Heuristic</div>
-h(n) = (d<sub>gc</sub>(n, goal) / v<sub>max</sub>) &times; r<sub>fuel</sub> &times; 0.8
-
-where:
-  d<sub>gc</sub> = great-circle distance from n to destination (nm)
-  v<sub>max</sub> = maximum service speed (kts)
-  r<sub>fuel</sub> = fuel consumption rate (mt/hour)
-  0.8 = underestimate factor guaranteeing admissibility
+\[ h(n) = \frac{d_{\text{gc}}(n, \text{goal})}{v_{\max}} \times r_{\text{fuel}} \times 0.8 \]
+<div class="formula-where">
+where \( d_{\text{gc}} \) = great-circle distance from \( n \) to destination (nm)<br>
+\( v_{\max} \) = maximum service speed (kts)<br>
+\( r_{\text{fuel}} \) = fuel consumption rate (mt/hour)<br>
+0.8 = underestimate factor guaranteeing admissibility
+</div>
                 </div>
 
                 <h3>4.3 Node Expansion</h3>
@@ -527,15 +530,16 @@ return failure (no path found within max_cells)</code></pre>
 
                 <div class="formula-block">
                     <div class="formula-title">Involuntary Speed Reduction (Cube Law)</div>
-If P<sub>required</sub> &gt; 0.9 &times; P<sub>MCR</sub>:
-
-  speed_reduction_factor = (P<sub>available</sub> / P<sub>required</sub>)<sup>1/3</sup>
-
-  STW<sub>actual</sub> = STW<sub>commanded</sub> &times; speed_reduction_factor
-
-This follows from the cubic relationship P &prop; v&sup3;:
-  reducing speed by factor k reduces power by factor k&sup3;
-  equivalently, reducing power by factor m reduces speed by factor m<sup>1/3</sup>
+<div class="formula-where">
+If \( P_{\text{required}} > 0.9 \times P_{\text{MCR}} \):
+</div>
+\[ \text{speed\_reduction\_factor} = \left(\frac{P_{\text{available}}}{P_{\text{required}}}\right)^{1/3} \]
+\[ \text{STW}_{\text{actual}} = \text{STW}_{\text{commanded}} \times \text{speed\_reduction\_factor} \]
+<div class="formula-where">
+This follows from the cubic relationship \( P \propto v^3 \):<br>
+reducing speed by factor \( k \) reduces power by factor \( k^3 \);<br>
+equivalently, reducing power by factor \( m \) reduces speed by factor \( m^{1/3} \)
+</div>
                 </div>
 
                 <p>
@@ -994,6 +998,18 @@ This follows from the cubic relationship P &prop; v&sup3;:
 
         window.addEventListener('scroll', setActiveLink);
         setActiveLink();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
     });
 </script>
 
