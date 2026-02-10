@@ -219,6 +219,50 @@
                     automatique, mais de fournir aux marins les moyens d&rsquo;analyse pouss&eacute;s pour qu&rsquo;ils r&eacute;alisent
                     eux-m&ecirc;mes les arbitrages.
                 </p>
+
+                <h3>1.1 &Eacute;tat actuel de l&rsquo;impl&eacute;mentation (WindMar v0.0.6)</h3>
+                <p>
+                    Les approches propos&eacute;es dans cet article constituent une feuille de route th&eacute;orique.
+                    Le syst&egrave;me WindMar, dans sa version actuelle (v0.0.6), impl&eacute;mente un pipeline
+                    op&eacute;rationnel qui couvre d&eacute;j&agrave; une partie de la cha&icirc;ne, mais avec des m&eacute;thodes plus
+                    simples que celles propos&eacute;es ici. Il est important de situer pr&eacute;cis&eacute;ment ce qui
+                    existe pour comprendre ce que les trois probl&egrave;mes ouverts ajouteraient.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Axe</th>
+                            <th>Cet article propose</th>
+                            <th>WindMar v0.0.6 impl&eacute;mente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Sc&eacute;narios m&eacute;t&eacute;o</strong><br><em>(probl&egrave;me 1)</em></td>
+                            <td>S&eacute;lection d&rsquo;analogues ERA5 par distance de Wasserstein spatio-temporelle, clustering en 3&ndash;5 sc&eacute;narios nomm&eacute;s, Monte Carlo conditionnel (N = 1 000&ndash;10 000)</td>
+                            <td>Pr&eacute;vision d&eacute;terministe unique (NOAA GFS 0,25&deg;, 5 jours), pr&eacute;-ing&eacute;r&eacute;e dans PostgreSQL sur un cycle de 6 heures. Simulation de Monte Carlo param&eacute;trique (N = 100) avec perturbations corr&eacute;l&eacute;es temporellement (d&eacute;composition de Cholesky), mais appliqu&eacute;es autour de la pr&eacute;vision GFS unique &mdash; pas de recherche d&rsquo;analogues, pas de clustering</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mod&egrave;le navire</strong><br><em>(probl&egrave;me 2)</em></td>
+                            <td>Reconstitution du spectre directionnel \(S(f, \theta)\) &agrave; partir de capteurs embarqu&eacute;s, calibration des param&egrave;tres de r&eacute;sistance par partition spectrale</td>
+                            <td>Mod&egrave;le Holtrop&ndash;Mennen avec param&egrave;tres scalaires d&rsquo;&eacute;tat de mer (\(H_s\), \(T_p\), direction) issus des grilles de pr&eacute;vision. Calibration par moindres carr&eacute;s non lin&eacute;aires (scipy) &agrave; partir de rapports de midi (noon reports). Pas de reconstitution spectrale</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Trajectoires</strong><br><em>(probl&egrave;me 3)</em></td>
+                            <td>Param&eacute;trisation par B-splines cubiques (\(N_c\) = 4&ndash;8 points de contr&ocirc;le) dans un couloir &agrave; d&eacute;croissance exponentielle \(\Delta_0 e^{-t/\tau}\), avec r&eacute;-optimisation MPC</td>
+                            <td>Recherche A* sur grille oc&eacute;anique 8-connect&eacute;e (r&eacute;solution 0,5&deg;), lissage Douglas-Peucker + filtre d&rsquo;angle de giration (&lt; 15&deg;). Deux strat&eacute;gies de vitesse pr&eacute;sent&eacute;es apr&egrave;s optimisation (&laquo; Same Speed &raquo; / &laquo; Match ETA &raquo;). Pas de param&eacute;trisation spline, pas de couloir contraint</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    Le syst&egrave;me actuel fournit donc un routage A* fonctionnel avec m&eacute;t&eacute;o temporelle,
+                    un mod&egrave;le de performance calibrable, et une quantification d&rsquo;incertitude par Monte
+                    Carlo &mdash; mais sur une seule pr&eacute;vision, avec des param&egrave;tres scalaires de mer, et
+                    dans un espace de trajectoires non structur&eacute;. Les trois probl&egrave;mes ouverts
+                    identifi&eacute;s ci-dessous visent &agrave; lever ces trois limitations.
+                </p>
             </section>
 
 
