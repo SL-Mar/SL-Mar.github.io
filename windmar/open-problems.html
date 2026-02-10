@@ -257,6 +257,28 @@
                 </table>
 
                 <p>
+                    Les deux captures d&rsquo;&eacute;cran ci-dessous illustrent l&rsquo;&eacute;tat actuel du syst&egrave;me. La route
+                    originale (trac&eacute; bleu) et la route optimis&eacute;e par A* (trac&eacute; vert pointill&eacute;) sont
+                    affich&eacute;es simultan&eacute;ment sur la carte. Le panneau de comparaison (en bas &agrave; gauche)
+                    pr&eacute;sente deux onglets de strat&eacute;gie de vitesse &mdash; &laquo; Same Speed &raquo; et
+                    &laquo; Match ETA &raquo; &mdash; avec les &eacute;conomies de carburant et de temps associ&eacute;es.
+                </p>
+
+                <figure style="margin: 1.5rem 0;">
+                    <img src="assets/img/windmar-dual-route-wind.png" alt="WindMar v0.0.6 — Optimisation A* avec superposition du champ de vent GFS" style="width: 100%; border-radius: 8px; border: 1px solid var(--ib-border);">
+                    <figcaption style="font-size: 0.85rem; color: #666; margin-top: 0.5rem; text-align: center;">
+                        <strong>Figure 1.</strong> Route originale (bleu) et route optimis&eacute;e A* (vert pointill&eacute;) sur fond de champ de vent GFS anim&eacute;. Le panneau de comparaison montre les onglets &laquo; Same Speed &raquo; / &laquo; Match ETA &raquo; avec les &eacute;conomies de carburant et de temps par rapport au calcul de voyage de r&eacute;f&eacute;rence.
+                    </figcaption>
+                </figure>
+
+                <figure style="margin: 1.5rem 0;">
+                    <img src="assets/img/windmar-dual-route-ecdis.png" alt="WindMar v0.0.6 — Interface ECDIS avec double affichage de route et crêtes de vagues" style="width: 100%; border-radius: 8px; border: 1px solid var(--ib-border);">
+                    <figcaption style="font-size: 0.85rem; color: #666; margin-top: 0.5rem; text-align: center;">
+                        <strong>Figure 2.</strong> M&ecirc;me vue en th&egrave;me ECDIS sombre avec rendu des cr&ecirc;tes de vagues. Le tableau de comparaison d&eacute;taille distance, carburant, temps, vitesse moyenne et nombre de waypoints pour la route de r&eacute;f&eacute;rence et la route optimis&eacute;e.
+                    </figcaption>
+                </figure>
+
+                <p>
                     Le syst&egrave;me actuel fournit donc un routage A* fonctionnel avec m&eacute;t&eacute;o temporelle,
                     un mod&egrave;le de performance calibrable, et une quantification d&rsquo;incertitude par Monte
                     Carlo &mdash; mais sur une seule pr&eacute;vision, avec des param&egrave;tres scalaires de mer, et
