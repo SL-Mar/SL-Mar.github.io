@@ -164,9 +164,14 @@
                 <div class="alert" style="background: #f0f7f0; border-left: 4px solid #34a853; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
                     <strong><i class="fas fa-code-branch"></i> Development Log</strong>
                     <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #e6f4ea; border: 1px solid #34a853; color: #1e7e34; padding: 0.15rem 0.65rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600; margin-left: 0.5rem; vertical-align: middle;">
-                        <i class="fas fa-tag"></i> v0.0.5 &mdash; Last Stable
+                        <i class="fas fa-tag"></i> v0.0.6 &mdash; Last Stable
                     </span>
                     <table style="width: 100%; margin-top: 0.75rem; font-size: 0.9rem; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #d4e6d4;">
+                            <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.6</strong></td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-10</td>
+                            <td style="padding: 0.35rem 0;">ECDIS-style UI redesign, dual speed-strategy optimization (Same Speed / Match ETA), voyage baseline gating, wave crest rendering with polar diagram, GFS wind DB ingestion, turn-angle path smoothing</td>
+                        </tr>
                         <tr style="border-bottom: 1px solid #d4e6d4;">
                             <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.5</strong></td>
                             <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-09</td>
@@ -217,11 +222,17 @@
                 <p>
                     The system ingests near-real-time wind data from NOAA GFS (0.25&deg; resolution, via NOMADS),
                     wave and current data from Copernicus Marine Service (CMEMS), with ERA5 reanalysis as a
-                    secondary wind fallback. A 5-day forecast timeline (f000&ndash;f120, 3-hourly steps) enables
-                    animated wind visualization. The system evaluates vessel motions (roll, pitch,
-                    vertical acceleration) and enforces safety criteria that block or penalize dangerous sea states.
-                    Finally, it calculates the IMO Carbon Intensity Indicator (CII) rating for the completed voyage,
-                    enabling operators to assess regulatory compliance before departure.
+                    secondary wind fallback. All weather grids are pre-ingested into PostgreSQL on a 6-hourly cycle
+                    (wind, waves, currents), enabling sub-second route calculations. A 5-day forecast timeline
+                    (f000&ndash;f120, 3-hourly steps) enables animated wind visualization with Windy-style wave crest
+                    rendering and click-to-inspect polar diagrams. The ECDIS-style map-centric interface presents a
+                    full-width chart with header dropdowns, a bottom-left route indicator panel, and a right slide-out
+                    analysis panel. After A* optimization, two speed strategies are presented side by side &mdash;
+                    Same Speed (arrive earlier) and Match ETA (maximize fuel savings) &mdash; so the navigator can
+                    make an informed choice. The system evaluates vessel motions (roll, pitch, vertical acceleration)
+                    and enforces safety criteria that block or penalize dangerous sea states. Finally, it calculates
+                    the IMO Carbon Intensity Indicator (CII) rating for the completed voyage, enabling operators to
+                    assess regulatory compliance before departure.
                 </p>
 
                 <div class="feature-grid">
@@ -238,9 +249,9 @@
                         <h4><i class="fas fa-route"></i> Route Optimization</h4>
                         <ul>
                             <li>Weather-aware A* pathfinding</li>
-                            <li>Variable speed optimization per leg</li>
-                            <li>Land avoidance with global-land-mask</li>
-                            <li>Path smoothing with fuel impact verification</li>
+                            <li>Dual speed-strategy comparison (Same Speed / Match ETA)</li>
+                            <li>Voyage baseline gating before optimization</li>
+                            <li>Turn-angle path smoothing with land-crossing check</li>
                         </ul>
                     </div>
                     <div class="feature-card">
@@ -255,9 +266,9 @@
                     <div class="feature-card">
                         <h4><i class="fas fa-cloud-sun"></i> Weather Integration</h4>
                         <ul>
-                            <li>NOAA GFS near-real-time wind (0.25&deg;)</li>
-                            <li>5-day forecast timeline with animation</li>
-                            <li>CMEMS wave and ocean current data</li>
+                            <li>NOAA GFS wind + CMEMS waves/currents ingested to DB</li>
+                            <li>5-day forecast timeline with data source indicator</li>
+                            <li>Windy-style wave crest rendering + polar diagram popup</li>
                             <li>ERA5 wind fallback, climatology blending</li>
                         </ul>
                     </div>
@@ -1330,14 +1341,17 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
 
                 <h3>Path Smoothing</h3>
                 <p>
-                    After A* finds the optimal grid path, a smoothing pass removes unnecessary waypoints to produce
-                    a more natural route. The algorithm iteratively removes intermediate waypoints and checks:
+                    After A* finds the optimal grid path, a two-stage smoothing pass produces a natural route:
                 </p>
+                <p><strong>Stage 1: Douglas-Peucker simplification.</strong> Iteratively removes intermediate waypoints, checking:</p>
                 <ul>
                     <li>The straight-line segment does not cross land</li>
                     <li>The fuel consumption difference is within 1% of the unsmoothed path</li>
                     <li>All intermediate points maintain safe seakeeping conditions</li>
                 </ul>
+                <p><strong>Stage 2: Turn-angle filter (v0.0.6).</strong> Removes waypoints where the course change
+                    is below 15&deg;, eliminating grid staircase artifacts from the 8-connected A* output. Before removing
+                    a waypoint, the filter verifies that the resulting direct segment does not cross land.</p>
             </section>
 
             <!-- ============================================================ -->
@@ -1376,6 +1390,52 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                     fuel consumption by approximately 35% per hour, although the voyage takes longer. The optimizer
                     balances this trade-off based on the fuel-per-mile metric.
                 </p>
+
+                <h3>Dual Speed-Strategy Comparison (v0.0.6)</h3>
+                <p>
+                    After the A* algorithm finds the optimal path, WindMar computes two speed strategies and
+                    presents them side by side so the navigator can choose the appropriate trade-off:
+                </p>
+
+                <table>
+                    <thead>
+                        <tr><th>Strategy</th><th>Speed Profile</th><th>Effect</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Same Speed</strong></td>
+                            <td>Run the optimized path at the same constant speed used in the voyage baseline</td>
+                            <td>Arrive earlier than baseline (shorter distance). Moderate fuel savings from distance reduction alone.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Match ETA</strong></td>
+                            <td>Slow-steam on the optimized path so that total voyage time matches the baseline arrival time</td>
+                            <td>Same arrival time as baseline. Maximum fuel savings by exploiting both shorter distance and lower speed.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Optimization Workflow</h3>
+                <p>The complete user-facing workflow is:</p>
+                <ol>
+                    <li><strong>Set waypoints</strong> on the map (draw or import RTZ)</li>
+                    <li><strong>Calculate Voyage</strong> &mdash; computes the baseline: fuel, time, and distance at constant calm speed along the user&rsquo;s drawn route</li>
+                    <li><strong>Optimize A*</strong> (enabled only after step 2) &mdash; finds the weather-optimal path and computes both speed strategies</li>
+                    <li><strong>Compare</strong> &mdash; the route comparison panel shows two tabs (Same Speed / Match ETA) with a table comparing baseline vs. optimized distance, fuel, time, average speed, and waypoint count</li>
+                    <li><strong>Apply or Dismiss</strong> &mdash; the navigator selects a strategy and applies it, or dismisses to keep the original route</li>
+                </ol>
+                <p>
+                    The original route (blue) and optimized route (green dashed) are displayed simultaneously on the
+                    map so the navigator can visually assess the deviation before committing.
+                </p>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Voyage baseline gating</strong> &mdash; The Optimize A* button is disabled until a voyage
+                    calculation has been performed. This ensures that the baseline fuel and time values are available
+                    for meaningful percentage savings in the comparison table. Without a baseline, the optimizer would
+                    have no reference to compute &ldquo;Same Speed&rdquo; or &ldquo;Match ETA&rdquo; scenarios against.
+                </div>
             </section>
 
             <!-- ============================================================ -->
@@ -1947,8 +2007,17 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h3>Ingestion Service</h3>
                 <p>
                     The <code>WeatherIngestionService</code> runs as a FastAPI background task on a 6-hour loop.
-                    It downloads global grids from CMEMS (waves, currents) and GFS (wind) and stores them
-                    compressed in PostgreSQL. Runs older than 24 hours are automatically marked as superseded.
+                    It downloads global grids from three sources and stores them compressed in PostgreSQL:
+                </p>
+                <ul>
+                    <li><strong>CMEMS waves</strong> &mdash; significant wave height, period, direction (swell + wind-wave decomposition)</li>
+                    <li><strong>CMEMS currents</strong> &mdash; U/V ocean current components</li>
+                    <li><strong>GFS wind</strong> (v0.0.6) &mdash; 41 forecast hours at 3-hourly steps with rate limiting to respect NOAA NOMADS fair-use policy</li>
+                </ul>
+                <p>
+                    Runs older than 24 hours are automatically marked as superseded. When DB wind grids are unavailable
+                    (e.g. first startup before ingestion completes), a live GFS snapshot is fetched from NOAA and injected
+                    into the temporal provider so that wind resistance is always included in route calculations.
                 </p>
 
                 <div class="alert info">

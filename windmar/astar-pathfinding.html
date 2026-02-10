@@ -495,6 +495,28 @@ return failure (no path found within max_cells)</code></pre>
                     represents dangerous conditions that completely block the leg, forcing the search to
                     find an alternative path around the hazardous area.
                 </div>
+
+                <h3>4.6 Time Penalty (v0.0.6)</h3>
+                <p>
+                    The A* cost function is fuel-only by default, which can cause the search to choose long detours
+                    around weather systems even when the fuel savings are marginal. To mitigate this, the cost function
+                    includes a time penalty term:
+                </p>
+                <div class="formula-block">
+                    <div class="formula-title">Penalised Edge Cost</div>
+\[ c(m, n) = \text{fuel}_{mn} \times \text{safety}_{mn} \times \text{zone}_{mn} + \lambda_t \times t_{mn} \times r_{\text{service}} \]
+<div class="formula-where">
+where \( \lambda_t \) = time penalty weight (set to 1.0 since v0.0.6, previously 0.5)<br>
+\( t_{mn} \) = transit time for the leg (hours)<br>
+\( r_{\text{service}} \) = fuel consumption rate at service speed (mt/h), making the penalty dimensionally consistent with fuel cost
+</div>
+                </div>
+                <p>
+                    Increasing \(\lambda_t\) from 0.5 to 1.0 penalises time-consuming detours more strongly, preventing
+                    long zigzag paths that save minimal fuel at the cost of significantly longer voyage times. The
+                    smoothing tolerance is also scaled to the grid resolution (one cell diagonal) to reduce waypoint
+                    count in proportion to the search grid density.
+                </p>
             </section>
 
             <!-- ============================================================ -->
@@ -692,18 +714,44 @@ equivalently, reducing power by factor \( m \) reduces speed by factor \( m^{1/3
                     peninsulas, islands, or narrow straits.
                 </p>
 
-                <h3>6.3 Re-evaluation</h3>
+                <h3>6.3 Turn-Angle Filter (v0.0.6)</h3>
                 <p>
-                    After smoothing, the route statistics are recalculated using
+                    Even after Douglas-Peucker simplification, the 8-connected grid can leave residual
+                    staircase artefacts &mdash; pairs of short legs with nearly identical headings separated
+                    by a negligible course change. The <code>_remove_small_turns()</code> post-filter
+                    iterates over the smoothed waypoints and removes any intermediate waypoint where the
+                    course change between the inbound and outbound legs is below a configurable threshold
+                    (default: 15&deg;). Before removing a waypoint, the filter verifies that the resulting
+                    direct segment does not cross land, preserving the same safety guarantee as the
+                    Douglas-Peucker land-crossing check.
+                </p>
+                <div class="formula-block">
+                    <div class="formula-title">Turn-Angle Criterion</div>
+                    <p>For consecutive waypoints \(w_{i-1}, w_i, w_{i+1}\):</p>
+                    \[\Delta\theta = \left| \left( \theta_{\text{out}} - \theta_{\text{in}} + 180° \right) \bmod 360° - 180° \right|\]
+                    <p>If \(\Delta\theta < 15°\) and the segment \(w_{i-1} \to w_{i+1}\) is clear of land, then \(w_i\) is removed.</p>
+                </div>
+
+                <h3>6.4 Re-evaluation</h3>
+                <p>
+                    After smoothing and turn-angle filtering, the route statistics are recalculated using
                     <code>_calculate_route_stats()</code>, which iterates over the smoothed waypoint
                     sequence and computes per-leg distance, bearing, weather, fuel consumption, and
-                    safety status. When variable-speed optimisation is enabled, each leg is also
-                    evaluated at multiple speeds (7 speed steps from 6.0 to 18.0 knots, as defined
-                    by <code>SPEED_STEPS</code> and <code>SPEED_RANGE_KTS</code>) to identify the
-                    speed that minimises fuel consumption per nautical mile while respecting safety
-                    constraints. The smoothed route is then compared against a direct great-circle
-                    route to compute fuel and time savings percentages, which are reported in the
-                    <code>OptimizedRoute</code> result.
+                    safety status. Two speed strategies are then computed (v0.0.6):
+                </p>
+                <ul>
+                    <li><strong>Constant Speed</strong> &mdash; the optimised path is evaluated at the same
+                        calm speed used in the voyage baseline, producing a &ldquo;Same Speed&rdquo; scenario</li>
+                    <li><strong>Match ETA</strong> &mdash; a time-constrained variable-speed profile is computed
+                        using <code>_calculate_route_stats_time_constrained()</code>, which adjusts leg speeds
+                        so that total voyage time matches the baseline arrival time, producing maximum fuel savings</li>
+                </ul>
+                <p>
+                    Both scenarios are packaged as <code>SpeedScenario</code> dataclass instances and attached
+                    to the <code>OptimizedRoute</code> result alongside the baseline fuel, time, and distance
+                    for percentage savings calculation. The smoothed route is also compared against the user&rsquo;s
+                    drawn waypoints (not just a simple great-circle) when <code>route_waypoints</code> are
+                    provided, ensuring that the baseline comparison reflects the actual intended route.
                 </p>
             </section>
 
