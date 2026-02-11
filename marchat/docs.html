@@ -65,7 +65,7 @@
                 <div class="sidebar-title">Pre-Arrival Forms</div>
                 <ul class="sidebar-menu">
                     <li><a href="#template-processing"><i class="fas fa-file-excel"></i> Template Processing</a></li>
-                    <li><a href="#auto-fill"><i class="fas fa-magic"></i> Auto-Fill Engine</a></li>
+                    <li><a href="#auto-fill"><i class="fas fa-magic"></i> Auto-Fill Agent</a></li>
                     <li><a href="#vessel-profiles"><i class="fas fa-ship"></i> Vessel Profiles</a></li>
                 </ul>
             </div>
@@ -127,6 +127,12 @@
                         All processing runs locally through Ollama, ensuring that sensitive vessel and operational data never leaves the shipboard network. The hybrid search pipeline combines semantic understanding with keyword matching, delivering precise results even for highly technical regulatory queries.
                     </p>
 
+                    <h3>Screenshots</h3>
+                    <p><strong>Pre-Arrival workspace &mdash; blank template with field placeholders:</strong></p>
+                    <img src="assets/images/pre-arrival-blank.png" alt="MarChat Pre-Arrival blank template" style="width:100%; border:1px solid #334155; border-radius:8px; margin-bottom:1.5rem;">
+                    <p><strong>Filled form after LLM agent auto-fill with agent log:</strong></p>
+                    <img src="assets/images/pre-arrival-filled.png" alt="MarChat Pre-Arrival filled form with agent log" style="width:100%; border:1px solid #334155; border-radius:8px; margin-bottom:1.5rem;">
+
                     <div class="feature-grid">
                         <div class="feature-card">
                             <h4><i class="fas fa-search"></i> Hybrid RAG</h4>
@@ -159,10 +165,12 @@
                         <div class="feature-card">
                             <h4><i class="fas fa-file-excel"></i> Pre-Arrival Forms</h4>
                             <ul>
-                                <li>Excel and DOCX template processing</li>
+                                <li>Excel, DOCX and PDF template processing</li>
                                 <li>{{placeholder}} pattern detection</li>
-                                <li>LLM-assisted auto-fill from context</li>
-                                <li>Vessel profile pre-population</li>
+                                <li>Tool-calling LLM agent (qwen2.5:14b) with 6 tools</li>
+                                <li>Batch fill all templates via SSE streaming</li>
+                                <li>Ship's KB + vessel profile context</li>
+                                <li>Agent log with tool call tracing</li>
                             </ul>
                         </div>
                         <div class="feature-card">
@@ -268,26 +276,34 @@
 
                     <h3>Data Flow: Form Auto-Fill</h3>
                     <p>
-                        The form auto-fill pipeline processes uploaded templates, extracts fields, and uses the LLM to generate values from user-provided context.
+                        The form auto-fill pipeline uses a multi-turn tool-calling agent (qwen2.5:14b) that autonomously gathers data from uploaded source documents, vessel profiles, and the RAG knowledge base before filling forms.
                     </p>
                     <div class="formula-block">
-                        <div class="formula-title">Form Auto-Fill Pipeline</div>
-1. Upload Template (Excel or DOCX)
+                        <div class="formula-title">Form Auto-Fill Pipeline (Tool-Calling Agent)</div>
+1. Upload Template (Excel, DOCX, or PDF)
    |
 2. Extract Fields: scan for {{placeholder}} patterns
    |   Detect highlighted cells (yellow) in Excel
    |   Infer field types (date, number, boolean, text)
    |
-3. User provides natural language context
-   |   (voyage details, port info, vessel data)
+3. User pastes agent instructions (REQUIRED)
+   |   + Ship's KB documents auto-included as context
    |
-4. Build LLM prompt: field list + context + vessel profile
+4. Tool-calling agent loop (qwen2.5:14b, up to 5 turns):
+   |   Turn 1: LLM reads field schema, decides which tools to call
+   |     -> get_template_fields(id)
+   |     -> get_vessel_profile(id)
+   |   Turn 2: LLM receives tool results, calls more tools if needed
+   |     -> search_documents("crew list")
+   |     -> read_source_document(id)
+   |   Turn 3: LLM has enough data, submits final values
+   |     -> submit_field_values({field: value, ...})
    |
-5. LLM generates JSON: { "field_name": "value", ... }
+5. Fill template: replace {{placeholders}} with submitted values
    |
-6. Fill template: replace {{placeholders}} with values
+6. Save and return filled document for download
    |
-7. Save and return filled document for download
+   Fallback: if tool calling fails, single-shot JSON prompt
                     </div>
                 </section>
 
@@ -300,7 +316,8 @@
                         <li><strong>Docker &amp; Docker Compose</strong> &mdash; for containerized deployment</li>
                         <li><strong>Ollama</strong> &mdash; local LLM runtime with the following models:
                             <ul>
-                                <li><code>gemma3:12b</code> &mdash; language model for chat and form filling</li>
+                                <li><code>gemma3:12b</code> &mdash; language model for chat and RAG</li>
+                                <li><code>qwen2.5:14b</code> &mdash; tool-calling model for form auto-fill agent</li>
                                 <li><code>mxbai-embed-large</code> &mdash; embedding model (1024 dimensions)</li>
                             </ul>
                         </li>
@@ -316,6 +333,7 @@ docker compose up -d</code></pre>
                     <h3>Pre-Install Ollama Models</h3>
                     <p>Before starting the application, ensure both required models are available in your Ollama instance:</p>
                     <pre><code>ollama pull gemma3:12b
+ollama pull qwen2.5:14b
 ollama pull mxbai-embed-large</code></pre>
 
                     <h3>Development Mode</h3>
@@ -330,17 +348,15 @@ ollama pull mxbai-embed-large</code></pre>
 QDRANT_URL=http://localhost:6333
 OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=gemma3:12b
+TOOL_CALLING_MODEL=qwen2.5:14b
 EMBEDDING_MODEL=mxbai-embed-large
 
 # Database
-DATABASE_URL=sqlite:///./data/marchat.db
-
-# Optional: OpenAI fallback (leave empty for local-only)
-OPENAI_API_KEY=</code></pre>
+DATABASE_URL=sqlite:///./data/marchat.db</code></pre>
 
                     <div class="alert warning">
                         <strong><i class="fas fa-exclamation-triangle"></i> Important</strong><br>
-                        Ollama must be running with both models pulled before starting the application. The backend will fail to initialize embeddings if <code>mxbai-embed-large</code> is not available, and chat/RAG queries will fail without <code>gemma3:12b</code>.
+                        Ollama must be running with all three models pulled before starting the application. The backend will fail to initialize embeddings if <code>mxbai-embed-large</code> is not available, chat/RAG queries require <code>gemma3:12b</code>, and form auto-fill requires <code>qwen2.5:14b</code> for native tool calling support.
                     </div>
 
                     <h3>Verifying Installation</h3>
@@ -496,8 +512,14 @@ curl http://localhost:8005/health
                             <tr>
                                 <td>gemma3:12b</td>
                                 <td>Ollama</td>
-                                <td>Language model</td>
-                                <td>Chat, RAG answer generation, form auto-fill</td>
+                                <td>Chat &amp; RAG language model</td>
+                                <td>General chat, regulatory search, answer generation</td>
+                            </tr>
+                            <tr>
+                                <td>qwen2.5:14b</td>
+                                <td>Ollama</td>
+                                <td>Tool-calling agent</td>
+                                <td>Pre-arrival form auto-fill with native Ollama tool calling (6 tools)</td>
                             </tr>
                             <tr>
                                 <td>mxbai-embed-large</td>
@@ -943,7 +965,12 @@ def get_llm_provider(provider_type: str, **kwargs) -> LLMProvider:
                             <tr>
                                 <td><code>model</code></td>
                                 <td>gemma3:12b</td>
-                                <td>Chat and generation model</td>
+                                <td>Chat and RAG generation model</td>
+                            </tr>
+                            <tr>
+                                <td><code>tool_calling_model</code></td>
+                                <td>qwen2.5:14b</td>
+                                <td>Tool-calling model for form auto-fill agent</td>
                             </tr>
                             <tr>
                                 <td><code>temperature</code></td>
@@ -1093,17 +1120,64 @@ for sheet in workbook.sheetnames:
                     <h2>Auto-Fill Engine</h2>
 
                     <p>
-                        The auto-fill engine uses the LLM to intelligently populate form fields from unstructured natural language context. Instead of manually filling each field, the user provides a free-text description of the voyage, vessel, and port information, and the LLM extracts the relevant values.
+                        The auto-fill engine uses a <strong>multi-turn tool-calling agent</strong> powered by <code>qwen2.5:14b</code> to autonomously gather data and populate form fields. The agent has access to 6 tools and can make up to 5 iterative turns to collect information before submitting the final values.
                     </p>
+
+                    <h3>Agent Tools</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>get_template_fields</code></td>
+                                <td>Read the field names, types, and descriptions from the form template</td>
+                            </tr>
+                            <tr>
+                                <td><code>get_vessel_profile</code></td>
+                                <td>Look up stored vessel data (IMO, flag, tonnage, owner, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td><code>search_documents</code></td>
+                                <td>RAG search across indexed maritime documents</td>
+                            </tr>
+                            <tr>
+                                <td><code>read_source_document</code></td>
+                                <td>Read uploaded source documents (crew lists, stores declarations, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td><code>extract_pdf_text</code></td>
+                                <td>Extract raw text from a PDF file</td>
+                            </tr>
+                            <tr>
+                                <td><code>submit_field_values</code></td>
+                                <td>Terminal tool &mdash; submit the final field-to-value JSON mapping</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
                     <h3>How It Works</h3>
                     <ol>
-                        <li><strong>Extract field list</strong> &mdash; The system retrieves all detected fields from the uploaded template.</li>
-                        <li><strong>Build prompt</strong> &mdash; A structured prompt is constructed containing the field list, the user's natural language context, and optionally the vessel profile data.</li>
-                        <li><strong>LLM generation</strong> &mdash; The forms mode system prompt instructs the LLM to output a JSON object mapping each field name to its inferred value.</li>
-                        <li><strong>Parse response</strong> &mdash; The engine handles markdown code block wrapping (strips <code>```json</code> delimiters if present) and parses the JSON.</li>
-                        <li><strong>Fill template</strong> &mdash; The parsed values are applied to the template placeholders.</li>
+                        <li><strong>User pastes instructions</strong> &mdash; Agent context (e.g., port agent email) is required before filling. All Ship's KB documents are automatically included.</li>
+                        <li><strong>Agent loop starts</strong> &mdash; The <code>qwen2.5:14b</code> model receives the field schema, instructions, and KB context, then decides which tools to call.</li>
+                        <li><strong>Tool execution</strong> &mdash; The agent calls tools iteratively (up to 5 turns) to gather vessel data, search documents, and read source files.</li>
+                        <li><strong>Submit values</strong> &mdash; When the agent has enough data, it calls <code>submit_field_values</code> with a JSON object mapping each field name to its inferred value.</li>
+                        <li><strong>Fill template</strong> &mdash; The submitted values are applied to the template placeholders and the filled document is saved.</li>
+                        <li><strong>Fallback</strong> &mdash; If tool calling fails (model doesn't return structured tool calls), the system falls back to a single-shot JSON prompt with direct context injection.</li>
                     </ol>
+
+                    <h3>Batch Fill</h3>
+                    <p>
+                        The batch fill endpoint (<code>POST /fill/batch</code>) runs the agent loop for each template sequentially and streams progress via Server-Sent Events (SSE). The frontend displays real-time progress including tool call tracing, field counts, and model name in the Agent Log console.
+                    </p>
+
+                    <div class="alert info">
+                        <strong><i class="fas fa-info-circle"></i> Why qwen2.5:14b?</strong><br>
+                        The tool-calling model must return native Ollama <code>tool_calls</code> in the response (structured function name + arguments). Not all models support this &mdash; for example, <code>qwen2.5-coder</code> variants dump tool calls as raw JSON text in the content field instead, which bypasses the agent loop. <code>qwen2.5:14b</code> (non-coder) was validated to return proper structured tool calls.
+                    </div>
 
                     <h3>Example Context Input</h3>
                     <pre><code>We are MV Pacific Star, IMO 9123456, Panama flag, arriving at
@@ -1136,8 +1210,8 @@ February 28th, no deficiencies found. Agent is MaritimePort BV.</code></pre>
                     </p>
 
                     <div class="alert info">
-                        <strong><i class="fas fa-info-circle"></i> JSON Output Handling</strong><br>
-                        The auto-fill engine uses the forms mode system prompt to ensure structured JSON output. It also includes fallback parsing that handles cases where the LLM wraps the JSON in markdown code blocks (<code>```json ... ```</code>), which is a common behavior for instruction-following models.
+                        <strong><i class="fas fa-info-circle"></i> JSON Fallback Parsing</strong><br>
+                        When tool calling is unavailable or the model returns a text response instead of tool calls, the fallback parser handles multiple formats: direct JSON, markdown code block wrapped JSON (<code>```json ... ```</code>), and nested JSON extraction from narrative text.
                     </div>
                 </section>
 
