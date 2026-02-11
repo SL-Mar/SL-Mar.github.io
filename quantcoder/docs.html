@@ -100,6 +100,10 @@
                         <strong>Research Tool:</strong> QuantCoder is a command-line research platform that transforms academic trading papers into backtestable QuantConnect algorithms. It uses a multi-agent AI architecture to decompose strategy logic from published research, generate production-ready LEAN Python code, validate it against local and cloud compilers, and iterate autonomously until the algorithm meets performance thresholds.
                     </div>
 
+                    <div class="alert warning">
+                        <strong>Work in Progress (Feb 2026):</strong> v2.0.0 introduced a significant pipeline refactoring &mdash; two-stage code generation, two-pass summarization, cross-model fidelity assessment, MinerU PDF extraction, and a static QC API linter (11 rules). This refactoring is <strong>not complete</strong>. Testing on papers with novel mathematical models (HMM, directional changes, regime-switching) has produced disappointing results: local LLMs (14&ndash;32B parameters) consistently fail to implement non-trivial math faithfully, substituting simple indicator proxies instead. The linter catches API-level mistakes but cannot compensate for algorithmic logic gaps.
+                    </div>
+
                     <h3>What is QuantCoder?</h3>
                     <p>QuantCoder is a Python CLI tool that bridges the gap between academic finance research and live algorithmic trading. It automates the full pipeline from discovering research articles on CrossRef and arXiv, extracting strategy logic via NLP, generating QuantConnect-compatible Python code through specialized AI agents, and validating the output through compilation and backtesting. The tool supports multiple LLM providers, autonomous self-improvement loops, and an evolution engine inspired by AlphaEvolve for iterating on strategy variants.</p>
 
@@ -742,16 +746,22 @@ quantcoder logs clear --keep 1</code></pre>
                     <h2>Code Generation</h2>
 
                     <h3>Pipeline Flow</h3>
-                    <p>The code generation pipeline transforms a research article PDF into a validated QuantConnect algorithm through a series of stages:</p>
+                    <p>The code generation pipeline transforms a research article PDF into a validated QuantConnect algorithm through a multi-stage process:</p>
 
                     <ol>
-                        <li><strong>PDF Text Extraction</strong> - pdfplumber extracts raw text from each page of the research article</li>
+                        <li><strong>PDF Extraction</strong> - MinerU (primary) or pdfplumber (fallback) extracts text from the research article. MinerU preserves LaTeX equations, tables, and document structure via a vision-language model. Ollama models are unloaded before MinerU runs to free GPU VRAM.</li>
                         <li><strong>NLP Analysis</strong> - spaCy processes the extracted text to identify key entities, indicators, and strategy parameters</li>
-                        <li><strong>Summary Generation</strong> - The configured LLM creates a structured summary with entry/exit logic, indicators, and risk parameters</li>
-                        <li><strong>Code Generation</strong> - The multi-agent system (or single-agent mode) generates QuantConnect LEAN Python code from the summary</li>
-                        <li><strong>Validation</strong> - Local AST syntax validation followed by optional QuantConnect cloud compilation</li>
+                        <li><strong>Two-Pass Summarization</strong> - Pass 1 extracts verbatim quotes from paper sections; Pass 2 interprets them into a structured strategy specification. This preserves novel model terminology (HMM states, regime parameters, jump penalties) that single-pass summarization tends to lose.</li>
+                        <li><strong>Two-Stage Code Generation</strong> - Stage 1 generates the QuantConnect framework with mathematical stub functions; Stage 2 fills in the mathematical core from the paper. This decomposition helps local LLMs handle novel math separately from framework boilerplate.</li>
+                        <li><strong>QC API Linting</strong> - A static linter with 11 rules (QC001&ndash;QC011) auto-fixes common QuantConnect API mistakes: PascalCase methods, wrong Resolution casing, <code>len()</code> on RollingWindow, <code>Action()</code> wrappers, wrong asset class API (forex in <code>add_equity()</code>), reserved attribute names, and <code>IndicatorBase[float]</code> type errors.</li>
+                        <li><strong>Cross-Model Fidelity Assessment</strong> - A reasoning model (mistral) evaluates whether the generated code faithfully implements the paper&rsquo;s strategy. If the fidelity score is below threshold, the code model regenerates with the critique (up to 3 attempts).</li>
+                        <li><strong>Validation</strong> - Local AST syntax check, QC API linting, then optional QuantConnect cloud compilation</li>
                         <li><strong>Refinement</strong> - If validation fails, errors are fed back to the LLM for automatic correction (up to 3 iterations)</li>
                     </ol>
+
+                    <div class="alert warning">
+                        <strong>Current Limitation:</strong> Despite these pipeline improvements, local LLMs at the 14&ndash;32B parameter range consistently substitute simple indicator proxies (SMA, RSI) for novel mathematical models described in research papers. The fidelity assessment loop detects this substitution but regeneration rarely improves the result. Papers describing standard indicator-based strategies work well; papers with novel math (HMM, Ornstein-Uhlenbeck, directional changes) do not.
+                    </div>
 
                     <h3>Code Generation Rules</h3>
                     <p>All generated algorithms must comply with the following QuantConnect LEAN engine constraints. These rules are enforced in the generation prompt and validated during the AST check:</p>
@@ -1003,23 +1013,21 @@ Results:
                     <p>Downloaded PDFs are stored in <code>~/.quantcoder/articles/</code> with filenames derived from the DOI.</p>
 
                     <h3>Text Extraction and NLP</h3>
-                    <p>The <code>ArticleProcessor</code> class handles text extraction and analysis:</p>
+                    <p>The <code>ArticleProcessor</code> class handles text extraction and analysis with two backends:</p>
                     <ul>
-                        <li><strong>pdfplumber</strong> extracts raw text page-by-page, preserving tables and figures where possible</li>
+                        <li><strong>MinerU</strong> (primary) &mdash; A vision-language model that preserves LaTeX equations, tables, and document structure. Runs as a CLI subprocess. Ollama models are automatically unloaded before MinerU runs to free GPU VRAM. Outputs structured Markdown with heading hierarchy.</li>
+                        <li><strong>pdfplumber</strong> (fallback) &mdash; Extracts raw text page-by-page when MinerU is unavailable. Adequate for text-heavy papers but loses equations and complex formatting.</li>
                         <li><strong>spaCy</strong> performs named entity recognition, keyword extraction, and section detection</li>
                         <li>The processor identifies key strategy components: indicators, entry conditions, exit conditions, risk parameters, universe criteria</li>
                     </ul>
 
-                    <h3>LLM Summarization</h3>
-                    <p>The extracted text is passed to the configured LLM (via the summary provider) with a structured prompt that requests:</p>
+                    <h3>Two-Pass LLM Summarization</h3>
+                    <p>Summarization uses a two-pass approach to preserve novel terminology from research papers:</p>
                     <ul>
-                        <li>Strategy description (one paragraph)</li>
-                        <li>Trading universe and selection criteria</li>
-                        <li>Entry and exit signals with specific indicator parameters</li>
-                        <li>Risk management rules (position sizing, stop losses, profit targets)</li>
-                        <li>Backtesting methodology from the paper (if described)</li>
-                        <li>Key parameters and their optimal values</li>
+                        <li><strong>Pass 1 (Extract)</strong> &mdash; Extracts verbatim quotes from each paper section: exact parameter values, mathematical expressions, trading rules, indicator formulas</li>
+                        <li><strong>Pass 2 (Interpret)</strong> &mdash; Synthesizes the extracted quotes into a structured strategy specification with entry/exit logic, indicators, risk parameters, and universe criteria</li>
                     </ul>
+                    <p>This two-pass approach prevents the LLM from paraphrasing away novel model-specific terms (e.g., &ldquo;directional change threshold&rdquo;, &ldquo;HMM hidden states&rdquo;, &ldquo;jump penalty parameter&rdquo;) that a single-pass summary would replace with generic language.</p>
 
                     <h3>Deep Search (Optional)</h3>
                     <p>When a Tavily API key is configured, QuantCoder can perform deep web searches to supplement article discovery:</p>
@@ -2082,8 +2090,33 @@ pytest tests/ -k "test_generate" -v</code></pre>
                         <li>Invalid escape sequences</li>
                     </ul>
 
-                    <h4>Stage 2: QuantConnect Cloud Compilation</h4>
-                    <p>Submits the algorithm to QuantConnect via MCP for cloud compilation. This catches:</p>
+                    <h4>Stage 2: QC API Static Linting</h4>
+                    <p>A static linter with 11 rules (QC001&ndash;QC011) auto-fixes common QuantConnect API mistakes that local LLMs produce. Most rules auto-fix; some produce warnings only:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rule</th>
+                                <th>Issue</th>
+                                <th>Auto-fix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>QC001</td><td>PascalCase API calls (<code>self.SetStartDate</code> &rarr; <code>self.set_start_date</code>)</td><td>Yes</td></tr>
+                            <tr><td>QC002</td><td><code>len()</code> on RollingWindow &rarr; <code>.count</code></td><td>Yes</td></tr>
+                            <tr><td>QC003</td><td><code>.Values</code> on RollingWindow &rarr; <code>list()</code></td><td>Yes</td></tr>
+                            <tr><td>QC004</td><td><code>Action()</code> wrapper on callbacks &rarr; removed</td><td>Yes</td></tr>
+                            <tr><td>QC005</td><td>History DataFrame treated as Slice</td><td>Warning</td></tr>
+                            <tr><td>QC006</td><td><code>self.history()</code> inside <code>on_data()</code></td><td>Warning</td></tr>
+                            <tr><td>QC007</td><td>Wrong Resolution casing (<code>Resolution.Daily</code> &rarr; <code>Resolution.DAILY</code>)</td><td>Yes</td></tr>
+                            <tr><td>QC008</td><td>Indicator name shadowing (<code>self.rsi = ...</code>)</td><td>Warning</td></tr>
+                            <tr><td>QC009</td><td>Wrong asset class API (forex/crypto in <code>add_equity()</code>)</td><td>Yes</td></tr>
+                            <tr><td>QC010</td><td>Reserved attribute names (<code>self.alpha</code> crashes C# interop)</td><td>Yes</td></tr>
+                            <tr><td>QC011</td><td><code>IndicatorBase[float]</code> &rarr; <code>IndicatorBase[IndicatorDataPoint]</code></td><td>Yes</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Stage 3: QuantConnect Cloud Compilation</h4>
+                    <p>Submits the lint-fixed algorithm to QuantConnect via MCP for cloud compilation. This catches:</p>
                     <ul>
                         <li>Missing or incorrect imports</li>
                         <li>Incorrect LEAN API usage (wrong method names, argument types)</li>
@@ -2091,7 +2124,7 @@ pytest tests/ -k "test_generate" -v</code></pre>
                         <li>Missing <code>initialize()</code> or <code>on_data()</code> methods</li>
                     </ul>
 
-                    <h4>Stage 3: Backtest Execution</h4>
+                    <h4>Stage 4: Backtest Execution</h4>
                     <p>Runs the compiled algorithm on QuantConnect's backtesting engine. Extracts:</p>
                     <ul>
                         <li>Sharpe ratio</li>
@@ -2101,7 +2134,7 @@ pytest tests/ -k "test_generate" -v</code></pre>
                         <li>Win rate and profit factor</li>
                     </ul>
 
-                    <h4>Stage 4: Autonomous Error Learning Validation</h4>
+                    <h4>Stage 5: Autonomous Error Learning Validation</h4>
                     <p>If autonomous mode is active, the learning system validates that known error patterns have been avoided:</p>
                     <ul>
                         <li>Checks for previously seen compilation errors</li>
@@ -2110,8 +2143,8 @@ pytest tests/ -k "test_generate" -v</code></pre>
                         <li>Confirms risk management parameters are set</li>
                     </ul>
 
-                    <div class="alert success">
-                        <strong>Validation Guarantee:</strong> Algorithms that pass all four validation stages are syntactically correct Python, compilable on the QuantConnect LEAN engine, executable in backtesting, and conform to all learned best practices from previous generation runs. This multi-stage approach minimizes the likelihood of runtime errors during live deployment.
+                    <div class="alert info">
+                        <strong>Validation Pipeline:</strong> Algorithms that pass all five validation stages are syntactically correct Python, free of common QC API mistakes, compilable on the QuantConnect LEAN engine, and conform to learned best practices. However, passing validation does not guarantee the algorithm faithfully implements the paper&rsquo;s strategy &mdash; that is handled separately by the fidelity assessment loop, which remains limited by local LLM capabilities.
                     </div>
                 </section>
 
