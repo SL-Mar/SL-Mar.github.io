@@ -192,36 +192,26 @@
                 <article class="project">
                     <div class="project-header">
                         <div>
-                            <h3>MarChat <span class="github-stars" data-repo="SL-Mar/marchat"></span></h3>
-                            <p>Maritime shipboard AI assistant with RAG and pre-arrival form engine</p>
+                            <h3>MarChat <span style="background:#22c55e; color:#fff; font-size:0.65em; padding:2px 8px; border-radius:4px; vertical-align:middle; margin-left:8px;">SOLD</span> <span class="github-stars" data-repo="SL-Mar/marchat"></span></h3>
+                            <p>AI-powered pre-arrival form automation for maritime operations</p>
                         </div>
                     </div>
                     <div class="project-meta">
                         <span>Next.js</span>
                         <span>FastAPI</span>
-                        <span>Qdrant</span>
-                        <span>Last updated: February 2026</span>
+                        <span>Ollama + Anthropic</span>
+                        <span>Delivered: February 2026</span>
                     </div>
                     <p>
-                        MarChat is a maritime shipboard AI assistant that provides RAG-powered search over maritime regulations
-                        (SOLAS, MARPOL, STCW), multi-mode chat for different operational contexts, and an automated pre-arrival
-                        document engine. Uses local-first LLM inference via Ollama with hybrid search combining semantic embeddings,
-                        BM25, reciprocal rank fusion, and cross-encoder reranking.
+                        MarChat automates pre-arrival port documentation &mdash; FAL forms, ISPS declarations, health forms, customs manifests &mdash;
+                        using a tool-calling LLM agent. Reads crew lists, stores declarations, and certificates, then fills Excel/DOCX/PDF
+                        templates automatically. Local-first inference via Ollama with Anthropic Claude fallback.
                     </p>
-                    <p><strong>Key Features:</strong></p>
-                    <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                        <li>Hybrid RAG search (semantic + BM25 + RRF + cross-encoder reranking)</li>
-                        <li>Multi-mode chat: regulatory, medical, general, forms</li>
-                        <li>Pre-arrival form auto-fill from natural language context</li>
-                        <li>Excel template processing with field detection</li>
-                        <li>Multi-collection document management</li>
-                        <li>Local-first inference via Ollama (offline-capable)</li>
-                    </ul>
                     <div class="tech">
                         <span>Next.js</span>
                         <span>FastAPI</span>
-                        <span>Qdrant</span>
                         <span>Ollama</span>
+                        <span>Anthropic</span>
                         <span>SQLite</span>
                         <span>openpyxl</span>
                     </div>
