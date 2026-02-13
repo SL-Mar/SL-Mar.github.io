@@ -165,9 +165,14 @@
                 <div class="alert" style="background: #f0f7f0; border-left: 4px solid #34a853; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
                     <strong><i class="fas fa-code-branch"></i> Development Log</strong>
                     <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #e6f4ea; border: 1px solid #34a853; color: #1e7e34; padding: 0.15rem 0.65rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600; margin-left: 0.5rem; vertical-align: middle;">
-                        <i class="fas fa-tag"></i> v0.0.6 &mdash; Last Stable
+                        <i class="fas fa-tag"></i> v0.0.7 &mdash; Last Stable
                     </span>
                     <table style="width: 100%; margin-top: 0.75rem; font-size: 0.9rem; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #d4e6d4;">
+                            <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.7</strong></td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-13</td>
+                            <td style="padding: 0.35rem 0;">Two-mode architecture (Weather/Analysis), 7 weather layers with WMO color ramps, forecast timeline for all layers, analysis panel + detail page with per-waypoint passage plan, route save/load, current &amp; wave direction in results, Monte Carlo P10/P50/P90, vessel speed sync</td>
+                        </tr>
                         <tr style="border-bottom: 1px solid #d4e6d4;">
                             <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.6</strong></td>
                             <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-10</td>
@@ -222,19 +227,39 @@
                 </p>
                 <p>
                     The system ingests near-real-time wind data from NOAA GFS (0.25&deg; resolution, via NOMADS),
-                    wave and current data from Copernicus Marine Service (CMEMS), with ERA5 reanalysis as a
-                    secondary wind fallback. All weather grids are pre-ingested into PostgreSQL on a 6-hourly cycle
-                    (wind, waves, currents), enabling sub-second route calculations. A 5-day forecast timeline
-                    (f000&ndash;f120, 3-hourly steps) enables animated wind visualization with Windy-style wave crest
-                    rendering and click-to-inspect polar diagrams. The ECDIS-style map-centric interface presents a
-                    full-width chart with header dropdowns, a bottom-left route indicator panel, and a right slide-out
-                    analysis panel. After A* optimization, two speed strategies are presented side by side &mdash;
-                    Same Speed (arrive earlier) and Match ETA (maximize fuel savings) &mdash; so the navigator can
-                    make an informed choice. The system evaluates vessel motions (roll, pitch, vertical acceleration)
-                    and enforces safety criteria that block or penalize dangerous sea states. Finally, it calculates
+                    wave, current, SST, swell, visibility, and ice data from Copernicus Marine Service (CMEMS), with ERA5 reanalysis as a
+                    secondary wind fallback. Weather grids are pre-ingested into PostgreSQL on a 6-hourly cycle
+                    (wind, waves, currents, ice), with on-demand prefetch for SST, visibility, and swell &mdash; enabling sub-second route calculations.
+                    A forecast timeline (f000&ndash;f120, 3-hourly steps) supports all 7 weather layers with play/pause and scrubbing.
+                    The interface uses a <strong>two-mode architecture</strong>: <em>Weather mode</em> presents a full-screen ECDIS-style
+                    chart with 7 weather overlays and WMO-standard color ramps; <em>Analysis mode</em> displays a left panel (320px) for
+                    route import, voyage calculation, optimization comparison (6 route variants from dual A*/VISIR engines), and
+                    Monte Carlo simulation (P10/P50/P90). A dedicated analysis page shows a per-waypoint passage plan with
+                    ETA, SOG, wind, waves, current speed/direction, fuel, and data source badges.
+                    The system evaluates vessel motions (roll, pitch, vertical acceleration)
+                    and enforces safety criteria that block or penalize dangerous sea states. It calculates
                     the IMO Carbon Intensity Indicator (CII) rating for the completed voyage, enabling operators to
                     assess regulatory compliance before departure.
                 </p>
+
+                <div class="screenshot-gallery" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0;">
+                    <figure style="margin: 0;">
+                        <a href="assets/img/windmar-route-analysis.png" target="_blank">
+                            <img src="assets/img/windmar-route-analysis.png" alt="Route Analysis — weather overlays with voyage calculation and Monte Carlo simulation" style="width: 100%; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        </a>
+                        <figcaption style="text-align: center; font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                            <strong>Route Analysis</strong> — Wind overlay with voyage calculation panel, waypoint routing, and Monte Carlo simulation (P10/P50/P90)
+                        </figcaption>
+                    </figure>
+                    <figure style="margin: 0;">
+                        <a href="assets/img/windmar-passage-plan.png" target="_blank">
+                            <img src="assets/img/windmar-passage-plan.png" alt="Passage Plan — per-waypoint analysis with ETA, weather conditions, and fuel consumption" style="width: 100%; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        </a>
+                        <figcaption style="text-align: center; font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                            <strong>Analysis Detail</strong> — Per-waypoint passage plan with ETA, SOG, wind, waves, currents, fuel, and weather insights
+                        </figcaption>
+                    </figure>
+                </div>
 
                 <div class="feature-grid">
                     <div class="feature-card">
@@ -249,9 +274,9 @@
                     <div class="feature-card">
                         <h4><i class="fas fa-route"></i> Route Optimization</h4>
                         <ul>
-                            <li>Weather-aware A* pathfinding</li>
-                            <li>Dual speed-strategy comparison (Same Speed / Match ETA)</li>
-                            <li>Voyage baseline gating before optimization</li>
+                            <li>Dual-engine: A* grid search + VISIR Dijkstra</li>
+                            <li>6 route variants (2 engines &times; 3 safety weights)</li>
+                            <li>Per-waypoint passage plan with weather data</li>
                             <li>Turn-angle path smoothing with land-crossing check</li>
                         </ul>
                     </div>
@@ -267,10 +292,10 @@
                     <div class="feature-card">
                         <h4><i class="fas fa-cloud-sun"></i> Weather Integration</h4>
                         <ul>
-                            <li>NOAA GFS wind + CMEMS waves/currents ingested to DB</li>
-                            <li>5-day forecast timeline with data source indicator</li>
-                            <li>Windy-style wave crest rendering + polar diagram popup</li>
-                            <li>ERA5 wind fallback, climatology blending</li>
+                            <li>7 layers: wind, waves, currents, swell, SST, visibility, ice</li>
+                            <li>Forecast timeline for all layers (5-day, 3h steps)</li>
+                            <li>WMO-standard color ramps per field</li>
+                            <li>6-hourly DB ingestion + on-demand prefetch</li>
                         </ul>
                     </div>
                     <div class="feature-card">
@@ -319,7 +344,7 @@
                         <tr>
                             <td>Frontend</td>
                             <td>Next.js 15</td>
-                            <td>Map visualization, route input, results display, CII dashboard</td>
+                            <td>Two-mode UI (Weather/Analysis), 7 weather map layers, route analysis panel, passage plan</td>
                         </tr>
                         <tr>
                             <td>Backend</td>
@@ -334,7 +359,7 @@
                         <tr>
                             <td>Weather Provider</td>
                             <td>NOAA GFS / CMEMS / ERA5</td>
-                            <td>GFS wind (primary), CMEMS waves and currents, ERA5 wind fallback, 5-day forecast</td>
+                            <td>GFS wind, CMEMS waves/currents/SST/swell/visibility/ice, ERA5 fallback, 5-day forecast</td>
                         </tr>
                         <tr>
                             <td>Database</td>
@@ -2008,12 +2033,21 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h3>Ingestion Service</h3>
                 <p>
                     The <code>WeatherIngestionService</code> runs as a FastAPI background task on a 6-hour loop.
-                    It downloads global grids from three sources and stores them compressed in PostgreSQL:
+                    It downloads global grids from four sources and stores them compressed in PostgreSQL:
                 </p>
                 <ul>
+                    <li><strong>GFS wind</strong> &mdash; 41 forecast hours (f000&ndash;f120, 3-hourly) from NOAA NOMADS with 2s rate limiting</li>
                     <li><strong>CMEMS waves</strong> &mdash; significant wave height, period, direction (swell + wind-wave decomposition)</li>
                     <li><strong>CMEMS currents</strong> &mdash; U/V ocean current components</li>
-                    <li><strong>GFS wind</strong> (v0.0.6) &mdash; 41 forecast hours at 3-hourly steps with rate limiting to respect NOAA NOMADS fair-use policy</li>
+                    <li><strong>CMEMS ice</strong> (v0.0.7) &mdash; sea ice concentration from Arctic/Antarctic physics models</li>
+                </ul>
+                <p>
+                    Additionally, three fields are fetched on-demand via API prefetch endpoints (not background-ingested):
+                </p>
+                <ul>
+                    <li><strong>CMEMS SST</strong> &mdash; sea surface temperature from global ocean physics model</li>
+                    <li><strong>CMEMS visibility</strong> &mdash; meteorological visibility from atmospheric model</li>
+                    <li><strong>CMEMS swell</strong> &mdash; swell-only component decomposed from total wave field</li>
                 </ul>
                 <p>
                     Runs older than 24 hours are automatically marked as superseded. When DB wind grids are unavailable
@@ -2023,10 +2057,51 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
 
                 <div class="alert info">
                     <i class="fas fa-info-circle"></i>
-                    <strong>Wave forecast</strong> &mdash; When available, the ingestion service stores multi-timestep
-                    wave forecasts (0&ndash;120h, 3-hourly = 41 steps), enabling the Monte Carlo simulator to use
-                    time-varying wave conditions along the voyage.
+                    <strong>Multi-timestep forecasts</strong> &mdash; The ingestion service stores wave forecasts at
+                    0&ndash;120h (3-hourly = 41 steps). The Monte Carlo simulator uses these time-varying conditions
+                    along the voyage. Forecast frames for all 7 layers are served to the frontend for timeline playback.
                 </div>
+
+                <h3>Visualization Pipeline</h3>
+                <p>
+                    The frontend presents 7 weather layers, each with a dedicated rendering pipeline from database to map overlay:
+                </p>
+                <table>
+                    <thead>
+                        <tr><th>Layer</th><th>Data Source</th><th>API Endpoint</th><th>Renderer</th><th>Color Ramp</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Wind</td><td>GFS (NOAA)</td><td><code>/api/weather/wind</code> + <code>/wind/velocity</code></td><td>WeatherGridLayer + VelocityParticleLayer</td><td>WMO Beaufort scale</td></tr>
+                        <tr><td>Waves</td><td>CMEMS</td><td><code>/api/weather/waves</code></td><td>WeatherGridLayer + WaveCrestOverlay</td><td>Blue&ndash;yellow&ndash;red (0&ndash;8m)</td></tr>
+                        <tr><td>Currents</td><td>CMEMS</td><td><code>/api/weather/currents/velocity</code></td><td>VelocityParticleLayer</td><td>Particle speed coloring</td></tr>
+                        <tr><td>Swell</td><td>CMEMS</td><td><code>/api/weather/forecast/wave/frames</code></td><td>WeatherGridLayer</td><td>Blue&ndash;purple (0&ndash;6m)</td></tr>
+                        <tr><td>SST</td><td>CMEMS</td><td><code>/api/weather/forecast/sst/frames</code></td><td>WeatherGridLayer</td><td>Cold blue &rarr; warm red (&minus;2&ndash;32&deg;C)</td></tr>
+                        <tr><td>Visibility</td><td>CMEMS</td><td><code>/api/weather/forecast/visibility/frames</code></td><td>WeatherGridLayer</td><td>Red&ndash;yellow&ndash;green (0&ndash;30km)</td></tr>
+                        <tr><td>Ice</td><td>CMEMS</td><td><code>/api/weather/forecast/ice/frames</code></td><td>WeatherGridLayer</td><td>White&ndash;blue (0&ndash;100%)</td></tr>
+                    </tbody>
+                </table>
+                <p>
+                    <strong>Rendering flow:</strong> API serves compressed grid data &rarr; frontend decompresses into lat/lon arrays &rarr;
+                    <code>WeatherGridLayer</code> draws colored cells on a Leaflet canvas overlay, with WMO-standard color ramps per field.
+                    Wind and currents additionally use <code>VelocityParticleLayer</code> for animated particle flow.
+                    The <code>ForecastTimeline</code> component manages frame playback across all layers with play/pause, speed control,
+                    and a scrubber bar showing rich date labels. Each layer type fetches its own forecast frames independently.
+                </p>
+
+                <h3>Two-Mode Architecture (v0.0.7)</h3>
+                <p>
+                    The frontend uses a mode toggle in the header to switch between two workflows:
+                </p>
+                <ul>
+                    <li><strong>Weather mode</strong> &mdash; Full-screen map with all 7 weather overlays. The user pans freely;
+                        weather data loads for the visible viewport. Forecast timeline, layer selector, and legend are visible.
+                        No route analysis panels are shown.</li>
+                    <li><strong>Analysis mode</strong> &mdash; A left panel (320px) appears with route import (RTZ/JSON),
+                        departure time picker, voyage calculation, optimization comparison (6 route variants), and
+                        Monte Carlo simulation. Weather overlays are hidden to keep the map focused on the route.
+                        A &ldquo;View Full Analysis&rdquo; link opens the <code>/analysis</code> page with a per-waypoint
+                        passage plan table showing ETA, SOG, wind, waves, current, fuel, and data source badges.</li>
+                </ul>
 
                 <h3>DbWeatherProvider</h3>
                 <p>
