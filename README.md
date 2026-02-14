@@ -37,7 +37,7 @@ This repository contains the source code for my personal GitHub Pages website. T
 - **About Section**: Professional background and expertise areas
 - **Research Focus**: Grid showcasing main research domains
 - **Featured Work**: Highlights of key projects and publications
-- **Contact Section**: Social media links (GitHub, Medium, Substack, LinkedIn)
+- **Contact Section**: Social media links (GitHub, Medium, LinkedIn)
 
 ### Publications Page (`publications.html`)
 - **Category Filtering**: JavaScript-powered filter for different publication types
@@ -49,7 +49,7 @@ This repository contains the source code for my personal GitHub Pages website. T
   - AI in Legal Reasoning
   - Maritime Law & Ship Operations
 - **Rich Metadata**: Publication venue, tags, descriptions for each article
-- **External Links**: Direct links to Medium, Substack, and other platforms
+- **External Links**: Direct links to Medium and other platforms
 
 ### Projects Page (`projects.html`)
 - **Featured Project**: QuantCoder FS with detailed description
@@ -93,7 +93,6 @@ This repository contains the source code for my personal GitHub Pages website. T
 
 - **GitHub**: [https://github.com/SL-Mar](https://github.com/SL-Mar)
 - **Medium**: [https://medium.com/@sebastien.laignel](https://medium.com/@sebastien.laignel)
-- **Substack**: [https://substack.com/@sebastienlaignel](https://substack.com/@sebastienlaignel)
 - **LinkedIn**: [https://www.linkedin.com/in/sebastien-laignel](https://www.linkedin.com/in/sebastien-laignel)
 
 ---
