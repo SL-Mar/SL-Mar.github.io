@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="Maritime and quantitative finance solutions — WindMar route optimization, QuantMar trading platform, and open-source tools">
+    <title>Solutions | SL Mar</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-heading h2 {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+        .section-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Featured solution cards */
+        .solution-featured {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+        .solution-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .solution-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(88,166,255,0.1);
+            transform: translateY(-4px);
+        }
+        .solution-card-body {
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .solution-card h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+        }
+        .solution-card .solution-subtitle {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+        }
+        .solution-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+        .solution-card .tech {
+            margin-bottom: 1.25rem;
+        }
+        .solution-card .solution-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: auto;
+            padding-top: 0.5rem;
+        }
+        .solution-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.7rem;
+            border-radius: 1rem;
+            font-weight: 500;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+        .status-live {
+            background: rgba(34,197,94,0.15);
+            color: #22c55e;
+            border: 1px solid rgba(34,197,94,0.3);
+        }
+        .status-dev {
+            background: rgba(234,179,8,0.15);
+            color: #eab308;
+            border: 1px solid rgba(234,179,8,0.3);
+        }
+        .status-private {
+            background: rgba(139,148,158,0.15);
+            color: #8b949e;
+            border: 1px solid rgba(139,148,158,0.3);
+        }
+
+        /* Open source project grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        .project-grid .project { margin-bottom: 0; }
+
+        /* Legacy single row */
+        .legacy-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 700px;
+        }
+
+        @media (max-width: 1024px) {
+            .solution-featured { grid-template-columns: 1fr; }
+            .project-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="nav-left">
+                <img src="logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="index.html" class="logo">SL Mar</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="solutions.html" class="active">Solutions</a></li>
+                <li><a href="publications.html">Publications</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="https://github.com/SL-Mar" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://medium.com/@sl_mar" target="_blank" rel="noopener noreferrer" title="Medium"><i class="fa-brands fa-medium"></i></a>
+                <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Featured Solutions -->
+    <section>
+        <div class="container">
+            <div class="section-heading">
+                <h2>Solutions</h2>
+            </div>
+            <div class="solution-featured">
+
+                <!-- WindMar -->
+                <div class="solution-card">
+                    <div class="solution-card-body">
+                        <h3>
+                            WindMar
+                            <span class="github-stars" data-repo="SL-Mar/windmar"></span>
+                        </h3>
+                        <p class="solution-subtitle">Weather-Aware Maritime Route Optimization</p>
+                        <p>
+                            Route optimization system for MR product tankers using A* pathfinding over
+                            ocean grids with real ECMWF/GFS meteorological data. Physics-based vessel
+                            modelling of hull resistance, propulsion efficiency, and cargo loading produces
+                            realistic fuel consumption estimates across real ocean conditions.
+                        </p>
+                        <div class="tech">
+                            <span>Python</span>
+                            <span>FastAPI</span>
+                            <span>Next.js</span>
+                            <span>NumPy</span>
+                            <span>xarray</span>
+                            <span>PostgreSQL</span>
+                            <span>Docker</span>
+                        </div>
+                        <div class="solution-buttons">
+                            <a href="https://demo-windmar.slmar.co" target="_blank" class="btn btn-primary">
+                                <i class="fa-solid fa-play"></i> Live Demo
+                            </a>
+                            <a href="windmar/docs.html" class="btn btn-secondary">
+                                <i class="fa-solid fa-book"></i> Documentation
+                            </a>
+                            <a href="https://github.com/SL-Mar/windmar" target="_blank" class="btn btn-secondary">
+                                <i class="fa-brands fa-github"></i> GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QuantMar -->
+                <div class="solution-card">
+                    <div class="solution-card-body">
+                        <h3>
+                            QuantMar
+                            <span class="solution-status status-private"><i class="fa-solid fa-lock"></i> Private</span>
+                        </h3>
+                        <p class="solution-subtitle">Quantitative Trading Research Platform</p>
+                        <p>
+                            Self-modifying strategy SDK with backtest engine, agent tools, and an
+                            indicator pipeline that generates, validates, and integrates custom technical
+                            indicators autonomously. AI-powered auto mode for end-to-end strategy
+                            development from research to deployment.
+                        </p>
+                        <div class="tech">
+                            <span>Python</span>
+                            <span>FastAPI</span>
+                            <span>Next.js</span>
+                            <span>TimescaleDB</span>
+                            <span>Redis</span>
+                            <span>Ollama</span>
+                            <span>Docker</span>
+                        </div>
+                        <div class="solution-buttons">
+                            <a href="https://demo-quantmar.slmar.co" target="_blank" class="btn btn-primary">
+                                <i class="fa-solid fa-play"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Source Projects -->
+    <section>
+        <div class="container">
+            <div class="section-heading">
+                <h2>Open Source</h2>
+            </div>
+            <div class="project-grid">
+
+                <article class="project">
+                    <div class="project-header">
+                        <div>
+                            <h3>QuantCoder <span class="github-stars" data-repo="SL-Mar/quantcoder"></span></h3>
+                            <p>AI-powered CLI for generating QuantConnect trading algorithms</p>
+                        </div>
+                    </div>
+                    <div class="project-meta">
+                        <span>Python</span>
+                        <span>Click</span>
+                        <span>QuantConnect API</span>
+                    </div>
+                    <p>
+                        Converts academic research articles into executable QuantConnect trading algorithms.
+                        Multi-agent architecture extracts strategy logic, generates code, compiles against
+                        the QuantConnect API, and iterates on errors automatically.
+                    </p>
+                    <div class="tech">
+                        <span>Python</span>
+                        <span>Click</span>
+                        <span>QuantConnect API</span>
+                        <span>LangChain</span>
+                        <span>Rich</span>
+                    </div>
+                    <div class="project-buttons">
+                        <a href="quantcoder/docs.html" class="btn btn-primary">
+                            <i class="fa-solid fa-book"></i> Documentation
+                        </a>
+                        <a href="https://github.com/SL-Mar/quantcoder" target="_blank" class="btn btn-secondary">
+                            <i class="fa-brands fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </article>
+
+                <article class="project">
+                    <div class="project-header">
+                        <div>
+                            <h3>Chat with Fundamentals <span class="github-stars" data-repo="SL-Mar/chat-with-fundamentals"></span></h3>
+                            <p>Financial research and portfolio management platform</p>
+                        </div>
+                    </div>
+                    <div class="project-meta">
+                        <span>Next.js</span>
+                        <span>FastAPI</span>
+                        <span>TimescaleDB</span>
+                    </div>
+                    <p>
+                        Universe-based factor analysis platform combining AI-powered fundamental analysis
+                        with quantitative portfolio optimization. EODHD data integration and sandbox code
+                        execution for research workflows. Predecessor to QuantMar.
+                    </p>
+                    <div class="tech">
+                        <span>Next.js</span>
+                        <span>FastAPI</span>
+                        <span>TimescaleDB</span>
+                        <span>Redis</span>
+                        <span>Ollama</span>
+                    </div>
+                    <div class="project-buttons">
+                        <a href="chat-with-fundamentals/docs.html" class="btn btn-primary">
+                            <i class="fa-solid fa-book"></i> Documentation
+                        </a>
+                        <a href="https://github.com/SL-Mar/chat-with-fundamentals" target="_blank" class="btn btn-secondary">
+                            <i class="fa-brands fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- MarChat (Sold) -->
+    <section>
+        <div class="container">
+            <div class="section-heading">
+                <h2>Delivered</h2>
+            </div>
+            <div class="legacy-grid">
+                <article class="project">
+                    <div class="project-header">
+                        <div>
+                            <h3>
+                                MarChat
+                                <span style="background:#22c55e; color:#fff; font-size:0.65em; padding:2px 8px; border-radius:4px; vertical-align:middle; margin-left:8px;">SOLD</span>
+                                <span class="github-stars" data-repo="SL-Mar/marchat"></span>
+                            </h3>
+                            <p>AI-powered pre-arrival form automation for maritime operations</p>
+                        </div>
+                    </div>
+                    <div class="project-meta">
+                        <span>Next.js</span>
+                        <span>FastAPI</span>
+                        <span>Ollama + Anthropic</span>
+                        <span>Delivered: February 2026</span>
+                    </div>
+                    <p>
+                        Automates pre-arrival port documentation &mdash; FAL forms, ISPS declarations,
+                        health forms, customs manifests &mdash; using a tool-calling LLM agent. Reads crew
+                        lists and certificates, fills Excel/DOCX/PDF templates automatically.
+                    </p>
+                    <div class="tech">
+                        <span>Next.js</span>
+                        <span>FastAPI</span>
+                        <span>Ollama</span>
+                        <span>Anthropic</span>
+                        <span>SQLite</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SL Mar</p>
+            <p>Maritime and Market Consultancy</p>
+            <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions l&eacute;gales</a></p>
+        </div>
+    </footer>
+
+    <style>
+        .github-stars {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 0.15rem 0.6rem;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+        .github-stars i { color: #e3b341; font-size: 0.75rem; }
+    </style>
+    <script>
+        document.querySelectorAll('.github-stars').forEach(el => {
+            const repo = el.dataset.repo;
+            fetch(`https://api.github.com/repos/${repo}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.stargazers_count !== undefined) {
+                        el.innerHTML = `<i class="fa-solid fa-star"></i> ${data.stargazers_count}`;
+                    }
+                })
+                .catch(() => {});
+        });
+    </script>
+</body>
+</html>

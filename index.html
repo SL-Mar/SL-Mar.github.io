@@ -128,17 +128,8 @@
             background: var(--border);
         }
 
-        /* Project grid */
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-        }
-        .project-grid .project { margin-bottom: 0; }
-
         @media (max-width: 1024px) {
             .domain-grid { grid-template-columns: 1fr; }
-            .project-grid { grid-template-columns: 1fr; }
             .hero-banner { height: 55vh; min-height: 380px; }
             .hero-banner h1 { font-size: 2.5rem; }
         }
@@ -160,6 +151,7 @@
             </div>
             <ul class="nav-center">
                 <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="solutions.html">Solutions</a></li>
                 <li><a href="publications.html">Publications</a></li>
             </ul>
             <div class="nav-right">
@@ -198,9 +190,8 @@
                     <div class="domain-card-body">
                         <h3>Maritime Operations</h3>
                         <p>
-                            Vessel operations, cargo management, and regulatory compliance
-                            for product tankers. From bridge watch-keeping to port-state
-                            inspections, translating hands-on experience into software.
+                            Navigation, tanker operations, cargo handling &mdash;
+                            Oil, Chemical, LPG, LNG.
                         </p>
                     </div>
                     <p class="credit">Photo: author</p>
@@ -210,9 +201,8 @@
                     <div class="domain-card-body">
                         <h3>Weather Routing</h3>
                         <p>
-                            Ocean weather analysis, route optimization, and voyage planning
-                            using ECMWF and GFS meteorological data. Physics-based modeling
-                            of hull resistance, fuel consumption, and sea state effects.
+                            Ocean weather analysis, physics-based ship modelling,
+                            voyage planning.
                         </p>
                     </div>
                     <p class="credit">Source: windy.com</p>
@@ -222,9 +212,8 @@
                     <div class="domain-card-body">
                         <h3>Quantitative Finance</h3>
                         <p>
-                            Algorithmic trading, factor analysis, and portfolio optimization.
-                            Research-driven strategy development with AI-powered code generation,
-                            backtesting, and live deployment on QuantConnect.
+                            Algorithmic trading, factor analysis, AI-powered
+                            quantitative research and analysis.
                         </p>
                     </div>
                 </div>
@@ -232,144 +221,12 @@
         </div>
     </section>
 
-    <!-- Projects -->
+    <!-- CTA to Solutions -->
     <section>
-        <div class="container">
-            <div class="section-heading">
-                <h2>Open Source Projects</h2>
-            </div>
-            <div class="project-grid">
-
-                <article class="project">
-                    <div class="project-header">
-                        <div>
-                            <h3>QuantCoder <span class="github-stars" data-repo="SL-Mar/quantcoder"></span></h3>
-                            <p>AI-powered CLI for generating QuantConnect trading algorithms</p>
-                        </div>
-                    </div>
-                    <div class="project-meta">
-                        <span>Python</span>
-                        <span>Click</span>
-                        <span>QuantConnect API</span>
-                    </div>
-                    <p>
-                        Converts academic research articles into executable QuantConnect trading algorithms.
-                        Multi-agent AI architecture extracts strategy logic, generates Python code, compiles
-                        against the QuantConnect API, and iterates on errors automatically.
-                    </p>
-                    <div class="tech">
-                        <span>Python</span>
-                        <span>Click</span>
-                        <span>QuantConnect API</span>
-                        <span>LangChain</span>
-                        <span>Rich</span>
-                    </div>
-                    <div class="project-buttons">
-                        <a href="quantcoder/docs.html" class="btn btn-primary">
-                            <i class="fa-solid fa-book"></i> Documentation
-                        </a>
-                        <a href="https://github.com/SL-Mar/quantcoder" target="_blank" class="btn btn-secondary">
-                            <i class="fa-brands fa-github"></i> GitHub
-                        </a>
-                    </div>
-                </article>
-
-                <article class="project">
-                    <div class="project-header">
-                        <div>
-                            <h3>Chat with Fundamentals <span class="github-stars" data-repo="SL-Mar/chat-with-fundamentals"></span></h3>
-                            <p>Financial research and portfolio management platform</p>
-                        </div>
-                    </div>
-                    <div class="project-meta">
-                        <span>Next.js</span>
-                        <span>FastAPI</span>
-                        <span>TimescaleDB</span>
-                    </div>
-                    <p>
-                        Universe-based factor analysis platform combining AI-powered fundamental analysis
-                        with quantitative portfolio optimization. Multi-agent analysis, EODHD data integration,
-                        and sandbox code execution for research workflows.
-                    </p>
-                    <div class="tech">
-                        <span>Next.js</span>
-                        <span>FastAPI</span>
-                        <span>TimescaleDB</span>
-                        <span>Redis</span>
-                        <span>Ollama</span>
-                    </div>
-                    <div class="project-buttons">
-                        <a href="chat-with-fundamentals/docs.html" class="btn btn-primary">
-                            <i class="fa-solid fa-book"></i> Documentation
-                        </a>
-                        <a href="https://github.com/SL-Mar/chat-with-fundamentals" target="_blank" class="btn btn-secondary">
-                            <i class="fa-brands fa-github"></i> GitHub
-                        </a>
-                    </div>
-                </article>
-
-                <article class="project">
-                    <div class="project-header">
-                        <div>
-                            <h3>WindMar <span class="github-stars" data-repo="SL-Mar/windmar"></span></h3>
-                            <p>Weather-aware maritime route optimization</p>
-                        </div>
-                    </div>
-                    <div class="project-meta">
-                        <span>Python</span>
-                        <span>FastAPI</span>
-                        <span>Next.js</span>
-                    </div>
-                    <p>
-                        Route optimization for MR product tankers using A* pathfinding over ocean grids
-                        with real meteorological data. Models hull resistance, propulsion efficiency, and
-                        cargo loading for realistic fuel consumption estimates.
-                    </p>
-                    <div class="tech">
-                        <span>Python</span>
-                        <span>FastAPI</span>
-                        <span>Next.js</span>
-                        <span>NumPy</span>
-                        <span>xarray</span>
-                        <span>Docker</span>
-                    </div>
-                    <div class="project-buttons">
-                        <a href="windmar/docs.html" class="btn btn-primary">
-                            <i class="fa-solid fa-book"></i> Documentation
-                        </a>
-                        <a href="https://github.com/SL-Mar/windmar" target="_blank" class="btn btn-secondary">
-                            <i class="fa-brands fa-github"></i> GitHub
-                        </a>
-                    </div>
-                </article>
-
-                <article class="project">
-                    <div class="project-header">
-                        <div>
-                            <h3>MarChat <span style="background:#22c55e; color:#fff; font-size:0.65em; padding:2px 8px; border-radius:4px; vertical-align:middle; margin-left:8px;">SOLD</span> <span class="github-stars" data-repo="SL-Mar/marchat"></span></h3>
-                            <p>AI-powered pre-arrival form automation</p>
-                        </div>
-                    </div>
-                    <div class="project-meta">
-                        <span>Next.js</span>
-                        <span>FastAPI</span>
-                        <span>Ollama</span>
-                    </div>
-                    <p>
-                        Automates pre-arrival port documentation &mdash; FAL forms, ISPS declarations,
-                        health forms, customs manifests &mdash; using a tool-calling LLM agent. Reads crew
-                        lists and certificates, fills Excel/DOCX/PDF templates automatically.
-                    </p>
-                    <div class="tech">
-                        <span>Next.js</span>
-                        <span>FastAPI</span>
-                        <span>Ollama</span>
-                        <span>Anthropic</span>
-                        <span>SQLite</span>
-                    </div>
-                </article>
-
-            </div>
+        <div class="container" style="text-align: center; padding: 2rem 0;">
+            <a href="solutions.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.85rem 2rem;">
+                <i class="fa-solid fa-rocket"></i> View Solutions & Projects
+            </a>
         </div>
     </section>
 
@@ -381,35 +238,5 @@
         </div>
     </footer>
 
-    <style>
-        .github-stars {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            font-size: 0.8rem;
-            font-weight: 400;
-            color: var(--text-tertiary);
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 0.15rem 0.6rem;
-            vertical-align: middle;
-            margin-left: 0.5rem;
-        }
-        .github-stars i { color: #e3b341; font-size: 0.75rem; }
-    </style>
-    <script>
-        document.querySelectorAll('.github-stars').forEach(el => {
-            const repo = el.dataset.repo;
-            fetch(`https://api.github.com/repos/${repo}`)
-                .then(r => r.json())
-                .then(data => {
-                    if (data.stargazers_count !== undefined) {
-                        el.innerHTML = `<i class="fa-solid fa-star"></i> ${data.stargazers_count}`;
-                    }
-                })
-                .catch(() => {});
-        });
-    </script>
 </body>
 </html>
