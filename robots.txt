@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+Disallow: /katja/
+Disallow: /quantcoderfs/
+Disallow: /chat-with-solas/
+Disallow: /rnd-notes.html
+Disallow: /biotech-gainer-screening-methodology.html
+Disallow: /expected-shortfall-portfolio-strategy.html
+Disallow: /n8n-claude-breakout-trading.html
+Disallow: /contact.html
+Disallow: /code.html
+Disallow: /local-ai.html
+Disallow: /maritime-rag.html
+Disallow: /agentic-sms.html
+Disallow: /chat-with-solas.html
+Disallow: /*.md$
+
+Sitemap: https://slmar.co/sitemap.xml

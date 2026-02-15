@@ -4,10 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <meta name="description" content="Maritime & Market Consultancy — open-source applications for maritime operations, weather routing, and quantitative finance">
+    <meta name="description" content="Maritime & Market Consultancy — open-source tools for weather-aware route optimization, ship performance modelling, and quantitative trading">
+    <link rel="canonical" href="https://slmar.co/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://slmar.co/">
+    <meta property="og:title" content="SL Mar — Maritime & Market Consultancy">
+    <meta property="og:description" content="Open-source tools for weather-aware route optimization, ship performance modelling, and quantitative trading — grounded in 15+ years of deep-sea tanker operations.">
+    <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <meta property="og:site_name" content="SL Mar">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SL Mar — Maritime & Market Consultancy">
+    <meta name="twitter:description" content="Open-source tools for weather-aware route optimization, ship performance modelling, and quantitative trading.">
+    <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
     <title>SL Mar — Maritime & Market Consultancy</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "SL Mar",
+        "url": "https://slmar.co",
+        "description": "Maritime & Market Consultancy — open-source tools for weather-aware route optimization, ship performance modelling, and quantitative trading.",
+        "founder": {
+            "@type": "Person",
+            "name": "Sebastien M. Laignel",
+            "jobTitle": "Master Mariner, MSc, LLM"
+        },
+        "sameAs": [
+            "https://github.com/SL-Mar",
+            "https://www.linkedin.com/in/smr-laignel",
+            "https://medium.com/@sl_mar"
+        ]
+    }
+    </script>
     <style>
         /* Hero Banner */
         .hero-banner {
@@ -55,7 +85,7 @@
         .hero-desc {
             font-size: 1.15rem;
             color: rgba(255,255,255,0.75) !important;
-            max-width: 600px;
+            max-width: 680px;
             line-height: 1.7;
         }
         .hero-credit {
@@ -95,13 +125,16 @@
         }
         .domain-card h3 {
             font-size: 1.25rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             color: var(--text);
         }
         .domain-card p {
             color: var(--text-secondary);
             font-size: 0.9375rem;
-            line-height: 1.6;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+        .domain-card p:last-child {
             margin-bottom: 0;
         }
         .domain-card .credit {
@@ -128,10 +161,123 @@
             background: var(--border);
         }
 
+        /* WindMar Featured Section */
+        .windmar-feature {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+        }
+        .windmar-feature:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .windmar-feature h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+        }
+        .windmar-feature .feature-subtitle {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+        }
+        .windmar-feature p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+        .windmar-feature ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+        .windmar-feature ul li {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.8;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .windmar-feature ul li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 0.8rem;
+            top: 0.25rem;
+        }
+        .windmar-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* CTA Grid */
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .cta-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cta-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(88,166,255,0.1);
+            transform: translateY(-4px);
+            color: var(--text);
+        }
+        .cta-card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .cta-card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        .cta-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* Contact Strip */
+        .contact-strip {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        .contact-strip h2 {
+            margin-bottom: 0.75rem;
+        }
+        .contact-strip p {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
         @media (max-width: 1024px) {
             .domain-grid { grid-template-columns: 1fr; }
+            .cta-grid { grid-template-columns: 1fr; }
             .hero-banner { height: 55vh; min-height: 380px; }
             .hero-banner h1 { font-size: 2.5rem; }
+            .windmar-feature { padding: 2rem; }
         }
         @media (max-width: 768px) {
             .hero-banner { height: 50vh; min-height: 320px; }
@@ -139,6 +285,9 @@
             .hero-tagline { font-size: 1.1rem; }
             .hero-desc { font-size: 1rem; }
             .hero-banner .hero-overlay { padding-bottom: 2.5rem; }
+            .windmar-feature { padding: 1.5rem; }
+            .windmar-buttons { flex-direction: column; }
+            .windmar-buttons .btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -170,15 +319,16 @@
                 <h1>SL Mar</h1>
                 <p class="hero-tagline">Maritime & Market Consultancy</p>
                 <p class="hero-desc">
-                    Building open-source tools at the intersection of maritime operations,
-                    weather intelligence, and quantitative finance.
+                    Building open-source tools for weather-aware route optimization, ship performance
+                    modelling, and quantitative trading &mdash; grounded in 15+ years of deep-sea
+                    tanker operations.
                 </p>
             </div>
         </div>
         <span class="hero-credit">Photo: author</span>
     </section>
 
-    <!-- Domains -->
+    <!-- Expertise -->
     <section>
         <div class="container">
             <div class="section-heading">
@@ -190,8 +340,14 @@
                     <div class="domain-card-body">
                         <h3>Maritime Operations</h3>
                         <p>
-                            Navigation, tanker operations, cargo handling &mdash;
-                            Oil, Chemical, LPG, LNG.
+                            A career spanning oil, chemical, LPG, and LNG tankers &mdash; from cargo
+                            handling and ISPS/vetting compliance to pre-arrival documentation and
+                            terminal operations across four continents.
+                        </p>
+                        <p>
+                            The tools built here come from direct operational experience: WindMar models
+                            real loading conditions, MarChat automated the forms the author filled
+                            manually for years.
                         </p>
                     </div>
                     <p class="credit">Photo: author</p>
@@ -201,8 +357,14 @@
                     <div class="domain-card-body">
                         <h3>Weather Routing</h3>
                         <p>
-                            Ocean weather analysis, physics-based ship modelling,
-                            voyage planning.
+                            Physics-based ship modelling (Holtrop&ndash;Mennen resistance, propulsion
+                            chain, SFOC curves), A* pathfinding with safety constraints (wave height,
+                            roll, slamming), and Monte Carlo fuel estimation across ECMWF/GFS
+                            scenarios producing P10/P50/P90 distributions.
+                        </p>
+                        <p>
+                            A route optimizer masters and superintendents can trust because it models
+                            physics they understand.
                         </p>
                     </div>
                     <p class="credit">Source: windy.com</p>
@@ -212,8 +374,13 @@
                     <div class="domain-card-body">
                         <h3>Quantitative Finance</h3>
                         <p>
-                            Algorithmic trading, factor analysis, AI-powered
-                            quantitative research and analysis.
+                            Systematic trading from conception to live deployment on QuantConnect &mdash;
+                            momentum, mean-reversion, and factor-based strategies. QuantCoder converts
+                            academic papers into executable algorithms via multi-agent LLM pipelines.
+                        </p>
+                        <p>
+                            QuantMar: a self-modifying strategy SDK with autonomous indicator generation
+                            through sandboxed code execution and an end-to-end backtest engine.
                         </p>
                     </div>
                 </div>
@@ -221,11 +388,72 @@
         </div>
     </section>
 
-    <!-- CTA to Solutions -->
+    <!-- WindMar Featured -->
     <section>
-        <div class="container" style="text-align: center; padding: 2rem 0;">
-            <a href="solutions.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.85rem 2rem;">
-                <i class="fa-solid fa-rocket"></i> View Solutions & Projects
+        <div class="container">
+            <div class="section-heading">
+                <h2>Featured</h2>
+            </div>
+            <div class="windmar-feature">
+                <h3>WindMar &mdash; Weather-Aware Maritime Route Optimization</h3>
+                <p class="feature-subtitle">Physics-based. Not just a weather overlay.</p>
+                <p>
+                    WindMar combines hydrodynamic modelling, real meteorological data, and constrained
+                    pathfinding to produce routes that account for hull resistance, propulsion efficiency,
+                    and cargo loading under actual ocean conditions. Built by a master mariner for
+                    the people who actually sail the ships.
+                </p>
+                <ul>
+                    <li>ECMWF and GFS weather layers with wave, wind, and current fields</li>
+                    <li>Dual optimization: minimum fuel and minimum time with safety constraints</li>
+                    <li>Full passage plan output with waypoints, ETA, and bunker estimates</li>
+                    <li>CII compliance scoring for decarbonization reporting</li>
+                </ul>
+                <div class="windmar-buttons">
+                    <a href="https://demo-windmar.slmar.co" target="_blank" class="btn btn-primary">
+                        <i class="fa-solid fa-play"></i> Live Demo
+                    </a>
+                    <a href="windmar/docs.html" class="btn btn-secondary">
+                        <i class="fa-solid fa-book"></i> Documentation
+                    </a>
+                    <a href="https://github.com/SL-Mar/windmar" target="_blank" class="btn btn-secondary">
+                        <i class="fa-brands fa-github"></i> GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Grid -->
+    <section>
+        <div class="container">
+            <div class="cta-grid">
+                <a href="solutions.html" class="cta-card">
+                    <i class="fa-solid fa-ship"></i>
+                    <h3>Ship Operators & Charterers</h3>
+                    <p>Route optimization, voyage planning tools, and operational automation.</p>
+                </a>
+                <a href="windmar/docs.html" class="cta-card">
+                    <i class="fa-solid fa-microchip"></i>
+                    <h3>Technical Evaluators</h3>
+                    <p>Architecture, hydrodynamic modelling, and API documentation.</p>
+                </a>
+                <a href="publications.html" class="cta-card">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <h3>Research & Publications</h3>
+                    <p>Articles on AI, quantitative finance, algorithmic trading, and maritime law.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Strip -->
+    <section class="contact-strip" id="contact">
+        <div class="container">
+            <h2>Get in Touch</h2>
+            <p>For partnerships, consulting, or collaboration inquiries.</p>
+            <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.75rem 2rem;">
+                <i class="fa-brands fa-linkedin"></i> Connect on LinkedIn
             </a>
         </div>
     </section>
