@@ -70,14 +70,33 @@
             text-align: center;
         }
         .hero-tagline {
+            position: relative;
+            height: 3.5rem;
             font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 1.75rem;
+            font-size: 2.5rem;
             font-weight: 400;
             font-style: italic;
             color: rgba(255,255,255,0.9) !important;
             letter-spacing: 0.01em;
-            line-height: 1.6;
-            max-width: 700px;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+        .hero-tagline span {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            opacity: 0;
+            animation: fadePhrase 9s infinite;
+        }
+        .hero-tagline span:nth-child(1) { animation-delay: 0s; }
+        .hero-tagline span:nth-child(2) { animation-delay: 3s; }
+        .hero-tagline span:nth-child(3) { animation-delay: 6s; }
+        @keyframes fadePhrase {
+            0%   { opacity: 0; transform: translateX(-50%) translateY(8px); }
+            8%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+            28%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+            36%  { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
         }
         .hero-credit {
             position: absolute;
@@ -281,13 +300,13 @@
             .domain-grid { grid-template-columns: 1fr; }
             .cta-grid { grid-template-columns: 1fr; }
             .hero-banner { height: 55vh; min-height: 380px; }
-            .hero-tagline { font-size: 1.4rem; }
+            .hero-tagline { font-size: 1.8rem; height: 2.5rem; }
             .windmar-feature { padding: 2rem; }
             .nav-subtitle { display: none; }
         }
         @media (max-width: 768px) {
             .hero-banner { height: 50vh; min-height: 320px; }
-            .hero-tagline { font-size: 1.15rem; }
+            .hero-tagline { font-size: 1.25rem; height: 2rem; }
             .windmar-feature { padding: 1.5rem; }
             .windmar-buttons { flex-direction: column; }
             .windmar-buttons .btn { width: 100%; justify-content: center; }
@@ -319,10 +338,11 @@
     <section class="hero-banner">
         <img src="Assets/BridgeView.jpg" alt="Ship bridge at sunset with navigation instruments" loading="eager" />
         <div class="hero-overlay">
-            <p class="hero-tagline">
-                Weather routing, ship performance modelling,
-                and AI-powered systematic trading.
-            </p>
+            <div class="hero-tagline">
+                <span>Weather Routing</span>
+                <span>Ship Performance Modelling</span>
+                <span>AI-Powered Systematic Trading</span>
+            </div>
         </div>
         <span class="hero-credit">Credit photo: SL Mar</span>
     </section>
