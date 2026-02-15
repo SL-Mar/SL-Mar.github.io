@@ -4,21 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <meta name="description" content="Open-source applications for maritime operations, quantitative finance, and AI">
-    <title>Applications | SL Mar</title>
+    <meta name="description" content="Maritime & Market Consultancy — open-source applications for maritime operations, weather routing, and quantitative finance">
+    <title>SL Mar — Maritime & Market Consultancy</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* Hero Banner */
+        .hero-banner {
+            position: relative;
+            height: 70vh;
+            min-height: 480px;
+            max-height: 720px;
+            overflow: hidden;
+        }
+        .hero-banner img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 40%;
+        }
+        .hero-banner .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(13,17,23,0.3) 0%,
+                rgba(13,17,23,0.6) 50%,
+                rgba(13,17,23,0.95) 100%
+            );
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        .hero-banner h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+            color: #fff !important;
+        }
+        .hero-banner h1:hover { color: #fff !important; }
+        .hero-tagline {
+            font-size: 1.4rem;
+            color: var(--accent) !important;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        .hero-desc {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.75) !important;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+        .hero-credit {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 1.5rem;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.35);
+        }
+
+        /* Domain Cards */
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .domain-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .domain-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            transform: translateY(-4px);
+        }
+        .domain-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+        .domain-card-body {
+            padding: 1.5rem;
+        }
+        .domain-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        .domain-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+        .domain-card .credit {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            padding: 0 1.5rem 1rem;
+        }
+
+        /* Section heading */
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-heading h2 {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+        .section-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Project grid */
         .project-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 2.5rem;
+            gap: 2rem;
         }
-        .project-grid .project {
-            margin-bottom: 0;
-        }
+        .project-grid .project { margin-bottom: 0; }
+
         @media (max-width: 1024px) {
+            .domain-grid { grid-template-columns: 1fr; }
             .project-grid { grid-template-columns: 1fr; }
+            .hero-banner { height: 55vh; min-height: 380px; }
+            .hero-banner h1 { font-size: 2.5rem; }
+        }
+        @media (max-width: 768px) {
+            .hero-banner { height: 50vh; min-height: 320px; }
+            .hero-banner h1 { font-size: 2rem; }
+            .hero-tagline { font-size: 1.1rem; }
+            .hero-desc { font-size: 1rem; }
+            .hero-banner .hero-overlay { padding-bottom: 2.5rem; }
         }
     </style>
 </head>
@@ -30,7 +159,7 @@
                 <a href="index.html" class="logo">SL Mar</a>
             </div>
             <ul class="nav-center">
-                <li><a href="index.html" class="active">Applications</a></li>
+                <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="publications.html">Publications</a></li>
             </ul>
             <div class="nav-right">
@@ -41,8 +170,74 @@
         </div>
     </nav>
 
+    <!-- Hero -->
+    <section class="hero-banner">
+        <img src="Assets/BridgeView.jpg" alt="Ship bridge at sunset with navigation instruments" loading="eager" />
+        <div class="hero-overlay">
+            <div class="container">
+                <h1>SL Mar</h1>
+                <p class="hero-tagline">Maritime & Market Consultancy</p>
+                <p class="hero-desc">
+                    Building open-source tools at the intersection of maritime operations,
+                    weather intelligence, and quantitative finance.
+                </p>
+            </div>
+        </div>
+        <span class="hero-credit">Photo: author</span>
+    </section>
+
+    <!-- Domains -->
     <section>
         <div class="container">
+            <div class="section-heading">
+                <h2>Expertise</h2>
+            </div>
+            <div class="domain-grid">
+                <div class="domain-card">
+                    <img src="Assets/ManifoldView.jpg" alt="Product tanker manifold during cargo operations" loading="lazy" />
+                    <div class="domain-card-body">
+                        <h3>Maritime Operations</h3>
+                        <p>
+                            Vessel operations, cargo management, and regulatory compliance
+                            for product tankers. From bridge watch-keeping to port-state
+                            inspections, translating hands-on experience into software.
+                        </p>
+                    </div>
+                    <p class="credit">Photo: author</p>
+                </div>
+                <div class="domain-card">
+                    <img src="Assets/WindyView.jpg" alt="Cyclone weather patterns near Madagascar" loading="lazy" />
+                    <div class="domain-card-body">
+                        <h3>Weather Routing</h3>
+                        <p>
+                            Ocean weather analysis, route optimization, and voyage planning
+                            using ECMWF and GFS meteorological data. Physics-based modeling
+                            of hull resistance, fuel consumption, and sea state effects.
+                        </p>
+                    </div>
+                    <p class="credit">Source: windy.com</p>
+                </div>
+                <div class="domain-card">
+                    <img src="Assets/SLMarLogo.jpg" alt="Financial analysis screens with market data" loading="lazy" />
+                    <div class="domain-card-body">
+                        <h3>Quantitative Finance</h3>
+                        <p>
+                            Algorithmic trading, factor analysis, and portfolio optimization.
+                            Research-driven strategy development with AI-powered code generation,
+                            backtesting, and live deployment on QuantConnect.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section>
+        <div class="container">
+            <div class="section-heading">
+                <h2>Open Source Projects</h2>
+            </div>
             <div class="project-grid">
 
                 <article class="project">
@@ -56,22 +251,12 @@
                         <span>Python</span>
                         <span>Click</span>
                         <span>QuantConnect API</span>
-                        <span>Last updated: February 2026</span>
                     </div>
                     <p>
-                        QuantCoder is a command-line tool that converts academic research articles into executable
-                        QuantConnect trading algorithms. It uses a multi-agent AI architecture to extract strategy logic
-                        from papers, generate Python code, compile against the QuantConnect API, and iterate on errors
-                        automatically. Includes an interactive chat mode for strategy refinement.
+                        Converts academic research articles into executable QuantConnect trading algorithms.
+                        Multi-agent AI architecture extracts strategy logic, generates Python code, compiles
+                        against the QuantConnect API, and iterates on errors automatically.
                     </p>
-                    <p><strong>Key Features:</strong></p>
-                    <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                        <li>Research paper to trading algorithm conversion</li>
-                        <li>Multi-agent architecture (extractor, coder, compiler, fixer)</li>
-                        <li>Interactive chat for strategy development and backtesting</li>
-                        <li>QuantConnect API integration (compile, backtest, deploy)</li>
-                        <li>Support for multiple LLM providers (OpenAI, Anthropic, Ollama)</li>
-                    </ul>
                     <div class="tech">
                         <span>Python</span>
                         <span>Click</span>
@@ -81,12 +266,10 @@
                     </div>
                     <div class="project-buttons">
                         <a href="quantcoder/docs.html" class="btn btn-primary">
-                            <i class="fa-solid fa-book"></i>
-                            View Documentation
+                            <i class="fa-solid fa-book"></i> Documentation
                         </a>
-                        <a href="https://github.com/SL-Mar/quantcoder" target="_blank" class="btn btn-primary">
-                            <i class="fa-brands fa-github"></i>
-                            View on GitHub
+                        <a href="https://github.com/SL-Mar/quantcoder" target="_blank" class="btn btn-secondary">
+                            <i class="fa-brands fa-github"></i> GitHub
                         </a>
                     </div>
                 </article>
@@ -95,48 +278,32 @@
                     <div class="project-header">
                         <div>
                             <h3>Chat with Fundamentals <span class="github-stars" data-repo="SL-Mar/chat-with-fundamentals"></span></h3>
-                            <p>Full-stack financial research and portfolio management platform</p>
+                            <p>Financial research and portfolio management platform</p>
                         </div>
                     </div>
                     <div class="project-meta">
                         <span>Next.js</span>
                         <span>FastAPI</span>
-                        <span>PostgreSQL</span>
-                        <span>Last updated: February 2026</span>
+                        <span>TimescaleDB</span>
                     </div>
                     <p>
-                        Chat with Fundamentals is a comprehensive financial research and portfolio management platform that combines
-                        AI-powered fundamental analysis with advanced quantitative portfolio optimization. Built as a research engine
-                        to explore how autonomous agents and AI can automate and enhance financial analysis, it features multi-agent
-                        AI analysis, shares-based portfolio tracking, and RAG systems for quantitative research and SEC filings.
+                        Universe-based factor analysis platform combining AI-powered fundamental analysis
+                        with quantitative portfolio optimization. Multi-agent analysis, EODHD data integration,
+                        and sandbox code execution for research workflows.
                     </p>
-                    <p><strong>Key Features:</strong></p>
-                    <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                        <li>Multi-agent AI analysis (stocks, ETFs, forex, macro indicators)</li>
-                        <li>Shares-based portfolio management with 5 optimization strategies</li>
-                        <li>Comprehensive EODHD API integration (50+ endpoints across 9 categories)</li>
-                        <li>RAG systems for quant research papers and SEC filings (10-K, 10-Q, 8-K)</li>
-                        <li>Advanced risk analytics (Monte Carlo, VaR, CVaR, rolling Sharpe ratios)</li>
-                        <li>Real-time agent console with WebSocket logging</li>
-                    </ul>
                     <div class="tech">
                         <span>Next.js</span>
                         <span>FastAPI</span>
-                        <span>PostgreSQL</span>
                         <span>TimescaleDB</span>
                         <span>Redis</span>
-                        <span>CrewAI</span>
-                        <span>LangChain</span>
-                        <span>ChromaDB</span>
+                        <span>Ollama</span>
                     </div>
                     <div class="project-buttons">
                         <a href="chat-with-fundamentals/docs.html" class="btn btn-primary">
-                            <i class="fa-solid fa-book"></i>
-                            View Documentation
+                            <i class="fa-solid fa-book"></i> Documentation
                         </a>
-                        <a href="https://github.com/SL-Mar/chat-with-fundamentals" target="_blank" class="btn btn-primary">
-                            <i class="fa-brands fa-github"></i>
-                            View on GitHub
+                        <a href="https://github.com/SL-Mar/chat-with-fundamentals" target="_blank" class="btn btn-secondary">
+                            <i class="fa-brands fa-github"></i> GitHub
                         </a>
                     </div>
                 </article>
@@ -145,29 +312,19 @@
                     <div class="project-header">
                         <div>
                             <h3>WindMar <span class="github-stars" data-repo="SL-Mar/windmar"></span></h3>
-                            <p>Maritime route optimization for MR product tankers</p>
+                            <p>Weather-aware maritime route optimization</p>
                         </div>
                     </div>
                     <div class="project-meta">
                         <span>Python</span>
                         <span>FastAPI</span>
                         <span>Next.js</span>
-                        <span>Last updated: February 2026</span>
                     </div>
                     <p>
-                        WindMar is a weather-aware maritime route optimization system designed for MR product tankers.
-                        It uses A* pathfinding over ocean grids with real meteorological data to find fuel-optimal routes
-                        that account for wind, waves, currents, and vessel physics. The system models hull resistance,
-                        propulsion efficiency, and cargo loading to produce realistic fuel consumption estimates.
+                        Route optimization for MR product tankers using A* pathfinding over ocean grids
+                        with real meteorological data. Models hull resistance, propulsion efficiency, and
+                        cargo loading for realistic fuel consumption estimates.
                     </p>
-                    <p><strong>Key Features:</strong></p>
-                    <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary);">
-                        <li>Weather-aware A* routing with ECMWF/GFS meteorological data</li>
-                        <li>Physics-based vessel modeling (hull resistance, propulsion, cargo effects)</li>
-                        <li>Fuel consumption minimization across real ocean conditions</li>
-                        <li>Interactive map visualization with route comparison</li>
-                        <li>Docker Compose deployment (backend + frontend + worker)</li>
-                    </ul>
                     <div class="tech">
                         <span>Python</span>
                         <span>FastAPI</span>
@@ -178,12 +335,10 @@
                     </div>
                     <div class="project-buttons">
                         <a href="windmar/docs.html" class="btn btn-primary">
-                            <i class="fa-solid fa-book"></i>
-                            View Documentation
+                            <i class="fa-solid fa-book"></i> Documentation
                         </a>
-                        <a href="https://github.com/SL-Mar/windmar" target="_blank" class="btn btn-primary">
-                            <i class="fa-brands fa-github"></i>
-                            View on GitHub
+                        <a href="https://github.com/SL-Mar/windmar" target="_blank" class="btn btn-secondary">
+                            <i class="fa-brands fa-github"></i> GitHub
                         </a>
                     </div>
                 </article>
@@ -192,19 +347,18 @@
                     <div class="project-header">
                         <div>
                             <h3>MarChat <span style="background:#22c55e; color:#fff; font-size:0.65em; padding:2px 8px; border-radius:4px; vertical-align:middle; margin-left:8px;">SOLD</span> <span class="github-stars" data-repo="SL-Mar/marchat"></span></h3>
-                            <p>AI-powered pre-arrival form automation for maritime operations</p>
+                            <p>AI-powered pre-arrival form automation</p>
                         </div>
                     </div>
                     <div class="project-meta">
                         <span>Next.js</span>
                         <span>FastAPI</span>
-                        <span>Ollama + Anthropic</span>
-                        <span>Delivered: February 2026</span>
+                        <span>Ollama</span>
                     </div>
                     <p>
-                        MarChat automates pre-arrival port documentation &mdash; FAL forms, ISPS declarations, health forms, customs manifests &mdash;
-                        using a tool-calling LLM agent. Reads crew lists, stores declarations, and certificates, then fills Excel/DOCX/PDF
-                        templates automatically. Local-first inference via Ollama with Anthropic Claude fallback.
+                        Automates pre-arrival port documentation &mdash; FAL forms, ISPS declarations,
+                        health forms, customs manifests &mdash; using a tool-calling LLM agent. Reads crew
+                        lists and certificates, fills Excel/DOCX/PDF templates automatically.
                     </p>
                     <div class="tech">
                         <span>Next.js</span>
@@ -212,7 +366,6 @@
                         <span>Ollama</span>
                         <span>Anthropic</span>
                         <span>SQLite</span>
-                        <span>openpyxl</span>
                     </div>
                 </article>
 
@@ -227,6 +380,7 @@
             <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions l&eacute;gales</a></p>
         </div>
     </footer>
+
     <style>
         .github-stars {
             display: inline-flex;
