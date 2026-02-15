@@ -1,5 +1,5 @@
 # Professional Code Quality Assessment
-**Portfolio: https://quantcoder-fs.com/development.html**
+**Portfolio: https://slmar.co/development.html**
 **Assessment Date:** November 10, 2025
 **Assessor:** Claude Code (Sonnet 4.5)
 
