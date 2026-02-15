@@ -60,33 +60,24 @@
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(13,17,23,0.3) 0%,
-                rgba(13,17,23,0.6) 50%,
-                rgba(13,17,23,0.95) 100%
+                rgba(13,17,23,0.2) 0%,
+                rgba(13,17,23,0.5) 40%,
+                rgba(13,17,23,0.85) 100%
             );
             display: flex;
-            align-items: flex-end;
-            padding-bottom: 4rem;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
-        .hero-banner h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.5rem;
-            color: #fff !important;
-        }
-        .hero-banner h1:hover { color: #fff !important; }
         .hero-tagline {
-            font-size: 1.4rem;
-            color: var(--accent) !important;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
-        .hero-desc {
-            font-size: 1.15rem;
-            color: rgba(255,255,255,0.75) !important;
-            max-width: 680px;
-            line-height: 1.7;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.75rem;
+            font-weight: 400;
+            font-style: italic;
+            color: rgba(255,255,255,0.9) !important;
+            letter-spacing: 0.01em;
+            line-height: 1.6;
+            max-width: 700px;
         }
         .hero-credit {
             position: absolute;
@@ -275,19 +266,28 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Nav subtitle */
+        .nav-subtitle {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            font-weight: 400;
+            border-left: 1px solid var(--border);
+            padding-left: 0.75rem;
+            margin-left: 0.25rem;
+            white-space: nowrap;
+        }
+
         @media (max-width: 1024px) {
             .domain-grid { grid-template-columns: 1fr; }
             .cta-grid { grid-template-columns: 1fr; }
             .hero-banner { height: 55vh; min-height: 380px; }
-            .hero-banner h1 { font-size: 2.5rem; }
+            .hero-tagline { font-size: 1.4rem; }
             .windmar-feature { padding: 2rem; }
+            .nav-subtitle { display: none; }
         }
         @media (max-width: 768px) {
             .hero-banner { height: 50vh; min-height: 320px; }
-            .hero-banner h1 { font-size: 2rem; }
-            .hero-tagline { font-size: 1.1rem; }
-            .hero-desc { font-size: 1rem; }
-            .hero-banner .hero-overlay { padding-bottom: 2.5rem; }
+            .hero-tagline { font-size: 1.15rem; }
             .windmar-feature { padding: 1.5rem; }
             .windmar-buttons { flex-direction: column; }
             .windmar-buttons .btn { width: 100%; justify-content: center; }
@@ -300,6 +300,7 @@
             <div class="nav-left">
                 <img src="logo.png" alt="SL Mar Logo" class="nav-logo" />
                 <a href="index.html" class="logo">SL Mar</a>
+                <span class="nav-subtitle">Maritime & Market Consultancy</span>
             </div>
             <ul class="nav-center">
                 <li><a href="index.html" class="active">Home</a></li>
@@ -318,14 +319,10 @@
     <section class="hero-banner">
         <img src="Assets/BridgeView.jpg" alt="Ship bridge at sunset with navigation instruments" loading="eager" />
         <div class="hero-overlay">
-            <div class="container">
-                <h1>SL Mar</h1>
-                <p class="hero-tagline">Maritime & Market Consultancy</p>
-                <p class="hero-desc">
-                    Weather routing, ship performance modelling, and AI-powered
-                    systematic trading.
-                </p>
-            </div>
+            <p class="hero-tagline">
+                Weather routing, ship performance modelling,
+                and AI-powered systematic trading.
+            </p>
         </div>
         <span class="hero-credit">Credit photo: SL Mar</span>
     </section>
