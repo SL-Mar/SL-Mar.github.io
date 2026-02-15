@@ -108,6 +108,8 @@
             border-radius: 8px;
             overflow: hidden;
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
         }
         .domain-card:hover {
             border-color: var(--border-hover);
@@ -122,6 +124,7 @@
         }
         .domain-card-body {
             padding: 1.5rem;
+            flex: 1;
         }
         .domain-card h3 {
             font-size: 1.25rem;
@@ -397,8 +400,8 @@
                 <h2>Featured</h2>
             </div>
             <div class="windmar-feature">
-                <h3>WindMar &mdash; Weather-Aware Maritime Route Optimization</h3>
-                <p class="feature-subtitle">Physics-based. Not just a weather overlay.</p>
+                <h3>WindMar &mdash; Weather & Route Analysis</h3>
+                <p class="feature-subtitle">Grounded in physics. Validated at sea.</p>
                 <p>
                     WindMar combines hydrodynamic modelling, real meteorological data, and constrained
                     pathfinding to produce routes that account for hull resistance, propulsion efficiency,
