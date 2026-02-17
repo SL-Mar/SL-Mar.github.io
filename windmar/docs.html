@@ -100,6 +100,7 @@
             <ul class="sidebar-menu">
                 <li><a href="weather-data.html"><i class="fas fa-cloud-sun-rain"></i> Weather Data Acquisition</a></li>
                 <li><a href="#weather-database"><i class="fas fa-database"></i> Weather Database</a></li>
+                <li><a href="#forecast-timeline"><i class="fas fa-clock"></i> Forecast Timeline</a></li>
             </ul>
         </div>
 
@@ -2122,6 +2123,131 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                         <tr><td>Monte Carlo (100 sims)</td><td>N/A</td><td>&lt; 500ms</td></tr>
                     </tbody>
                 </table>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- FORECAST TIMELINE -->
+            <!-- ============================================================ -->
+            <section id="forecast-timeline">
+                <h2>Forecast Timeline</h2>
+
+                <p>
+                    The Forecast Timeline allows the user to animate weather data across all 41 forecast
+                    hours (0&ndash;120h, 3-hourly) for wind, waves, currents, swell, SST, and visibility,
+                    or across 10 daily steps (0&ndash;216h) for ice concentration. The timeline provides
+                    play/pause, speed control (1&times;/2&times;/4&times;), and a scrubber bar that
+                    shows date labels aligned with the model run time.
+                </p>
+
+                <div class="alert info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Local-first architecture</strong> &mdash; WindMar runs entirely on a local machine.
+                    Unlike cloud services such as Windy.com that serve pre-rendered tiles from a global CDN,
+                    WindMar fetches raw forecast data on demand, stores it in a local PostgreSQL database,
+                    and renders overlays client-side in the browser. This design gives full data ownership
+                    and offline capability, but imposes memory and bandwidth constraints that affect
+                    the timeline experience.
+                </div>
+
+                <h3>Data Flow</h3>
+                <p>
+                    All 7 weather layers use the same direct-load pattern. There is no background
+                    prefetching or polling loop.
+                </p>
+                <ol>
+                    <li>User activates a weather layer (e.g., Wind) and clicks the Timeline button</li>
+                    <li>The frontend calls the layer&rsquo;s <code>/frames</code> endpoint with the
+                        current viewport bounds, padded to 10&deg; grid cell edges</li>
+                    <li>The backend checks the file cache (<code>/tmp/windmar_cache/</code>). On cache miss,
+                        it rebuilds all forecast frames from PostgreSQL in a single pass (~3&ndash;50s
+                        depending on viewport size)</li>
+                    <li>The complete multi-frame JSON response is loaded into browser memory</li>
+                    <li>The slider auto-positions to the forecast hour nearest to the current time</li>
+                    <li>Frame switching during playback and scrubbing is instant &mdash; all data is client-side</li>
+                </ol>
+
+                <h3>Viewport Bounds and Capping</h3>
+                <p>
+                    When the timeline opens, the visible map viewport is captured and padded outward to
+                    the nearest 10&deg; grid cell boundaries. A <strong>maximum span of 120&deg; per axis</strong>
+                    is enforced to prevent the browser from receiving responses that exceed its memory capacity.
+                </p>
+                <p>
+                    Pan and zoom actions after the timeline is open do <strong>not</strong> trigger a re-fetch.
+                    The data overlay remains fixed to the bounds captured at load time. If the user pans
+                    beyond those bounds, the heatmap will be truncated at the grid edges. To load data for a
+                    different region:
+                </p>
+                <ol>
+                    <li>Navigate the map to the desired region</li>
+                    <li>Click <strong>Resync</strong> to re-ingest forecast data for the new viewport</li>
+                    <li>Re-open the Timeline &mdash; it will capture the new bounds</li>
+                </ol>
+
+                <h3>Browser Memory Constraints</h3>
+                <p>
+                    The entire forecast dataset (all timesteps, all grid points) is held in the JavaScript
+                    heap simultaneously. For wind data at GFS 0.25&deg; resolution, the response size
+                    scales with the viewport area:
+                </p>
+                <table>
+                    <thead>
+                        <tr><th>Viewport Span</th><th>Grid Points (per component)</th><th>JSON Response (41 frames)</th><th>Browser Behaviour</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>30&deg; &times; 55&deg; (e.g., Europe)</td><td>~26K</td><td>~24 MB</td><td>Loads in ~3s, smooth animation</td></tr>
+                        <tr><td>80&deg; &times; 80&deg; (e.g., Indian Ocean)</td><td>~103K</td><td>~129 MB</td><td>Loads in ~50s, smooth animation</td></tr>
+                        <tr><td>120&deg; &times; 120&deg; (maximum cap)</td><td>~231K</td><td>~290 MB (est.)</td><td>Near browser memory limit</td></tr>
+                    </tbody>
+                </table>
+                <p>
+                    Responses above ~300 MB risk crashing the browser tab. The 120&deg; cap is a pragmatic
+                    trade-off between coverage area and stability. Users needing data for a large ocean basin
+                    should zoom to the region of interest before opening the timeline.
+                </p>
+
+                <h3>Wind Particle Animation</h3>
+                <p>
+                    The wind layer renders two overlapping visualizations: a colour-mapped heatmap
+                    (WMO Beaufort scale) and animated wind particles (leaflet-velocity). The heatmap
+                    is clipped to the data grid bounds, but the particle layer may extrapolate slightly
+                    beyond the grid edges. This is a cosmetic artifact of the particle rendering engine
+                    and does not affect data accuracy.
+                </p>
+
+                <h3>Cache Architecture</h3>
+                <p>
+                    Frame data is cached at three levels to minimise redundant computation:
+                </p>
+                <table>
+                    <thead>
+                        <tr><th>Cache Tier</th><th>Scope</th><th>TTL</th><th>Effect</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Client-side (React ref)</td>
+                            <td>Per browser session</td>
+                            <td>Until page reload or layer change</td>
+                            <td>Instant restore when re-opening the timeline</td>
+                        </tr>
+                        <tr>
+                            <td>File cache (<code>/tmp/windmar_cache/</code>)</td>
+                            <td>Per viewport bounds, per layer</td>
+                            <td>12 hours (cleaned on resync)</td>
+                            <td>Skips DB rebuild on repeated requests</td>
+                        </tr>
+                        <tr>
+                            <td>PostgreSQL</td>
+                            <td>Per source, global grid</td>
+                            <td>Until superseded by newer run</td>
+                            <td>Authoritative store; file cache rebuilt from here</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    A Resync invalidates the client-side and file caches, forcing a fresh rebuild from
+                    the newly ingested PostgreSQL data on the next timeline open.
+                </p>
             </section>
 
             <!-- ============================================================ -->
