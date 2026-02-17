@@ -118,6 +118,8 @@
                 <li><a href="#weather-api"><i class="fas fa-cloud-sun"></i> Weather API</a></li>
                 <li><a href="#route-api"><i class="fas fa-directions"></i> Route API</a></li>
                 <li><a href="#vessel-api"><i class="fas fa-anchor"></i> Vessel API</a></li>
+                <li><a href="#performance-predictor"><i class="fas fa-tachometer-alt"></i> Performance Predictor</a></li>
+                <li><a href="#engine-log-api"><i class="fas fa-clipboard-list"></i> Engine Log API</a></li>
             </ul>
         </div>
 
@@ -166,9 +168,14 @@
                 <div class="alert" style="background: #f0f7f0; border-left: 4px solid #34a853; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
                     <strong><i class="fas fa-code-branch"></i> Development Log</strong>
                     <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #e6f4ea; border: 1px solid #34a853; color: #1e7e34; padding: 0.15rem 0.65rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600; margin-left: 0.5rem; vertical-align: middle;">
-                        <i class="fas fa-tag"></i> v0.0.7 &mdash; Last Stable
+                        <i class="fas fa-tag"></i> v0.0.8 &mdash; Last Stable
                     </span>
                     <table style="width: 100%; margin-top: 0.75rem; font-size: 0.9rem; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #d4e6d4;">
+                            <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.8</strong></td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-17</td>
+                            <td style="padding: 0.35rem 0;">Vessel model upgrade (SFOC calibration fix, Kwon + STAWAVE-1 dual wave methods, bisection performance predictor), engine log analytics (CSV/Excel upload, 5 KPIs, 6 charts, calibration bridge), weather pipeline refactoring (user-triggered overlays, viewport-aware resync, deferred supersede), 79 API endpoints</td>
+                        </tr>
                         <tr style="border-bottom: 1px solid #d4e6d4;">
                             <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.7</strong></td>
                             <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-13</td>
@@ -853,6 +860,25 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                     expectation that waves opposing the vessel's motion cause the greatest speed loss.
                 </p>
 
+                <h3>Dual Wave Method (v0.0.8)</h3>
+                <p>
+                    Since v0.0.8, WindMar supports two wave added resistance methods, selectable via the
+                    <code>wave_method</code> parameter on the vessel model:
+                </p>
+                <ul>
+                    <li><strong><code>stawave1</code></strong> (default) &mdash; ISO 15016 STAWAVE-1 method.
+                        A simplified, internationally standardized formula that estimates wave added resistance
+                        from significant wave height, vessel length, beam, and block coefficient. Well-suited
+                        for sea trial corrections and regulatory compliance calculations.</li>
+                    <li><strong><code>kwon</code></strong> &mdash; Kwon empirical method (documented above).
+                        Estimates speed loss percentage from wave height, vessel particulars, and encounter angle.
+                        More physically detailed directional response; well-validated for merchant vessels at service speed.</li>
+                </ul>
+                <p>
+                    Both methods are available via the <code>POST /api/vessel/predict</code> endpoint. The active method
+                    is reported by <code>GET /api/vessel/model-status</code>.
+                </p>
+
                 <p>
                     For a laden MR tanker in head seas with H_s = 3 m at service speed (Fr &asymp; 0.179), the wave
                     added resistance is approximately:
@@ -924,6 +950,31 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                     The engine load is clamped to the range [0.15, 1.0]. Below 15% load, the engine is considered
                     non-operational. Above 100% MCR, the engine cannot deliver more power, so the brake power is
                     capped at P_MCR = 8,840 kW.
+                </p>
+
+                <h3>SFOC Calibration Factor (v0.0.8)</h3>
+                <p>
+                    Since v0.0.8, the SFOC curve supports a multiplicative calibration factor (<code>sfoc_factor</code>)
+                    derived from engine log analysis. When the vessel is calibrated from actual noon report or engine log
+                    data, the optimizer may determine that the manufacturer's SFOC reference is over- or under-estimated.
+                    The corrected SFOC is:
+                </p>
+                <div class="formula-block">
+                    <div class="formula-title">Calibrated SFOC</div>
+                    \[\text{SFOC}_{\text{calibrated}}(l_f) = \text{SFOC}(l_f) \times k_{\text{sfoc}}\]
+                    <div class="formula-where">
+                        <p>Where:</p>
+                        <ul>
+                            <li>\(k_{\text{sfoc}}\) = SFOC calibration factor (default 1.0, typically 0.9&ndash;1.15)</li>
+                            <li>\(\text{SFOC}(l_f)\) = uncalibrated piecewise curve from above</li>
+                        </ul>
+                    </div>
+                </div>
+                <p>
+                    The factor is stored alongside the hull calibration factors (<code>calm_water</code>,
+                    <code>wind</code>, <code>waves</code>) and is applied globally to all fuel consumption
+                    calculations, route optimization, and CII compliance estimates. It is set via
+                    <code>POST /api/vessel/calibrate</code> or <code>POST /api/engine-log/calibrate</code>.
                 </p>
             </section>
 
@@ -1941,7 +1992,8 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
   "calibration_factors": {
     "calm_water": 1.12,
     "wind": 0.95,
-    "waves": 1.08
+    "waves": 1.08,
+    "sfoc_factor": 1.03
   },
   "rmse_before": 3.45,
   "rmse_after": 1.23,
@@ -1949,6 +2001,114 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
   "data_points": 42
 }</code></pre>
                 </div>
+
+                <!-- ============================================================ -->
+                <!-- PERFORMANCE PREDICTOR (v0.0.8) -->
+                <!-- ============================================================ -->
+                <section id="performance-predictor" style="margin-top: 2rem;">
+                <h3>Performance Predictor (v0.0.8)</h3>
+                <p>
+                    The performance predictor uses a bisection solver (30 iterations, ~0.001 kts precision) to answer
+                    two complementary questions: given an engine load, what speed can the vessel achieve? Or given a
+                    target calm-water speed, what engine load is required? All directions use the <strong>relative
+                    convention</strong>: 0&deg; = dead ahead, 90&deg; = beam, 180&deg; = astern.
+                </p>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/vessel/predict</span>
+                    <p class="endpoint-description">Predict vessel performance under specified weather conditions. Supports two modes: <strong>engine load mode</strong> (provide <code>engine_load_pct</code>) or <strong>target speed mode</strong> (provide <code>calm_speed_kts</code>).</p>
+                    <p><strong>Request Body (Mode 1 &mdash; Engine Load):</strong></p>
+                    <pre><code>{
+  "is_laden": true,
+  "engine_load_pct": 85,
+  "wind_speed_kts": 20,
+  "wind_relative_deg": 0,
+  "wave_height_m": 2.5,
+  "wave_relative_deg": 30,
+  "current_speed_kts": 1.0,
+  "current_relative_deg": 180
+}</code></pre>
+                    <p><strong>Request Body (Mode 2 &mdash; Target Speed):</strong></p>
+                    <pre><code>{
+  "is_laden": true,
+  "calm_speed_kts": 14.5,
+  "wind_speed_kts": 25,
+  "wind_relative_deg": 0,
+  "wave_height_m": 3.0,
+  "wave_relative_deg": 0,
+  "current_speed_kts": 0.5,
+  "current_relative_deg": 0
+}</code></pre>
+                    <p><strong>Response:</strong></p>
+                    <pre><code>{
+  "speed_through_water_kts": 13.28,
+  "speed_over_ground_kts": 12.78,
+  "fuel_consumption_mt_per_day": 28.4,
+  "fuel_consumption_mt_per_nm": 0.093,
+  "engine_load_pct": 85.0,
+  "speed_loss_pct": 8.4,
+  "resistance_breakdown_kn": {
+    "calm_water": 142.5,
+    "wind": 38.2,
+    "wave": 15.4
+  },
+  "mode": "engine_load",
+  "mcr_exceeded": false
+}</code></pre>
+                    <div class="alert info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>MCR capping</strong> &mdash; In target speed mode, if the required power exceeds MCR,
+                        the response includes <code>"mcr_exceeded": true</code> and <code>required_power_kw</code>.
+                        The achievable speed is capped at the maximum speed deliverable at 100% MCR.
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/vessel/model-status</span>
+                    <p class="endpoint-description">Returns the complete vessel model state: all 20 VesselSpecs fields (grouped by dimensions, engine, areas), current calibration factors with timestamp, active wave method, and computed values (optimal speeds, fuel at service speed).</p>
+                    <p><strong>Response (abbreviated):</strong></p>
+                    <pre><code>{
+  "specs": {
+    "loa": 183.0, "lpp": 176.0, "beam": 32.0,
+    "draft_laden": 11.8, "draft_ballast": 6.5,
+    "displacement_laden": 65000, "displacement_ballast": 20000,
+    "dwt": 49000, "block_coefficient": 0.82,
+    "wetted_surface_area": 8200.0,
+    "mcr_kw": 8840, "sfoc_mcr": 171,
+    "service_speed_laden": 14.5, "service_speed_ballast": 15.0,
+    "frontal_area_laden": 450, "frontal_area_ballast": 850,
+    "lateral_area_laden": 2100, "lateral_area_ballast": 2800,
+    "days_since_drydock": 180, "hull_roughness": 150
+  },
+  "calibration": {
+    "calm_water": 1.12, "wind": 0.95,
+    "waves": 1.08, "sfoc_factor": 1.03
+  },
+  "wave_method": "stawave1",
+  "computed": {
+    "optimal_speed_laden_kts": 12.8,
+    "optimal_speed_ballast_kts": 13.5
+  }
+}</code></pre>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/vessel/fuel-scenarios</span>
+                    <p class="endpoint-description">Returns fuel consumption scenarios computed from the real physics model with current calibration. Replaces hardcoded frontend estimates with server-side calculations using VesselModel.</p>
+                    <p><strong>Response:</strong></p>
+                    <pre><code>{
+  "scenarios": [
+    {"label": "Eco Speed", "speed_kts": 11.0, "fuel_mt_per_day": 18.2, "engine_load_pct": 45},
+    {"label": "Service Speed", "speed_kts": 14.5, "fuel_mt_per_day": 32.1, "engine_load_pct": 85},
+    {"label": "Full Speed", "speed_kts": 15.5, "fuel_mt_per_day": 39.8, "engine_load_pct": 100},
+    {"label": "Ballast Eco", "speed_kts": 12.0, "fuel_mt_per_day": 20.5, "engine_load_pct": 48}
+  ]
+}</code></pre>
+                </div>
+                </section>
 
                 <div class="endpoint">
                     <span class="endpoint-method method-post">POST</span>
@@ -1980,15 +2140,83 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
             </section>
 
             <!-- ============================================================ -->
+            <!-- ENGINE LOG API (v0.0.8) -->
+            <!-- ============================================================ -->
+            <section id="engine-log-api">
+                <h2>Engine Log API (v0.0.8)</h2>
+
+                <p>
+                    The Engine Log API enables upload and analysis of engine performance data from CSV or Excel files.
+                    It provides 5 KPIs (average SFOC, fuel efficiency, load distribution, power utilization, speed-consumption
+                    ratio), 6 interactive charts, and a calibration bridge that derives hull and SFOC correction factors
+                    from actual operational data.
+                </p>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/engine-log/upload</span>
+                    <p class="endpoint-description">Upload engine log data from CSV or Excel file. Accepts up to 5,000 entries per batch. Columns are mapped automatically (speed, fuel consumption, power, wind, waves, etc.).</p>
+                    <p><strong>Request Body:</strong> Multipart form data with CSV or Excel file.</p>
+                    <p><strong>Response:</strong></p>
+                    <pre><code>{
+  "batch_id": "01JMXYZ...",
+  "entries_count": 342,
+  "date_range": ["2025-11-15", "2026-01-20"],
+  "columns_mapped": ["speed_kts", "fuel_mt_day", "power_kw", "wind_speed_kts", "wave_height_m"]
+}</code></pre>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/engine-log/entries</span>
+                    <p class="endpoint-description">Retrieve engine log entries with optional filtering by date range, loading condition, and batch ID. Returns up to 5,000 entries. Shared filters apply across Entries, Analytics, and Performance tabs.</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/engine-log/summary</span>
+                    <p class="endpoint-description">Returns aggregated KPIs and chart data for the current engine log dataset: average SFOC, fuel efficiency index, load distribution histogram, power utilization, and speed-consumption curve.</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/engine-log/calibrate</span>
+                    <p class="endpoint-description">Run calibration optimization against the uploaded engine log data. Derives calibration factors (<code>calm_water</code>, <code>wind</code>, <code>waves</code>, <code>sfoc_factor</code>) by minimizing the RMSE between the physics model predictions and actual reported fuel consumption.</p>
+                    <p><strong>Response:</strong></p>
+                    <pre><code>{
+  "calibration_factors": {
+    "calm_water": 1.08,
+    "wind": 0.97,
+    "waves": 1.05,
+    "sfoc_factor": 1.02
+  },
+  "rmse_before": 4.12,
+  "rmse_after": 1.56,
+  "improvement_pct": 62.1,
+  "data_points": 342
+}</code></pre>
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method method-delete">DELETE</span>
+                    <span class="endpoint-path">/api/engine-log/batch/{batch_id}</span>
+                    <p class="endpoint-description">Delete an uploaded engine log batch and all associated entries.</p>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
             <!-- WEATHER DATABASE -->
             <!-- ============================================================ -->
             <section id="weather-database">
                 <h2>Weather Database Architecture</h2>
 
                 <p>
-                    Starting with v0.0.5, WindMar pre-fetches weather grids on a 6-hourly schedule and stores them
-                    as compressed blobs in PostgreSQL. This eliminates the 30&ndash;60 second CMEMS/GFS download latency
-                    during route calculations, reducing optimization time from minutes to seconds.
+                    WindMar stores weather grids as compressed blobs in PostgreSQL. Since v0.0.8, the ingestion model
+                    is <strong>user-triggered</strong>: the user clicks a per-layer <em>Resync</em> button to fetch
+                    fresh data for the current viewport, replacing the earlier 6-hourly background loop. This
+                    eliminates idle network traffic and gives the user explicit control over when data is refreshed.
+                    Pre-fetched grids still eliminate the 30&ndash;60 second CMEMS/GFS download latency during
+                    route calculations, reducing optimization time from minutes to seconds.
                 </p>
 
                 <h3>Database Schema</h3>
@@ -2031,29 +2259,28 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                     <li><strong>Synthetic data</strong> &mdash; deterministic test/demo fallback</li>
                 </ol>
 
-                <h3>Ingestion Service</h3>
+                <h3>Ingestion Model (v0.0.8: User-Triggered)</h3>
                 <p>
-                    The <code>WeatherIngestionService</code> runs as a FastAPI background task on a 6-hour loop.
-                    It downloads global grids from four sources and stores them compressed in PostgreSQL:
+                    Since v0.0.8, weather ingestion is <strong>user-triggered per layer</strong> via
+                    <code>POST /api/weather/{layer}/resync</code>. Each layer is fetched independently
+                    for the current map viewport (capped at 40&deg;&times;60&deg; CMEMS bbox). The data
+                    sources are:
                 </p>
                 <ul>
                     <li><strong>GFS wind</strong> &mdash; 41 forecast hours (f000&ndash;f120, 3-hourly) from NOAA NOMADS with 2s rate limiting</li>
                     <li><strong>CMEMS waves</strong> &mdash; significant wave height, period, direction (swell + wind-wave decomposition)</li>
                     <li><strong>CMEMS currents</strong> &mdash; U/V ocean current components</li>
-                    <li><strong>CMEMS ice</strong> (v0.0.7) &mdash; sea ice concentration from Arctic/Antarctic physics models</li>
-                </ul>
-                <p>
-                    Additionally, three fields are fetched on-demand via API prefetch endpoints (not background-ingested):
-                </p>
-                <ul>
-                    <li><strong>CMEMS SST</strong> &mdash; sea surface temperature from global ocean physics model</li>
+                    <li><strong>CMEMS ice</strong> &mdash; sea ice concentration from Arctic/Antarctic physics models</li>
+                    <li><strong>CMEMS SST</strong> &mdash; sea surface temperature (<code>copernicusmarine.subset()</code> with 6&times; subsampling)</li>
                     <li><strong>CMEMS visibility</strong> &mdash; meteorological visibility from atmospheric model</li>
                     <li><strong>CMEMS swell</strong> &mdash; swell-only component decomposed from total wave field</li>
                 </ul>
                 <p>
-                    Runs older than 24 hours are automatically marked as superseded. When DB wind grids are unavailable
-                    (e.g. first startup before ingestion completes), a live GFS snapshot is fetched from NOAA and injected
-                    into the temporal provider so that wind resistance is always included in route calculations.
+                    Grid subsampling (&le;500 points per axis) prevents oversized responses. Runs are isolated
+                    per source: a wave resync does not affect wind data. Older runs are superseded via deferred
+                    cleanup after the new run completes. When DB wind grids are unavailable (e.g. first startup),
+                    a live GFS snapshot is fetched and injected into the temporal provider so that wind resistance
+                    is always included in route calculations.
                 </p>
 
                 <div class="alert info">
