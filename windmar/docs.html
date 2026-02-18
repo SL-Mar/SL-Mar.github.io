@@ -173,8 +173,8 @@
                     <table style="width: 100%; margin-top: 0.75rem; font-size: 0.9rem; border-collapse: collapse;">
                         <tr style="border-bottom: 1px solid #d4e6d4;">
                             <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.8</strong></td>
-                            <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-17</td>
-                            <td style="padding: 0.35rem 0;">Vessel model upgrade (SFOC calibration fix, Kwon + STAWAVE-1 dual wave methods, bisection performance predictor), engine log analytics (CSV/Excel upload, 5 KPIs, 6 charts, calibration bridge), weather pipeline refactoring (user-triggered overlays, viewport-aware resync, deferred supersede), 79 API endpoints</td>
+                            <td style="padding: 0.35rem 0.5rem; color: #666; width: 6rem;">2026-02-18</td>
+                            <td style="padding: 0.35rem 0;">Vessel model upgrade (SFOC calibration fix, Kwon + STAWAVE-1 dual wave methods, bisection performance predictor), engine log analytics (CSV/Excel upload, 5 KPIs, 6 charts, calibration bridge), weather pipeline refactoring (user-triggered overlays, viewport-aware resync, deferred supersede), VISIR cost formula fix (safety on fuel only), hard avoidance limits (Hs &ge; 6&thinsp;m, wind &ge; 70&thinsp;kts), dashboard layout harmonization, 79 API endpoints</td>
                         </tr>
                         <tr style="border-bottom: 1px solid #d4e6d4;">
                             <td style="padding: 0.35rem 0; white-space: nowrap; color: #555; width: 5rem;"><strong>v0.0.7</strong></td>
@@ -1163,12 +1163,43 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h2>Safety Criteria</h2>
 
                 <p>
-                    WindMar enforces a three-tier safety classification (Safe, Marginal, Dangerous) based on vessel
-                    motion amplitudes and derived seakeeping parameters. These criteria are applied during route
-                    optimization to block unsafe routes and penalize marginally safe routes.
+                    WindMar enforces safety at two levels: <strong>hard avoidance limits</strong> that instantly
+                    reject extreme conditions, and a <strong>three-tier motion-based classification</strong>
+                    (Safe, Marginal, Dangerous) computed from the seakeeping model. Both are applied during
+                    route optimization by both the A* and VISIR engines.
                 </p>
 
-                <h3>Safety Limits</h3>
+                <h3>Hard Avoidance Limits (v0.0.8)</h3>
+
+                <p>
+                    These absolute thresholds are checked <em>before</em> computing vessel motions. Any grid cell
+                    exceeding either limit is assigned infinite cost &mdash; the optimizer cannot route through it
+                    regardless of heading or speed. These values are calibrated for an MR Product Tanker (~50k DWT).
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Threshold</th>
+                            <th>Equivalent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Significant wave height (Hs)</td>
+                            <td><strong>&ge; 6.0&thinsp;m</strong></td>
+                            <td>Beaufort 9+ (severe gale)</td>
+                        </tr>
+                        <tr>
+                            <td>Wind speed</td>
+                            <td><strong>&ge; 70&thinsp;kts</strong></td>
+                            <td>Beaufort 12 (hurricane force)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Motion-Based Safety Limits</h3>
 
                 <table>
                     <thead>
@@ -1209,11 +1240,12 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
 
                 <div class="alert warning">
                     <strong><i class="fas fa-exclamation-triangle"></i> Route Optimization Enforcement</strong><br>
-                    Safety criteria are enforced during A* route optimization. Grid cells classified as
-                    <strong>Dangerous</strong> are assigned infinite cost, effectively blocking the route through
-                    that cell. <strong>Marginal</strong> cells receive a 1.5&times; cost multiplier, encouraging
-                    the optimizer to find alternative paths when available. <strong>Safe</strong> cells use the
-                    nominal fuel-based cost.
+                    Safety criteria are enforced by both A* and VISIR engines. Grid cells classified as
+                    <strong>Dangerous</strong> receive a graduated penalty (2&times; to 5&times; cost, or infinite
+                    above 1.5&times; the dangerous threshold). <strong>Marginal</strong> cells receive a penalty
+                    proportional to the exceedance above safe limits. <strong>Safe</strong> cells use
+                    the nominal fuel-based cost. In both engines, safety penalties apply to fuel cost only &mdash;
+                    the time penalty remains unweighted to prevent artificial inflation of detour costs.
                 </div>
 
                 <p>
@@ -1523,21 +1555,41 @@ CDSAPI_KEY=your_cds_personal_access_token</code></pre>
                 <h2>Safety Constraints</h2>
 
                 <p>
-                    Safety constraints are integrated directly into the A* search, ensuring that the optimizer
-                    never produces a route that violates safety criteria or regulatory requirements. Constraints
-                    are applied at two levels: seakeeping safety and regulatory zone enforcement.
+                    Safety constraints are integrated directly into both the A* and VISIR search engines, ensuring
+                    that neither optimizer produces a route that violates safety criteria or regulatory requirements.
+                    Constraints are applied at three levels: hard avoidance, seakeeping safety, and regulatory zone enforcement.
                 </p>
 
-                <h3>Seakeeping Constraints in A* Search</h3>
+                <h3>Hard Avoidance (Pre-Motion Check)</h3>
                 <ul>
-                    <li><strong>Dangerous conditions</strong>: Cell cost = infinity. The A* algorithm will not
-                        expand through this cell, forcing the route around the hazardous area. This applies when
-                        any motion parameter exceeds the Dangerous threshold.</li>
-                    <li><strong>Marginal conditions</strong>: Cell cost &times; 1.5. The optimizer can still route
-                        through the cell, but at a 50% cost penalty. This encourages deviation when alternative
-                        routes are available but permits marginal conditions when no safe alternative exists.</li>
+                    <li><strong>Hs &ge; 6&thinsp;m or wind &ge; 70&thinsp;kts</strong>: Cell cost = infinity.
+                        Checked before computing vessel motions, making this a cheap gate that prevents
+                        the optimizer from even considering extreme sea states.</li>
+                </ul>
+
+                <h3>Seakeeping Constraints</h3>
+                <ul>
+                    <li><strong>Dangerous conditions</strong>: Graduated penalty (2&times; to 5&times;) based on
+                        severity of exceedance. Extreme conditions (&gt;1.5&times; the dangerous threshold) are
+                        assigned infinite cost, forcing the route around the hazardous area.</li>
+                    <li><strong>Marginal conditions</strong>: Penalty proportional to exceedance above safe limits
+                        (roll and pitch). The optimizer can still route through the cell but prefers alternatives.</li>
                     <li><strong>Safe conditions</strong>: Nominal fuel-based cost with no penalty.</li>
                 </ul>
+
+                <h3>Cost Formula (v0.0.8)</h3>
+                <p>
+                    Both engines use a time-constrained fuel minimization cost:
+                </p>
+                <p style="text-align: center; font-style: italic; margin: 1rem 0;">
+                    cost = fuel &times; safety &times; zone &times; ice + &lambda;<sub>time</sub> &times; hours
+                </p>
+                <p>
+                    Safety, zone, and ice multipliers apply <strong>only to the fuel term</strong>. The time penalty
+                    (&lambda;<sub>time</sub> = service-speed hourly fuel &times; 0.3) remains unweighted. This
+                    prevents the optimizer from over-penalizing direct routes in rough weather, which would
+                    otherwise produce detours that consume more fuel than the direct path.
+                </p>
 
                 <h3>Regulatory Zone Enforcement</h3>
                 <p>
