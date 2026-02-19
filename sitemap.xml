@@ -21,51 +21,6 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://slmar.co/windmar/docs.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://slmar.co/windmar/hydrodynamics.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://slmar.co/windmar/weather-data.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://slmar.co/windmar/weather-fields.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://slmar.co/windmar/astar-pathfinding.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://slmar.co/windmar/route-optimization-engines.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://slmar.co/windmar/monte-carlo.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://slmar.co/windmar/data-pipeline.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://slmar.co/windmar/open-problems.html</loc>
-    <lastmod>2026-02-13</lastmod>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://slmar.co/quantcoder/docs.html</loc>
     <lastmod>2026-02-11</lastmod>
     <priority>0.7</priority>

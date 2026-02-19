@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 
+Disallow: /windmar/
 Disallow: /katja/
 Disallow: /quantcoderfs/
 Disallow: /chat-with-solas/
