@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="Four momentum and trend-following papers backtested on QuantConnect over 2020-2026. None cleared Sharpe 1.0. Here's what they teach about the gap between academic backtests and deployable strategies.">
+    <link rel="canonical" href="https://slmar.co/quant2code/four-momentum-papers.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://slmar.co/quant2code/four-momentum-papers.html">
+    <meta property="og:title" content="Four Momentum Papers, Zero Survivors | Quant2Code">
+    <meta property="og:description" content="Four momentum and trend-following papers backtested on QuantConnect over 2020-2026. None cleared Sharpe 1.0. Here's what they teach about the gap between academic backtests and deployable strategies.">
+    <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <meta property="og:site_name" content="SL Mar">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Four Momentum Papers, Zero Survivors | Quant2Code">
+    <meta name="twitter:description" content="Four momentum and trend-following papers backtested on QuantConnect over 2020-2026. None cleared Sharpe 1.0.">
+    <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <title>Four Momentum Papers, Zero Survivors | Quant2Code</title>
+    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Four Momentum Papers, Zero Survivors",
+        "description": "Four momentum and trend-following papers backtested on QuantConnect over 2020-2026. None cleared Sharpe 1.0.",
+        "datePublished": "2026-02-22",
+        "author": {
+            "@type": "Person",
+            "name": "Sebastien M. Laignel",
+            "url": "https://slmar.co"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "SL Mar",
+            "url": "https://slmar.co"
+        },
+        "url": "https://slmar.co/quant2code/four-momentum-papers.html",
+        "isAccessibleForFree": true
+    }
+    </script>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="../logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="../index.html" class="logo">SL Mar</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../solutions.html">Solutions</a></li>
+                <li><a href="../publications.html">Publications</a></li>
+                <li><a href="./" class="active">Research</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="https://github.com/SL-Mar" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <article class="post-container">
+        <a href="./" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Quant2Code</a>
+
+        <header class="post-header">
+            <h1>Four Momentum Papers, Zero Survivors</h1>
+            <p class="post-subtitle">What happens when you run trending-market strategies through a crash, a rate hike cycle, and a rally &mdash; with no parameter tuning</p>
+            <div class="post-meta">
+                <span><i class="fa-regular fa-calendar"></i> Feb 2026</span>
+                <span><i class="fa-regular fa-clock"></i> 8 min read</span>
+                <span class="badge-free">FREE</span>
+            </div>
+        </header>
+
+        <div class="post-body">
+            <p>I started this week with a clear thesis: the market regime is trending up, so momentum and trend-following strategies should be in their element. I pulled four recent papers from arXiv and SSRN, coded each one on QuantConnect, and backtested them over the same brutal window &mdash; January 2020 through February 2026.</p>
+
+            <p>None of them cleared a Sharpe ratio of 1.0. All four were discarded.</p>
+
+            <p>Here&rsquo;s what happened, and what it teaches about the gap between academic backtests and deployable strategies.</p>
+
+            <h2>The Setup</h2>
+
+            <p>The regime assessment was straightforward: SPY above both its 50-day and 200-day moving averages, RSI in the 40&ndash;70 neutral band, VIX subdued. Textbook trending-up. So I searched for momentum, trend-following, and breakout strategies &mdash; the kinds of approaches that should thrive in this environment.</p>
+
+            <p>I selected four papers across a range of complexity:</p>
+
+            <ol>
+                <li><strong>A single-instrument trend-momentum system on gold</strong> &mdash; the simplest possible implementation</li>
+                <li><strong>A cross-asset network momentum model</strong> &mdash; the most theoretically interesting</li>
+                <li><strong>A century-old industry trend-following system</strong> &mdash; the longest track record</li>
+                <li><strong>A multi-factor market-neutral strategy on NYSE stocks</strong> &mdash; the most complete</li>
+            </ol>
+
+            <p>Every backtest used $100,000 starting capital, daily resolution, and ran from 2020-01-01 through 2026-02-21. No parameter optimization. No cherry-picked date ranges. The code goes in, the numbers come out.</p>
+
+            <h2>The Results</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Strategy</th>
+                        <th>Paper</th>
+                        <th>Sharpe</th>
+                        <th>CAGR</th>
+                        <th>Max DD</th>
+                        <th>Verdict</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Gold Trend-Momentum</td>
+                        <td>Singha et al., <a href="https://arxiv.org/abs/2511.08571" target="_blank" rel="noopener">arXiv:2511.08571</a></td>
+                        <td>-1.04</td>
+                        <td>+1.9%</td>
+                        <td>-2.6%</td>
+                        <td>Discarded</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Network Momentum</td>
+                        <td>Li &amp; Ferreira, <a href="https://arxiv.org/abs/2501.07135" target="_blank" rel="noopener">arXiv:2501.07135</a></td>
+                        <td>-2.22</td>
+                        <td>-0.9%</td>
+                        <td>-8.3%</td>
+                        <td>Discarded</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Industry Trend-Following</td>
+                        <td>Zarattini &amp; Antonacci, <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4857230" target="_blank" rel="noopener">SSRN:4857230</a></td>
+                        <td>0.39</td>
+                        <td>+12.0%</td>
+                        <td>-31.8%</td>
+                        <td>Discarded</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Multi-Factor Neutral</td>
+                        <td>Gkolemis et al., <a href="https://arxiv.org/abs/2412.12350" target="_blank" rel="noopener">arXiv:2412.12350</a></td>
+                        <td>0.46</td>
+                        <td>+15.4%</td>
+                        <td>-35.3%</td>
+                        <td>Discarded</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Not a single Sharpe above 1.0. Let me walk through each one.</p>
+
+            <h2>Paper 1: Gold Trend-Momentum</h2>
+
+            <p><strong>Claim</strong>: Sharpe 2.88 on gold futures, 2015&ndash;2025.</p>
+
+            <p><strong>What it does</strong>: Blends an EMA trend signal (60%) with a 50-day momentum confirmation (40%). Enters when the blended probability exceeds 0.52 and the trend slope is positive. Exits via ATR-based stops &mdash; hard stop at 2&times; ATR, trailing stop at 1.5&times; ATR, 30-day timeout, and regime de-risk when the bearish probability exceeds 0.50. Position sizing uses a 40% fractional Kelly criterion with a 15% annualized volatility target.</p>
+
+            <p><strong>What happened</strong>: The strategy returned 1.9% annualized &mdash; barely above a savings account. The Kelly sizing, combined with the confidence scaling and volatility targeting, produces position sizes around 5&ndash;10% of the portfolio. With gold&rsquo;s moderate volatility, the signal fires frequently but the sizing is too conservative to generate meaningful returns. The Sharpe is negative because the strategy underperforms T-bills during the 2022&ndash;2024 high-rate environment.</p>
+
+            <p><strong>The lesson</strong>: A Sharpe of 2.88 in-sample doesn&rsquo;t mean the parameters generalize. The paper uses rolling walk-forward optimization of the EMA smoothing parameter on 10-year training windows. When you freeze a single set of parameters (&lambda; = 0.94, &omega; = 0.6) and let them run, the signal degrades. The Kelly sizing &mdash; theoretically optimal &mdash; becomes a straitjacket when the edge is marginal.</p>
+
+            <h2>Paper 2: Network Momentum</h2>
+
+            <p><strong>Claim</strong>: Statistically significant Sharpe improvement over baseline MACD on 28 commodity futures.</p>
+
+            <p><strong>What it does</strong>: Computes MACD oscillators at six speeds on volatility-scaled prices. Then detects lead-lag relationships between markets using Dynamic Time Warping, constructs a sparse adjacency matrix via convex optimization, and replaces each market&rsquo;s own momentum with a network-weighted average of its neighbors&rsquo; momentum. The core insight: if your neighbors are trending, you will likely follow.</p>
+
+            <p><strong>What happened</strong>: Net loss of 5.5%. The simplified implementation &mdash; using lagged cross-correlations on 11 equity sector ETFs instead of DTW on 28 commodity futures &mdash; produced no usable signal. The strategy barely invests (holdings around 16% of equity), and what it does invest loses money.</p>
+
+            <p><strong>The lesson</strong>: Momentum spillover is a real phenomenon in commodities, where supply chains create structural lead-lag relationships (soybeans lead soybean meal, crude leads heating oil). Equity sectors don&rsquo;t have these hard linkages. Technology doesn&rsquo;t &ldquo;lead&rdquo; healthcare the way corn leads ethanol. The concept is sound but domain-specific &mdash; it doesn&rsquo;t transfer across asset classes without the structural relationships that make it work.</p>
+
+            <h2>Paper 3: A Century of Industry Trends</h2>
+
+            <p><strong>Claim</strong>: Sharpe 1.39 over 1926&ndash;2024, long-only trend-following on 48 industry portfolios.</p>
+
+            <p><strong>What it does</strong>: Uses combined Donchian (20-day) and Keltner (20-day EMA + 2&times; ATR) channels for entry, with a 40-day exit band. Asymmetric lookbacks &mdash; fast entry, slow exit &mdash; to let winners run. Volatility-scaled sizing targets 1.5% daily volatility per active sector, capped at 200% leverage. Uninvested capital goes to T-bills.</p>
+
+            <p><strong>What happened</strong>: 100% total return over six years, which sounds respectable until you look at the decomposition. Beta to the market: 0.647. Maximum drawdown: 31.8%. The strategy is levered beta with a trend filter &mdash; it participates in most of the upside (because it&rsquo;s in sectors that are trending up, which during a bull market is most of them) and takes most of the drawdowns (because the exit signals are slow).</p>
+
+            <p><strong>The lesson</strong>: A century of data doesn&rsquo;t protect you from the simplest failure mode: your trend-following system might just be a leveraged index fund with extra steps. The 1.39 Sharpe over 1926&ndash;2024 includes decades where the strategy&rsquo;s structural edge &mdash; avoiding deep drawdowns &mdash; added enormous value. In the post-2020 regime of fast V-shaped recoveries, the slow exit signals mean you&rsquo;re whipsawed out of positions and re-enter late. The edge erodes when drawdowns are short and sharp rather than long and grinding.</p>
+
+            <h2>Paper 4: Multi-Factor Market-Neutral</h2>
+
+            <p><strong>Claim</strong>: Sharpe 0.81 out-of-sample (2016&ndash;2024), near-zero beta.</p>
+
+            <p><strong>What it does</strong>: Ranks NYSE stocks monthly using RSI, 12-month momentum (skip last month), ROE, and book-to-market. Goes long the top 40, short the bottom 40, weighted by inverse volatility (risk parity). Dollar-neutral construction &mdash; long leg equals short leg.</p>
+
+            <p><strong>What happened</strong>: The best of the four. 15.4% CAGR, 10.7% annualized alpha, and a beta of -0.11 &mdash; genuinely market-neutral. But a 35.3% maximum drawdown and 21.4% annualized volatility push the Sharpe to 0.46. The strategy survives COVID almost untouched (consistent with the paper&rsquo;s findings) but suffers during 2022&ndash;2023 when the factor signals degrade.</p>
+
+            <p><strong>The lesson</strong>: This strategy actually works &mdash; the alpha is real, the market neutrality holds. It fails the Sharpe cutoff because of periodic factor regime changes. The original paper uses Lasso regression to dynamically weight factors, which adapts to shifting factor returns. My simplified implementation uses a fixed equal-weight composite, which means when momentum reverses (as it did in early 2022), the strategy takes the full hit. The gap between 0.46 and 1.0 is the gap between static and adaptive factor weighting.</p>
+
+            <h2>What I Learned</h2>
+
+            <p>Four papers, four distinct approaches, one common outcome. Here&rsquo;s what the batch teaches:</p>
+
+            <p><strong>1. In-sample Sharpe ratios are marketing, not science.</strong> Paper 1 claimed 2.88. Paper 3 claimed 1.39. Neither survived fixed-parameter, out-of-sample testing over a period that includes both a crash and a recovery. If a paper reports Sharpe &gt; 2.0 on any single asset, be skeptical.</p>
+
+            <p><strong>2. Domain-specific edges don&rsquo;t transfer.</strong> Network momentum works in commodities because supply chains create hard structural dependencies. Applying it to equity sectors &mdash; where the &ldquo;network&rdquo; is just correlation &mdash; strips out the structural edge and leaves you with noise.</p>
+
+            <p><strong>3. Long track records hide regime dependence.</strong> A century of data that includes the Great Depression, the 1970s stagflation, and the 2008 crisis will produce impressive backtests for any trend-following system. But the modern market &mdash; with algorithmic trading, passive flows, and central bank interventions &mdash; behaves differently. V-shaped recoveries punish slow exits.</p>
+
+            <p><strong>4. The best strategy in the batch was the most boring one.</strong> The multi-factor neutral approach &mdash; basic momentum, basic value, basic quality, rebalanced monthly &mdash; produced real alpha and genuine market neutrality. It didn&rsquo;t clear the bar, but it was the only one with a structural argument for why it should work going forward. If I had to bet on one of these four surviving the next five years, it would be this one &mdash; with adaptive factor weighting.</p>
+
+            <p><strong>5. Failing fast is the point.</strong> These four backtests took a few hours to code and run. The alternative &mdash; spending weeks refining parameters, adding complexity, hunting for the right date range &mdash; would have produced better-looking numbers and worse strategies. The hard cutoff at Sharpe 1.0 with no iteration is the whole discipline.</p>
+
+            <h2>The Scoreboard</h2>
+
+            <p>Four papers tested. Four discarded. Zero published teardowns from this batch.</p>
+
+            <p>The search continues.</p>
+
+            <hr>
+
+            <p class="post-signature"><em>&mdash; SL Mar | <a href="https://slmar.co">slmar.co</a></em></p>
+        </div>
+    </article>
+
+    <footer>
+        <div class="post-container">
+            <p>&copy; 2026 SL Mar</p>
+            <p>Maritime and Market Consultancy</p>
+            <p><a href="../MC_mentions-legales.html">Mentions l&eacute;gales</a></p>
+        </div>
+    </footer>
+</body>
+</html>
