@@ -16,5 +16,7 @@ Disallow: /maritime-rag.html
 Disallow: /agentic-sms.html
 Disallow: /chat-with-solas.html
 Disallow: /*.md$
+Disallow: /quant2code/p/
+Disallow: /quant2code/thanks.html
 
 Sitemap: https://slmar.co/sitemap.xml

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="The Sharpe decay problem, measured across 10 academic strategies. Average decay: 43%. Three tiers of decay, and what separates the survivors.">
+    <link rel="canonical" href="https://slmar.co/quant2code/sharpe-decay.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://slmar.co/quant2code/sharpe-decay.html">
+    <meta property="og:title" content="Why in-sample Sharpe 2.6 becomes 0.9 out-of-sample | Quant2Code">
+    <meta property="og:description" content="The Sharpe decay problem, measured across 10 academic strategies. Average decay: 43%. Three tiers of decay, and what separates the survivors.">
+    <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <meta property="og:site_name" content="SL Mar">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Why in-sample Sharpe 2.6 becomes 0.9 out-of-sample | Quant2Code">
+    <meta name="twitter:description" content="The Sharpe decay problem, measured across 10 academic strategies. Average decay: 43%.">
+    <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <title>Why in-sample Sharpe 2.6 becomes 0.9 out-of-sample | Quant2Code</title>
+    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Why in-sample Sharpe 2.6 becomes 0.9 out-of-sample",
+        "description": "The Sharpe decay problem, measured across 10 academic strategies. Average decay: 43%.",
+        "datePublished": "2026-02-22",
+        "author": {
+            "@type": "Person",
+            "name": "Sebastien M. Laignel",
+            "url": "https://slmar.co"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "SL Mar",
+            "url": "https://slmar.co"
+        },
+        "url": "https://slmar.co/quant2code/sharpe-decay.html",
+        "isAccessibleForFree": true
+    }
+    </script>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="../logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="../index.html" class="logo">SL Mar</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../solutions.html">Solutions</a></li>
+                <li><a href="../publications.html">Publications</a></li>
+                <li><a href="./" class="active">Research</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="https://github.com/SL-Mar" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <article class="post-container">
+        <a href="./" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Quant2Code</a>
+
+        <header class="post-header">
+            <h1>Why in-sample Sharpe 2.6 becomes 0.9 out-of-sample</h1>
+            <p class="post-subtitle">The Sharpe decay problem, measured across 10 academic strategies</p>
+            <div class="post-meta">
+                <span><i class="fa-regular fa-calendar"></i> Feb 2026</span>
+                <span><i class="fa-regular fa-clock"></i> 6 min read</span>
+                <span class="badge-free">FREE</span>
+            </div>
+        </header>
+
+        <div class="post-body">
+            <p>Every paper in quantitative finance has a backtesting section. The results always look great. Sharpe ratios north of 1.5, smooth equity curves, modest drawdowns.</p>
+
+            <p>Then you test it on data the authors didn't use. And the numbers collapse.</p>
+
+            <p>I ran 10 academic strategies through both periods on QuantConnect:</p>
+
+            <ul>
+                <li><strong>In-sample</strong>: 2023&ndash;2024 (the period most papers optimize for)</li>
+                <li><strong>Out-of-sample</strong>: 2020&ndash;2022 (COVID crash, recovery, rate hikes &mdash; the papers never saw this)</li>
+            </ul>
+
+            <p>Here's what happened.</p>
+
+            <h2>The decay table</h2>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Strategy Type</th>
+                            <th>IS Sharpe</th>
+                            <th>OOS Sharpe</th>
+                            <th>Decay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Multi-factor market-neutral</td>
+                            <td>0.05</td>
+                            <td>0.41</td>
+                            <td>-686%*</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Market-neutral mid-cap</td>
+                            <td>1.35</td>
+                            <td>0.75</td>
+                            <td>-44%</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Reward-risk parity</td>
+                            <td>0.98</td>
+                            <td>1.05</td>
+                            <td>+7%</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Optimal mean reversion</td>
+                            <td>1.46</td>
+                            <td>0.85</td>
+                            <td>-42%</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Conditional factor stat-arb</td>
+                            <td>1.43</td>
+                            <td>0.50</td>
+                            <td>-65%</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>PAMR + OLMAR mean reversion</td>
+                            <td>1.86</td>
+                            <td>0.78</td>
+                            <td>-58%</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Skewness-parity portfolio</td>
+                            <td>1.69</td>
+                            <td>0.71</td>
+                            <td>-58%</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Tukey's ladder portfolio</td>
+                            <td>1.24</td>
+                            <td>1.08</td>
+                            <td>-13%</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Robust risk parity</td>
+                            <td>1.73</td>
+                            <td>0.84</td>
+                            <td>-51%</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>VolTS volatility system</td>
+                            <td>2.63</td>
+                            <td>0.90</td>
+                            <td>-66%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>*Paper 1 anomaly: very low IS Sharpe makes the OOS comparison misleading &mdash; skip this one.</p>
+
+            <p><strong>Average decay (Papers 2&ndash;10): -43%.</strong></p>
+
+            <p>A paper showing Sharpe 1.5 in-sample should be expected to deliver roughly 0.85 out-of-sample. Anything above that is a pleasant surprise.</p>
+
+            <h2>Three tiers of decay</h2>
+
+            <h3>Low decay (&lt; 20%) &mdash; structural signals</h3>
+
+            <p>Papers 3 and 8 barely decayed. What they share: they use portfolio construction rules that don't depend heavily on estimated parameters.</p>
+
+            <p>Reward-risk parity (Paper 3) weights assets by the inverse of their contribution to portfolio risk. The signal comes from the covariance structure &mdash; which changes slowly. Tukey's ladder (Paper 8) uses a non-parametric transformation that's robust to distribution shifts.</p>
+
+            <p>These strategies survive regime changes because they don't overfit to a specific covariance regime.</p>
+
+            <h3>Medium decay (30&ndash;50%) &mdash; strong but fitted signals</h3>
+
+            <p>Papers 2, 4, and 9 lost 40&ndash;50% of their Sharpe. These are legitimate signals &mdash; mean reversion, factor scoring, risk parity with shrinkage &mdash; but they estimate parameters in-sample that drift out-of-sample.</p>
+
+            <p>Paper 4 (optimal mean reversion) estimates a mean-reversion speed parameter from in-sample data. When the market regime shifts from low-vol (2023&ndash;24) to high-vol (2020&ndash;22), that parameter is wrong.</p>
+
+            <p>Paper 9 (robust risk parity) uses a shrinkage estimator for the covariance matrix. Shrinkage helps &mdash; the decay is less than Paper 7 (no shrinkage) &mdash; but it can't fully compensate for a covariance regime shift.</p>
+
+            <h3>High decay (&gt; 55%) &mdash; overfitted</h3>
+
+            <p>Papers 5, 6, 7, and 10 lost more than half their Sharpe. The common thread: heavy optimization in-sample.</p>
+
+            <p>Paper 10 is the extreme case. VolTS uses a volatility-timing model calibrated to 2023&ndash;2024 (low-vol, strong trend). Out-of-sample includes the COVID crash, the 2022 rate-hike selloff, and the recovery whipsaw. A timing model calibrated to calm markets breaks in turbulent ones. Sharpe drops from 2.63 to 0.90.</p>
+
+            <p>Paper 5 (conditional factor stat-arb) has 1,146 total trades in-sample. High frequency + conditional factor selection = many parameters fitted to the in-sample period.</p>
+
+            <h2>The practical takeaway</h2>
+
+            <p>When reading a quant paper, apply this mental model:</p>
+
+            <ol>
+                <li><strong>Is the signal structural or fitted?</strong> Structural signals (inverse risk weighting, momentum, value) survive. Fitted signals (optimized parameters, calibrated thresholds) decay.</li>
+                <li><strong>How many parameters does it estimate?</strong> More parameters = more overfitting = steeper decay. A strategy with 2 parameters (lookback period, rebalance frequency) will decay less than one with 8 parameters (factor weights, threshold levels, regime indicators).</li>
+                <li><strong>What's the in-sample Sharpe?</strong> Apply a 40&ndash;50% haircut as your base expectation. If the IS Sharpe is below 1.0 after the haircut, it's probably not worth implementing.</li>
+                <li><strong>Does it survive a regime shift?</strong> If the paper only tests on 2020&ndash;2024, ask: what happens in a flat market? A trending market? A crash? The best strategies work in all three.</li>
+            </ol>
+
+            <h2>One more thing</h2>
+
+            <p>The Sharpe decay pattern isn't unique to these 10 papers. It's a structural feature of backtesting. The more you optimize on historical data, the more you fit the noise. And noise doesn't persist.</p>
+
+            <p>The best strategies are the simplest ones. They capture a real, persistent market effect &mdash; mean reversion, risk compensation, momentum &mdash; with the fewest possible parameters.</p>
+
+            <p>The next post will be a full teardown of Paper 4 (optimal mean reversion): Sharpe 1.46 in-sample, 0.85 out-of-sample. One of the few strategies I'd consider deploying with real capital.</p>
+
+            <hr>
+
+            <p class="post-signature"><em>&mdash; SL Mar | <a href="https://slmar.co">slmar.co</a></em></p>
+        </div>
+    </article>
+
+    <footer>
+        <div class="post-container">
+            <p>&copy; 2026 SL Mar</p>
+            <p>Maritime and Market Consultancy</p>
+            <p><a href="../MC_mentions-legales.html">Mentions l&eacute;gales</a></p>
+        </div>
+    </footer>
+</body>
+</html>

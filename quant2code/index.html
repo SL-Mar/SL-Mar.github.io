@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="Quant2Code — Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.">
+    <link rel="canonical" href="https://slmar.co/quant2code/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://slmar.co/quant2code/">
+    <meta property="og:title" content="Quant2Code | SL Mar">
+    <meta property="og:description" content="Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.">
+    <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <meta property="og:site_name" content="SL Mar">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Quant2Code | SL Mar">
+    <meta name="twitter:description" content="Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.">
+    <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <title>Quant2Code | SL Mar</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Quant2Code",
+        "description": "Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.",
+        "url": "https://slmar.co/quant2code/",
+        "author": {
+            "@type": "Person",
+            "name": "Sebastien M. Laignel",
+            "url": "https://slmar.co"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "SL Mar",
+            "url": "https://slmar.co"
+        }
+    }
+    </script>
+    <style>
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-heading h2 {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+        .section-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Blog hero */
+        .blog-hero {
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .blog-hero h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+        .blog-hero .tagline {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* Post cards */
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .post-card {
+            display: block;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .post-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.24);
+            transform: translateY(-2px);
+        }
+        .post-card h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        .post-card-meta {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .post-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .badge-free {
+            background: rgba(34,197,94,0.15);
+            color: #22c55e;
+            border: 1px solid rgba(34,197,94,0.3);
+            padding: 0.15rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .badge-paid {
+            background: rgba(234,179,8,0.15);
+            color: #eab308;
+            border: 1px solid rgba(234,179,8,0.3);
+            padding: 0.15rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .badge-soon {
+            background: rgba(139,148,158,0.15);
+            color: #8b949e;
+            border: 1px solid rgba(139,148,158,0.3);
+            padding: 0.15rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        /* CTA box */
+        .stripe-cta {
+            background: var(--bg-card);
+            border: 1px solid rgba(234,179,8,0.3);
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+        }
+        .stripe-cta h3 {
+            color: #eab308;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .stripe-cta p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .stripe-cta .feature-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .stripe-cta .feature-list li {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.8;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .stripe-cta .feature-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: #eab308;
+            font-size: 0.8rem;
+            top: 0.25rem;
+        }
+        .btn-buy {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2rem;
+            background: #eab308;
+            color: #0d1117;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-buy:hover {
+            background: #fbbf24;
+            color: #0d1117;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(234,179,8,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .blog-hero h1 { font-size: 2.25rem; }
+            .stripe-cta { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="nav-left">
+                <img src="../logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="../index.html" class="logo">SL Mar</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../solutions.html">Solutions</a></li>
+                <li><a href="../publications.html">Publications</a></li>
+                <li><a href="./" class="active">Research</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="https://github.com/SL-Mar" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="blog-hero">
+        <div class="container">
+            <h1>Quant2Code</h1>
+            <p class="tagline">Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.</p>
+        </div>
+    </section>
+
+    <!-- Posts -->
+    <section>
+        <div class="container">
+            <div class="section-heading">
+                <h2>Posts</h2>
+            </div>
+            <div class="post-list">
+
+                <a href="intro.html" class="post-card">
+                    <h3>I backtest academic papers so you don't have to</h3>
+                    <div class="post-card-meta">
+                        <span>Feb 2026</span>
+                        <span class="badge-free">FREE</span>
+                    </div>
+                    <p>What Quant2Code is about. The first benchmark across 10 academic strategies, and the patterns that already show.</p>
+                </a>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>Teardown #1: Optimal mean reversion</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-paid">PAID</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>Sharpe 1.46 in-sample, 0.85 out-of-sample. One of the few strategies worth deploying with real capital.</p>
+                </span>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>Teardown #2: Reward-risk parity</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-paid">PAID</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>7% Sharpe decay. The structural signal that survived every regime. Full code and analysis.</p>
+                </span>
+
+                <a href="sharpe-decay.html" class="post-card">
+                    <h3>Why in-sample Sharpe 2.6 becomes 0.9 out-of-sample</h3>
+                    <div class="post-card-meta">
+                        <span>Feb 2026</span>
+                        <span class="badge-free">FREE</span>
+                    </div>
+                    <p>The Sharpe decay problem, measured across 10 academic strategies. Three tiers of decay, and what separates the survivors.</p>
+                </a>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>Teardown #3: PAMR + OLMAR combined</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-paid">PAID</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>+179% in-sample, +132% out-of-sample. An online learning strategy that compounds aggressively.</p>
+                </span>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>Paper picks: what's worth reading on arXiv this month</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-free">FREE</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>Curated academic research worth your time, so you don't have to wade through 200 uploads a week.</p>
+                </span>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>Teardown #4: Conditional factor stat-arb</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-paid">PAID</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>1,146 trades. 65% Sharpe decay. A cautionary tale in overfitting.</p>
+                </span>
+
+                <a href="seven-bugs.html" class="post-card">
+                    <h3>The 7 bugs that made my backtests look amazing</h3>
+                    <div class="post-card-meta">
+                        <span>Feb 2026</span>
+                        <span class="badge-free">FREE</span>
+                    </div>
+                    <p>How I found and fixed the flaws that inflated my backtest results by 1000x. A checklist for auditing your own engine.</p>
+                </a>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>Teardown #5: VolTS volatility timing</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-paid">PAID</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>Sharpe 2.63 to 0.90. The worst decay in the benchmark. Why volatility timing fails across regimes.</p>
+                </span>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>What actually works in systematic trading</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-free">FREE</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>Synthesis from 10 strategies. The persistent effects, the implementation details that matter, and the patterns that survive.</p>
+                </span>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>Teardown #6: Robust risk parity</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-paid">PAID</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>Shrinkage helps, but can't save you from a covariance regime shift. Full analysis with code.</p>
+                </span>
+
+                <span class="post-card" style="cursor: default; opacity: 0.6;">
+                    <h3>Lessons from one year of paper-to-algo pipelines</h3>
+                    <div class="post-card-meta">
+                        <span>Coming soon</span>
+                        <span class="badge-free">FREE</span>
+                        <span class="badge-soon">UPCOMING</span>
+                    </div>
+                    <p>The final post. What I've learned, what failed, and what I'd do differently.</p>
+                </span>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Stripe CTA -->
+    <section>
+        <div class="container">
+            <div class="stripe-cta">
+                <h3>Get All 6 Strategy Teardowns</h3>
+                <p>Full QuantConnect code, equity curves, out-of-sample validation, and deployment verdicts for 6 academic strategies.</p>
+                <ul class="feature-list">
+                    <li>Complete implementation code for each strategy</li>
+                    <li>In-sample and out-of-sample backtest results</li>
+                    <li>Honest deployment verdict for each strategy</li>
+                    <li>Parameter sensitivity analysis</li>
+                </ul>
+                <!-- Replace href with your Stripe Payment Link when ready -->
+                <a href="#stripe-coming-soon" class="btn-buy" id="stripe-link">
+                    <i class="fa-solid fa-lock-open"></i> Unlock all teardowns &mdash; $9
+                </a>
+                <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-top: 1rem; margin-bottom: 0;">One-time payment. No subscription. Lifetime access.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SL Mar</p>
+            <p>Maritime and Market Consultancy</p>
+            <p><a href="../MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions l&eacute;gales</a></p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="I take academic quant papers, implement them in QuantConnect, and test them properly. No cherry-picked date ranges. No survivorship bias.">
+    <link rel="canonical" href="https://slmar.co/quant2code/intro.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://slmar.co/quant2code/intro.html">
+    <meta property="og:title" content="I backtest academic papers so you don't have to | Quant2Code">
+    <meta property="og:description" content="What Quant2Code is about. The first benchmark across 10 academic strategies, and the patterns that already show.">
+    <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <meta property="og:site_name" content="SL Mar">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="I backtest academic papers so you don't have to | Quant2Code">
+    <meta name="twitter:description" content="What Quant2Code is about. The first benchmark across 10 academic strategies, and the patterns that already show.">
+    <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <title>I backtest academic papers so you don't have to | Quant2Code</title>
+    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "I backtest academic papers so you don't have to",
+        "description": "What Quant2Code is about. The first benchmark across 10 academic strategies, and the patterns that already show.",
+        "datePublished": "2026-02-22",
+        "author": {
+            "@type": "Person",
+            "name": "Sebastien M. Laignel",
+            "url": "https://slmar.co"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "SL Mar",
+            "url": "https://slmar.co"
+        },
+        "url": "https://slmar.co/quant2code/intro.html",
+        "isAccessibleForFree": true
+    }
+    </script>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="../logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="../index.html" class="logo">SL Mar</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../solutions.html">Solutions</a></li>
+                <li><a href="../publications.html">Publications</a></li>
+                <li><a href="./" class="active">Research</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="https://github.com/SL-Mar" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <article class="post-container">
+        <a href="./" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Quant2Code</a>
+
+        <header class="post-header">
+            <h1>I backtest academic papers so you don't have to</h1>
+            <p class="post-subtitle">What Quant2Code is about</p>
+            <div class="post-meta">
+                <span><i class="fa-regular fa-calendar"></i> Feb 2026</span>
+                <span><i class="fa-regular fa-clock"></i> 4 min read</span>
+                <span class="badge-free">FREE</span>
+            </div>
+        </header>
+
+        <div class="post-body">
+            <p>Every week, arXiv gets flooded with papers claiming market-beating strategies. Momentum factors, mean reversion, risk parity, statistical arbitrage &mdash; all with impressive backtest results.</p>
+
+            <p>Most of them don't survive contact with real market data.</p>
+
+            <p>I take these papers, implement the strategies in QuantConnect, and test them properly:</p>
+
+            <ul>
+                <li><strong>In-sample backtest</strong> (2023&ndash;2024) to see if the math works</li>
+                <li><strong>Out-of-sample validation</strong> (2020&ndash;2022) to see if it holds</li>
+                <li>An honest verdict: would I risk real capital on this?</li>
+            </ul>
+
+            <p>No cherry-picked date ranges. No survivorship bias. No "trust me, the Sharpe is 3.0."</p>
+
+            <h2>What you'll get</h2>
+
+            <ul>
+                <li><strong>Strategy teardowns</strong> &mdash; one paper, one backtest, one verdict. Full QuantConnect code, equity curves, and performance metrics. Paid subscribers get the complete analysis with out-of-sample validation.</li>
+                <li><strong>Quant insights</strong> &mdash; what actually works in systematic trading, and what falls apart out-of-sample. The patterns are more interesting than any single strategy.</li>
+                <li><strong>Paper picks</strong> &mdash; curated academic research worth your time, so you don't have to wade through 200 arXiv uploads a week.</li>
+            </ul>
+
+            <h2>The first benchmark</h2>
+
+            <p>I started by running 10 academic strategies through the full pipeline. Here's the honest scorecard:</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Strategy Type</th>
+                            <th>Paper</th>
+                            <th>IS Sharpe</th>
+                            <th>IS Return</th>
+                            <th>OOS Sharpe</th>
+                            <th>OOS Return</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mean Reversion</td>
+                            <td>Optimal portfolio selection</td>
+                            <td>1.46</td>
+                            <td>+72.6%</td>
+                            <td>0.85</td>
+                            <td>+75.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Statistical Arb</td>
+                            <td>Conditional factor model</td>
+                            <td>1.43</td>
+                            <td>+73.2%</td>
+                            <td>0.50</td>
+                            <td>+46.3%</td>
+                        </tr>
+                        <tr>
+                            <td>Risk Parity</td>
+                            <td>Skewness-based weighting</td>
+                            <td>1.69</td>
+                            <td>+93.2%</td>
+                            <td>0.71</td>
+                            <td>+59.5%</td>
+                        </tr>
+                        <tr>
+                            <td>Risk Parity</td>
+                            <td>Robust shrinkage estimator</td>
+                            <td>1.73</td>
+                            <td>+108.6%</td>
+                            <td>0.84</td>
+                            <td>+78.7%</td>
+                        </tr>
+                        <tr>
+                            <td>PAMR + OLMAR</td>
+                            <td>Combined mean reversion</td>
+                            <td>1.86</td>
+                            <td>+179.4%</td>
+                            <td>0.78</td>
+                            <td>+132.4%</td>
+                        </tr>
+                        <tr>
+                            <td>Factor Model</td>
+                            <td>Multi-factor market-neutral</td>
+                            <td>0.05</td>
+                            <td>+16.6%</td>
+                            <td>0.41</td>
+                            <td>+18.8%</td>
+                        </tr>
+                        <tr>
+                            <td>Factor Scoring</td>
+                            <td>Market-neutral mid-cap</td>
+                            <td>1.35</td>
+                            <td>+64.8%</td>
+                            <td>0.75</td>
+                            <td>+61.2%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>Some patterns already show:</p>
+
+            <ol>
+                <li><strong>In-sample Sharpe consistently overstates out-of-sample.</strong> Average decay: ~45%. A paper claiming Sharpe 1.5 in-sample will likely deliver 0.8 out-of-sample.</li>
+                <li><strong>Mean reversion and risk parity strategies degrade less.</strong> Their signals are structural, not fitted to a specific regime.</li>
+                <li><strong>Factor models with optimization are the most fragile.</strong> Heavy parameter fitting in-sample = the sharpest out-of-sample decay.</li>
+            </ol>
+
+            <h2>Why this publication</h2>
+
+            <p>I've been building paper-to-algorithm pipelines and backtesting frameworks for the past year. I've run these strategies through full in-sample and out-of-sample validation on QuantConnect &mdash; the industry standard for quant backtesting.</p>
+
+            <p>The patterns I found &mdash; why backtests lie, where the real edge hides, what kills a strategy out-of-sample &mdash; are worth sharing.</p>
+
+            <p>One paper per week. Real data. Honest results.</p>
+
+            <hr>
+
+            <p class="post-signature"><em>&mdash; SL Mar | <a href="https://slmar.co">slmar.co</a></em></p>
+        </div>
+    </article>
+
+    <footer>
+        <div class="post-container">
+            <p>&copy; 2026 SL Mar</p>
+            <p>Maritime and Market Consultancy</p>
+            <p><a href="../MC_mentions-legales.html">Mentions l&eacute;gales</a></p>
+        </div>
+    </footer>
+</body>
+</html>

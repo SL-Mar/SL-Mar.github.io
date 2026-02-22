@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="How I found and fixed the 7 bugs that inflated my backtest results by 1000x. A checklist for auditing your own backtesting engine.">
+    <link rel="canonical" href="https://slmar.co/quant2code/seven-bugs.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://slmar.co/quant2code/seven-bugs.html">
+    <meta property="og:title" content="The 7 bugs that made my backtests look amazing | Quant2Code">
+    <meta property="og:description" content="How I found and fixed the 7 bugs that inflated my backtest results by 1000x. A checklist for auditing your own engine.">
+    <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <meta property="og:site_name" content="SL Mar">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The 7 bugs that made my backtests look amazing | Quant2Code">
+    <meta name="twitter:description" content="How I found and fixed the 7 bugs that inflated my backtest results by 1000x.">
+    <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <title>The 7 bugs that made my backtests look amazing | Quant2Code</title>
+    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "The 7 bugs that made my backtests look amazing",
+        "description": "How I found and fixed the 7 bugs that inflated my backtest results by 1000x.",
+        "datePublished": "2026-02-22",
+        "author": {
+            "@type": "Person",
+            "name": "Sebastien M. Laignel",
+            "url": "https://slmar.co"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "SL Mar",
+            "url": "https://slmar.co"
+        },
+        "url": "https://slmar.co/quant2code/seven-bugs.html",
+        "isAccessibleForFree": true
+    }
+    </script>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="nav-left">
+                <img src="../logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="../index.html" class="logo">SL Mar</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../solutions.html">Solutions</a></li>
+                <li><a href="../publications.html">Publications</a></li>
+                <li><a href="./" class="active">Research</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="https://github.com/SL-Mar" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <article class="post-container">
+        <a href="./" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Quant2Code</a>
+
+        <header class="post-header">
+            <h1>The 7 bugs that made my backtests look amazing</h1>
+            <p class="post-subtitle">How I found and fixed the flaws that inflated my backtest results by 1000x</p>
+            <div class="post-meta">
+                <span><i class="fa-regular fa-calendar"></i> Feb 2026</span>
+                <span><i class="fa-regular fa-clock"></i> 8 min read</span>
+                <span class="badge-free">FREE</span>
+            </div>
+        </header>
+
+        <div class="post-body">
+            <p>Before I could publish honest backtest results, I had to get honest with myself about my backtesting engine. The first benchmark run showed a strategy returning 632,051%. Obviously wrong. But the code compiled, the engine ran, and the metrics computed without errors.</p>
+
+            <p>Here are the 7 bugs I found and fixed, in the order I discovered them. Each one is a pattern that could be hiding in your backtesting code too.</p>
+
+            <h2>Bug 1: The Sharpe sign trick</h2>
+
+            <p><strong>Symptom:</strong> A strategy with -39% return showed Sharpe ratio of 1.39.</p>
+
+            <p><strong>Root cause:</strong> When total return is negative but daily returns have low variance, the Sharpe formula can produce a positive number if the risk-free rate isn't handled correctly. The annualization factor was amplifying a small positive mean of daily returns that were actually dominated by a large drawdown.</p>
+
+            <p><strong>Fix:</strong> Clamp Sharpe and Sortino to zero when total return is below the risk-free rate. If you lost money, your risk-adjusted return is not positive. Period.</p>
+
+            <p><strong>Lesson:</strong> Always sanity-check Sharpe against total return. If Sharpe &gt; 0 and return &lt; 0, something is wrong.</p>
+
+            <h2>Bug 2: Free leverage</h2>
+
+            <p><strong>Symptom:</strong> A long-short strategy allocated 140% of capital &mdash; 80% long, 60% short &mdash; without any margin check.</p>
+
+            <p><strong>Root cause:</strong> The <code>target_weights()</code> function accepted any weights the strategy returned. If weights summed to more than 1.0 in absolute terms, the engine happily executed them all.</p>
+
+            <p><strong>Fix:</strong> Normalize gross exposure to &lt;= 1.0 before converting weights to orders. If you want 80% long and 60% short, you get 57% long and 43% short.</p>
+
+            <p><strong>Lesson:</strong> If your backtester doesn't enforce a leverage constraint, every long-short strategy gets free alpha from leverage.</p>
+
+            <h2>Bug 3: Delisted penny stocks in the universe</h2>
+
+            <p><strong>Symptom:</strong> A strategy supposed to trade 50 S&amp;P 500 stocks was seeing 1,751 tickers.</p>
+
+            <p><strong>Root cause:</strong> The OHLCV data query wasn't scoped to the universe. It loaded ALL tickers from the database &mdash; including delisted penny stocks with 0.001 prices. The strategy was buying penny stocks at fractions of a cent, then seeing them "delist" at higher prices.</p>
+
+            <p><strong>Fix:</strong> Filter OHLCV to active tickers only. Scope delisted ticker queries to the specific universe.</p>
+
+            <p><strong>Impact:</strong> Paper 1's return dropped from <strong>632,051% to -29.5%</strong>. The "alpha" was entirely from delisted penny stock contamination.</p>
+
+            <p><strong>Lesson:</strong> Always verify your universe. Print the ticker count. If it doesn't match your expectation, you have data leakage.</p>
+
+            <h2>Bug 4: Spending money you don't have</h2>
+
+            <p><strong>Symptom:</strong> The engine processed buy orders even when cash was insufficient, creating negative cash balances.</p>
+
+            <p><strong>Root cause:</strong> Orders were validated at submission time but not at fill time. Between submission and fill (next bar), other orders could consume the cash. The engine would fill all orders regardless of remaining cash.</p>
+
+            <p><strong>Fix:</strong> Pre-validate each order against available cash at fill time. Auto-size-down orders that exceed available cash. Enforce <code>max_positions</code> as a hard cap.</p>
+
+            <p><strong>Lesson:</strong> Cash validation must happen at fill time, not at submission time. Markets move between the two.</p>
+
+            <h2>Bug 5: O(n&sup2;) daily rebalance</h2>
+
+            <p><strong>Symptom:</strong> A daily-rebalance strategy on 50 tickers timed out after 10 minutes.</p>
+
+            <p><strong>Root cause:</strong> For each trading day, the engine scanned the entire OHLCV DataFrame to extract the last 252 bars. With ~500 trading days and 50 tickers, that's 500 &times; (252 &times; 50) = 6.3 million row lookups, each scanning the full DataFrame.</p>
+
+            <p><strong>Fix:</strong> Pre-group OHLCV by date on initialization. Use bisect for O(1) date lookup instead of DataFrame filtering.</p>
+
+            <p><strong>Impact:</strong> Paper 6 (daily rebalance, 2,699 trades) went from timeout to ~5 minutes.</p>
+
+            <p><strong>Lesson:</strong> If your backtest is slow, profile the inner loop. The bottleneck is almost always data access, not math.</p>
+
+            <h2>Bug 6: The missing fundamentals</h2>
+
+            <p><strong>Symptom:</strong> Strategies that used fundamentals data (PE ratio, market cap) generated zero trades.</p>
+
+            <p><strong>Root cause:</strong> LLM-generated strategy code used field names like <code>market_capitalization</code> while the database column was <code>market_cap</code>. Same data, different name. The strategy silently got None for every lookup and skipped every stock.</p>
+
+            <p><strong>Fix:</strong> Add field aliases: <code>market_capitalization -&gt; market_cap</code>, <code>pe -&gt; pe_ratio</code>, <code>return_on_equity -&gt; roe</code>, etc. 16 aliases covering common naming variations.</p>
+
+            <p><strong>Lesson:</strong> When your strategy generates zero trades, the first thing to check is data access. Add logging at the point where data is consumed, not just where it's loaded.</p>
+
+            <h2>Bug 7: Short selling creates money</h2>
+
+            <p><strong>Symptom:</strong> A long-short strategy returned 632,051% (yes, the same paper as Bug 3 &mdash; it had multiple problems).</p>
+
+            <p><strong>Root cause:</strong> Short positions weren't tracked properly. The engine treated short sales as "cash in" without accounting for the obligation to buy back. Short selling was literally free money &mdash; sell shares you don't own, pocket the cash, never close the position.</p>
+
+            <p><strong>Fix:</strong> Track negative position quantities. Require 150% margin for short positions (standard Reg T margin). Debit proceeds are reduced by margin hold.</p>
+
+            <p><strong>Lesson:</strong> If your backtester supports short selling, test it with a strategy that only shorts. The final portfolio value should be lower than initial cash (margin consumed). If it's higher, you have a bug.</p>
+
+            <h2>The compound effect</h2>
+
+            <p>Each bug independently made results look better than reality. Together, they were devastating:</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Paper 1</th>
+                            <th>Before All Fixes</th>
+                            <th>After All Fixes</th>
+                            <th>QuantConnect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Return</td>
+                            <td>632,051%</td>
+                            <td>-29.5%</td>
+                            <td>+16.6%</td>
+                        </tr>
+                        <tr>
+                            <td>Sharpe</td>
+                            <td>2.91</td>
+                            <td>0.00</td>
+                            <td>0.05</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>Six hundred thirty-two <em>thousand</em> percent. From bugs.</p>
+
+            <p>The scariest part: the engine ran without errors. The code compiled. The metrics computed. Nothing crashed. The numbers just happened to be wrong by a factor of 20,000.</p>
+
+            <h2>How to audit your own backtester</h2>
+
+            <ol>
+                <li><strong>Run a buy-and-hold benchmark.</strong> If your strategy beats buy-and-hold by more than 2x on SPY, be suspicious.</li>
+                <li><strong>Run a short-only strategy.</strong> If it makes money with no long positions, your short-selling logic is broken.</li>
+                <li><strong>Print your universe.</strong> If the ticker count doesn't match, you have data leakage.</li>
+                <li><strong>Check cash at every fill.</strong> If cash goes negative at any point, you're spending money that doesn't exist.</li>
+                <li><strong>Validate Sharpe against return.</strong> Positive Sharpe + negative return = broken metric.</li>
+                <li><strong>Compare against QuantConnect.</strong> Run the same strategy on both engines. If results diverge by more than 20%, investigate.</li>
+            </ol>
+
+            <p>The 7 bugs I found are not unique to my engine. They're patterns that appear in any custom backtesting framework. The fix is always the same: compare against a trusted reference, and don't trust impressive results until you've verified the plumbing.</p>
+
+            <hr>
+
+            <p class="post-signature"><em>&mdash; SL Mar | <a href="https://slmar.co">slmar.co</a></em></p>
+        </div>
+    </article>
+
+    <footer>
+        <div class="post-container">
+            <p>&copy; 2026 SL Mar</p>
+            <p>Maritime and Market Consultancy</p>
+            <p><a href="../MC_mentions-legales.html">Mentions l&eacute;gales</a></p>
+        </div>
+    </footer>
+</body>
+</html>
