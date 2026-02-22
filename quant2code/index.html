@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-    <meta name="description" content="Quant2Code — Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.">
+    <meta name="description" content="Quant2Code — Academic quant strategies backtested on QuantConnect. Only Sharpe >= 1.0 over 2020-today gets published.">
     <link rel="canonical" href="https://slmar.co/quant2code/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://slmar.co/quant2code/">
     <meta property="og:title" content="Quant2Code | SL Mar">
-    <meta property="og:description" content="Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.">
+    <meta property="og:description" content="Academic quant strategies backtested on QuantConnect. Only Sharpe >= 1.0 over 2020-today gets published.">
     <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
     <meta property="og:site_name" content="SL Mar">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Quant2Code | SL Mar">
-    <meta name="twitter:description" content="Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.">
+    <meta name="twitter:description" content="Academic quant strategies backtested on QuantConnect. Only Sharpe >= 1.0 over 2020-today gets published.">
     <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
     <title>Quant2Code | SL Mar</title>
     <link rel="stylesheet" href="../styles.css">
@@ -24,7 +24,7 @@
         "@context": "https://schema.org",
         "@type": "Blog",
         "name": "Quant2Code",
-        "description": "Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.",
+        "description": "Academic quant strategies backtested on QuantConnect. Only Sharpe >= 1.0 over 2020-today gets published.",
         "url": "https://slmar.co/quant2code/",
         "author": {
             "@type": "Person",
@@ -117,104 +117,8 @@
             line-height: 1.6;
         }
 
-        .badge-free {
-            background: rgba(34,197,94,0.15);
-            color: #22c55e;
-            border: 1px solid rgba(34,197,94,0.3);
-            padding: 0.15rem 0.6rem;
-            border-radius: 1rem;
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-        .badge-paid {
-            background: rgba(234,179,8,0.15);
-            color: #eab308;
-            border: 1px solid rgba(234,179,8,0.3);
-            padding: 0.15rem 0.6rem;
-            border-radius: 1rem;
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-        .badge-soon {
-            background: rgba(139,148,158,0.15);
-            color: #8b949e;
-            border: 1px solid rgba(139,148,158,0.3);
-            padding: 0.15rem 0.6rem;
-            border-radius: 1rem;
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-
-        /* CTA box */
-        .stripe-cta {
-            background: var(--bg-card);
-            border: 1px solid rgba(234,179,8,0.3);
-            border-radius: 8px;
-            padding: 2.5rem;
-            text-align: center;
-        }
-        .stripe-cta h3 {
-            color: #eab308;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .stripe-cta p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-        .stripe-cta .feature-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 1.5rem;
-            text-align: left;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .stripe-cta .feature-list li {
-            color: var(--text-secondary);
-            font-size: 0.9375rem;
-            line-height: 1.8;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-        .stripe-cta .feature-list li::before {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            left: 0;
-            color: #eab308;
-            font-size: 0.8rem;
-            top: 0.25rem;
-        }
-        .btn-buy {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 2rem;
-            background: #eab308;
-            color: #0d1117;
-            font-weight: 600;
-            font-size: 1rem;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-buy:hover {
-            background: #fbbf24;
-            color: #0d1117;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(234,179,8,0.3);
-        }
-
         @media (max-width: 768px) {
             .blog-hero h1 { font-size: 2.25rem; }
-            .stripe-cta { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -242,7 +146,7 @@
     <section class="blog-hero">
         <div class="container">
             <h1>Quant2Code</h1>
-            <p class="tagline">Academic quant papers tested on real market data. Strategy teardowns, backtest results, and honest verdicts.</p>
+            <p class="tagline">Academic quant strategies backtested on QuantConnect. Only Sharpe &ge; 1.0 over 2020&ndash;today gets published.</p>
         </div>
     </section>
 
@@ -255,65 +159,15 @@
             <div class="post-list">
 
                 <a href="intro.html" class="post-card">
-                    <h3>I backtest academic papers so you don't have to</h3>
+                    <h3>What this is and how it works</h3>
                     <div class="post-card-meta">
                         <span>Feb 2026</span>
-                        <span class="badge-free">FREE</span>
                     </div>
-                    <p>What Quant2Code is about. The first benchmark across 10 academic strategies, and the patterns that already show.</p>
+                    <p>The pipeline: regime assessment, paper selection, QuantConnect implementation, and the Sharpe &ge; 1.0 hard cutoff. No parameter tweaking. No second chances.</p>
                 </a>
 
-                <span class="post-card" style="cursor: default; opacity: 0.6;">
-                    <h3>How I select strategies (and why most don't make the cut)</h3>
-                    <div class="post-card-meta">
-                        <span>Coming soon</span>
-                        <span class="badge-free">FREE</span>
-                        <span class="badge-soon">UPCOMING</span>
-                    </div>
-                    <p>The selection pipeline: regime assessment, arXiv paper search, 2020&ndash;today backtest window, and the Sharpe &ge; 1.0 hard cutoff that filters out most academic strategies.</p>
-                </span>
+                <!-- Teardown cards appended here as strategies clear SR >= 1.0 and produce insights -->
 
-                <a href="sharpe-decay.html" class="post-card">
-                    <h3>Why in-sample Sharpe 2.6 becomes 0.9 out-of-sample</h3>
-                    <div class="post-card-meta">
-                        <span>Feb 2026</span>
-                        <span class="badge-free">FREE</span>
-                    </div>
-                    <p>The Sharpe decay problem, measured across 10 academic strategies. Three tiers of decay, and what separates the survivors.</p>
-                </a>
-
-                <a href="seven-bugs.html" class="post-card">
-                    <h3>The 7 bugs that made my backtests look amazing</h3>
-                    <div class="post-card-meta">
-                        <span>Feb 2026</span>
-                        <span class="badge-free">FREE</span>
-                    </div>
-                    <p>How I found and fixed the flaws that inflated my backtest results by 1000x. A checklist for auditing your own engine.</p>
-                </a>
-
-                <!-- Teardown cards are appended here as strategies clear SR >= 1.0 -->
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Stripe CTA -->
-    <section>
-        <div class="container">
-            <div class="stripe-cta">
-                <h3>2026 Strategy Pack</h3>
-                <p>All strategy teardowns published in 2026 &mdash; delivered to your inbox as they come out.</p>
-                <ul class="feature-list">
-                    <li>Every strategy teardown with full QuantConnect code</li>
-                    <li>5+ year backtests (2020&ndash;today, including COVID crash)</li>
-                    <li>Only strategies with Sharpe &ge; 1.0 make the cut</li>
-                    <li>One payment, all 2026 content</li>
-                </ul>
-                <!-- Replace href with your Stripe Payment Link when ready -->
-                <a href="https://buy.stripe.com/test_4gMdR91cj3Se5REgAea7C00" class="btn-buy" id="stripe-link">
-                    <i class="fa-solid fa-lock-open"></i> Get the 2026 Pack &mdash; $49
-                </a>
-                <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-top: 1rem; margin-bottom: 0;">One-time payment. All teardowns published in 2026.</p>
             </div>
         </div>
     </section>
