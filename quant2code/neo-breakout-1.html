@@ -294,6 +294,11 @@
             </table>
             </div>
 
+            <figure>
+                <img src="img/Backtest_neo_bo_1_donch15.png" alt="Neo-Breakout-1 Donchian(15) equity curve — QuantConnect backtest" />
+                <figcaption>Equity curve: Donchian(15) optimized config &mdash; +5.24% return, PSR 96.6%</figcaption>
+            </figure>
+
             <p>The pattern is clear: wider lookback = fewer trades = higher win rate = better risk-adjusted returns. A 3-bar Donchian fires on any minor blip. A 15-bar Donchian only fires when the price genuinely breaks to a new local high &mdash; the kind of breakout that actually follows through.</p>
 
             <p>The sweet spot is 15 bars. Going to 20 gives slightly lower drawdown but also lower returns &mdash; you start missing real breakouts by being too selective. At 15, the system makes 42 trades at 48% win rate with Sharpe 6.76 &mdash; a massive improvement over the initial Donchian(6) config.</p>
