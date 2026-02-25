@@ -38,6 +38,27 @@
             font-size: 0.875rem;
             margin-top: 2rem;
         }
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            background: var(--accent);
+            color: #0d1117;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            margin-top: 1.5rem;
+        }
+        .btn-download:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88,166,255,0.3);
+        }
         .bundle-contents {
             text-align: left;
             margin: 2rem auto;
@@ -115,11 +136,14 @@
     <div class="thanks-container">
         <div class="thanks-icon"><i class="fa-solid fa-circle-check"></i></div>
         <h1>Thank you for your purchase</h1>
-        <p>Check your email for a download link to the Neo-Breakout-1 model bundle.</p>
-        <p>If you don't see the email within a few minutes, check your spam folder.</p>
+        <p>Your Neo-Breakout-1 model bundle is ready to download.</p>
+
+        <a href="dl/neo-breakout-1-adb0f794.zip" class="btn-download" download>
+            <i class="fa-solid fa-download"></i> Download Model Bundle (.zip, 381 KB)
+        </a>
 
         <div class="bundle-contents">
-            <h3>What's in the bundle</h3>
+            <h3>What's inside</h3>
             <ul>
                 <li><i class="fa-solid fa-check"></i> neo-breakout-1.joblib &mdash; trained LightGBM model</li>
                 <li><i class="fa-solid fa-check"></i> neo-breakout-1.json &mdash; model card with metrics</li>
