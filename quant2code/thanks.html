@@ -38,6 +38,59 @@
             font-size: 0.875rem;
             margin-top: 2rem;
         }
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            background: var(--accent);
+            color: #0d1117;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            margin-top: 1.5rem;
+        }
+        .btn-download:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88,166,255,0.3);
+        }
+        .bundle-contents {
+            text-align: left;
+            margin: 2rem auto;
+            max-width: 420px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+        }
+        .bundle-contents h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        .bundle-contents ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .bundle-contents li {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            padding: 0.3rem 0;
+        }
+        .bundle-contents li i {
+            color: #22c55e;
+            margin-right: 0.5rem;
+            width: 1rem;
+        }
         .thanks-container .btn-back {
             display: inline-flex;
             align-items: center;
@@ -82,9 +135,23 @@
 
     <div class="thanks-container">
         <div class="thanks-icon"><i class="fa-solid fa-circle-check"></i></div>
-        <h1>Payment received</h1>
-        <p>Check your email for access links to all 6 strategy teardowns.</p>
-        <p>If you don't see the email within a few minutes, check your spam folder.</p>
+        <h1>Thank you for your purchase</h1>
+        <p>Your Neo-Breakout-1 model bundle is ready to download.</p>
+
+        <a href="dl/neo-breakout-1-adb0f794.zip" class="btn-download" download>
+            <i class="fa-solid fa-download"></i> Download Model Bundle (.zip, 381 KB)
+        </a>
+
+        <div class="bundle-contents">
+            <h3>What's inside</h3>
+            <ul>
+                <li><i class="fa-solid fa-check"></i> neo-breakout-1.joblib &mdash; trained LightGBM model</li>
+                <li><i class="fa-solid fa-check"></i> neo-breakout-1.json &mdash; model card with metrics</li>
+                <li><i class="fa-solid fa-check"></i> execution-template.py &mdash; QuantConnect algo template</li>
+                <li><i class="fa-solid fa-check"></i> README.md &mdash; feature list and usage guide</li>
+            </ul>
+        </div>
+
         <p class="note">Questions? Reach out at <a href="mailto:contact@slmar.co" style="color: var(--accent);">contact@slmar.co</a></p>
         <a href="./" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Back to Quant2Code</a>
     </div>
