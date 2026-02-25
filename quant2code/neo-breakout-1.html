@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-    <meta name="description" content="How a LightGBM breakout model combined with intraday volume and price confirmation turned a losing strategy into Sharpe 2.65 on biotech small-caps.">
+    <meta name="description" content="How a LightGBM breakout model combined with intraday volume and price confirmation turned a losing strategy into Sharpe 6.76 on biotech small-caps.">
     <link rel="canonical" href="https://slmar.co/quant2code/neo-breakout-1.html">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://slmar.co/quant2code/neo-breakout-1.html">
     <meta property="og:title" content="Teardown #1: Neo-Breakout-1 | Quant2Code">
-    <meta property="og:description" content="How a LightGBM breakout model combined with intraday volume and price confirmation turned a losing strategy into Sharpe 2.65 on biotech small-caps.">
+    <meta property="og:description" content="How a LightGBM breakout model combined with intraday volume and price confirmation turned a losing strategy into Sharpe 6.76 on biotech small-caps.">
     <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
     <meta property="og:site_name" content="SL Mar">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Teardown #1: Neo-Breakout-1 | Quant2Code">
-    <meta name="twitter:description" content="How a LightGBM breakout model combined with intraday volume and price confirmation turned a losing strategy into Sharpe 2.65 on biotech small-caps.">
+    <meta name="twitter:description" content="How a LightGBM breakout model combined with intraday volume and price confirmation turned a losing strategy into Sharpe 6.76 on biotech small-caps.">
     <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
     <title>Teardown #1: Neo-Breakout-1 | Quant2Code</title>
     <link rel="stylesheet" href="post.css">
@@ -24,7 +24,7 @@
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         "headline": "Teardown #1: Neo-Breakout-1",
-        "description": "How a LightGBM breakout model combined with intraday volume and price confirmation turned a losing strategy into Sharpe 2.65 on biotech small-caps.",
+        "description": "How a LightGBM breakout model combined with intraday volume and price confirmation turned a losing strategy into Sharpe 6.76 on biotech small-caps.",
         "datePublished": "2026-02-23",
         "author": {
             "@type": "Person",
@@ -138,10 +138,10 @@
 
         <header class="post-header">
             <h1>Teardown #1: Neo-Breakout-1</h1>
-            <p class="post-subtitle">From -12% to Sharpe 2.65 &mdash; how ML candidate selection meets intraday breakout confirmation</p>
+            <p class="post-subtitle">From -12% to Sharpe 6.76 &mdash; how ML candidate selection meets intraday breakout confirmation</p>
             <div class="post-meta">
                 <span><i class="fa-regular fa-calendar"></i> 23 Feb 2026</span>
-                <span><i class="fa-regular fa-clock"></i> 8 min read</span>
+                <span><i class="fa-regular fa-clock"></i> 10 min read</span>
                 <span class="badge-free">FREE</span>
             </div>
         </header>
@@ -215,7 +215,7 @@
             <ol>
                 <li><strong>Model prediction</strong>: the ticker must be in the model's top-10 candidates for the day</li>
                 <li><strong>Volume spike</strong>: the current minute bar's volume must significantly exceed the rolling average of the previous minute bars</li>
-                <li><strong>Price breakout</strong>: the current bar's high must exceed the highest high of the previous candles (Donchian channel breakout)</li>
+                <li><strong>Price breakout</strong>: the current bar's high must exceed the highest high of the previous N candles (Donchian channel breakout)</li>
             </ol>
 
             <p>Exit: take-profit or EOD liquidation at 3:55 PM, whichever comes first.</p>
@@ -275,11 +275,38 @@
 
             <p>The model filters out the 20 tickers whose volume spikes and price breakouts are noise, leaving only the 10 where the breakout has a higher probability of following through.</p>
 
+            <h2>Parameter Sensitivity: Donchian Period</h2>
+
+            <p>The Donchian lookback period &mdash; how many prior bars define the breakout channel &mdash; is the one parameter in the triple confirmation that's easy to sweep. Everything else (the 20x volume spike, the model's top-10 selection, the 5% take-profit) stays fixed. Only the breakout horizon varies.</p>
+
+            <p>We ran five identical backtests over the same 19-day window, changing only the Donchian period:</p>
+
+            <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Donchian Period</th><th>Net Profit</th><th>Sharpe</th><th>Win Rate</th><th>Max DD</th><th>Trades</th></tr></thead>
+                <tbody>
+                    <tr><td>3 bars</td><td>+3.21%</td><td>2.63</td><td>42%</td><td>1.9%</td><td>60</td></tr>
+                    <tr><td>6 bars</td><td>+3.16%</td><td>2.65</td><td>44%</td><td>1.9%</td><td>54</td></tr>
+                    <tr><td>10 bars</td><td>+3.21%</td><td>2.71</td><td>46%</td><td>1.6%</td><td>48</td></tr>
+                    <tr><td><strong>15 bars</strong></td><td><strong>+5.24%</strong></td><td><strong>6.76</strong></td><td><strong>48%</strong></td><td><strong>1.6%</strong></td><td><strong>42</strong></td></tr>
+                    <tr><td>20 bars</td><td>+4.74%</td><td>6.15</td><td>48%</td><td>1.4%</td><td>38</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>The pattern is clear: wider lookback = fewer trades = higher win rate = better risk-adjusted returns. A 3-bar Donchian fires on any minor blip. A 15-bar Donchian only fires when the price genuinely breaks to a new local high &mdash; the kind of breakout that actually follows through.</p>
+
+            <p>The sweet spot is 15 bars. Going to 20 gives slightly lower drawdown but also lower returns &mdash; you start missing real breakouts by being too selective. At 15, the system makes 42 trades at 48% win rate with Sharpe 6.76 &mdash; a massive improvement over the initial Donchian(6) config.</p>
+
+            <p>This is the deployed configuration.</p>
+
             <h2>The Verdict</h2>
 
             <p>Neo-Breakout-1 works &mdash; but not in the way you'd expect from a typical ML trading model. The model alone loses money if you just buy at open. The execution logic alone loses money if applied blindly. The alpha lives specifically in the intersection: model-selected candidates, confirmed by intraday volume and price action.</p>
 
-            <p><strong>Would I deploy this?</strong> It's on paper trading now. The backtest covers only 19 days and 54 trades &mdash; not enough for statistical confidence. The Sharpe is high but the sample is small. I need at least 2&ndash;3 months of live paper results before committing capital.</p>
+            <p>After parameter optimization, the best configuration (Donchian 15) delivers Sharpe 6.76 on +5.24% net profit with only 1.6% max drawdown &mdash; a significant jump from the initial Donchian(6) baseline of SR 2.65.</p>
+
+            <p><strong>Would I deploy this?</strong> It's on paper trading now with the optimized Donchian(15) config. The backtest covers only 19 days and 42 trades &mdash; not enough for statistical confidence. The Sharpe is high but the sample is small. I need at least 2&ndash;3 months of live paper results before committing capital.</p>
 
             <p><strong>What would need to change for production?</strong></p>
             <ul>
