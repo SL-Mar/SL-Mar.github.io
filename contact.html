@@ -2,13 +2,365 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0;url=index.html#contact">
-    <title>Redirecting...</title>
-    <script type="text/javascript">
-        window.location.href = "index.html#contact";
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="Contact SL Mar for maritime operations automation, weather routing, and quantitative trading consulting">
+    <link rel="canonical" href="https://slmar.co/contact.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://slmar.co/contact.html">
+    <meta property="og:title" content="Contact | SL Mar">
+    <meta property="og:description" content="Contact SL Mar for maritime operations automation, weather routing, and quantitative trading consulting">
+    <meta property="og:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <meta property="og:site_name" content="SL Mar">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Contact | SL Mar">
+    <meta name="twitter:description" content="Contact SL Mar for maritime operations automation, weather routing, and quantitative trading consulting">
+    <meta name="twitter:image" content="https://slmar.co/Assets/BridgeView.jpg">
+    <title>Contact | SL Mar</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .contact-hero {
+            text-align: center;
+            padding: 4rem 0 2rem;
+        }
+        .contact-hero h1 {
+            font-size: 2.75rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+        .contact-hero p {
+            text-align: center;
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2.5rem;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b949e' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+        .form-group select option {
+            background: var(--bg-secondary);
+            color: var(--text);
+        }
+        .form-group textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        /* Service selector */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        .service-option {
+            position: relative;
+        }
+        .service-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .service-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.25rem 0.75rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-weight: 400;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+        .service-option label i {
+            font-size: 1.35rem;
+            color: var(--text-tertiary);
+            transition: color 0.2s;
+        }
+        .service-option input[type="radio"]:checked + label {
+            border-color: var(--accent);
+            background: rgba(88, 166, 255, 0.08);
+            color: var(--text);
+        }
+        .service-option input[type="radio"]:checked + label i {
+            color: var(--accent);
+        }
+        .service-option label:hover {
+            border-color: var(--border-hover);
+        }
+
+        /* Domain selector */
+        .domain-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .domain-option {
+            flex: 1;
+            position: relative;
+        }
+        .domain-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .domain-option label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 400;
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+        .domain-option input[type="radio"]:checked + label {
+            border-color: var(--accent);
+            background: rgba(88, 166, 255, 0.08);
+            color: var(--text);
+        }
+        .domain-option label:hover {
+            border-color: var(--border-hover);
+        }
+
+        @media (max-width: 480px) {
+            .service-grid { grid-template-columns: 1fr; }
+            .domain-row { flex-direction: column; }
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 0.75rem 2rem;
+            font-size: 1.05rem;
+        }
+
+        .alt-contact {
+            text-align: center;
+            padding: 3rem 0 1rem;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .alt-contact p {
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.9375rem;
+            margin-bottom: 1rem;
+        }
+        .alt-contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .alt-contact-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+        .alt-contact-links a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .contact-hero h1 {
+                font-size: 2rem;
+            }
+            .form-card {
+                padding: 1.5rem;
+                margin: 0 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting to <a href="index.html#contact">Contact</a>...</p>
+    <nav>
+        <div class="container nav-container">
+            <div class="nav-left">
+                <img src="logo.png" alt="SL Mar Logo" class="nav-logo" />
+                <a href="index.html" class="logo">SL Mar</a>
+            </div>
+            <ul class="nav-center">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="solutions.html">Solutions</a></li>
+                <li><a href="publications.html">Publications</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="https://github.com/SL-Mar" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <section>
+        <div class="container">
+            <div class="contact-hero">
+                <h1>Let's Work Together</h1>
+                <p>Do you need an automation in maritime operations or quant trading?</p>
+            </div>
+
+            <form class="form-card" action="https://formspree.io/f/maqdgnpl" method="POST">
+                <div class="form-group">
+                    <label>I need</label>
+                    <div class="service-grid">
+                        <div class="service-option">
+                            <input type="radio" id="svc-consulting" name="service" value="Consulting" required>
+                            <label for="svc-consulting">
+                                <i class="fa-solid fa-comments"></i>
+                                Consulting
+                            </label>
+                        </div>
+                        <div class="service-option">
+                            <input type="radio" id="svc-automation" name="service" value="Automation">
+                            <label for="svc-automation">
+                                <i class="fa-solid fa-gears"></i>
+                                Automation
+                            </label>
+                        </div>
+                        <div class="service-option">
+                            <input type="radio" id="svc-app" name="service" value="Custom App">
+                            <label for="svc-app">
+                                <i class="fa-solid fa-laptop-code"></i>
+                                Custom App
+                            </label>
+                        </div>
+                        <div class="service-option">
+                            <input type="radio" id="svc-other" name="service" value="Other">
+                            <label for="svc-other">
+                                <i class="fa-solid fa-ellipsis"></i>
+                                Something Else
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>In</label>
+                    <div class="domain-row">
+                        <div class="domain-option">
+                            <input type="radio" id="dom-maritime" name="domain" value="Maritime" required>
+                            <label for="dom-maritime">
+                                <i class="fa-solid fa-ship"></i> Maritime
+                            </label>
+                        </div>
+                        <div class="domain-option">
+                            <input type="radio" id="dom-quant" name="domain" value="Quant Trading">
+                            <label for="dom-quant">
+                                <i class="fa-solid fa-chart-line"></i> Quant Trading
+                            </label>
+                        </div>
+                        <div class="domain-option">
+                            <input type="radio" id="dom-both" name="domain" value="Both / Other">
+                            <label for="dom-both">
+                                Both / Other
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Tell me more</label>
+                    <textarea id="message" name="message" placeholder="What problem are you trying to solve?" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary form-submit">
+                    <i class="fa-solid fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+
+            <div class="alt-contact">
+                <p>Or reach out directly</p>
+                <div class="alt-contact-links">
+                    <a href="https://www.linkedin.com/in/smr-laignel" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-linkedin"></i> LinkedIn
+                    </a>
+                    <a href="mailto:contact@slmar.co">
+                        <i class="fa-solid fa-envelope"></i> contact@slmar.co
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SL Mar</p>
+            <p>Maritime and Market Consultancy</p>
+            <p><a href="MC_mentions-legales.html" style="color: inherit; text-decoration: underline;">Mentions l&eacute;gales</a></p>
+        </div>
+    </footer>
 </body>
 </html>
